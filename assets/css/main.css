@@ -1,0 +1,172 @@
+/******
+GENERAL
+******/
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-overflow-scrolling: touch;
+
+    outline: none;
+    ie-dummy: expression(this.hideFocus=true);
+}
+
+body {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #0B1D33;
+    color: #426A91;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.main {
+    height: 100%;
+}
+
+hr {
+    width: 100%;
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #112a42;
+    margin: 1em 0;
+    padding: 0;
+}
+
+/*******
+FLICKITY
+*******/
+.main-carousel {
+    background: #EEE;
+}
+
+.carousel-cell {
+    width: 100%;
+    height: -moz-calc(100vh - 75px);
+    height: -webkit-calc(100vh - 75px);
+    height: -o-calc(100vh - 75px);
+    height: calc(100vh - 75px);
+    background: #0B1D33;
+    counter-increment: carousel-cell;
+}
+
+/******
+HEADER
+******/
+.header {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-content: center;
+    margin: 20px;
+}
+
+.LeftButtonHeader {
+    width: 20px;
+    height: 20px;
+    -webkit-filter: invert(.5);
+    -moz-filter: invert(.5);
+}
+
+.HeaderCaption {
+    color: lightgrey;
+}
+
+.RightButtonHeader {
+    width: 20px;
+    height: 20px;
+    -webkit-filter: invert(.5);
+    -moz-filter: invert(.5);
+}
+
+/***********
+GENERAL TABS
+***********/
+.MainInTab {
+    height: 100%;
+}
+
+/**********
+CHAT WINDOW
+**********/
+.ChatWindow {
+    height: 100%;
+    position: relative;
+}
+
+.ChatResponses {
+
+}
+
+.ChatInput {
+    position: absolute;
+    margin: auto;
+    bottom: 90px; /* 75+15 */
+    left: 0;
+    z-index: 600;
+    width: 100%;
+    height: 40px;
+    border:none;
+    color: #FFF;
+    background-color: #13223C;
+}
+
+#ChatTextInput {
+    display: none;
+}
+
+
+/*****
+NAVBAR
+*****/
+.Navbar {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-content: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 75px;
+    width: 100%;
+    background-color: #13223C;
+}
+
+.NavbarIconWrap {
+    margin: auto;
+}
+
+.NavbarIconWrap img {
+    height: 30px;
+    width: 30px;
+    filter: invert(.5);
+    -webkit-filter: invert(.5);
+    -moz-filter: invert(.5);
+}
+
+.NavbarLine {
+    position: absolute;
+    bottom: 73px;
+    left: 0;
+    width: 20% !important;
+    height: 2px;
+    background: #FF00A2;
+}
+
+.ActiveTab {
+    -webkit-transition: -moz-transform .3s ease-out;
+    -moz-transition: -webkit-transform .3s ease-out;
+
+    filter: invert(16%) sepia(77%) saturate(6174%) hue-rotate(316deg) brightness(107%) contrast(110%);
+    -webkit-filter: invert(16%) sepia(77%) saturate(6174%) hue-rotate(316deg) brightness(107%) contrast(110%);
+    -moz-filter: invert(16%) sepia(77%) saturate(6174%) hue-rotate(316deg) brightness(107%) contrast(110%);
+}
