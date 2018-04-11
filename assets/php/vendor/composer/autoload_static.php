@@ -56,7 +56,7 @@ class ComposerStaticInit3c5661e077098f105cbab5a541fd4883
     public static $prefixDirsPsr4 = array (
         'Websocket\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src',
+            0 => __DIR__ . '/../..' . '/Chatserver/src',
         ),
         'Symfony\\Polyfill\\Php70\\' => 
         array (

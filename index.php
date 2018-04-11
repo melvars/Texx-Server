@@ -105,6 +105,7 @@
 
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script src="assets/js/encryption.js"></script>
 <script src="assets/js/chat.js"></script>
 <script src="assets/js/main.js"></script>
 

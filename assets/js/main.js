@@ -1,10 +1,6 @@
-/******
- GENERAL
- ******/
-
 /*****
- NAVBAR
- *****/
+NAVBAR
+*****/
 var $el, leftPos, newWidth,
     $mainNav = $(".Navbar");
 $mainNav.append("<span class='NavbarLine'></span>");

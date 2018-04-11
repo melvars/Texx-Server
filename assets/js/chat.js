@@ -1,10 +1,42 @@
+/************
+ GENERATE KEYS
+ ************/
+if (localStorage.getItem('KeysGenerated') === null || localStorage.getItem('KeysGenerated') !== "true") {
+    // GENERATE
+    var EncryptionPhrase = "PASSWORD 123"; // THE USERS PASSWORD
+    var RSABitLength = 1024;
+    var PrivateKeyString = cryptico.generateRSAKey(EncryptionPhrase, RSABitLength);
+    var PublicKeyString = cryptico.publicKeyString(PrivateKeyString);
+    // SAVE TO DATABASE
+    $.ajax({
+        type: "POST",
+        url: "assets/php/SavePublicKey.php",
+        data: {
+            UserID: "1", // TEMPORARY
+            PublicKeyString: PublicKeyString
+        },
+        async: true,
+        error: function () {
+            console.error("Error while saving public key to database!");
+        },
+        success: function () {
+            localStorage.setItem('KeysGenerated', "true");
+        }
+    });
+}
+
+
+/******
+ GENERAL
+ ******/
+
 var ChatTextInput = $("#ChatTextInput");
 var SubscribeTextInput = $("#SubscribeTextInput");
 var ChatResponses = $("#ChatResponses");
 
 var WebSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
 WebSocket.onopen = function () {
-    //console.log("Chat connection established!");
+    console.log("Chat connection established!");
 };
 WebSocket.onmessage = function (e) {
     var MessageObject = JSON.parse(e.data);

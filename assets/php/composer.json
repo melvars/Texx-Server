@@ -1,7 +1,7 @@
 {
     "autoload": {
         "psr-4": {
-            "Websocket\\": "src"
+            "Websocket\\": "Chatserver/src"
         }
     },
     "require": {
