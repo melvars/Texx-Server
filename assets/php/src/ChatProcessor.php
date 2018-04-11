@@ -6,6 +6,7 @@ namespace Websocket;
 use Ratchet\ConnectionInterface;
 use Ratchet\WebSocket\MessageComponentInterface;
 use Ratchet\RFC6455\Messaging\MessageInterface;
+use Nubs\RandomNameGenerator\Alliteration;
 
 class ChatProcessor implements MessageComponentInterface
 {
@@ -22,12 +23,10 @@ class ChatProcessor implements MessageComponentInterface
     }
 
     public function onOpen(ConnectionInterface $conn) {
-        $generator = new \Nubs\RandomNameGenerator\Alliteration();
+        $generator = new Alliteration();
         $this->clients->attach($conn);
         $this->users[$conn->resourceId] = $conn;
         $this->connectedUsersNames[$conn->resourceId] = $generator->getName();
-
-        echo "New connection! ({$conn->resourceId})\n";
     }
 
     /*public function onMessage(ConnectionInterface $from, $msg) {
@@ -47,27 +46,42 @@ class ChatProcessor implements MessageComponentInterface
 
     public function onMessage(ConnectionInterface $conn, MessageInterface $msg) {
         $data = json_decode($msg);
-        switch ($data->command) {
-            case "subscribe":
-                $this->subscriptions[$conn->resourceId] = $data->channel;
+        switch ($data->ClientMessageType) {
+            case "Subscribe":
+                $this->subscriptions[$conn->resourceId] = $data->Channel;
                 foreach ($this->subscriptions as $id => $channel) {
                     if ($this->subscriptions[$conn->resourceId] == $channel) {
+                        $MessageObject = new \stdClass();
+                        $MessageObject->ServerMessage = true;
+                        $MessageObject->ServerMessageType = "GroupJoin";
+                        $MessageObject->GroupName = $channel;
+                        $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
                         if ($id === $conn->resourceId) {
-                            $this->users[$id]->send("You (" . $this->connectedUsersNames[$conn->resourceId] . ") joined this group.");
+                            $MessageObject->WasHimself = true;
                         } else {
-                            $this->users[$id]->send("User (<b>" . $this->connectedUsersNames[$conn->resourceId] . "</b>) joined this group.");
+                            $MessageObject->WasHimself = false;
                         }
+                        $MessageJson = json_encode($MessageObject, true);
+                        $this->users[$id]->send($MessageJson);
                     }
                 }
                 break;
-            case "message":
+            case "Message":
                 if (isset($this->subscriptions[$conn->resourceId])) {
                     $target = $this->subscriptions[$conn->resourceId];
                     foreach ($this->subscriptions as $id => $channel) {
-                        if ($channel == $target && $id == $conn->resourceId) {
-                            $this->users[$id]->send("<b>You</b> - " . $data->message);
-                        } else if ($channel == $target && $id != $conn->resourceId) {
-                            $this->users[$id]->send("<b>" . $this->connectedUsersNames[$conn->resourceId] . "</b> - " . $data->message);
+                        if ($channel == $target) {
+                            $MessageObject = new \stdClass();
+                            $MessageObject->ServerMessage = false;
+                            $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
+                            $MessageObject->Message = htmlspecialchars($data->Message);
+                            if ($id === $conn->resourceId) {
+                                $MessageObject->WasHimself = true;
+                            } else {
+                                $MessageObject->WasHimself = false;
+                            }
+                            $MessageJson = json_encode($MessageObject, true);
+                            $this->users[$id]->send($MessageJson);
                         }
                     }
                 }
@@ -76,9 +90,20 @@ class ChatProcessor implements MessageComponentInterface
 
     public function onClose(ConnectionInterface $conn) {
         $this->clients->detach($conn);
-        echo "Connection {$conn->resourceId} has disconnected\n";
         foreach ($this->clients as $client) {
-            $client->send("User <b>" . $this->connectedUsersNames[$conn->resourceId] . "</b> has disconnected");
+            if (isset($this->subscriptions[$conn->resourceId])) {
+                $target = $this->subscriptions[$conn->resourceId];
+                foreach ($this->subscriptions as $id => $channel) {
+                    if ($channel == $target) {
+                        $MessageObject = new \stdClass();
+                        $MessageObject->ServerMessage = true;
+                        $MessageObject->ServerMessageType = "UserDisconnect";
+                        $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
+                        $MessageJson = json_encode($MessageObject, true);
+                        $this->users[$id]->send($MessageJson);
+                    }
+                }
+            }
         }
         unset($this->users[$conn->resourceId]);
         unset($this->subscriptions[$conn->resourceId]);

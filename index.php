@@ -23,7 +23,8 @@
         <div class="carousel-cell FeedTab">
             <div class="headerWrap">
                 <div class="header">
-                    <span class="LeftButtonHeader"><img src="assets/icons/BurgerMenuShort.svg"></span>
+                    <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
+                                                        src="assets/icons/BurgerMenuShort.svg"></span>
                     <span class="HeaderCaption">Feed</span>
                     <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                 </div>
@@ -33,7 +34,8 @@
         <div class="carousel-cell ExploreTab">
             <div class="headerWrap">
                 <div class="header">
-                    <span class="LeftButtonHeader"><img src="assets/icons/BurgerMenuShort.svg"></span>
+                    <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
+                                                        src="assets/icons/BurgerMenuShort.svg"></span>
                     <span class="HeaderCaption">Explore</span>
                     <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                 </div>
@@ -43,7 +45,8 @@
         <div class="carousel-cell">
             <div class="headerWrap">
                 <div class="header">
-                    <span class="LeftButtonHeader"><img src="assets/icons/BurgerMenuShort.svg"></span>
+                    <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
+                                                        src="assets/icons/BurgerMenuShort.svg"></span>
                     <span class="HeaderCaption">Chat</span>
                     <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                 </div>
@@ -60,7 +63,8 @@
         <div class="carousel-cell">
             <div class="headerWrap">
                 <div class="header">
-                    <span class="LeftButtonHeader"><img src="assets/icons/BurgerMenuShort.svg"></span>
+                    <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
+                                                        src="assets/icons/BurgerMenuShort.svg"></span>
                     <span class="HeaderCaption">Friends</span>
                     <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                 </div>
@@ -70,7 +74,8 @@
         <div class="carousel-cell">
             <div class="headerWrap">
                 <div class="header">
-                    <span class="LeftButtonHeader"><img src="assets/icons/BurgerMenuShort.svg"></span>
+                    <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
+                                                        src="assets/icons/BurgerMenuShort.svg"></span>
                     <span class="HeaderCaption">Personal</span>
                     <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                 </div>
@@ -81,19 +86,19 @@
 
     <div class="Navbar">
          <span id="0" class="NavbarIconWrap">
-             <img src="assets/icons/FriendFeedOutline.svg">
+             <img draggable="false" ondragstart="return false;" src="assets/icons/FriendFeedOutline.svg">
         </span>
         <span id="1" class="NavbarIconWrap">
-            <img src="assets/icons/ExploreGlobeOutline.svg">
+            <img draggable="false" ondragstart="return false;" src="assets/icons/ExploreGlobeOutline.svg">
         </span>
         <span id="2" class="NavbarIconWrap ActiveTab">
-            <img src="assets/icons/MessageBubbleOutline.svg">
+            <img draggable="false" ondragstart="return false;" src="assets/icons/MessageBubbleOutline.svg">
         </span>
         <span id="3" class="NavbarIconWrap">
-            <img src="assets/icons/UserGroupOutline.svg">
+            <img draggable="false" ondragstart="return false;" src="assets/icons/UserGroupOutline.svg">
          </span>
         <span id="4" class="NavbarIconWrap">
-            <img src="assets/icons/UserOutline.svg">
+            <img draggable="false" ondragstart="return false;" src="assets/icons/UserOutline.svg">
         </span>
     </div>
 </div>
