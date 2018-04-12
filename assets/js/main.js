@@ -1,33 +1,34 @@
-/*****
-NAVBAR
-*****/
-var $el, leftPos, newWidth,
-    $mainNav = $(".Navbar");
-$mainNav.append("<span class='NavbarLine'></span>");
-var $magicLine = $(".NavbarLine");
-$magicLine
+var MainTabWindows = $(".MainTabWindows");
+var NavbarIconWrap = $(".NavbarIconWrap");
+var Navbar = $(".Navbar");
+var NavbarLine = $(".NavbarLine");
+
+/******
+ NAVBAR
+ *****/
+var $el, leftPos, newWidth;
+NavbarLine
     .css("left", $(".ActiveTab").position().left)
-    .data("origLeft", $magicLine.position().left)
-    .data("origWidth", $magicLine.width());
-$(".NavbarIconWrap").on("click", function () {
-    $(".NavbarIconWrap").removeClass("ActiveTab");
+    .data("origLeft", NavbarLine.position().left)
+    .data("origWidth", NavbarLine.width());
+NavbarIconWrap.on("click", function () {
+    NavbarIconWrap.removeClass("ActiveTab");
     $(this).addClass("ActiveTab");
     var index = $(this).attr('id');
-    $('.MainTabWindows').slick('slickGoTo',index);
+    MainTabWindows.slick('slickGoTo', index);
     //$('.MainTabWindows').flickity().flickity('select', index);
-
     $el = $(this);
     leftPos = $el.position().left;
-    $magicLine.stop().animate({
+    NavbarLine.stop().animate({
         left: leftPos,
-        width: newWidth,
+        width: newWidth
     }, 300);
 });
 
-/*******
-FLICKITY
-*******/
-$('.MainTabWindows').slick({
+/********
+ FLICKITY
+ *******/
+MainTabWindows.slick({
     initialSlide: 2,
     mobileFirst: true,
     nextArrow: "",
@@ -36,13 +37,13 @@ $('.MainTabWindows').slick({
     zIndex: 500
 });
 
-$('.MainTabWindows').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+MainTabWindows.on('beforeChange', function (event, slick, currentSlide, nextSlide) {
     //console.log(nextSlide);
-    $(".NavbarIconWrap").removeClass("ActiveTab");
+    NavbarIconWrap.removeClass("ActiveTab");
     $el = $("#" + nextSlide);
     $el.addClass("ActiveTab");
     leftPos = $el.position().left;
-    $magicLine.stop().animate({
+    NavbarLine.stop().animate({
         left: leftPos,
         width: newWidth
     }, 300);

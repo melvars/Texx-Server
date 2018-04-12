@@ -1,0 +1,12 @@
+﻿{
+	"en": {
+		"Translator": "Marvin Borner",
+		"Reset all values": "Reset all values to default values?",
+		"Yes": "Yes",
+		"No": "No",
+		"Room temperature": "Room temperature",
+		"Length": "Length",
+		"Width": "Width",
+		"Height": "Height"
+	}
+}

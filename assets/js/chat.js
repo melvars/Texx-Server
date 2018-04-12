@@ -2,7 +2,7 @@
  GENERATE KEYS
  ************/
 if (localStorage.getItem('KeysGenerated') === null || localStorage.getItem('KeysGenerated') !== "true") {
-    // GENERATE
+    // GENERATE -- LATER ON LOGIN!
     var EncryptionPhrase = "PASSWORD 123"; // THE USERS PASSWORD
     var RSABitLength = 1024;
     var PrivateKeyString = cryptico.generateRSAKey(EncryptionPhrase, RSABitLength);

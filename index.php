@@ -54,6 +54,7 @@
             </div>
             <div class="MainInTab">
                 <div class="ChatWindow">
+                    <span data-lang='Hello'></span>
                     <div id="ChatResponses" class="ChatResponses"></div>
                     <input title="ChatTextInput" id="ChatTextInput" class="ChatInput" type="text"/>
                     <input title="SubscribeTextInput" id="SubscribeTextInput" class="ChatInput" type="text"/>
@@ -101,10 +102,21 @@
             <img draggable="false" ondragstart="return false;" src="assets/icons/UserOutline.svg">
         </span>
     </div>
+    <span class='NavbarLine'></span>
 </div>
+
+<script>
+    function initiateLanguage() {
+        var translate = new Translate();
+        var currentLng = 'fr'; // <- PHP IP LOCATION
+        translate.init(currentLng);
+        translate.process();
+    }
+</script>
 
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script src="assets/js/language.js"></script>
 <script src="assets/js/encryption.js"></script>
 <script src="assets/js/chat.js"></script>
 <script src="assets/js/main.js"></script>

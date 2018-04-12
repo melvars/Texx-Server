@@ -1,0 +1,12 @@
+﻿{
+	"en": {
+		"langcode": "en",
+		"Hello": "Hello World!",
+		"Yes": "Yes"
+	},
+	"fr": {
+		"langcode": "fr",
+		"Hello": "Bonjour à tous!",
+		"Yes": "Oui"
+	}
+}
