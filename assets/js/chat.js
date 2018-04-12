@@ -45,15 +45,16 @@ WebSocket.onmessage = function (e) {
     } else if (MessageObject.ServerMessage === true) {
         if (MessageObject.ServerMessageType === "GroupJoin") {
             if (MessageObject.WasHimself === false) {
-                ChatResponses.append(MessageObject.Username + " joined the group. <br>");
+                ChatResponses.append(MessageObject.Username + " <span data-lang='joined the group'></span><br>");
             } else if (MessageObject.WasHimself === true) {
                 ChatResponses.empty();
-                ChatResponses.append("You joined the group " + MessageObject.GroupName + ".<br>");
+                ChatResponses.append("<span data-lang='You joined the group'> " + MessageObject.GroupName + "</span>.<br>");
             }
         } else if (MessageObject.ServerMessageType === "UserDisconnect") {
-            ChatResponses.append(MessageObject.Username + " disconnected from the Server.");
+            ChatResponses.append(MessageObject.Username + " <span data-lang='has disconnected from the server'></span><br>");
         }
     }
+    initiateLanguage(); // need further work (performance)
 };
 
 ChatTextInput.keyup(function (e) {

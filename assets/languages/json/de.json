@@ -1,12 +1,14 @@
 ﻿{
 	"de": {
 		"Translator": "Marvin Borner",
-		"Reset all values": "Möchten Sie alle Angaben zurücksetzen?",
-		"Yes": "Ja",
-		"No": "Nein",
-		"Room temperature": "Raum Temperatur",
-		"Length": "Länge",
-		"Width": "Breite",
-		"Height": "Width"
+		"you": "du",
+		"Feed": "Neues",
+		"Explore": "Entdecken",
+		"Chat": "Nachrichten",
+		"Friends": "Freunde",
+		"Personal": "Persönliche Daten",
+		"joined the group": "ist der Gruppe beigetreten",
+		"You joined the group": "Du bist der Gruppe beigetreten",
+		"has disconnected from the server": "hat sich vom Server getrennt"
 	}
 }

@@ -8,8 +8,6 @@
     <meta name="theme-color" content="#0B1D33">
     <meta name="msapplication-navbutton-color" content="#0B1D33">
     <meta name="apple-mobile-web-app-status-bar-style" content="#0B1D33">
-
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" media="screen">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"
           media="screen">
     <link rel="stylesheet" href="assets/css/main.css" media="screen">
@@ -25,7 +23,7 @@
                 <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
                                                         src="assets/icons/BurgerMenuShort.svg"></span>
-                    <span class="HeaderCaption">Feed</span>
+                    <span class="HeaderCaption"><span data-lang='Feed'></span></span>
                     <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                 </div>
                 <hr>
@@ -36,7 +34,7 @@
                 <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
                                                         src="assets/icons/BurgerMenuShort.svg"></span>
-                    <span class="HeaderCaption">Explore</span>
+                    <span class="HeaderCaption"><span data-lang='Explore'></span></span>
                     <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                 </div>
                 <hr>
@@ -47,14 +45,13 @@
                 <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
                                                         src="assets/icons/BurgerMenuShort.svg"></span>
-                    <span class="HeaderCaption">Chat</span>
+                    <span class="HeaderCaption"><span data-lang='Chat'></span></span>
                     <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                 </div>
                 <hr>
             </div>
             <div class="MainInTab">
                 <div class="ChatWindow">
-                    <span data-lang='Hello'></span>
                     <div id="ChatResponses" class="ChatResponses"></div>
                     <input title="ChatTextInput" id="ChatTextInput" class="ChatInput" type="text"/>
                     <input title="SubscribeTextInput" id="SubscribeTextInput" class="ChatInput" type="text"/>
@@ -66,7 +63,7 @@
                 <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
                                                         src="assets/icons/BurgerMenuShort.svg"></span>
-                    <span class="HeaderCaption">Friends</span>
+                    <span class="HeaderCaption"><span data-lang='Friends'></span></span>
                     <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                 </div>
                 <hr>
@@ -77,7 +74,7 @@
                 <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
                                                         src="assets/icons/BurgerMenuShort.svg"></span>
-                    <span class="HeaderCaption">Personal</span>
+                    <span class="HeaderCaption"><span data-lang='Personal'></span></span>
                     <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                 </div>
                 <hr>
@@ -108,7 +105,7 @@
 <script>
     function initiateLanguage() {
         var translate = new Translate();
-        var currentLng = 'fr'; // <- PHP IP LOCATION
+        var currentLng = 'de'; // <- PHP IP LOCATION
         translate.init(currentLng);
         translate.process();
     }
@@ -116,6 +113,7 @@
 
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
 <script src="assets/js/language.js"></script>
 <script src="assets/js/encryption.js"></script>
 <script src="assets/js/chat.js"></script>
