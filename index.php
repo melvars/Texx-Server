@@ -8,9 +8,10 @@
     <meta name="theme-color" content="#0B1D33">
     <meta name="msapplication-navbutton-color" content="#0B1D33">
     <meta name="apple-mobile-web-app-status-bar-style" content="#0B1D33">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"
-          media="screen">
-    <link rel="stylesheet" href="assets/css/main.css" media="screen">
+
+    <style>
+        <?php include "assets/php/stylesheet.php"; ?>
+    </style>
 
     <title>Social Network</title>
 </head>
@@ -103,6 +104,10 @@
 </div>
 
 <script>
+    <?php include "assets/php/scripts.php"; ?>
+</script>
+
+<script>
     function initiateLanguage() {
         var translate = new Translate();
         var currentLng = 'de'; // <- PHP IP LOCATION
@@ -110,14 +115,6 @@
         translate.process();
     }
 </script>
-
-<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
-<script src="assets/js/language.js"></script>
-<script src="assets/js/encryption.js"></script>
-<script src="assets/js/chat.js"></script>
-<script src="assets/js/main.js"></script>
 
 </body>
 </html>

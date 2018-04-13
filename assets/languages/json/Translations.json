@@ -34,5 +34,17 @@
 		"joined the group": "s'est joint au groupe",
 		"You joined the group": "Vous avez rejoint le groupe",
 		"has disconnected from the server": "s'est déconnecté du serveur."
+	},
+	"kl": {
+		"Translator": "Marvin Borner (probably needs corrections)",
+		"you": "SoH",
+		"Feed": "De'",
+		"Explore": "Tu'",
+		"Chat": "Qin",
+		"Friends": "Jup",
+		"Personal": "Ghot",
+		"joined the group": "ghom muv",
+		"You joined the group": "Ghom muv SoH",
+		"has disconnected from the server": "disconnected vo' jabwI'"
 	}
 }

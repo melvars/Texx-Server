@@ -3,6 +3,7 @@ var NavbarIconWrap = $(".NavbarIconWrap");
 var Navbar = $(".Navbar");
 var NavbarLine = $(".NavbarLine");
 
+
 /******
  NAVBAR
  *****/

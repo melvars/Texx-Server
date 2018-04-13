@@ -6,6 +6,8 @@
     },
     "require": {
         "cboden/ratchet": "^0.4.1",
-        "nubs/random-name-generator": "^2.1"
+        "nubs/random-name-generator": "^2.1",
+        "natxet/CssMin": "^3.0",
+        "matthiasmullie/minify": "^1.3"
     }
 }
