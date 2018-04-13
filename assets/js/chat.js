@@ -32,7 +32,7 @@ if (localStorage.getItem('KeysGenerated') === null || localStorage.getItem('Keys
 
 var ChatTextInput = $("#ChatTextInput");
 var SubscribeTextInput = $("#SubscribeTextInput");
-var ChatResponses = $("#ChatResponses");
+var ChatMessages = $("#ChatMessages");
 
 var WebSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
 WebSocket.onopen = function () {
@@ -41,17 +41,21 @@ WebSocket.onopen = function () {
 WebSocket.onmessage = function (e) {
     var MessageObject = JSON.parse(e.data);
     if (MessageObject.ServerMessage === false) {
-        ChatResponses.append(MessageObject.Username + " - " + MessageObject.Message + "<br>");
+        if (MessageObject.WasHimself === true) { //MessageObject.Username
+            ChatMessages.append("<div class='ChatMessage MessageSent'>" + MessageObject.Message + "</div><br><br>");
+        } else if (MessageObject.WasHimself === false) {
+            ChatMessages.append("<div class='ChatMessage MessageReceived'>" + MessageObject.Message + "</div><br><br>");
+        }
     } else if (MessageObject.ServerMessage === true) {
         if (MessageObject.ServerMessageType === "GroupJoin") {
             if (MessageObject.WasHimself === false) {
-                ChatResponses.append(MessageObject.Username + " <span data-lang='joined the group'></span><br>");
+                ChatMessages.append("<div class='ServerChatMessage'>" + MessageObject.Username + " <span class='ServerChatMessage' data-lang='joined the group'></span>.</div><br>");
             } else if (MessageObject.WasHimself === true) {
-                ChatResponses.empty();
-                ChatResponses.append("<span data-lang='You joined the group'> " + MessageObject.GroupName + "</span>.<br>");
+                ChatMessages.empty();
+                ChatMessages.append("<div class='ServerChatMessage'><span data-lang='You joined the group'> " + MessageObject.GroupName + "</span>.</div><br>");
             }
         } else if (MessageObject.ServerMessageType === "UserDisconnect") {
-            ChatResponses.append(MessageObject.Username + " <span data-lang='has disconnected from the server'></span><br>");
+            ChatMessages.append("<div class='ServerChatMessage'>" + MessageObject.Username + " <span data-lang='has disconnected from the server'></span>.</div><br>");
         }
     }
     initiateLanguage(); // need further work (performance)

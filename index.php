@@ -9,8 +9,11 @@
     <meta name="msapplication-navbutton-color" content="#0B1D33">
     <meta name="apple-mobile-web-app-status-bar-style" content="#0B1D33">
 
+    <link rel="stylesheet" href="assets/css/slick.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+
     <style>
-        <?php include "assets/php/stylesheet.php"; ?>
+        <?php //include "assets/php/stylesheet.php"; ?>
     </style>
 
     <title>Social Network</title>
@@ -53,7 +56,9 @@
             </div>
             <div class="MainInTab">
                 <div class="ChatWindow">
-                    <div id="ChatResponses" class="ChatResponses"></div>
+                    <div id="ChatMessages" class="ChatMessages">
+
+                    </div>
                     <input title="ChatTextInput" id="ChatTextInput" class="ChatInput" type="text"/>
                     <input title="SubscribeTextInput" id="SubscribeTextInput" class="ChatInput" type="text"/>
                 </div>
@@ -104,7 +109,7 @@
 </div>
 
 <script>
-    <?php include "assets/php/scripts.php"; ?>
+    <?php //include "assets/php/scripts.php"; ?>
 </script>
 
 <script>
@@ -115,6 +120,15 @@
         translate.process();
     }
 </script>
+
+<script src="assets/js/jquery.js"></script>
+<script src="assets/js/fontawesome.js"></script>
+<script src="assets/js/modernizr.js"></script>
+<script src="assets/js/language.js"></script>
+<script src="assets/js/encryption.js"></script>
+<script src="assets/js/chat.js"></script>
+<script src="assets/js/slick.js"></script>
+<script src="assets/js/main.js"></script>
 
 </body>
 </html>

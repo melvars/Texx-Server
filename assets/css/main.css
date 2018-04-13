@@ -21,7 +21,7 @@ body {
     height: 100%;
     width: 100%;
     overflow: hidden;
-    background-color: #0B1D33;
+    background-color: #0c1d34;
     color: #426A91;
     margin: 0;
     padding: 0;
@@ -55,7 +55,7 @@ FLICKITY
     height: -webkit-calc(100vh - 75px);
     height: -o-calc(100vh - 75px);
     height: calc(100vh - 75px);
-    background: #0B1D33;
+    background: #0c1d34;
     counter-increment: carousel-cell;
 }
 
@@ -99,12 +99,40 @@ GENERAL TABS
 CHAT WINDOW
 **********/
 .ChatWindow {
-    height: 100%;
     position: relative;
+    margin: 5px;
+    height: 100%;
 }
 
-.ChatResponses {
+.ChatMessages {
+    height: 100%;
+    width: 100%;
+}
 
+.ChatMessage {
+    display: block;
+    position: relative;
+    border-radius: 25px;
+    min-width: 100px;
+    max-width: 50%;
+    width: auto;
+    height: auto;
+    word-wrap: break-word;
+    padding: 10px;
+}
+
+.ServerChatMessage {
+    text-align: center;
+}
+
+.MessageSent {
+    float: right;
+    background-color: #12213b;
+}
+
+.MessageReceived {
+    float: left;
+    background-color: #13223c;
 }
 
 .ChatInput {
@@ -115,7 +143,7 @@ CHAT WINDOW
     z-index: 600;
     width: 100%;
     height: 40px;
-    border:none;
+    border: none;
     color: #FFF;
     background-color: #13223C;
 }
@@ -123,7 +151,6 @@ CHAT WINDOW
 #ChatTextInput {
     display: none;
 }
-
 
 /*****
 NAVBAR
@@ -138,7 +165,7 @@ NAVBAR
     left: 0;
     height: 75px;
     width: 100%;
-    background-color: #13223C;
+    background-color: #13223c;
 }
 
 .NavbarIconWrap {
@@ -159,14 +186,14 @@ NAVBAR
     left: 0;
     width: 20% !important;
     height: 2px;
-    background: #FF00A2;
+    background: #eb12b5;
 }
 
 .ActiveTab {
     -webkit-transition: -moz-transform .3s ease-out;
     -moz-transition: -webkit-transform .3s ease-out;
 
-    filter: invert(16%) sepia(77%) saturate(6174%) hue-rotate(316deg) brightness(107%) contrast(110%);
-    -webkit-filter: invert(16%) sepia(77%) saturate(6174%) hue-rotate(316deg) brightness(107%) contrast(110%);
-    -moz-filter: invert(16%) sepia(77%) saturate(6174%) hue-rotate(316deg) brightness(107%) contrast(110%);
+    filter: invert(19%) sepia(93%) saturate(4612%) hue-rotate(303deg) brightness(98%) contrast(101%);
+    -webkit-filter: invert(19%) sepia(93%) saturate(4612%) hue-rotate(303deg) brightness(98%) contrast(101%);
+    -moz-filter: invert(19%) sepia(93%) saturate(4612%) hue-rotate(303deg) brightness(98%) contrast(101%);
 }
