@@ -57,10 +57,10 @@
             <div class="MainInTab">
                 <div class="ChatWindow">
                     <div id="ChatMessages" class="ChatMessages">
-
+                        <!-- Messages -->
                     </div>
-                    <input title="ChatTextInput" id="ChatTextInput" class="ChatInput" type="text"/>
-                    <input title="SubscribeTextInput" id="SubscribeTextInput" class="ChatInput" type="text"/>
+                    <input title="Type your message..." id="ChatTextInput" class="ChatInput" type="text"/>
+                    <input title="Join a group..." id="SubscribeTextInput" class="ChatInput" type="text"/>
                 </div>
             </div>
         </div>

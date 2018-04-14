@@ -20,7 +20,7 @@ function Translate() {
                         var key = elem.getAttribute(_self.attribute);
 
                         if (key != null) {
-                            console.log("Language initialized with language pack: " + _self.lng);
+                            //console.log("Language initialized with language pack: " + _self.lng);
                             elem.innerHTML = LngObject[_self.lng][key];
                         }
                     }

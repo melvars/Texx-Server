@@ -32,6 +32,11 @@ body {
     height: 100%;
 }
 
+::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
 hr {
     width: 100%;
     display: block;
@@ -51,6 +56,7 @@ FLICKITY
 
 .carousel-cell {
     width: 100%;
+    height: calc(100vh - 75px);
     height: -moz-calc(100vh - 75px);
     height: -webkit-calc(100vh - 75px);
     height: -o-calc(100vh - 75px);
@@ -100,11 +106,16 @@ CHAT WINDOW
 **********/
 .ChatWindow {
     position: relative;
-    margin: 5px;
     height: 100%;
+    margin: 5px;
 }
 
 .ChatMessages {
+    overflow-y: scroll;
+    max-height: calc(100% - 135px); /* navbar + input + some margin*/
+    max-height: -moz-calc(100% - 135px);
+    max-height: -webkit-calc(100% - 135px);
+    max-height: -o-calc(100% - 135px);
     height: 100%;
     width: 100%;
 }
@@ -112,22 +123,57 @@ CHAT WINDOW
 .ChatMessage {
     display: block;
     position: relative;
-    border-radius: 25px;
-    min-width: 100px;
+    min-width: 50px;
     max-width: 50%;
     width: auto;
     height: auto;
     word-wrap: break-word;
+    text-align: center;
     padding: 10px;
 }
 
 .ServerChatMessage {
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
+    padding: 5px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background: linear-gradient(to right, #ad4eff, #7c41f9);
+    color: #FFF;
+    font-size: x-small;
 }
 
 .MessageSent {
     float: right;
     background-color: #12213b;
+}
+
+.AloneMessage {
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+}
+
+.TopMessage {
+    -webkit-border-radius: 25px 25px 10px 10px;
+    -moz-border-radius: 25px 25px 10px 10px;
+    border-radius: 25px 25px 10px 10px;
+}
+
+.MiddleMessage {
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+.BottomMessage {
+    -webkit-border-radius: 10px 10px 25px 25px;
+    -moz-border-radius: 10px 10px 25px 25px;
+    border-radius: 10px 10px 25px 25px;
 }
 
 .MessageReceived {

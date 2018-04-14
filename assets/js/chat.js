@@ -35,27 +35,52 @@ var SubscribeTextInput = $("#SubscribeTextInput");
 var ChatMessages = $("#ChatMessages");
 
 var WebSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
+
 WebSocket.onopen = function () {
     console.log("Chat connection established!");
 };
+
 WebSocket.onmessage = function (e) {
+    var LastMessage = $(".ChatMessage:last");
     var MessageObject = JSON.parse(e.data);
     if (MessageObject.ServerMessage === false) {
         if (MessageObject.WasHimself === true) { //MessageObject.Username
-            ChatMessages.append("<div class='ChatMessage MessageSent'>" + MessageObject.Message + "</div><br><br>");
+            if (!LastMessage.hasClass("MessageSent")) {
+                ChatMessages.append("<div class='ChatMessage MessageSent AloneMessage'>" + MessageObject.Message + "</div><br><br>");
+            } else if (LastMessage.hasClass("MessageSent")) {
+                if (LastMessage.hasClass("AloneMessage")) {
+                    LastMessage.removeClass("AloneMessage");
+                    LastMessage.addClass("TopMessage");
+                } else if (LastMessage.hasClass("BottomMessage")) {
+                    LastMessage.removeClass("BottomMessage");
+                    LastMessage.addClass("MiddleMessage");
+                }
+                ChatMessages.append("<div class='ChatMessage MessageSent BottomMessage'>" + MessageObject.Message + "</div><br><br>");
+            }
         } else if (MessageObject.WasHimself === false) {
-            ChatMessages.append("<div class='ChatMessage MessageReceived'>" + MessageObject.Message + "</div><br><br>");
+            if (!LastMessage.hasClass("MessageReceived")) {
+                ChatMessages.append("<div class='ChatMessage MessageReceived AloneMessage'>" + MessageObject.Message + "</div><br><br>");
+            } else if (LastMessage.hasClass("MessageReceived")) {
+                if (LastMessage.hasClass("AloneMessage")) {
+                    LastMessage.removeClass("AloneMessage");
+                    LastMessage.addClass("TopMessage");
+                } else if (LastMessage.hasClass("BottomMessage")) {
+                    LastMessage.removeClass("BottomMessage");
+                    LastMessage.addClass("MiddleMessage");
+                }
+                ChatMessages.append("<div class='ChatMessage MessageReceived BottomMessage'>" + MessageObject.Message + "</div><br><br>");
+            }
         }
     } else if (MessageObject.ServerMessage === true) {
         if (MessageObject.ServerMessageType === "GroupJoin") {
             if (MessageObject.WasHimself === false) {
-                ChatMessages.append("<div class='ServerChatMessage'>" + MessageObject.Username + " <span class='ServerChatMessage' data-lang='joined the group'></span>.</div><br>");
+                ChatMessages.append("<div class='ServerChatMessage'>" + MessageObject.Username + " <span data-lang='joined the group'></span>.</div><br><br>");
             } else if (MessageObject.WasHimself === true) {
                 ChatMessages.empty();
-                ChatMessages.append("<div class='ServerChatMessage'><span data-lang='You joined the group'> " + MessageObject.GroupName + "</span>.</div><br>");
+                ChatMessages.append("<div class='ServerChatMessage'><span data-lang='You joined the group'> " + MessageObject.GroupName + "</span>.</div><br><br>");
             }
         } else if (MessageObject.ServerMessageType === "UserDisconnect") {
-            ChatMessages.append("<div class='ServerChatMessage'>" + MessageObject.Username + " <span data-lang='has disconnected from the server'></span>.</div><br>");
+            ChatMessages.append("<div class='ServerChatMessage'>" + MessageObject.Username + " <span data-lang='has disconnected from the server'></span>.</div><br><br>");
         }
     }
     initiateLanguage(); // need further work (performance)
