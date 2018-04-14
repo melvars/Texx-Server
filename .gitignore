@@ -1,5 +1,4 @@
 assets/php/DataBaseConf.php
-login/_meta/*
 login/app/.env
 login/composer.lock
 login/composer.phar
