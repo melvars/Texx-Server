@@ -57,6 +57,9 @@ WebSocket.onmessage = function (e) {
                 }
                 ChatMessages.append("<div class='ChatMessage MessageSent BottomMessage'>" + MessageObject.Message + "</div><br><br>");
             }
+            $('.MessageSent').linkify({
+                target: "_blank"
+            });
         } else if (MessageObject.WasHimself === false) {
             if (!LastMessage.hasClass("MessageReceived")) {
                 ChatMessages.append("<div class='ChatMessage MessageReceived AloneMessage'>" + MessageObject.Message + "</div><br><br>");
@@ -70,6 +73,9 @@ WebSocket.onmessage = function (e) {
                 }
                 ChatMessages.append("<div class='ChatMessage MessageReceived BottomMessage'>" + MessageObject.Message + "</div><br><br>");
             }
+            $('.MessageReceived').linkify({
+                target: "_blank"
+            });
         }
     } else if (MessageObject.ServerMessage === true) {
         if (MessageObject.ServerMessageType === "GroupJoin") {

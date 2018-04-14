@@ -16,6 +16,11 @@ GENERAL
     ie-dummy: expression(this.hideFocus=true);
 }
 
+::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
 body {
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     height: 100%;
@@ -32,9 +37,9 @@ body {
     height: 100%;
 }
 
-::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
+a {
+    text-decoration: none;
+    color: #4a93c0;
 }
 
 hr {

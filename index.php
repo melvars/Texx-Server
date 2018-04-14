@@ -124,6 +124,7 @@
 <script src="assets/js/jquery.js"></script>
 <script src="assets/js/fontawesome.js"></script>
 <script src="assets/js/modernizr.js"></script>
+<script src="assets/js/linkify.js"></script>
 <script src="assets/js/language.js"></script>
 <script src="assets/js/encryption.js"></script>
 <script src="assets/js/chat.js"></script>
