@@ -82,9 +82,9 @@
         'mail'    => [
             'mailer'     => 'smtp',     // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
             'host'       => getenv('SMTP_HOST') ?: null,
-            'port'       => 587,
+            'port'       => 465,
             'auth'       => true,
-            'secure'     => 'tls',
+            'secure'     => 'ssl',
             'username'   => getenv('SMTP_USER') ?: null,
             'password'   => getenv('SMTP_PASSWORD') ?: null,
             'smtp_debug' => 4,
@@ -154,7 +154,7 @@
                 // This can be a comma-separated list, to load multiple fallback locales
                 'default' => 'en_US'
             ],
-            'title'     =>      'UserFrosting',
+            'title'     =>      'SocialNetwork',
             // Global ufTable settings
             'uf_table' => [
                 'use_loading_transition' => true
@@ -167,15 +167,15 @@
                     'port'              => isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : null,
                     'path'              => isset($_SERVER['SCRIPT_NAME']) ? trim(dirname($_SERVER['SCRIPT_NAME']), '/\\') : ''
                 ],
-                'author'            => 'https://www.userfrosting.com',
-                'publisher'         => ''
+                'author'            => 'Marvin Borner',
+                'publisher'         => 'Marvin Borner'
             ]
         ],
         'php' => [
-            'timezone' => 'America/New_York',
+            'timezone' => 'Europe/Berlin',
             'error_reporting' => E_ALL,  // Development - report all errors and suggestions
-            'display_errors'  => 'true',
-            'log_errors'      => 'false',
+            'display_errors'  => 'false',
+            'log_errors'      => 'true',
             // Let PHP itself render errors natively.  Useful if a fatal error is raised in our custom shutdown handler.
             'display_errors_native' => 'false'
         ]

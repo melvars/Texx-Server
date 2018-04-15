@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Carbon\Carbon;
@@ -46,8 +47,7 @@ class UserController extends SimpleController
      * Request type: POST
      * @see getModalCreate
      */
-    public function create($request, $response, $args)
-    {
+    public function create($request, $response, $args) {
         // Get POST parameters: user_name, first_name, last_name, email, locale, (group)
         $params = $request->getParsedBody();
 
@@ -72,13 +72,13 @@ class UserController extends SimpleController
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        $error = false;
+        $error = FALSE;
 
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            $error = true;
+            $error = TRUE;
         }
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -87,12 +87,12 @@ class UserController extends SimpleController
         // Check if username or email already exists
         if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
             $ms->addMessageTranslated('danger', 'USERNAME.IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($error) {
@@ -123,7 +123,7 @@ class UserController extends SimpleController
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
+        Capsule::transaction(function () use ($classMapper, $data, $ms, $config, $currentUser) {
             // Create the user
             $user = $classMapper->createInstance('user', $data);
 
@@ -151,12 +151,12 @@ class UserController extends SimpleController
             $message = new TwigMailMessage($this->ci->view, 'mail/password-create.html.twig');
 
             $message->from($config['address_book.admin'])
-                    ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
-                    ->addParams([
-                        'user' => $user,
-                        'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . ' hours',
-                        'token' => $passwordRequest->getToken()
-                    ]);
+                ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                ->addParams([
+                    'user' => $user,
+                    'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . ' hours',
+                    'token' => $passwordRequest->getToken()
+                ]);
 
             $this->ci->mailer->send($message);
 
@@ -177,8 +177,7 @@ class UserController extends SimpleController
      * This route requires authentication.
      * Request type: POST
      */
-    public function createPasswordReset($request, $response, $args)
-    {
+    public function createPasswordReset($request, $response, $args) {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
 
@@ -207,7 +206,7 @@ class UserController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($user, $config) {
+        Capsule::transaction(function () use ($user, $config) {
 
             // Create a password reset and shoot off an email
             $passwordReset = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.reset']);
@@ -216,12 +215,12 @@ class UserController extends SimpleController
             $message = new TwigMailMessage($this->ci->view, 'mail/password-reset.html.twig');
 
             $message->from($config['address_book.admin'])
-                    ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
-                    ->addParams([
-                        'user' => $user,
-                        'token' => $passwordReset->getToken(),
-                        'request_date' => Carbon::now()->format('Y-m-d H:i:s')
-                    ]);
+                ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                ->addParams([
+                    'user' => $user,
+                    'token' => $passwordReset->getToken(),
+                    'request_date' => Carbon::now()->format('Y-m-d H:i:s')
+                ]);
 
             $this->ci->mailer->send($message);
         });
@@ -242,8 +241,7 @@ class UserController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      * Request type: DELETE
      */
-    public function delete($request, $response, $args)
-    {
+    public function delete($request, $response, $args) {
         $user = $this->getUserFromParams($args);
 
         // If the user doesn't exist, return 404
@@ -278,7 +276,7 @@ class UserController extends SimpleController
         $userName = $user->user_name;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($user, $userName, $currentUser) {
+        Capsule::transaction(function () use ($user, $userName, $currentUser) {
             $user->delete();
             unset($user);
 
@@ -305,8 +303,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getActivities($request, $response, $args)
-    {
+    public function getActivities($request, $response, $args) {
         $user = $this->getUserFromParams($args);
 
         // If the user doesn't exist, return 404
@@ -351,8 +348,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getInfo($request, $response, $args)
-    {
+    public function getInfo($request, $response, $args) {
         $user = $this->getUserFromParams($args);
 
         // If the user doesn't exist, return 404
@@ -365,10 +361,10 @@ class UserController extends SimpleController
 
         // Join user's most recent activity
         $user = $classMapper->createInstance('user')
-                            ->where('user_name', $user->user_name)
-                            ->joinLastActivity()
-                            ->with('lastActivity', 'group')
-                            ->first();
+            ->where('user_name', $user->user_name)
+            ->joinLastActivity()
+            ->with('lastActivity', 'group')
+            ->first();
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
@@ -397,8 +393,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getList($request, $response, $args)
-    {
+    public function getList($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -430,8 +425,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalConfirmDelete($request, $response, $args)
-    {
+    public function getModalConfirmDelete($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -483,8 +477,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalCreate($request, $response, $args)
-    {
+    public function getModalCreate($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -534,8 +527,8 @@ class UserController extends SimpleController
         // Create a dummy user to prepopulate fields
         $data = [
             'group_id' => $currentUser->group_id,
-            'locale'   => $config['site.registration.user_defaults.locale'],
-            'theme'    => ''
+            'locale' => $config['site.registration.user_defaults.locale'],
+            'theme' => ''
         ];
 
         $user = $classMapper->createInstance('user', $data);
@@ -555,7 +548,7 @@ class UserController extends SimpleController
                 'submit_text' => $translator->translate('CREATE')
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
+                'validators' => $validator->rules('json', FALSE)
             ]
         ]);
     }
@@ -567,8 +560,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEdit($request, $response, $args)
-    {
+    public function getModalEdit($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -642,7 +634,7 @@ class UserController extends SimpleController
                 'submit_text' => $translator->translate('UPDATE')
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
+                'validators' => $validator->rules('json', FALSE)
             ]
         ]);
     }
@@ -654,8 +646,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEditPassword($request, $response, $args)
-    {
+    public function getModalEditPassword($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -687,7 +678,7 @@ class UserController extends SimpleController
         return $this->ci->view->render($response, 'modals/user-set-password.html.twig', [
             'user' => $user,
             'page' => [
-                'validators' => $validator->rules('json', false)
+                'validators' => $validator->rules('json', FALSE)
             ]
         ]);
     }
@@ -699,8 +690,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEditRoles($request, $response, $args)
-    {
+    public function getModalEditRoles($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -737,8 +727,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getPermissions($request, $response, $args)
-    {
+    public function getPermissions($request, $response, $args) {
         $user = $this->getUserFromParams($args);
 
         // If the user doesn't exist, return 404
@@ -782,8 +771,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getRoles($request, $response, $args)
-    {
+    public function getRoles($request, $response, $args) {
         $user = $this->getUserFromParams($args);
 
         // If the user doesn't exist, return 404
@@ -830,8 +818,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageInfo($request, $response, $args)
-    {
+    public function pageInfo($request, $response, $args) {
         $user = $this->getUserFromParams($args);
 
         // If the user no longer exists, forward to main user listing page
@@ -848,8 +835,8 @@ class UserController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_user', [
-                'user' => $user
-            ])) {
+            'user' => $user
+        ])) {
             throw new ForbiddenException();
         }
 
@@ -960,8 +947,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageList($request, $response, $args)
-    {
+    public function pageList($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
@@ -986,8 +972,7 @@ class UserController extends SimpleController
      * This route requires authentication.
      * Request type: PUT
      */
-    public function updateInfo($request, $response, $args)
-    {
+    public function updateInfo($request, $response, $args) {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
 
@@ -1011,13 +996,13 @@ class UserController extends SimpleController
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        $error = false;
+        $error = FALSE;
 
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            $error = true;
+            $error = TRUE;
         }
 
         // Determine targeted fields
@@ -1064,7 +1049,7 @@ class UserController extends SimpleController
             $classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')
         ) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($error) {
@@ -1072,7 +1057,7 @@ class UserController extends SimpleController
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($data, $user, $currentUser) {
+        Capsule::transaction(function () use ($data, $user, $currentUser) {
             // Update the user and generate success messages
             foreach ($data as $name => $value) {
                 if ($value != $user->$name) {
@@ -1106,8 +1091,7 @@ class UserController extends SimpleController
      * This route requires authentication.
      * Request type: PUT
      */
-    public function updateField($request, $response, $args)
-    {
+    public function updateField($request, $response, $args) {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
 
@@ -1168,7 +1152,7 @@ class UserController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }
@@ -1204,7 +1188,7 @@ class UserController extends SimpleController
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($fieldName, $fieldValue, $user, $currentUser) {
+        Capsule::transaction(function () use ($fieldName, $fieldValue, $user, $currentUser) {
             if ($fieldName == 'roles') {
                 $newRoles = collect($fieldValue)->pluck('role_id')->all();
                 $user->roles()->sync($newRoles);
@@ -1244,8 +1228,7 @@ class UserController extends SimpleController
         return $response->withStatus(200);
     }
 
-    protected function getUserFromParams($params)
-    {
+    protected function getUserFromParams($params) {
         // Load the request schema
         $schema = new RequestSchema('schema://requests/user/get-by-username.yaml');
 
@@ -1259,7 +1242,7 @@ class UserController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }

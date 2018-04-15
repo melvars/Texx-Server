@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\ServicesProvider;
 
 use Dotenv\Dotenv;
@@ -70,8 +71,7 @@ class ServicesProvider
      *
      * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
      */
-    public function register(ContainerInterface $container)
-    {
+    public function register(ContainerInterface $container) {
         /**
          * Flash messaging service.
          *
@@ -126,7 +126,7 @@ class ServicesProvider
 
                 // TODO: move this out into PathBuilder and Loader classes in userfrosting/assets
                 // This would also allow us to define and load bundles in themes
-                $bundleSchemas = array_reverse($locator->findResources('sprinkles://' . $config['assets.raw.schema'], true, true));
+                $bundleSchemas = array_reverse($locator->findResources('sprinkles://' . $config['assets.raw.schema'], TRUE, TRUE));
 
                 foreach ($bundleSchemas as $schema) {
                     if (file_exists($schema)) {
@@ -138,7 +138,7 @@ class ServicesProvider
                 $aub = new CompiledAssetUrlBuilder($baseUrl);
 
                 $as = new AssetBundleSchema($aub);
-                $as->loadCompiledSchemaFile($locator->findResource("build://" . $config['assets.compiled.schema'], true, true));
+                $as->loadCompiledSchemaFile($locator->findResource("build://" . $config['assets.compiled.schema'], TRUE, TRUE));
             }
 
             $am = new AssetManager($aub, $as);
@@ -156,7 +156,7 @@ class ServicesProvider
             $config = $c->config;
 
             if ($config['cache.driver'] == 'file') {
-                $path = $c->locator->findResource('cache://', true, true);
+                $path = $c->locator->findResource('cache://', TRUE, TRUE);
                 $cacheStore = new TaggableFileStore($path);
             } elseif ($config['cache.driver'] == 'memcached') {
                 // We need to inject the prefix in the memcached config
@@ -307,9 +307,9 @@ class ServicesProvider
                 // Register listener
                 $queryEventDispatcher->listen(QueryExecuted::class, function ($query) use ($logger) {
                     $logger->debug("Query executed on database [{$query->connectionName}]:", [
-                        'query'    => $query->sql,
+                        'query' => $query->sql,
                         'bindings' => $query->bindings,
-                        'time'     => $query->time . ' ms'
+                        'time' => $query->time . ' ms'
                     ]);
                 });
             }
@@ -325,11 +325,11 @@ class ServicesProvider
         $container['debugLogger'] = function ($c) {
             $logger = new Logger('debug');
 
-            $logFile = $c->locator->findResource('log://userfrosting.log', true, true);
+            $logFile = $c->locator->findResource('log://userfrosting.log', TRUE, TRUE);
 
             $handler = new StreamHandler($logFile);
 
-            $formatter = new MixedFormatter(null, null, true);
+            $formatter = new MixedFormatter(NULL, NULL, TRUE);
 
             $handler->setFormatter($formatter);
             $logger->pushHandler($handler);
@@ -365,11 +365,11 @@ class ServicesProvider
         $container['errorLogger'] = function ($c) {
             $log = new Logger('errors');
 
-            $logFile = $c->locator->findResource('log://userfrosting.log', true, true);
+            $logFile = $c->locator->findResource('log://userfrosting.log', TRUE, TRUE);
 
             $handler = new StreamHandler($logFile, Logger::WARNING);
 
-            $formatter = new LineFormatter(null, null, true);
+            $formatter = new LineFormatter(NULL, NULL, TRUE);
 
             $handler->setFormatter($formatter);
             $log->pushHandler($handler);
@@ -385,7 +385,7 @@ class ServicesProvider
         $container['factory'] = function ($c) {
 
             // Get the path of all of the sprinkle's factories
-            $factoriesPath = $c->locator->findResources('factories://', true, true);
+            $factoriesPath = $c->locator->findResources('factories://', TRUE, TRUE);
 
             // Create a new Factory Muffin instance
             $fm = new FactoryMuffin();
@@ -439,10 +439,10 @@ class ServicesProvider
         $container['mailLogger'] = function ($c) {
             $log = new Logger('mail');
 
-            $logFile = $c->locator->findResource('log://userfrosting.log', true, true);
+            $logFile = $c->locator->findResource('log://userfrosting.log', TRUE, TRUE);
 
             $handler = new StreamHandler($logFile);
-            $formatter = new LineFormatter(null, null, true);
+            $formatter = new LineFormatter(NULL, NULL, TRUE);
 
             $handler->setFormatter($formatter);
             $log->pushHandler($handler);
@@ -478,11 +478,11 @@ class ServicesProvider
         $container['queryLogger'] = function ($c) {
             $logger = new Logger('query');
 
-            $logFile = $c->locator->findResource('log://userfrosting.log', true, true);
+            $logFile = $c->locator->findResource('log://userfrosting.log', TRUE, TRUE);
 
             $handler = new StreamHandler($logFile);
 
-            $formatter = new MixedFormatter(null, null, true);
+            $formatter = new MixedFormatter(NULL, NULL, TRUE);
 
             $handler->setFormatter($formatter);
             $logger->pushHandler($handler);
@@ -494,7 +494,7 @@ class ServicesProvider
          * Override Slim's default router with the UF router.
          */
         $container['router'] = function ($c) {
-            $routerCacheFile = false;
+            $routerCacheFile = FALSE;
             if (isset($c->config['settings.routerCacheFile'])) {
                 $routerCacheFile = $c->config['settings.routerCacheFile'];
             }
@@ -537,13 +537,13 @@ class ServicesProvider
 
             $config = $c->config;
 
-            if ($config->has('throttles') && ($config['throttles'] !== null)) {
+            if ($config->has('throttles') && ($config['throttles'] !== NULL)) {
                 foreach ($config['throttles'] as $type => $rule) {
                     if ($rule) {
                         $throttleRule = new ThrottleRule($rule['method'], $rule['interval'], $rule['delays']);
                         $throttler->addThrottleRule($type, $throttleRule);
                     } else {
-                        $throttler->addThrottleRule($type, null);
+                        $throttler->addThrottleRule($type, NULL);
                     }
                 }
             }
@@ -571,7 +571,7 @@ class ServicesProvider
          * Also adds the UserFrosting core Twig extension, which provides additional functions, filters, global variables, etc.
          */
         $container['view'] = function ($c) {
-            $templatePaths = $c->locator->findResources('templates://', true, true);
+            $templatePaths = $c->locator->findResources('templates://', TRUE, TRUE);
 
             $view = new Twig($templatePaths);
 
@@ -593,7 +593,7 @@ class ServicesProvider
             $twig = $view->getEnvironment();
 
             if ($c->config['cache.twig']) {
-                $twig->setCache($c->locator->findResource('cache://twig', true, true));
+                $twig->setCache($c->locator->findResource('cache://twig', TRUE, TRUE));
             }
 
             if ($c->config['debug.twig']) {

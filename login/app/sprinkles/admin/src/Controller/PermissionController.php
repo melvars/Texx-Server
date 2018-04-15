@@ -146,7 +146,7 @@ class PermissionController extends SimpleController
      *
      * This checks that the currently logged-in user has permission to view permissions.
      * Note that permissions cannot be modified through the interface.  This is because
-     * permissions are tighly coupled to the code and should only be modified by developers.
+     * permissions are highly coupled to the code and should only be modified by developers.
      * This page requires authentication.
      * Request type: GET
      */

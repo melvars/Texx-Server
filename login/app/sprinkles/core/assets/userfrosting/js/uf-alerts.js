@@ -1,6 +1,6 @@
 /**
  * ufAlerts jQuery plugin. Fetches and renders alerts from the UF alert stream.
- * 
+ *
  * Based on template from https://github.com/jquery-boilerplate/jquery-boilerplate
  *
  * === USAGE ===
@@ -33,23 +33,23 @@
  * UserFrosting https://www.userfrosting.com
  * @author Alexander Weissman <https://alexanderweissman.com>
  */
-;(function($, window, document, undefined) {
-	'use strict';
+;(function ($, window, document, undefined) {
+    'use strict';
 
     // Define plugin name and defaults.
     var pluginName = 'ufAlerts',
         defaults = {
-            url                 : site.uri.public + '/alerts',
-            scrollToTop         : true,
-            scrollWhenVisible   : false,
-            agglomerate         : false,
-            alertMessageClass   : 'uf-alert-message',
-            alertTemplateId     : 'uf-alert-template',
-            DEBUG               : false
+            url: site.uri.public + '/alerts',
+            scrollToTop: true,
+            scrollWhenVisible: false,
+            agglomerate: false,
+            alertMessageClass: 'uf-alert-message',
+            alertTemplateId: 'uf-alert-template',
+            DEBUG: false
         };
 
     // Constructor
-    function Plugin (element, options) {
+    function Plugin(element, options) {
         this.element = element[0];
         this.$element = $(this.element);
         this.settings = $.extend(true, {}, defaults, options);
@@ -57,23 +57,27 @@
         this._name = pluginName;
 
         // Detect changes to element attributes
-        this.$element.attrchange({ callback: function (event) { this.element = event.target; }.bind(this) });
+        this.$element.attrchange({
+            callback: function (event) {
+                this.element = event.target;
+            }.bind(this)
+        });
 
         // Plugin variables
         this.alerts = [];
         this._newAlertsPromise = $.Deferred().resolve();
         this._alertTemplateHtml = $('#' + this.settings.alertTemplateId).html();
         this._alertTypePriorities = {
-            danger : 3,
+            danger: 3,
             warning: 2,
             success: 1,
-            info   : 0
+            info: 0
         };
         this._alertTypeIcon = {
-            danger : 'fa-ban',
+            danger: 'fa-ban',
             warning: 'fa-warning',
             success: 'fa-check',
-            info   : 'fa-info'
+            info: 'fa-info'
         };
 
         return this;
@@ -84,7 +88,7 @@
         /**
          * Clear all alerts from the current uf-alerts collection.
          */
-        clear: function() {
+        clear: function () {
             // See http://stackoverflow.com/a/1232046/2970321
             this.alerts.length = 0;
 
@@ -104,7 +108,7 @@
         /**
          * Fetches alerts from the alert stream
          */
-        fetch: function() {
+        fetch: function () {
             // Set a promise, so that any chained calls after fetch can wait until the messages have been retrieved
             this._newAlertsPromise = $.ajax({
                 url: this.settings.url,
@@ -115,36 +119,36 @@
                 // Failure
                 this._fetchFailure.bind(this)
             );
-            
+
             return this.$element;
         },
         /**
          * Success callback for fetch
          */
-        _fetchSuccess: function(alerts) {
+        _fetchSuccess: function (alerts) {
             if (alerts != null) this.alerts = $.merge(this.alerts, alerts);
             this.$element.trigger('fetch.' + this._name);
         },
         /**
          * Failure callback for fetch
          */
-        _fetchFailure: function(response) {
+        _fetchFailure: function (response) {
             this.$element.trigger('error.' + this._name);
             if ((typeof site !== 'undefined') && site.debug.ajax && response.responseText) {
                 document.write(response.responseText);
                 document.close();
             } else {
                 if (this.settings.DEBUG) {
-                    console.warn('Error (' + response.status + '): ' + response.responseText );
+                    console.warn('Error (' + response.status + '): ' + response.responseText);
                 }
             }
         },
         /**
          * Push a given message to the current uf-alerts collection.
          */
-        push: function(options) {
+        push: function (options) {
             this.alerts.push({
-                type   : options[0],
+                type: options[0],
                 message: options[1]
             });
 
@@ -153,7 +157,7 @@
         /**
          * Renders the alerts.
          */
-        render: function() {
+        render: function () {
             // Wait for promise completion, only if promise is unresolved.
             if (this._newAlertsPromise.state() == 'resolved' || this._newAlertsPromise.state() == 'rejected') {
                 this._render();
@@ -167,7 +171,7 @@
         /*
          * Internal private method that physically handles rendering operation.
          */
-        _render: function() {
+        _render: function () {
             // Holds generated HTML
             var alertHtml = '';
             // Only compile alerts if there are alerts to display
@@ -198,9 +202,9 @@
 
                     // Generate complete alert HTML
                     alertHtml = alertTemplate({
-                        type   : alertContainerType,
+                        type: alertContainerType,
                         message: alertMessage,
-                        icon   : this._alertTypeIcon[alertContainerType]
+                        icon: this._alertTypeIcon[alertContainerType]
                     });
                 }
                 else {
@@ -214,7 +218,7 @@
                         // Compile alert
                         alertHtml += alertTemplate(alert);
                     }
-                } 
+                }
             }
             // Show alerts
             this.$element.html(alertHtml);
@@ -223,7 +227,7 @@
             if (this.settings.scrollToTop && alertHtml !== '') {
                 // Don't scroll if already visible, unless scrollWhenVisible is true
                 if (!this._alertsVisible() || this.settings.scrollWhenVisible) {
-                    $('html, body').animate({ scrollTop: this.$element.offset().top }, 'fast');
+                    $('html, body').animate({scrollTop: this.$element.offset().top}, 'fast');
                 }
             }
 
@@ -233,19 +237,19 @@
         /**
          * Returns true if alerts container is completely within the viewport.
          */
-        _alertsVisible: function() {
+        _alertsVisible: function () {
             var rect = this.element.getBoundingClientRect();
             return (
                 rect.top >= 0 &&
                 rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&     
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
                 rect.right <= (window.innerWidth || document.documentElement.clientWidth)
             );
         },
         /**
          * Completely destroy the ufAlerts plugin on the element.
          */
-        destroy: function() {
+        destroy: function () {
             // Unbind any bound events
             this.$element.off('.' + this._name);
 
@@ -257,7 +261,7 @@
     });
 
     // Handles instantiation and access to non-private methods.
-    $.fn[pluginName] = function(methodOrOptions) {
+    $.fn[pluginName] = function (methodOrOptions) {
         // Grab plugin instance
         var instance = $(this).data(pluginName);
         // If undefined or object, initalise plugin.
@@ -272,14 +276,14 @@
         else if (typeof methodOrOptions === 'string' && typeof instance[methodOrOptions] === 'function') {
             // Ensure not a private function
             if (methodOrOptions.indexOf('_') !== 0) {
-                return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
+                return instance[methodOrOptions](Array.prototype.slice.call(arguments, 1));
             }
             else {
-                console.warn('Method ' +  methodOrOptions + ' is private!');
+                console.warn('Method ' + methodOrOptions + ' is private!');
             }
         }
         else {
-            console.warn('Method ' +  methodOrOptions + ' does not exist.');
+            console.warn('Method ' + methodOrOptions + ' does not exist.');
         }
     };
 })(jQuery, window, document);
