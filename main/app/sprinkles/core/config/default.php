@@ -154,7 +154,7 @@
                 // This can be a comma-separated list, to load multiple fallback locales
                 'default' => 'en_US'
             ],
-            'title'     =>      'SocialNetwork',
+            'title'     =>      'BEAM-Messenger',
             // Global ufTable settings
             'uf_table' => [
                 'use_loading_transition' => true

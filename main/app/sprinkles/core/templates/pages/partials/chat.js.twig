@@ -1,9 +1,11 @@
+{% autoescape 'js' %}
+
 /************
  GENERATE KEYS
  ************/
 if (localStorage.getItem('KeysGenerated') === null || localStorage.getItem('KeysGenerated') !== "true") {
     // GENERATE -- LATER ON LOGIN!
-    var EncryptionPhrase = "PASSWORD 123"; // THE USERS PASSWORD
+    var EncryptionPhrase = "PASSWORD 123"; // THE USERS PASSWORD -- needs to generate on login!
     var RSABitLength = 1024;
     var PrivateKeyString = cryptico.generateRSAKey(EncryptionPhrase, RSABitLength);
     var PublicKeyString = cryptico.publicKeyString(PrivateKeyString);
@@ -80,16 +82,19 @@ WebSocket.onmessage = function (e) {
     } else if (MessageObject.ServerMessage === true) {
         if (MessageObject.ServerMessageType === "GroupJoin") {
             if (MessageObject.WasHimself === false) {
-                ChatMessages.append("<div class='ServerChatMessage'>" + MessageObject.Username + " <span data-lang='joined the group'></span>.</div><br><br>");
+                var TempJoinMessage = "{{ translate("CHAT_MESSAGES.USER_GROUP_JOIN", {user: "ConvertTranslatedMessageWithUsername"}) }}";
+                var GeneratedJoinMessage = TempJoinMessage.replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
+                ChatMessages.append("<div class='ServerChatMessage'>" + GeneratedJoinMessage + ".</div><br><br>");
             } else if (MessageObject.WasHimself === true) {
                 ChatMessages.empty();
-                ChatMessages.append("<div class='ServerChatMessage'><span data-lang='You joined the group'> " + MessageObject.GroupName + "</span>.</div><br><br>");
+                ChatMessages.append("<div class='ServerChatMessage'>{{ translate("CHAT_MESSAGES.YOU_GROUP_JOIN") }} " + MessageObject.GroupName + "</span>.</div><br><br>");
             }
         } else if (MessageObject.ServerMessageType === "UserDisconnect") {
-            ChatMessages.append("<div class='ServerChatMessage'>" + MessageObject.Username + " <span data-lang='has disconnected from the server'></span>.</div><br><br>");
+            var TempDisconnectMessage = "{{ translate("CHAT_MESSAGES.USER_DISCONNECT", {user: "ConvertTranslatedMessageWithUsername"}) }}";
+            var GeneratedDisconnectMessage = TempDisconnectMessage.replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
+            ChatMessages.append("<div class='ServerChatMessage'>" + GeneratedDisconnectMessage + ".</div><br><br>");
         }
     }
-    initiateLanguage(); // need further work (performance)
 };
 
 ChatTextInput.keyup(function (e) {
@@ -115,3 +120,4 @@ function sendMessage(msg) {
     WebSocket.send(JSON.stringify({ClientMessageType: "Message", Message: msg}));
     ChatTextInput.val("");
 }
+{% endautoescape %}

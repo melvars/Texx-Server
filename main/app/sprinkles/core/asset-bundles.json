@@ -49,9 +49,7 @@
                 "SiteAssets/js/fontawesome.js",
                 "SiteAssets/js/modernizr.js",
                 "SiteAssets/js/linkify.js",
-                "SiteAssets/js/language.js",
                 "SiteAssets/js/encryption.js",
-                "SiteAssets/js/chat.js",
                 "SiteAssets/js/slick.js",
                 "SiteAssets/js/main.js"
             ],

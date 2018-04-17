@@ -15,7 +15,7 @@
                     <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
                                                         src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
-                        <span class="HeaderCaption"><span data-lang='Feed'></span></span>
+                        <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.FEED") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
                     <hr>
@@ -26,7 +26,7 @@
                     <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
                                                         src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
-                        <span class="HeaderCaption"><span data-lang='Explore'></span></span>
+                        <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.EXPLORE") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
                     <hr>
@@ -37,7 +37,7 @@
                     <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
                                                         src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
-                        <span class="HeaderCaption"><span data-lang='Chat'></span></span>
+                        <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.CHAT") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
                     <hr>
@@ -57,7 +57,7 @@
                     <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
                                                         src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
-                        <span class="HeaderCaption"><span data-lang='Friends'></span></span>
+                        <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.FRIENDS") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
                     <hr>
@@ -68,7 +68,7 @@
                     <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
                                                         src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
-                        <span class="HeaderCaption"><span data-lang='Personal'></span></span>
+                        <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.PERSONAL") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
                     <hr>
@@ -97,16 +97,8 @@
     </div>
 {% endblock %}
 
-
-
 {% block scripts_page %}
-    <!-- Script to Activate the Language -->
     <script>
-        function initiateLanguage() {
-            var translate = new Translate();
-            var currentLng = 'de'; // <- PHP IP LOCATION
-            translate.init(currentLng);
-            translate.process();
-        }
+        {% include "pages/partials/chat.js.twig" %}
     </script>
 {% endblock %}
