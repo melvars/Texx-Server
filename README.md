@@ -1,5 +1,5 @@
 # BEAM-Messenger
-~The messenenger with that certain something~  
+The messenenger with that certain something.  
 Just a task for me to create my own social network.
 It's not my aim to create a **popular** social network.  
 ## The things the network should/will feature
