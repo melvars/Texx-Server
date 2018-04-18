@@ -41,8 +41,6 @@ MainTabWindows.slick({
 MainTabWindows.on('beforeChange', function (event, slick, currentSlide, nextSlide) {
     currentSlide = $("#" + currentSlide);
     nextSlide = $("#" + nextSlide);
-    //console.log(nextSlide);
-    console.log(currentSlide.children().attr("src"));
     currentSlide.children().attr("src", (currentSlide.children().attr("src").split('.svg')[0].replace('Activated','') + ".svg"));
     nextSlide.children().attr("src", nextSlide.children().attr("src").split('.svg')[0] + "Activated.svg");
     $el = nextSlide;
