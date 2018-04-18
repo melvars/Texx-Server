@@ -1,3 +1,7 @@
+svg path {
+    fill: green;
+}
+
 /******
 GENERAL
 ******/
@@ -103,7 +107,7 @@ HEADER
 GENERAL TABS
 ***********/
 .MainInTab {
-    height: 100%;
+    height: 100%
 }
 
 /**********
@@ -226,9 +230,6 @@ NAVBAR
 .NavbarIconWrap img {
     height: 30px;
     width: 30px;
-    filter: invert(.5);
-    -webkit-filter: invert(.5);
-    -moz-filter: invert(.5);
 }
 
 .NavbarLine {
@@ -240,11 +241,3 @@ NAVBAR
     background: #eb12b5;
 }
 
-.ActiveTab {
-    -webkit-transition: -moz-transform .3s ease-out;
-    -moz-transition: -webkit-transform .3s ease-out;
-
-    filter: invert(19%) sepia(93%) saturate(4612%) hue-rotate(303deg) brightness(98%) contrast(101%);
-    -webkit-filter: invert(19%) sepia(93%) saturate(4612%) hue-rotate(303deg) brightness(98%) contrast(101%);
-    -moz-filter: invert(19%) sepia(93%) saturate(4612%) hue-rotate(303deg) brightness(98%) contrast(101%);
-}

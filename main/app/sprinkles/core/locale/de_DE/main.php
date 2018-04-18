@@ -9,7 +9,7 @@ return [
     ],
     "CHAT_MESSAGES" => [
         "USER_GROUP_JOIN" => "{{user}} ist der Gruppe beigetreten",
-        "YOU_GROUP_JOIN" => "Du bist der Gruppe beigetreten",
+        "YOU_GROUP_JOIN" => "Du bist der Gruppe {{group}} beigetreten",
         "USER_DISCONNECT" => "{{user}} hat sich vom Server getrennt"
     ]
 ];

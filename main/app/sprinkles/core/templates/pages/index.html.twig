@@ -32,10 +32,11 @@
                     <hr>
                 </div>
             </div>
-            <div class="carousel-cell">
+
+            <div class="carousel-cell ChatTab">
                 <div class="headerWrap">
                     <div class="header">
-                    <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
+                    <span class="LeftButtonHeader"><img class="svg" draggable="false" ondragstart="return false;"
                                                         src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.CHAT") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
@@ -52,6 +53,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="carousel-cell">
                 <div class="headerWrap">
                     <div class="header">
@@ -73,6 +75,10 @@
                     </div>
                     <hr>
                 </div>
+                <div class="MainInTab">
+                    {{current_user.first_name}} {{current_user.last_name}}
+                    <small>({{current_user.user_name}})</small>
+                </div>
             </div>
         </div>
 
@@ -84,7 +90,7 @@
             <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/ExploreGlobeOutline.svg') }}">
         </span>
             <span id="2" class="NavbarIconWrap ActiveTab">
-            <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutline.svg') }}">
+            <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutlineActivated.svg') }}">
         </span>
             <span id="3" class="NavbarIconWrap">
             <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/UserGroupOutline.svg') }}">
