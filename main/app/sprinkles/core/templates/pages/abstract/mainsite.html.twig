@@ -24,6 +24,7 @@
                 {% block stylesheets_site %}
                     <!-- Include main CSS asset bundle -->
                     {{ assets.css('css/main-site') | raw }}
+                    {{ assets.css('css/form-widgets') | raw }}
                 {% endblock %}
 
                 {# Override this block in a child layout template or page template to specify or override stylesheets for groups of similar pages. #}

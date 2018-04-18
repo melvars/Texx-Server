@@ -18,7 +18,7 @@ function attachUserForm() {
         // Set up the form for submission
         form.ufForm({
             validators: page.validators
-        }).on("submitSuccess.ufForm", function() {
+        }).on("submitSuccess.ufForm", function () {
             // Reload page on success
             window.location.reload();
         });
@@ -41,14 +41,14 @@ function toggleChangePasswordMode(el, userName, changePasswordMode) {
         var validator = form.validate();
         if (validator) {
             //Iterate through named elements inside of the form, and mark them as error free
-            el.find("input[type='password']").each(function() {
-              validator.successList.push(this); //mark as error free
+            el.find("input[type='password']").each(function () {
+                validator.successList.push(this); //mark as error free
             });
             validator.resetForm();//remove error class on name elements and clear history
             validator.reset();//remove all error and success data
         }
         el.find("input[type='password']").closest('.form-group')
-        .removeClass('has-error has-success');
+            .removeClass('has-error has-success');
         el.find('.form-control-feedback').each(function () {
             $(this).remove();
         });
@@ -66,7 +66,7 @@ function toggleChangePasswordMode(el, userName, changePasswordMode) {
  * Update user field(s)
  */
 function updateUser(userName, fieldName, fieldValue) {
-	var data = {
+    var data = {
         'value': fieldValue
     };
 
@@ -83,7 +83,7 @@ function updateUser(userName, fieldName, fieldValue) {
         dataType: debugAjax ? 'html' : 'json',
         converters: {
             // Override jQuery's strict JSON parsing
-            'text json': function(result) {
+            'text json': function (result) {
                 try {
                     // First try to use native browser parsing
                     if (typeof JSON === 'object' && typeof JSON.parse === 'function') {
@@ -92,19 +92,19 @@ function updateUser(userName, fieldName, fieldValue) {
                         return $.parseJSON(result);
                     }
                 } catch (e) {
-                   // statements to handle any exceptions
-                   console.log("Warning: Could not parse expected JSON response.");
-                   return {};
+                    // statements to handle any exceptions
+                    console.log("Warning: Could not parse expected JSON response.");
+                    return {};
                 }
             }
         }
-	}).fail(function (jqXHR) {
+    }).fail(function (jqXHR) {
         // Error messages
         if (debugAjax && jqXHR.responseText) {
             document.write(jqXHR.responseText);
             document.close();
         } else {
-            console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+            console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText);
 
             // Display errors on failure
             // TODO: ufAlerts widget should have a 'destroy' method
@@ -113,7 +113,7 @@ function updateUser(userName, fieldName, fieldValue) {
             } else {
                 $("#alerts-page").ufAlerts('clear');
             }
-    
+
             $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
         }
 
@@ -126,13 +126,13 @@ function updateUser(userName, fieldName, fieldValue) {
 /**
  * Link user action buttons, for example in a table or on a specific user's page.
  */
- function bindUserButtons(el) {
+function bindUserButtons(el) {
 
     /**
      * Buttons that launch a modal dialog
      */
     // Edit general user details button
-    el.find('.js-user-edit').click(function() {
+    el.find('.js-user-edit').click(function () {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/edit",
             ajaxParams: {
@@ -145,7 +145,7 @@ function updateUser(userName, fieldName, fieldValue) {
     });
 
     // Manage user roles button
-    el.find('.js-user-roles').click(function() {
+    el.find('.js-user-roles').click(function () {
         var userName = $(this).data('user_name');
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/roles",
@@ -162,28 +162,27 @@ function updateUser(userName, fieldName, fieldValue) {
             // Set up collection widget
             var roleWidget = modal.find('.js-form-roles');
             roleWidget.ufCollection({
-                dropdown : {
+                dropdown: {
                     ajax: {
-                        url     : site.uri.public + '/api/roles'
+                        url: site.uri.public + '/api/roles'
                     },
-                    placeholder : "Select a role"
+                    placeholder: "Select a role"
                 },
                 dropdownTemplate: modal.find('#user-roles-select-option').html(),
-                rowTemplate     : modal.find('#user-roles-row').html()
+                rowTemplate: modal.find('#user-roles-row').html()
             });
 
             // Get current roles and add to widget
             $.getJSON(site.uri.public + '/api/users/u/' + userName + '/roles')
-            .done(function (data) {
-                $.each(data.rows, function (idx, role) {
-                    role.text = role.name;
-                    roleWidget.ufCollection('addRow', role);
+                .done(function (data) {
+                    $.each(data.rows, function (idx, role) {
+                        role.text = role.name;
+                        roleWidget.ufCollection('addRow', role);
+                    });
                 });
-            });
 
             // Set up form for submission
-            form.ufForm({
-            }).on("submitSuccess.ufForm", function() {
+            form.ufForm({}).on("submitSuccess.ufForm", function () {
                 // Reload page on success
                 window.location.reload();
             });
@@ -191,7 +190,7 @@ function updateUser(userName, fieldName, fieldValue) {
     });
 
     // Change user password button
-    el.find('.js-user-password').click(function() {
+    el.find('.js-user-password').click(function () {
         var userName = $(this).data('user_name');
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/password",
@@ -208,7 +207,7 @@ function updateUser(userName, fieldName, fieldValue) {
             // Set up form for submission
             form.ufForm({
                 validators: page.validators
-            }).on("submitSuccess.ufForm", function() {
+            }).on("submitSuccess.ufForm", function () {
                 // Reload page on success
                 window.location.reload();
             });
@@ -216,7 +215,7 @@ function updateUser(userName, fieldName, fieldValue) {
             toggleChangePasswordMode(modal, userName, 'link');
 
             // On submission, submit either the PUT request, or POST for a password reset, depending on the toggle state
-            modal.find("input[name='change_password_mode']").click(function() {
+            modal.find("input[name='change_password_mode']").click(function () {
                 var changePasswordMode = $(this).val();
                 toggleChangePasswordMode(modal, userName, changePasswordMode);
             });
@@ -224,7 +223,7 @@ function updateUser(userName, fieldName, fieldValue) {
     });
 
     // Delete user button
-    el.find('.js-user-delete').click(function() {
+    el.find('.js-user-delete').click(function () {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/confirm-delete",
             ajaxParams: {
@@ -238,17 +237,17 @@ function updateUser(userName, fieldName, fieldValue) {
             var form = modal.find('.js-form');
 
             form.ufForm()
-            .on("submitSuccess.ufForm", function() {
-                // Reload page on success
-                window.location.reload();
-            });
+                .on("submitSuccess.ufForm", function () {
+                    // Reload page on success
+                    window.location.reload();
+                });
         });
     });
 
     /**
      * Direct action buttons
      */
-    el.find('.js-user-activate').click(function() {
+    el.find('.js-user-activate').click(function () {
         var btn = $(this);
         updateUser(btn.data('user_name'), 'flag_verified', '1');
     });
@@ -266,7 +265,7 @@ function updateUser(userName, fieldName, fieldValue) {
 
 function bindUserCreationButton(el) {
     // Link create button
-    el.find('.js-user-create').click(function() {
+    el.find('.js-user-create').click(function () {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/create",
             msgTarget: $("#alerts-page")

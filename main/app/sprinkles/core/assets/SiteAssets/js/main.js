@@ -14,7 +14,7 @@ NavbarLine
     .data("origWidth", NavbarLine.width());
 NavbarIconWrap.on("click", function () {
     NavbarIconWrap.removeClass("ActiveTab");
-    $(this).children().attr("src", $(this).children().attr("src").split('.svg')[0] + "Activated.svg");
+    //$(this).children().attr("src", $(this).children().attr("src").split('.svg')[0] + "Activated.svg");
     var index = $(this).attr('id');
     MainTabWindows.slick('slickGoTo', index);
     //$('.MainTabWindows').flickity().flickity('select', index);

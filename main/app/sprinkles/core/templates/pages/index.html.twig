@@ -10,6 +10,7 @@
 {% block content %}
     <div class="main">
         <div class="MainTabWindows">
+
             <div class="carousel-cell FeedTab">
                 <div class="headerWrap">
                     <div class="header">
@@ -21,6 +22,7 @@
                     <hr>
                 </div>
             </div>
+
             <div class="carousel-cell ExploreTab">
                 <div class="headerWrap">
                     <div class="header">
@@ -43,18 +45,16 @@
                     </div>
                     <hr>
                 </div>
-                <div class="MainInTab">
-                    <div class="ChatWindow">
+                <div class="MainInTab ChatWindow">
                         <div id="ChatMessages" class="ChatMessages">
                             <!-- Messages -->
                         </div>
                         <input title="Type your message..." id="ChatTextInput" class="ChatInput" type="text"/>
                         <input title="Join a group..." id="SubscribeTextInput" class="ChatInput" type="text"/>
-                    </div>
                 </div>
             </div>
 
-            <div class="carousel-cell">
+            <div class="carousel-cell FriendsTab">
                 <div class="headerWrap">
                     <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
@@ -65,7 +65,8 @@
                     <hr>
                 </div>
             </div>
-            <div class="carousel-cell">
+
+            <div class="carousel-cell PersonalTab">
                 <div class="headerWrap">
                     <div class="header">
                     <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
@@ -75,9 +76,18 @@
                     </div>
                     <hr>
                 </div>
-                <div class="MainInTab">
-                    {{current_user.first_name}} {{current_user.last_name}}
-                    <small>({{current_user.user_name}})</small>
+                <div class="MainInTab PersonalTabWindow">
+                    <div class="PersonalOverviewHeader">
+                        <div class="GenderFab Female">&#9792;</div>
+                        <img class="AvatarImage" src="{{ current_user.avatar }}" />
+                        <div class="GenderFab Male">&#9794;</div>
+                    </div>
+                    <br>
+                    <div class="DisplayNames">
+                        <span class="FullName">{{ current_user.first_name}} {{current_user.last_name}}</span><br>
+                        <small class="Username">{{current_user.user_name}}</small>
+                    </div><br>
+                    <hr class="ShorterLine" align="center">
                 </div>
             </div>
         </div>
@@ -90,7 +100,7 @@
             <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/ExploreGlobeOutline.svg') }}">
         </span>
             <span id="2" class="NavbarIconWrap ActiveTab">
-            <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutlineActivated.svg') }}">
+            <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutline.svg') }}">
         </span>
             <span id="3" class="NavbarIconWrap">
             <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/UserGroupOutline.svg') }}">

@@ -52,6 +52,11 @@ hr {
     padding: 0;
 }
 
+hr.ShorterLine {
+    margin: 0 auto;
+    width: 90%;
+}
+
 /*******
 FLICKITY
 *******/
@@ -201,6 +206,59 @@ CHAT WINDOW
 
 #ChatTextInput {
     display: none;
+}
+
+/***********
+PERSONAL TAB
+***********/
+.PersonalTabWindow {
+    position: relative;
+    height: 100%;
+    margin: 5px;
+}
+
+.PersonalOverviewHeader {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.GenderFab {
+    height: 50px;
+    width: 50px;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    color: white;
+    font-size: 25px;
+    line-height: 50px;
+    text-align: center;
+}
+
+.GenderFab.Female {
+    background: linear-gradient(to right, #ff7a88, #ff9676);
+}
+
+.AvatarImage {
+    height: 110px;
+    width: 110px;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+}
+
+.GenderFab.Male {
+    background: linear-gradient(to right, #11c1d5, #1ddcb6);
+}
+
+.DisplayNames {
+    text-align: center;
+}
+
+.DisplayNames .FullName {
+    font-weight: bold;
+    font-size: 20px;
 }
 
 /*****
