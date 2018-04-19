@@ -73,9 +73,9 @@ return [
         "DESCRIPTION" => "In unsere Datenschutzbestimmungen erklären wir Ihnen, welche Daten wir sammeln und wozu wir diese benutzen."
     ],
 
-    "SLUG" => "Schnecke",
-    "SLUG_CONDITION" => "Schnecke/Bedingungen",
-    "SLUG_IN_USE" => "Die Schnecke <strong>{{slug}}</strong> existiert bereits",
+    "SLUG" => "Abkürzung",
+    "SLUG_CONDITION" => "Abkürzung/Bedingungen",
+    "SLUG_IN_USE" => "Die Abkürzung <strong>{{slug}}</strong> existiert bereits",
     "STATUS" => "Status",
     "SUGGEST" => "Vorschlagen",
 

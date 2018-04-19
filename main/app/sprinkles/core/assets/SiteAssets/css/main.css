@@ -193,15 +193,23 @@ CHAT WINDOW
 
 .ChatInput {
     position: absolute;
-    margin: auto;
-    bottom: 90px; /* 75+15 */
-    left: 0;
-    z-index: 600;
+    box-sizing: border-box;
     width: 100%;
     height: 40px;
+    padding-left: 15px;
+    padding-right: 15px;
+    bottom: 90px; /* 75+15 */
+    z-index: 600;
     border: none;
-    color: #FFF;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    color: #426A91;
     background-color: #13223C;
+}
+
+#SubscribeTextInput {
+    color: #FFF;
 }
 
 #ChatTextInput {
