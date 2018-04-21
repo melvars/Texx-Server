@@ -1,6 +1,8 @@
 /******
 GENERAL
 ******/
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic');
+
 * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -22,7 +24,7 @@ GENERAL
 }
 
 body {
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-family: 'Nanum Gothic', sans-serif;
     height: 100%;
     width: 100%;
     overflow: hidden;
@@ -140,6 +142,7 @@ CHAT WINDOW
     word-wrap: break-word;
     text-align: center;
     padding: 10px;
+    font-size: 0.9em;
 }
 
 .ServerChatMessage {
@@ -160,6 +163,13 @@ CHAT WINDOW
 .MessageSent {
     float: right;
     background-color: #12213b;
+    color: #345679;
+}
+
+.MessageReceived {
+    float: left;
+    background-color: #13223c;
+    color: #f3f4f5;
 }
 
 .AloneMessage {
@@ -186,11 +196,6 @@ CHAT WINDOW
     border-radius: 10px 10px 25px 25px;
 }
 
-.MessageReceived {
-    float: left;
-    background-color: #13223c;
-}
-
 .ChatInput {
     position: absolute;
     box-sizing: border-box;
@@ -204,12 +209,8 @@ CHAT WINDOW
     -webkit-border-radius: 25px;
     -moz-border-radius: 25px;
     border-radius: 25px;
-    color: #426A91;
+    color: #f3f4f5;
     background-color: #13223C;
-}
-
-#SubscribeTextInput {
-    color: #FFF;
 }
 
 #ChatTextInput {

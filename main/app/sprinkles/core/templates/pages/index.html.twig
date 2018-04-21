@@ -3,9 +3,9 @@
 {% set page_active = "home" %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}{{translate("HOME")}}{% endblock %}
+{% block page_title %}{{ translate("HOME") }}{% endblock %}
 
-{% block page_description %}{{translate("WELCOME_TO", {'title': site.title})}}{% endblock %}
+{% block page_description %}{{ translate("WELCOME_TO", {'title': site.title}) }}{% endblock %}
 
 {% block content %}
     <div class="main">
@@ -46,11 +46,13 @@
                     <hr>
                 </div>
                 <div class="MainInTab ChatWindow">
-                        <div id="ChatMessages" class="ChatMessages">
-                            <!-- Messages -->
-                        </div>
-                        <input title="Type your message..." placeholder="Type your message..." id="ChatTextInput" class="ChatInput" type="text"/>
-                        <input title="Join a group..." placeholder="Join a group..." id="SubscribeTextInput" class="ChatInput" type="text"/>
+                    <div id="ChatMessages" class="ChatMessages">
+                        <!-- Messages -->
+                    </div>
+                    <input title="Join a group..." placeholder="{{ translate("CHAT_MESSAGES.JOIN_GROUP_PH") }}"
+                           id="SubscribeTextInput" class="ChatInput" type="text"/>
+                    <input title="Type your message..." placeholder="{{ translate("CHAT_MESSAGES.WRITE_MESSAGE_PH") }}"
+                           id="ChatTextInput" class="ChatInput" type="text"/>
                 </div>
             </div>
 
@@ -79,14 +81,16 @@
                 <div class="MainInTab PersonalTabWindow">
                     <div class="PersonalOverviewHeader">
                         <div class="GenderFab Female">&#9792;</div>
-                        <img class="AvatarImage" src="{{ current_user.avatar }}" />
+                        <img class="AvatarImage" src="{{ current_user.avatar }}"/>
                         <div class="GenderFab Male">&#9794;</div>
                     </div>
                     <br>
                     <div class="DisplayNames">
-                        <span class="FullName">{{ current_user.first_name}} {{current_user.last_name}}</span><br>
-                        <small class="Username">{{current_user.user_name}}</small>
-                    </div><br>
+                        <span class="FullName">{{ current_user.first_name }} {{ current_user.last_name }}</span>
+                        <br>
+                        <small class="Username">{{ current_user.user_name }}</small>
+                    </div>
+                    <br>
                     <hr class="ShorterLine" align="center">
                 </div>
             </div>
@@ -94,19 +98,24 @@
 
         <div class="Navbar">
          <span id="0" class="NavbarIconWrap">
-             <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/FriendFeedOutline.svg') }}">
+             <img draggable="false" ondragstart="return false;"
+                  src="{{ assets.url('assets://SiteAssets/icons/FriendFeedOutline.svg') }}">
         </span>
             <span id="1" class="NavbarIconWrap">
-            <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/ExploreGlobeOutline.svg') }}">
+            <img draggable="false" ondragstart="return false;"
+                 src="{{ assets.url('assets://SiteAssets/icons/ExploreGlobeOutline.svg') }}">
         </span>
             <span id="2" class="NavbarIconWrap ActiveTab">
-            <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutlineActivated.svg') }}">
+            <img draggable="false" ondragstart="return false;"
+                 src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutlineActivated.svg') }}">
         </span>
             <span id="3" class="NavbarIconWrap">
-            <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/UserGroupOutline.svg') }}">
+            <img draggable="false" ondragstart="return false;"
+                 src="{{ assets.url('assets://SiteAssets/icons/UserGroupOutline.svg') }}">
          </span>
             <span id="4" class="NavbarIconWrap">
-            <img draggable="false" ondragstart="return false;" src="{{ assets.url('assets://SiteAssets/icons/UserOutline.svg') }}">
+            <img draggable="false" ondragstart="return false;"
+                 src="{{ assets.url('assets://SiteAssets/icons/UserOutline.svg') }}">
         </span>
         </div>
         <span class='NavbarLine'></span>
