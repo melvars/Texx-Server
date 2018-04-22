@@ -141,7 +141,7 @@ CHAT WINDOW
     height: auto;
     word-wrap: break-word;
     text-align: center;
-    padding: 10px;
+    padding: 8px;
     font-size: 0.9em;
 }
 
@@ -163,7 +163,7 @@ CHAT WINDOW
 .MessageSent {
     float: right;
     background-color: #12213b;
-    color: #345679;
+    color: #537eaf;
 }
 
 .MessageReceived {
