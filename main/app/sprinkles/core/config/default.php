@@ -124,8 +124,8 @@
             ],
             'analytics' => [
                 'google' => [
-                    'code' => '',
-                    'enabled' => false
+                    'code' => 'UA-109245179-2',
+                    'enabled' => true
                 ]
             ],
             'author'    =>      'Author',
@@ -144,6 +144,7 @@
                     'ar'    => 'العربية',
                     'pt_PT' => 'Português',
                     'ru_RU' => 'русский',
+                    'tlh'   => 'tlhIngan Hol',
                     'de_DE' => 'Deutsch',
                     'fr_FR' => 'Français',
                     'tr'    => 'Türk',

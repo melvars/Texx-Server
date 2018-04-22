@@ -24,6 +24,7 @@
                 {% block stylesheets_site %}
                     <!-- Include main CSS asset bundle -->
                     {{ assets.css('css/main-site') | raw }}
+                    {{ assets.css('css/form-widgets') | raw }}
                 {% endblock %}
 
                 {# Override this block in a child layout template or page template to specify or override stylesheets for groups of similar pages. #}
@@ -64,7 +65,40 @@
     {% block body %}
         <body {% block body_attributes %}{% endblock %}>
         {# Page Content #}
-        {% block content %}{% endblock %}
+        {% block content %}
+            <div class="wrapper">
+
+                <header class="main-header">
+                    {% include "navigation/main-nav.html.twig" %}
+                </header>
+
+                <!-- Full Width Column -->
+                <div class="content-wrapper">
+                    <div class="container">
+                        <!-- Content Header (Page header) -->
+                        {% block content_header %}
+                            <section class="content-header">
+                                <h1>{% block header_title %}{{ block('page_title') }}{% endblock %}</h1>
+                                {% if block('page_description') is not empty %}<h1><small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small></h1>{% endif %}
+                                {% block breadcrumb %}
+                                    {% include 'navigation/breadcrumb.html.twig' with {page_title: block('page_title')} %}
+                                {% endblock %}
+                                <div id="alerts-page"></div>
+                            </section>
+                        {% endblock %}
+                        <section class="content">
+                            {% block body_matter %}{% endblock %}
+                        </section>
+                    </div>
+                </div>
+                <!-- /.content-wrapper -->
+
+                {% block footer %}
+                    {% include "pages/partials/footer.html.twig" %}
+                {% endblock %}
+            </div>
+            <!-- ./wrapper -->
+        {% endblock %}
 
         <!-- Javascript configuration -->
         <script>

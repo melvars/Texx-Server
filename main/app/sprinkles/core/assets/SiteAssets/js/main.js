@@ -14,7 +14,7 @@ NavbarLine
     .data("origWidth", NavbarLine.width());
 NavbarIconWrap.on("click", function () {
     NavbarIconWrap.removeClass("ActiveTab");
-    $(this).addClass("ActiveTab");
+    //$(this).children().attr("src", $(this).children().attr("src").split('.svg')[0] + "Activated.svg");
     var index = $(this).attr('id');
     MainTabWindows.slick('slickGoTo', index);
     //$('.MainTabWindows').flickity().flickity('select', index);
@@ -39,9 +39,11 @@ MainTabWindows.slick({
 });
 
 MainTabWindows.on('beforeChange', function (event, slick, currentSlide, nextSlide) {
-    //console.log(nextSlide);
-    NavbarIconWrap.removeClass("ActiveTab");
-    $el = $("#" + nextSlide);
+    currentSlide = $("#" + currentSlide);
+    nextSlide = $("#" + nextSlide);
+    currentSlide.children().attr("src", (currentSlide.children().attr("src").split('.svg')[0].replace('Activated','') + ".svg"));
+    nextSlide.children().attr("src", nextSlide.children().attr("src").split('.svg')[0] + "Activated.svg");
+    $el = nextSlide;
     $el.addClass("ActiveTab");
     leftPos = $el.position().left;
     NavbarLine.stop().animate({

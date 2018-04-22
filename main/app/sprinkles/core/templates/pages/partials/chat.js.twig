@@ -2,8 +2,8 @@
 
 /************
  GENERATE KEYS
- ************/
-if (localStorage.getItem('KeysGenerated') === null || localStorage.getItem('KeysGenerated') !== "true") {
+ ************
+ if (localStorage.getItem('KeysGenerated') === null || localStorage.getItem('KeysGenerated') !== "true") {
     // GENERATE -- LATER ON LOGIN!
     var EncryptionPhrase = "PASSWORD 123"; // THE USERS PASSWORD -- needs to generate on login!
     var RSABitLength = 1024;
@@ -28,96 +28,103 @@ if (localStorage.getItem('KeysGenerated') === null || localStorage.getItem('Keys
 }
 
 
-/******
+ /******
  GENERAL
  ******/
+function InitializeChatServer() {
+    var ChatTextInput = $("#ChatTextInput");
+    var SubscribeTextInput = $("#SubscribeTextInput");
+    var ChatMessages = $("#ChatMessages");
 
-var ChatTextInput = $("#ChatTextInput");
-var SubscribeTextInput = $("#SubscribeTextInput");
-var ChatMessages = $("#ChatMessages");
-
-var WebSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
-
-WebSocket.onopen = function () {
-    console.log("Chat connection established!");
-};
-
-WebSocket.onmessage = function (e) {
-    var LastMessage = $(".ChatMessage:last");
-    var MessageObject = JSON.parse(e.data);
-    if (MessageObject.ServerMessage === false) {
-        if (MessageObject.WasHimself === true) { //MessageObject.Username
-            if (!LastMessage.hasClass("MessageSent")) {
-                ChatMessages.append("<div class='ChatMessage MessageSent AloneMessage'>" + MessageObject.Message + "</div><br><br>");
-            } else if (LastMessage.hasClass("MessageSent")) {
-                if (LastMessage.hasClass("AloneMessage")) {
-                    LastMessage.removeClass("AloneMessage");
-                    LastMessage.addClass("TopMessage");
-                } else if (LastMessage.hasClass("BottomMessage")) {
-                    LastMessage.removeClass("BottomMessage");
-                    LastMessage.addClass("MiddleMessage");
+    var ChatSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
+    ChatSocket.onerror = function () {
+        setTimeout(function(){
+            console.log("Connection failed. Trying again...");
+            InitializeChatServer();
+        }, 5000);
+    };
+    ChatSocket.onopen = function () {
+        console.log("Chat connection established!");
+        ChatSocket.onmessage = function (e) {
+            var LastMessage = $(".ChatMessage:last");
+            var MessageObject = JSON.parse(e.data);
+            if (MessageObject.ServerMessage === false) {
+                if (MessageObject.WasHimself === true) { //MessageObject.Username
+                    if (!LastMessage.hasClass("MessageSent")) {
+                        ChatMessages.append("<div class='ChatMessage MessageSent AloneMessage'>" + MessageObject.Message + "</div><br><br>");
+                    } else if (LastMessage.hasClass("MessageSent")) {
+                        if (LastMessage.hasClass("AloneMessage")) {
+                            LastMessage.removeClass("AloneMessage");
+                            LastMessage.addClass("TopMessage");
+                        } else if (LastMessage.hasClass("BottomMessage")) {
+                            LastMessage.removeClass("BottomMessage");
+                            LastMessage.addClass("MiddleMessage");
+                        }
+                        ChatMessages.append("<div class='ChatMessage MessageSent BottomMessage'>" + MessageObject.Message + "</div><br><br>");
+                    }
+                    $('.MessageSent').linkify({
+                        target: "_blank"
+                    });
+                } else if (MessageObject.WasHimself === false) {
+                    if (!LastMessage.hasClass("MessageReceived")) {
+                        ChatMessages.append("<div class='ChatMessage MessageReceived AloneMessage'>" + MessageObject.Message + "</div><br><br>");
+                    } else if (LastMessage.hasClass("MessageReceived")) {
+                        if (LastMessage.hasClass("AloneMessage")) {
+                            LastMessage.removeClass("AloneMessage");
+                            LastMessage.addClass("TopMessage");
+                        } else if (LastMessage.hasClass("BottomMessage")) {
+                            LastMessage.removeClass("BottomMessage");
+                            LastMessage.addClass("MiddleMessage");
+                        }
+                        ChatMessages.append("<div class='ChatMessage MessageReceived BottomMessage'>" + MessageObject.Message + "</div><br><br>");
+                    }
+                    $('.MessageReceived').linkify({
+                        target: "_blank"
+                    });
                 }
-                ChatMessages.append("<div class='ChatMessage MessageSent BottomMessage'>" + MessageObject.Message + "</div><br><br>");
-            }
-            $('.MessageSent').linkify({
-                target: "_blank"
-            });
-        } else if (MessageObject.WasHimself === false) {
-            if (!LastMessage.hasClass("MessageReceived")) {
-                ChatMessages.append("<div class='ChatMessage MessageReceived AloneMessage'>" + MessageObject.Message + "</div><br><br>");
-            } else if (LastMessage.hasClass("MessageReceived")) {
-                if (LastMessage.hasClass("AloneMessage")) {
-                    LastMessage.removeClass("AloneMessage");
-                    LastMessage.addClass("TopMessage");
-                } else if (LastMessage.hasClass("BottomMessage")) {
-                    LastMessage.removeClass("BottomMessage");
-                    LastMessage.addClass("MiddleMessage");
+            } else if (MessageObject.ServerMessage === true) {
+                if (MessageObject.ServerMessageType === "GroupJoin") {
+                    if (MessageObject.WasHimself === false) {
+                        var TranslatedUserJoinMessage = "{{ translate("CHAT_MESSAGES.USER_GROUP_JOIN", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
+                        ChatMessages.append("<div class='ServerChatMessage'>" + TranslatedUserJoinMessage + ".</div><br><br>");
+                    } else if (MessageObject.WasHimself === true) {
+                        ChatMessages.empty();
+                        var TranslatedYouJoinMessage = "{{ translate("CHAT_MESSAGES.YOU_GROUP_JOIN", {group: "ConvertTranslatedMessageWithGroupName"}) }}".replace("ConvertTranslatedMessageWithGroupName", '"' + MessageObject.GroupName + '"');
+                        ChatMessages.append("<div class='ServerChatMessage'>" + TranslatedYouJoinMessage + "</span>.</div><br><br>");
+                    }
+                } else if (MessageObject.ServerMessageType === "UserDisconnect") {
+                    var TranslatedDisconnectMessage = "{{ translate("CHAT_MESSAGES.USER_DISCONNECT", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
+                    ChatMessages.append("<div class='ServerChatMessage'>" + TranslatedDisconnectMessage + ".</div><br><br>");
                 }
-                ChatMessages.append("<div class='ChatMessage MessageReceived BottomMessage'>" + MessageObject.Message + "</div><br><br>");
             }
-            $('.MessageReceived').linkify({
-                target: "_blank"
-            });
-        }
-    } else if (MessageObject.ServerMessage === true) {
-        if (MessageObject.ServerMessageType === "GroupJoin") {
-            if (MessageObject.WasHimself === false) {
-                var TempJoinMessage = "{{ translate("CHAT_MESSAGES.USER_GROUP_JOIN", {user: "ConvertTranslatedMessageWithUsername"}) }}";
-                var GeneratedJoinMessage = TempJoinMessage.replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
-                ChatMessages.append("<div class='ServerChatMessage'>" + GeneratedJoinMessage + ".</div><br><br>");
-            } else if (MessageObject.WasHimself === true) {
-                ChatMessages.empty();
-                ChatMessages.append("<div class='ServerChatMessage'>{{ translate("CHAT_MESSAGES.YOU_GROUP_JOIN") }} " + MessageObject.GroupName + "</span>.</div><br><br>");
+        };
+
+        ChatTextInput.keyup(function (e) {
+            if (e.keyCode === 13) {
+                sendMessage(ChatTextInput.val());
+                ChatTextInput.val("");
             }
-        } else if (MessageObject.ServerMessageType === "UserDisconnect") {
-            var TempDisconnectMessage = "{{ translate("CHAT_MESSAGES.USER_DISCONNECT", {user: "ConvertTranslatedMessageWithUsername"}) }}";
-            var GeneratedDisconnectMessage = TempDisconnectMessage.replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
-            ChatMessages.append("<div class='ServerChatMessage'>" + GeneratedDisconnectMessage + ".</div><br><br>");
+        });
+
+        SubscribeTextInput.keyup(function (e) {
+            if (e.keyCode === 13) {
+                subscribe(SubscribeTextInput.val());
+            }
+        });
+
+        function subscribe(channel) {
+            ChatSocket.send(JSON.stringify({ClientMessageType: "Subscribe", Channel: channel}));
+            SubscribeTextInput.hide();
+            ChatTextInput.show();
         }
-    }
-};
 
-ChatTextInput.keyup(function (e) {
-    if (e.keyCode === 13) {
-        sendMessage(ChatTextInput.val());
-        ChatTextInput.val("");
-    }
-});
-
-SubscribeTextInput.keyup(function (e) {
-    if (e.keyCode === 13) {
-        subscribe(SubscribeTextInput.val());
-    }
-});
-
-function subscribe(channel) {
-    WebSocket.send(JSON.stringify({ClientMessageType: "Subscribe", Channel: channel}));
-    SubscribeTextInput.hide();
-    ChatTextInput.show();
+        function sendMessage(msg) {
+            ChatSocket.send(JSON.stringify({ClientMessageType: "Message", Message: msg}));
+            ChatTextInput.val("");
+        }
+    };
 }
 
-function sendMessage(msg) {
-    WebSocket.send(JSON.stringify({ClientMessageType: "Message", Message: msg}));
-    ChatTextInput.val("");
-}
+InitializeChatServer();
+
 {% endautoescape %}

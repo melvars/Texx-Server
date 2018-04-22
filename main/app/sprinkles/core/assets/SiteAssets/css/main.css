@@ -1,6 +1,8 @@
 /******
 GENERAL
 ******/
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic');
+
 * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -22,7 +24,7 @@ GENERAL
 }
 
 body {
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-family: 'Nanum Gothic', sans-serif;
     height: 100%;
     width: 100%;
     overflow: hidden;
@@ -50,6 +52,11 @@ hr {
     border-top: 1px solid #112a42;
     margin: 1em 0;
     padding: 0;
+}
+
+hr.ShorterLine {
+    margin: 0 auto;
+    width: 90%;
 }
 
 /*******
@@ -134,7 +141,8 @@ CHAT WINDOW
     height: auto;
     word-wrap: break-word;
     text-align: center;
-    padding: 10px;
+    padding: 8px;
+    font-size: 0.9em;
 }
 
 .ServerChatMessage {
@@ -155,6 +163,13 @@ CHAT WINDOW
 .MessageSent {
     float: right;
     background-color: #12213b;
+    color: #537eaf;
+}
+
+.MessageReceived {
+    float: left;
+    background-color: #13223c;
+    color: #f3f4f5;
 }
 
 .AloneMessage {
@@ -181,26 +196,78 @@ CHAT WINDOW
     border-radius: 10px 10px 25px 25px;
 }
 
-.MessageReceived {
-    float: left;
-    background-color: #13223c;
-}
-
 .ChatInput {
     position: absolute;
-    margin: auto;
-    bottom: 90px; /* 75+15 */
-    left: 0;
-    z-index: 600;
+    box-sizing: border-box;
     width: 100%;
     height: 40px;
+    padding-left: 15px;
+    padding-right: 15px;
+    bottom: 90px; /* 75+15 */
+    z-index: 600;
     border: none;
-    color: #FFF;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    color: #f3f4f5;
     background-color: #13223C;
 }
 
 #ChatTextInput {
     display: none;
+}
+
+/***********
+PERSONAL TAB
+***********/
+.PersonalTabWindow {
+    position: relative;
+    height: 100%;
+    margin: 5px;
+}
+
+.PersonalOverviewHeader {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.GenderFab {
+    height: 50px;
+    width: 50px;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    color: white;
+    font-size: 25px;
+    line-height: 50px;
+    text-align: center;
+}
+
+.GenderFab.Female {
+    background: linear-gradient(to right, #ff7a88, #ff9676);
+}
+
+.AvatarImage {
+    height: 110px;
+    width: 110px;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+}
+
+.GenderFab.Male {
+    background: linear-gradient(to right, #11c1d5, #1ddcb6);
+}
+
+.DisplayNames {
+    text-align: center;
+}
+
+.DisplayNames .FullName {
+    font-weight: bold;
+    font-size: 20px;
 }
 
 /*****
@@ -226,9 +293,6 @@ NAVBAR
 .NavbarIconWrap img {
     height: 30px;
     width: 30px;
-    filter: invert(.5);
-    -webkit-filter: invert(.5);
-    -moz-filter: invert(.5);
 }
 
 .NavbarLine {
@@ -240,11 +304,3 @@ NAVBAR
     background: #eb12b5;
 }
 
-.ActiveTab {
-    -webkit-transition: -moz-transform .3s ease-out;
-    -moz-transition: -webkit-transform .3s ease-out;
-
-    filter: invert(19%) sepia(93%) saturate(4612%) hue-rotate(303deg) brightness(98%) contrast(101%);
-    -webkit-filter: invert(19%) sepia(93%) saturate(4612%) hue-rotate(303deg) brightness(98%) contrast(101%);
-    -moz-filter: invert(19%) sepia(93%) saturate(4612%) hue-rotate(303deg) brightness(98%) contrast(101%);
-}
