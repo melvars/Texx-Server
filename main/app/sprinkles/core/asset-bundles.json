@@ -51,7 +51,8 @@
                 "SiteAssets/js/linkify.js",
                 "SiteAssets/js/encryption.js",
                 "SiteAssets/js/slick.js",
-                "SiteAssets/js/main.js"
+                "SiteAssets/js/main.js",
+                "SiteAssets/js/console.image.js"
             ],
             "options": {
                 "result": {

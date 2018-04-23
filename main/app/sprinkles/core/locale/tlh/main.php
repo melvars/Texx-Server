@@ -1,4 +1,5 @@
 <?php
+// NEEDS HELP!
 return [
     "TAB_CAPTIONS" => [
         "FEED" => "De'",
@@ -13,5 +14,8 @@ return [
         "USER_DISCONNECT" => "{{user}} chev vo' jabwI'",
         "JOIN_GROUP_PH" => "Ghom muv...",
         "WRITE_MESSAGE_PH" => "QIn ghItlh...",
+    ],
+    "EXPLORE_TAB" => [
+        "USER_SEARCH_PH" => "jupDaj vItu'..."
     ]
 ];

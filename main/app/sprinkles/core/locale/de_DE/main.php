@@ -13,5 +13,8 @@ return [
         "USER_DISCONNECT" => "{{user}} hat sich vom Server getrennt",
         "JOIN_GROUP_PH" => "Betrete eine Gruppe...",
         "WRITE_MESSAGE_PH" => "Schreibe eine Nachricht..."
+    ],
+    "EXPLORE_TAB" => [
+        "USER_SEARCH_PH" => "Suche ein Profil..."
     ]
 ];

@@ -113,6 +113,58 @@ GENERAL TABS
     height: 100%;
 }
 
+/*************
+EXPLORE WINDOW
+*************/
+.ExploreTabWindow {
+    position: relative;
+    height: 100%;
+    margin: 5px;
+}
+
+.UserSearchBar {
+    display: table;
+    box-sizing: border-box;
+    width: 80%;
+    height: 40px;
+    margin: 0 auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    top: 0; /* 75+15 */
+    z-index: 600;
+    border: none;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    color: #f3f4f5;
+    background-color: #13223C;
+}
+
+.SearchResults {
+    display: grid;
+    grid-template-columns: 10% 20% auto 10%;
+    overflow-y: auto;
+    max-height: 45%;
+    width: 100%;
+}
+
+.SearchResults .avatar {
+    grid-column-start: 2;
+    justify-self: center;
+    align-self: center;
+    height: 50px;
+    width: 50px;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+}
+
+.SearchResults .full_name {
+    grid-column-start: 3;
+    justify-self: center; /* OR start */
+    align-self: center;
+}
+
 /**********
 CHAT WINDOW
 **********/

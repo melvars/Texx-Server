@@ -33,6 +33,16 @@
                     </div>
                     <hr>
                 </div>
+                <div class="MainInTab ExploreTabWindow">
+                    <input id="UserSearchBar" class="UserSearchBar" type="text" title="{{ translate("EXPLORE_TAB.USER_SEARCH_PH") }}"
+                           placeholder="{{ translate("EXPLORE_TAB.USER_SEARCH_PH") }}">
+                    <br>
+                    <div class="SearchResults">
+                    </div>
+                    <div id="ExploreData">
+
+                    </div>
+                </div>
             </div>
 
             <div class="carousel-cell ChatTab">
@@ -49,9 +59,11 @@
                     <div id="ChatMessages" class="ChatMessages">
                         <!-- Messages -->
                     </div>
-                    <input title="Join a group..." placeholder="{{ translate("CHAT_MESSAGES.JOIN_GROUP_PH") }}"
+                    <input title="{{ translate("CHAT_MESSAGES.JOIN_GROUP_PH") }}"
+                           placeholder="{{ translate("CHAT_MESSAGES.JOIN_GROUP_PH") }}"
                            id="SubscribeTextInput" class="ChatInput" type="text"/>
-                    <input title="Type your message..." placeholder="{{ translate("CHAT_MESSAGES.WRITE_MESSAGE_PH") }}"
+                    <input title="{{ translate("CHAT_MESSAGES.WRITE_MESSAGE_PH") }}"
+                           placeholder="{{ translate("CHAT_MESSAGES.WRITE_MESSAGE_PH") }}"
                            id="ChatTextInput" class="ChatInput" type="text"/>
                 </div>
             </div>

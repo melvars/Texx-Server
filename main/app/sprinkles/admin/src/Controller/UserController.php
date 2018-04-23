@@ -380,6 +380,7 @@ class UserController extends SimpleController
         }
 
         $result = $user->toArray();
+        $result["avatar"] = $user->avatar;
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
@@ -1010,7 +1011,7 @@ class UserController extends SimpleController
         foreach ($data as $name => $value) {
             if ($name == 'first_name' || $name == 'last_name') {
                 $fieldNames[] = 'name';
-            } elseif ($name == 'group_id') {
+            } else if ($name == 'group_id') {
                 $fieldNames[] = 'group';
             } else {
                 $fieldNames[] = $name;
@@ -1175,7 +1176,7 @@ class UserController extends SimpleController
                 $e = new BadRequestException();
                 $e->addUserMessage('DISABLE_MASTER');
                 throw $e;
-            } elseif (
+            } else if (
                 ($user->id == $currentUser->id) &&
                 ($fieldValue == '0')
             ) {
@@ -1183,7 +1184,7 @@ class UserController extends SimpleController
                 $e->addUserMessage('DISABLE_SELF');
                 throw $e;
             }
-        } elseif ($fieldName == 'password') {
+        } else if ($fieldName == 'password') {
             $fieldValue = Password::hash($fieldValue);
         }
 
@@ -1215,7 +1216,7 @@ class UserController extends SimpleController
                     'user_name' => $user->user_name
                 ]);
             }
-        } elseif ($fieldName == 'flag_verified') {
+        } else if ($fieldName == 'flag_verified') {
             $ms->addMessageTranslated('success', 'MANUALLY_ACTIVATED', [
                 'user_name' => $user->user_name
             ]);
