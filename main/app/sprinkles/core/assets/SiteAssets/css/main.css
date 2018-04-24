@@ -23,7 +23,7 @@ GENERAL
     background: transparent;
 }
 
-body {
+html, body {
     font-family: 'Nanum Gothic', sans-serif;
     height: 100%;
     width: 100%;
@@ -60,7 +60,7 @@ hr.ShorterLine {
 }
 
 /*******
-FLICKITY
+SWIPEABLE
 *******/
 .main-carousel {
     background: #EEE;
@@ -68,13 +68,13 @@ FLICKITY
 
 .carousel-cell {
     width: 100%;
-    height: calc(100vh - 75px);
-    height: -moz-calc(100vh - 75px);
-    height: -webkit-calc(100vh - 75px);
-    height: -o-calc(100vh - 75px);
-    height: calc(100vh - 75px);
+    height: 100%;
     background: #0c1d34;
     counter-increment: carousel-cell;
+}
+
+.draggable, .slick-track {
+    height: 100%;
 }
 
 /******
@@ -109,7 +109,7 @@ HEADER
 /***********
 GENERAL TABS
 ***********/
-.MainInTab {
+.MainTabWindows, .MainInTab {
     height: 100%;
 }
 
@@ -174,12 +174,16 @@ CHAT WINDOW
     margin: 5px;
 }
 
+hr.ChatHeaderDivider {
+    margin-bottom: 0.6em; /* cause of symmetry things */
+}
+
 .ChatMessages {
     overflow-y: scroll;
-    max-height: calc(100% - 135px); /* navbar + input + some margin*/
-    max-height: -moz-calc(100% - 135px);
-    max-height: -webkit-calc(100% - 135px);
-    max-height: -o-calc(100% - 135px);
+    max-height: calc(100% - 215px); /* navbar + input + some margin*/
+    max-height: -moz-calc(100% - 215px);
+    max-height: -webkit-calc(100% - 215px);
+    max-height: -o-calc(100% - 215px);
     height: 100%;
     width: 100%;
 }
@@ -194,7 +198,7 @@ CHAT WINDOW
     word-wrap: break-word;
     text-align: center;
     padding: 8px;
-    font-size: 0.9em;
+    font-size: 0.85em;
 }
 
 .ServerChatMessage {
@@ -221,7 +225,7 @@ CHAT WINDOW
 .MessageReceived {
     float: left;
     background-color: #13223c;
-    color: #f3f4f5;
+    color: #a7a8a9;
 }
 
 .AloneMessage {
@@ -255,7 +259,7 @@ CHAT WINDOW
     height: 40px;
     padding-left: 15px;
     padding-right: 15px;
-    bottom: 90px; /* 75+15 */
+    bottom: 165px; /* 75+15 MATH GENIUS */
     z-index: 600;
     border: none;
     -webkit-border-radius: 25px;

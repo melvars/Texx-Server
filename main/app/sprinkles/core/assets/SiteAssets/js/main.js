@@ -16,10 +16,8 @@ NavbarLine
     .data("origWidth", NavbarLine.width());
 NavbarIconWrap.on("click", function () {
     NavbarIconWrap.removeClass("ActiveTab");
-    //$(this).children().attr("src", $(this).children().attr("src").split('.svg')[0] + "Activated.svg");
     var index = $(this).attr('id');
     MainTabWindows.slick('slickGoTo', index);
-    //$('.MainTabWindows').flickity().flickity('select', index);
     $el = $(this);
     leftPos = $el.position().left;
     NavbarLine.stop().animate({
@@ -28,8 +26,15 @@ NavbarIconWrap.on("click", function () {
     }, 300);
 });
 
+window.addEventListener("load",function() {
+    setTimeout(function(){
+        // This hides the address bar:
+        window.scrollTo(0, 1);
+    }, 0);
+});
+
 /********
- FLICKITY
+ SWIPEABLE
  *******/
 MainTabWindows.slick({
     initialSlide: 2,
@@ -113,8 +118,8 @@ UserSearchBar.keyup(function () {
             SearchResults.append("<img class='avatar' src='" + answer.avatar + "'/><div class='full_name'>" + answer.full_name + "</div>");
         },
         error: function () {
-            console.log("[SEARCH LOGGER] " + RequestedUser + " not found...");
             console.log("[SEARCH LOGGER] 404s are not a bug - they're a feature!");
+            console.log("[SEARCH LOGGER] " + RequestedUser + " not found...");
         }
     });
 });
