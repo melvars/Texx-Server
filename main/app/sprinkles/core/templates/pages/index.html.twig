@@ -78,6 +78,15 @@
                     </div>
                     <hr>
                 </div>
+                <div class="MainInTab">
+                    {% for user in users %}
+                        <li>
+                            <img src="{{ user.avatar }}" alt="User Image">
+                            <a class="users-list-name" href="{{site.uri.public}}/users/u/{{user.user_name}}">{{user.first_name}} {{user.last_name}}</a>
+                            <span class="users-list-date">{{ user.registered }}</span>
+                        </li>
+                    {% endfor %}
+                </div>
             </div>
 
             <div class="carousel-cell PersonalTab">

@@ -27,8 +27,19 @@ class CoreController extends SimpleController
      * By default, this is the page that non-authenticated users will first see when they navigate to your website's root.
      * Request type: GET
      */
+
     public function pageIndex($request, $response, $args) {
-        return $this->ci->view->render($response, 'pages/index.html.twig');
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Probably a better way to do this
+        $users = $classMapper->staticMethod('user', 'orderBy', 'created_at', 'desc')
+            //->take(8)
+            ->get();
+
+        return $this->ci->view->render($response, 'pages/index.html.twig', [
+            'users' => $users
+        ]);
     }
 
     /**

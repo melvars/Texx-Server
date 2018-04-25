@@ -120,6 +120,8 @@ UserSearchBar.keyup(function () {
         error: function () {
             console.log("[SEARCH LOGGER] 404s are not a bug - they're a feature!");
             console.log("[SEARCH LOGGER] " + RequestedUser + " not found...");
+            
+            SearchResults.empty();
         }
     });
 });
