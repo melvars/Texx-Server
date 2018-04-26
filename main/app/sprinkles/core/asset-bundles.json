@@ -50,7 +50,7 @@
                 "SiteAssets/js/modernizr.js",
                 "SiteAssets/js/linkify.js",
                 "SiteAssets/js/encryption.js",
-                "SiteAssets/js/slick.js",
+                "SiteAssets/js/swiper.js",
                 "SiteAssets/js/console.image.js",
                 "SiteAssets/js/main.js"
             ],
@@ -97,7 +97,7 @@
         },
         "css/main-site": {
             "styles": [
-                "SiteAssets/css/slick.css",
+                "SiteAssets/css/swiper.css",
                 "SiteAssets/css/main.css"
             ],
             "options": {

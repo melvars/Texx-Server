@@ -6,10 +6,6 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-use Slim\Http\Request;
-use Slim\Http\Response;
-use Slim\Http\UploadedFile;
-
 /**
  * Routes for posting.
  */

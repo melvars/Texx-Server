@@ -35,9 +35,4 @@
         <a href="{{site.uri.public}}/groups"><i class="fa fa-users fa-fw"></i> <span>{{ translate("GROUP", 2) }}</span></a>
     </li>
     {% endif %}
-    {% if checkAccess('update_site_config') %}
-        <li>
-            <a href="{{site.uri.public}}/settings"><i class="fa fa-gears fa-fw"></i> <span>{{ translate("SITE.CONFIG.MANAGER") }}</span></a>
-        </li>
-    {% endif %}
 {% endblock %}

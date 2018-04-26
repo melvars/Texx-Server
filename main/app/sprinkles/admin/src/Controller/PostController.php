@@ -39,7 +39,7 @@ class PostController extends SimpleController
 
         $authorizer = $this->ci->authorizer;
         $currentUser = $this->ci->currentUser;
-        if (!$authorizer->checkAccess($currentUser, 'uri_dashboard')) {
+        if (!$authorizer->checkAccess($currentUser, 'post_image')) {
             throw new ForbiddenException();
         }
 
