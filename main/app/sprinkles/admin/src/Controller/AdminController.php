@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Carbon\Carbon;
@@ -30,8 +31,7 @@ class AdminController extends SimpleController
      * Renders the admin panel dashboard
      *
      */
-    public function pageDashboard($request, $response, $args)
-    {
+    public function pageDashboard($request, $response, $args) {
         //** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
@@ -48,8 +48,8 @@ class AdminController extends SimpleController
 
         // Probably a better way to do this
         $users = $classMapper->staticMethod('user', 'orderBy', 'created_at', 'desc')
-                 ->take(8)
-                 ->get();
+            ->take(8)
+            ->get();
 
         // Transform the `create_at` date in "x days ago" type of string
         $users->transform(function ($item, $key) {
@@ -97,8 +97,7 @@ class AdminController extends SimpleController
      * This route requires authentication.
      * Request type: POST
      */
-    public function clearCache($request, $response, $args)
-    {
+    public function clearCache($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
@@ -128,8 +127,7 @@ class AdminController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalConfirmClearCache($request, $response, $args)
-    {
+    public function getModalConfirmClearCache($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 

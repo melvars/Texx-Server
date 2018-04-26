@@ -1,0 +1,19 @@
+<form method="post" enctype="multipart/form-data" action="{{site.uri.public}}/api/posts/image">
+    {% include "forms/csrf.html.twig" %}
+    <p>
+        <label>Add file (single): </label><br/>
+        <input type="file" name="example1"/>
+    </p>
+    <p>
+        <label>Add files (up to 2): </label><br/>
+        <input type="file" name="example2[]"/><br/>
+        <input type="file" name="example2[]"/>
+    </p>
+    <p>
+        <label>Add files (multiple): </label><br/>
+        <input type="file" name="example3[]" multiple="multiple"/>
+    </p>
+    <p>
+        <input type="submit"/>
+    </p>
+</form>

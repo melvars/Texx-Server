@@ -42,6 +42,11 @@ class CoreController extends SimpleController
         ]);
     }
 
+
+    public function pageTest($request, $response, $args) {
+        return $this->ci->view->render($response, 'pages/test.html.twig');
+    }
+
     /**
      * Renders a sample "about" page for UserFrosting.
      *

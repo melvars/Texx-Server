@@ -14,6 +14,8 @@ $app->get('/', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageIndex')
     ->add('authGuard')
     ->setName('index');
 
+$app->get('/test', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageTest');
+
 $app->get('/about','UserFrosting\Sprinkle\Core\Controller\CoreController:pageAbout')->add('checkEnvironment');
 
 $app->get('/alerts', 'UserFrosting\Sprinkle\Core\Controller\CoreController:jsonAlerts');
