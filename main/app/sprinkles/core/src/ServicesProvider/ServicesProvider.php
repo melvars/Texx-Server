@@ -235,9 +235,6 @@ class ServicesProvider
             // Hacky fix to prevent sessions from being hit too much: ignore CSRF middleware for requests for raw assets ;-)
             // See https://github.com/laravel/framework/issues/8172#issuecomment-99112012 for more information on why it's bad to hit Laravel sessions multiple times in rapid succession.
             $csrfBlacklist = $config['csrf.blacklist'];
-            $csrfBlacklist['^/api/posts/image'] = [
-                'POST'
-            ];
             $csrfBlacklist['^/' . $config['assets.raw.path']] = [
                 'GET'
             ];

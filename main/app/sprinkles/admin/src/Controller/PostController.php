@@ -8,6 +8,7 @@
 
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
+use function GuzzleHttp\Psr7\str;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
@@ -25,15 +26,24 @@ use Slim\Http\UploadedFile;
  */
 class PostController extends SimpleController
 {
-    public function postImage($request, $response, $args) {
 
+    public function showImage($request, $response, $args) {
+
+        $authorizer = $this->ci->authorizer;
+        $currentUser = $this->ci->currentUser;
+        if (!$authorizer->checkAccess($currentUser, 'view_image')) {
+            throw new ForbiddenException();
+        }
+
+        $postID = $args['PostID'];
+    }
+
+    public function postImage(Request $request, Response $response) {
         function moveUploadedFile($directory, UploadedFile $uploadedFile) {
             $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
             $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
             $filename = sprintf('%s.%0.8s', $basename, $extension);
-
             $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
-
             return $filename;
         }
 
@@ -43,46 +53,20 @@ class PostController extends SimpleController
             throw new ForbiddenException();
         }
 
-        $directory = $_SERVER['DOCUMENT_ROOT'] . '/beam/social/main/uploads/';
+        $directory = __DIR__ . '/../../../../../uploads'; // It's ugly but it is flexible..
         $uploadedFiles = $request->getUploadedFiles();
-        $uploadedFile = $uploadedFiles['example1'];
-        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+        $uploadedFile = $uploadedFiles['image'];
+
+        if (!strpos($uploadedFile->getClientMediaType(), "mage")) {
+            return $response->withStatus(415);
+        } else if ($uploadedFile->getError() === 1) {
+            return $response->withStatus(406);
+        } else if ($uploadedFile->getSize() > 10485760) {
+            return $response->withStatus(413);
+        } else {
             $filename = moveUploadedFile($directory, $uploadedFile);
             $response->write('uploaded ' . $filename . '<br/>');
         }
-
-        foreach ($uploadedFiles['example2'] as $uploadedFile) {
-            if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-                $filename = moveUploadedFile($directory, $uploadedFile);
-                $response->write('uploaded ' . $filename . '<br/>');
-            }
-        }
-
-        foreach ($uploadedFiles['example3'] as $uploadedFile) {
-            if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-                $filename = moveUploadedFile($directory, $uploadedFile);
-                $response->write('uploaded ' . $filename . '<br/>');
-            }
-        }
-    }
-
-    /**
-     * Moves the uploaded file to the upload directory and assigns it a unique name
-     * to avoid overwriting an existing uploaded file.
-     *
-     * @param string $directory directory to which the file is moved
-     * @param UploadedFile $uploaded file uploaded file to move
-     * @return string filename of moved file
-     */
-    function moveUploadedFile($directory, UploadedFile $uploadedFile)
-    {
-        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-        $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
-        $filename = sprintf('%s.%0.8s', $basename, $extension);
-
-        $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
-
-        return $filename;
     }
 
     protected function getUserFromParams($params) {
