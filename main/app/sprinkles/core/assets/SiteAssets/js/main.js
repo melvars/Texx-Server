@@ -6,6 +6,17 @@ var UserSearchBar = $("#UserSearchBar");
 var SearchResults = $(".SearchResults");
 var ExploreData = $("#ExploreData");
 
+/**********
+ OLD BROWSER
+ *********/
+var isIE = /*@cc_on!@*/false || !!document.documentMode;
+var isEdge = !isIE && !!window.StyleMedia;
+if (isIE || isEdge) {
+    alert("Sorry, your browser is currently not supported. " +
+        "Please update to a newer browser if you are facing any kind of issues. " +
+        "If you are a developer, you can help us supporting this browser on github.com/marvinborner/BEAM-Messenger/") // PLEASE DO IT ACTUALLY
+}
+
 /******
  NAVBAR
  *****/
@@ -26,8 +37,8 @@ NavbarIconWrap.on("click", function () {
     }, 300);
 });
 
-window.addEventListener("load",function() {
-    setTimeout(function(){
+window.addEventListener("load", function () {
+    setTimeout(function () {
         // This hides the address bar:
         window.scrollTo(0, 1);
     }, 0);
@@ -58,46 +69,6 @@ MainTabWindows.on('beforeChange', function (event, slick, currentSlide, nextSlid
         width: newWidth
     }, 300);
 });
-
-/*
-$('.MainTabWindows').flickity({
-    cellAlign: 'left',
-    prevNextButtons: false,
-    pageDots: false,
-    friction: 0.3,
-    dragThreshold: ($("body").width() * 0.5),
-    initialIndex: 2,
-    wrapAround: true,
-    maxSwipeWidth: 0,
-    on: {
-        change: function (index) {
-            $(".NavbarIconWrap").removeClass("ActiveTab");
-            $el = $("#" + index);
-            $el.addClass("ActiveTab");
-            leftPos = $el.position().left;
-            $magicLine.stop().animate({
-                left: leftPos,
-                width: newWidth
-            }, 300);
-        },
-        dragStart: function () {
-            $(".ActiveTab").css({ transform: 'scale(1.05)' });
-        },
-        dragEnd: function () {
-            $(".NavbarIconWrap").css({ transform: 'scale(1.0)' });
-        }/*,
-        scroll: function (event, progress) {
-            var TotalWidth = $("body").width();
-            console.log(progress / 10);
-            leftPos = ((progress / 1000) * TotalWidth + 'px');
-            $magicLine.stop().animate({
-                left: leftPos,
-                width: newWidth
-            });
-        }*
-    }
-});
-*/
 
 /*****
  SEARCH

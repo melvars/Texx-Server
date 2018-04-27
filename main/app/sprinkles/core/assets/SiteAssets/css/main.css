@@ -85,6 +85,7 @@ SWIPEABLE
 HEADER
 ******/
 .header {
+    -js-display: flex;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
@@ -95,6 +96,7 @@ HEADER
 .LeftButtonHeader {
     width: 20px;
     height: 20px;
+    filter: invert(.5);
     -webkit-filter: invert(.5);
     -moz-filter: invert(.5);
 }
@@ -106,6 +108,7 @@ HEADER
 .RightButtonHeader {
     width: 20px;
     height: 20px;
+    filter: invert(.5);
     -webkit-filter: invert(.5);
     -moz-filter: invert(.5);
 }
@@ -115,6 +118,34 @@ GENERAL TABS
 ***********/
 .MainTabWindows, .MainInTab {
     height: 100%;
+}
+
+/**********
+FEED WINDOW
+**********/
+.FeedTabWindow {
+    position: relative;
+    max-height: calc(100% - 155px); /* navbar + some margin*/
+    max-height: -moz-calc(100% - 155px);
+    max-height: -webkit-calc(100% - 155px);
+    max-width: 100%;
+    margin: 15px;
+    overflow-y: scroll;
+}
+
+.FeedImage {
+    display: block;
+    margin: 0 auto;
+    width: calc(100vw - 30px); /* left + right margin */
+    width: -moz-calc(100vw - 30px);
+    width: -webkit-calc(100vw - 30px);
+    height: calc(100vw - 30px);
+    height: -moz-calc(100vw - 30px);
+    height: -webkit-calc(100vw - 30px);
+    object-fit: cover;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
 }
 
 /*************
@@ -187,7 +218,6 @@ hr.ChatHeaderDivider {
     max-height: calc(100% - 215px); /* navbar + input + some margin*/
     max-height: -moz-calc(100% - 215px);
     max-height: -webkit-calc(100% - 215px);
-    max-height: -o-calc(100% - 215px);
     height: 100%;
     width: 100%;
 }
@@ -287,6 +317,7 @@ PERSONAL TAB
 }
 
 .PersonalOverviewHeader {
+    -js-display: flex;
     display: flex;
     justify-content: space-evenly;
     align-items: flex-end;
@@ -334,6 +365,7 @@ PERSONAL TAB
 NAVBAR
 *****/
 .Navbar {
+    -js-display: flex;
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;

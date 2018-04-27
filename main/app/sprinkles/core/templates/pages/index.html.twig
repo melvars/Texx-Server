@@ -20,9 +20,10 @@
                     </div>
                     <hr>
                 </div>
-                <div class="MainInTab">
+                <div class="MainInTab FeedTabWindow">
                     {% for FeedImage in FeedImages %}
-                        <img src="{{ site.uri.public }}/image/{{ FeedImage.PostID }}" alt="An image">
+                        <img class="FeedImage" src="{{ site.uri.public }}/image/{{ FeedImage.PostID }}" alt="An image">
+                        <br>
                     {% endfor %}
                 </div>
             </div>
