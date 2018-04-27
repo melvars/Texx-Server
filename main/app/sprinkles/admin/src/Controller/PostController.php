@@ -18,6 +18,8 @@ use UserFrosting\Support\Exception\BadRequestException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\UploadedFile;
+use Illuminate\Database\Capsule\Manager as DB;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Controller class for user-related requests, including listing users, CRUD for users, etc.
@@ -27,33 +29,39 @@ use Slim\Http\UploadedFile;
 class PostController extends SimpleController
 {
 
-    public function showImage($request, $response, $args) {
-
+    public function showImage(Request $request, Response $response, $args) {
+        // check if user is authorized
         $authorizer = $this->ci->authorizer;
         $currentUser = $this->ci->currentUser;
         if (!$authorizer->checkAccess($currentUser, 'view_image')) {
             throw new ForbiddenException();
         }
-
         $postID = $args['PostID'];
+
+        // get filename from database
+        $FileRequestedImage = DB::table('image_posts')
+            ->where('PostID', '=', $postID)
+            ->value('File');
+
+        if ($FileRequestedImage) {
+            $FileType = pathinfo($FileRequestedImage, PATHINFO_EXTENSION);
+
+            // echo image
+            $response->write(file_get_contents(__DIR__ . '/../../../../../uploads/' . $FileRequestedImage));
+            return $response->withHeader('Content-type', 'image/' . $FileType);
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     public function postImage(Request $request, Response $response) {
-        function moveUploadedFile($directory, UploadedFile $uploadedFile) {
-            $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-            $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
-            $filename = sprintf('%s.%0.8s', $basename, $extension);
-            $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
-            return $filename;
-        }
-
+        // check if user is authorized
         $authorizer = $this->ci->authorizer;
         $currentUser = $this->ci->currentUser;
         if (!$authorizer->checkAccess($currentUser, 'post_image')) {
             throw new ForbiddenException();
         }
 
-        $directory = __DIR__ . '/../../../../../uploads'; // It's ugly but it is flexible..
         $uploadedFiles = $request->getUploadedFiles();
         $uploadedFile = $uploadedFiles['image'];
 
@@ -63,9 +71,19 @@ class PostController extends SimpleController
             return $response->withStatus(406);
         } else if ($uploadedFile->getSize() > 10485760) {
             return $response->withStatus(413);
-        } else {
-            $filename = moveUploadedFile($directory, $uploadedFile);
-            $response->write('uploaded ' . $filename . '<br/>');
+        } else { // Upload is accepted
+            // Move file to upload directory
+            $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+            $basename = bin2hex(random_bytes(8));
+            $filename = sprintf('%s.%0.8s', $basename, $extension);
+            $uploadedFile->moveTo(__DIR__ . '/../../../../../uploads' . DIRECTORY_SEPARATOR . $filename);
+
+            // Store in Database
+            DB::table('image_posts')->insert(
+                ['UserID' => $currentUser->id, 'File' => $filename]
+            );
+
+            $response->write('Uploaded successfully! <br/>');
         }
     }
 

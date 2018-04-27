@@ -1,4 +1,2 @@
-### TODO
-* User implementation in main site (Tabs)
-* Add image upload
-* Much much more.....
+### TODO (for future implementations)
+* Use Laravels database migrations system
