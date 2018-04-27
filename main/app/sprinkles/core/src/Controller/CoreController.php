@@ -11,6 +11,7 @@ namespace UserFrosting\Sprinkle\Core\Controller;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\NotFoundException as NotFoundException;
+use Illuminate\Database\Capsule\Manager as DB;
 
 /**
  * CoreController Class
@@ -32,13 +33,16 @@ class CoreController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        // Probably a better way to do this
-        $users = $classMapper->staticMethod('user', 'orderBy', 'created_at', 'desc')
-            //->take(8)
+        $friends = $classMapper->staticMethod('user', 'orderBy', 'created_at', 'desc')
+            ->get();
+
+        $FeedImages = DB::table('image_posts')
+            ->orderBy('Created')
             ->get();
 
         return $this->ci->view->render($response, 'pages/index.html.twig', [
-            'users' => $users
+            'friends' => $friends,
+            'FeedImages' => $FeedImages
         ]);
     }
 

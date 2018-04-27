@@ -14,27 +14,31 @@
             <div class="carousel-cell FeedTab">
                 <div class="headerWrap">
                     <div class="header">
-                    <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
-                                                        src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                    <span class="LeftButtonHeader"><img src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.FEED") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
                     <hr>
+                </div>
+                <div class="MainInTab">
+                    {% for FeedImage in FeedImages %}
+                        <img src="{{ site.uri.public }}/image/{{ FeedImage.PostID }}" alt="An image">
+                    {% endfor %}
                 </div>
             </div>
 
             <div class="carousel-cell ExploreTab">
                 <div class="headerWrap">
                     <div class="header">
-                    <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
-                                                        src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                    <span class="LeftButtonHeader"><img src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.EXPLORE") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
                     <hr>
                 </div>
                 <div class="MainInTab ExploreTabWindow">
-                    <input id="UserSearchBar" class="UserSearchBar" type="text" title="{{ translate("EXPLORE_TAB.USER_SEARCH_PH") }}"
+                    <input id="UserSearchBar" class="UserSearchBar" type="text"
+                           title="{{ translate("EXPLORE_TAB.USER_SEARCH_PH") }}"
                            placeholder="{{ translate("EXPLORE_TAB.USER_SEARCH_PH") }}">
                     <br>
                     <div class="SearchResults">
@@ -48,8 +52,7 @@
             <div class="carousel-cell ChatTab">
                 <div class="headerWrap">
                     <div class="header">
-                    <span class="LeftButtonHeader"><img class="svg" draggable="false" ondragstart="return false;"
-                                                        src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                    <span class="LeftButtonHeader"><img src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.CHAT") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
@@ -61,29 +64,29 @@
                     </div>
                     <input title="{{ translate("CHAT_MESSAGES.JOIN_GROUP_PH") }}"
                            placeholder="{{ translate("CHAT_MESSAGES.JOIN_GROUP_PH") }}"
-                           id="SubscribeTextInput" class="ChatInput" type="text"/>
+                           id="SubscribeTextInput" class="ChatInput" type="text" />
                     <input title="{{ translate("CHAT_MESSAGES.WRITE_MESSAGE_PH") }}"
                            placeholder="{{ translate("CHAT_MESSAGES.WRITE_MESSAGE_PH") }}"
-                           id="ChatTextInput" class="ChatInput" type="text"/>
+                           id="ChatTextInput" class="ChatInput" type="text" />
                 </div>
             </div>
 
             <div class="carousel-cell FriendsTab">
                 <div class="headerWrap">
                     <div class="header">
-                    <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
-                                                        src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                    <span class="LeftButtonHeader"><img src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.FRIENDS") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
                     <hr>
                 </div>
                 <div class="MainInTab">
-                    {% for user in users %}
+                    {% for friend in friends %}
                         <li>
-                            <img src="{{ user.avatar }}" alt="User Image">
-                            <a class="users-list-name" href="{{site.uri.public}}/users/u/{{user.user_name}}">{{user.first_name}} {{user.last_name}}</a>
-                            <span class="users-list-date">{{ user.registered }}</span>
+                            <img src="{{ friend.avatar }}" alt="User Image">
+                            <a class="users-list-name"
+                               href="{{ site.uri.public }}/users/u/{{ friend.user_name }}">{{ friend.first_name }} {{ friend.last_name }}</a>
+                            <span class="users-list-date">{{ friend.registered }}</span>
                         </li>
                     {% endfor %}
                 </div>
@@ -92,8 +95,7 @@
             <div class="carousel-cell PersonalTab">
                 <div class="headerWrap">
                     <div class="header">
-                    <span class="LeftButtonHeader"><img draggable="false" ondragstart="return false;"
-                                                        src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                    <span class="LeftButtonHeader"><img src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.PERSONAL") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
@@ -102,7 +104,7 @@
                 <div class="MainInTab PersonalTabWindow">
                     <div class="PersonalOverviewHeader">
                         <div class="GenderFab Female">&#9792;</div>
-                        <img class="AvatarImage" src="{{ current_user.avatar }}"/>
+                        <img class="AvatarImage" src="{{ current_user.avatar }}" />
                         <div class="GenderFab Male">&#9794;</div>
                     </div>
                     <br>
@@ -118,26 +120,21 @@
         </div>
 
         <div class="Navbar">
-         <span id="0" class="NavbarIconWrap">
-             <img draggable="false" ondragstart="return false;"
-                  src="{{ assets.url('assets://SiteAssets/icons/FriendFeedOutline.svg') }}">
-        </span>
+            <span id="0" class="NavbarIconWrap">
+                <img src="{{ assets.url('assets://SiteAssets/icons/FriendFeedOutline.svg') }}">
+            </span>
             <span id="1" class="NavbarIconWrap">
-            <img draggable="false" ondragstart="return false;"
-                 src="{{ assets.url('assets://SiteAssets/icons/ExploreGlobeOutline.svg') }}">
-        </span>
+                <img src="{{ assets.url('assets://SiteAssets/icons/ExploreGlobeOutline.svg') }}">
+            </span>
             <span id="2" class="NavbarIconWrap ActiveTab">
-            <img draggable="false" ondragstart="return false;"
-                 src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutlineActivated.svg') }}">
-        </span>
+                <img src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutlineActivated.svg') }}">
+            </span>
             <span id="3" class="NavbarIconWrap">
-            <img draggable="false" ondragstart="return false;"
-                 src="{{ assets.url('assets://SiteAssets/icons/UserGroupOutline.svg') }}">
-         </span>
+                <img src="{{ assets.url('assets://SiteAssets/icons/UserGroupOutline.svg') }}">
+            </span>
             <span id="4" class="NavbarIconWrap">
-            <img draggable="false" ondragstart="return false;"
-                 src="{{ assets.url('assets://SiteAssets/icons/UserOutline.svg') }}">
-        </span>
+                <img src="{{ assets.url('assets://SiteAssets/icons/UserOutline.svg') }}">
+            </span>
         </div>
         <span class='NavbarLine'></span>
     </div>

@@ -25,6 +25,8 @@ $app->group('/api/users', function () {
 
     $this->get('/u/{user_name}/activities', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getActivities');
 
+    $this->get('/u/{user_name}/posts', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getActivities');
+
     $this->get('/u/{user_name}/roles', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getRoles');
 
     $this->get('/u/{user_name}/permissions', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getPermissions');

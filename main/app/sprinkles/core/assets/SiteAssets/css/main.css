@@ -35,10 +35,6 @@ html, body {
     border: 0;
 }
 
-.main {
-    height: 100%;
-}
-
 a {
     text-decoration: none;
     color: #4a93c0;
@@ -54,9 +50,17 @@ hr {
     padding: 0;
 }
 
+img {
+    pointer-events: none;
+}
+
 hr.ShorterLine {
     margin: 0 auto;
     width: 90%;
+}
+
+.main {
+    height: 100%;
 }
 
 /*******
