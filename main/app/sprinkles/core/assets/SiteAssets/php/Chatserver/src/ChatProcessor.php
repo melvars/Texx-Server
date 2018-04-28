@@ -73,8 +73,30 @@ class ChatProcessor implements MessageComponentInterface
                         if ($channel == $target) {
                             $MessageObject = new \stdClass();
                             $MessageObject->ServerMessage = false;
+                            $MessageObject->GroupName = $channel;
                             $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
                             $MessageObject->Message = htmlspecialchars($data->Message);
+                            if ($id === $conn->resourceId) {
+                                $MessageObject->WasHimself = true;
+                            } else {
+                                $MessageObject->WasHimself = false;
+                            }
+                            $MessageJson = json_encode($MessageObject, true);
+                            $this->users[$id]->send($MessageJson);
+                        }
+                    }
+                }
+            case "TypingState":
+                if (isset($this->subscriptions[$conn->resourceId])) {
+                    $target = $this->subscriptions[$conn->resourceId];
+                    foreach ($this->subscriptions as $id => $channel) {
+                        if ($channel == $target) {
+                            $MessageObject = new \stdClass();
+                            $MessageObject->ServerMessage = true;
+                            $MessageObject->ServerMessageType = "TypingState";
+                            $MessageObject->GroupName = $channel;
+                            $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
+                            $MessageObject->State = htmlspecialchars($data->State);
                             if ($id === $conn->resourceId) {
                                 $MessageObject->WasHimself = true;
                             } else {

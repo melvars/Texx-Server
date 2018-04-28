@@ -84,20 +84,33 @@ function InitializeChatServer() {
                 }
             } else if (MessageObject.ServerMessage === true) {
                 if (MessageObject.ServerMessageType === "GroupJoin") {
-                    if (MessageObject.WasHimself === false) {
-                        var Message = "{{ translate("CHAT_MESSAGES.USER_GROUP_JOIN", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
-                    } else if (MessageObject.WasHimself === true) {
+                    if (MessageObject.WasHimself === true) {
                         ChatMessages.empty();
                         var Message = "{{ translate("CHAT_MESSAGES.YOU_GROUP_JOIN", {group: "ConvertTranslatedMessageWithGroupName"}) }}".replace("ConvertTranslatedMessageWithGroupName", '"' + MessageObject.GroupName + '"');
+                    } else if (MessageObject.WasHimself === false) {
+                        var Message = "{{ translate("CHAT_MESSAGES.USER_GROUP_JOIN", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
                     }
                     ChatMessages.append("<div class='ServerChatMessage'>" + Message + "</span>.</div><br><br>");
                 } else if (MessageObject.ServerMessageType === "UserDisconnect") {
                     var TranslatedDisconnectMessage = "{{ translate("CHAT_MESSAGES.USER_DISCONNECT", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
                     ChatMessages.append("<div class='ServerChatMessage'>" + TranslatedDisconnectMessage + ".</div><br><br>");
+                } else if (MessageObject.ServerMessageType === "TypingState") {
+                    if (MessageObject.State === true) {
+                        if (MessageObject.WasHimself === true) {
+                            console.log("[SERVER REPORT] YOU STARTED TYPING");
+                        } else if (MessageObject.WasHimself === false) {
+                            console.log("[SERVER REPORT] " + MessageObject.Username + " STARTED TYPING");
+                        }
+                    } else if (MessageObject.State === false) {
+                        if (MessageObject.WasHimself === true) {
+                            console.log("[SERVER REPORT] YOU STOPPED TYPING");
+                        } else if (MessageObject.WasHimself === false) {
+                            console.log("[SERVER REPORT] " + MessageObject.Username + " STOPPED TYPING");
+                        }
+                    }
                 }
             }
             ChatMessages.animate({scrollTop: document.querySelector("#ChatMessages").scrollHeight}, "slow");
-            //window.scrollTo(0,document.querySelector("#ChatMessages").scrollHeight);
         };
 
         SubscribeTextInput.keyup(function (e) {
@@ -115,12 +128,18 @@ function InitializeChatServer() {
             ChatTypeTimeout = setTimeout(sendStopTyping, 2500);
 
             function sendStartTyping() {
-                if (IsTyping !== true) sendTypingState(true);
+                if (IsTyping !== true) {
+                    console.log("[TYPE LOGGER] USER STARTED TYPING");
+                    sendTypingState(true);
+                }
                 IsTyping = true;
             }
 
             function sendStopTyping() {
-                if (IsTyping !== false) sendTypingState(false);
+                if (IsTyping !== false) {
+                    console.log("[TYPE LOGGER] USER STOPPED TYPING");
+                    sendTypingState(false);
+                }
                 IsTyping = false;
             }
 
@@ -143,7 +162,7 @@ function InitializeChatServer() {
         }
 
         function sendTypingState(state) {
-            ChatSocket.send(JSON.stringify({ClientMessageType: "TypingState", Message: state}));
+            ChatSocket.send(JSON.stringify({ClientMessageType: "TypingState", State: state}));
         }
     };
 }
