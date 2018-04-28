@@ -35,24 +35,28 @@ function InitializeChatServer() {
     var ChatTextInput = $("#ChatTextInput");
     var SubscribeTextInput = $("#SubscribeTextInput");
     var ChatMessages = $("#ChatMessages");
+    var TypingIndicatorAnimationElement = "<div class='spinner'><div class='bounce1'></div><div class='bounce2'></div><div class='bounce3'></div></div>";
 
     var ChatSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
     ChatSocket.onerror = function () {
         setTimeout(function () {
-            console.log("Connection failed. Trying again...");
+            console.log("[WEBSOCKET LOGGER] Connection failed. Trying again...");
             InitializeChatServer();
         }, 5000);
     };
     ChatSocket.onopen = function () {
-        console.log("Chat connection established!");
+        console.log("[WEBSOCKET LOGGER] Chat connection established!");
+
+        // GOT MESSAGE
         ChatSocket.onmessage = function (e) {
+            var TypingIndicatorMessage = $(".TypingIndicatorMessage");
             var LastMessage = $(".ChatMessage:last");
             var MessageObject = JSON.parse(e.data);
-            if (MessageObject.ServerMessage === false) {
-                if (MessageObject.WasHimself === true) { // SENT
-                    if (!LastMessage.hasClass("MessageSent")) {
+            if (MessageObject.ServerMessage === false) { // NO SERVER MESSAGE -> SENT BY USER
+                if (MessageObject.WasHimself === true) { // -> MESSAGE WAS FROM HIMSELF
+                    if (!LastMessage.hasClass("MessageSent")) { // CHECK IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
                         ChatMessages.append("<div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + MessageObject.Message + "</div><br><br>");
-                    } else if (LastMessage.hasClass("MessageSent")) {
+                    } else if (LastMessage.hasClass("MessageSent")) { // IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
                         ChatMessages.append("<div class='ChatMessage MessageSent BottomMessage animated fadeInRight'>" + MessageObject.Message + "</div><br><br>");
                         if (LastMessage.hasClass("AloneMessage")) {
                             LastMessage.removeClass("AloneMessage");
@@ -62,13 +66,14 @@ function InitializeChatServer() {
                             LastMessage.addClass("MiddleMessage");
                         }
                     }
+                    // CONVERT LINKS TO LINKS
                     $('.MessageSent').linkify({
                         target: "_blank"
                     });
-                } else if (MessageObject.WasHimself === false) { // RECEIVED
-                    if (!LastMessage.hasClass("MessageReceived")) {
+                } else if (MessageObject.WasHimself === false) { // -> MESSAGE WAS FROM OTHER USER
+                    if (!LastMessage.hasClass("MessageReceived")) { // CHECK IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
                         ChatMessages.append("<div class='ChatMessage MessageReceived AloneMessage animated fadeInLeft'>" + MessageObject.Message + "</div><br><br>");
-                    } else if (LastMessage.hasClass("MessageReceived")) {
+                    } else if (LastMessage.hasClass("MessageReceived")) { // IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
                         ChatMessages.append("<div class='ChatMessage MessageReceived BottomMessage animated fadeInLeft'>" + MessageObject.Message + "</div><br><br>");
                         if (LastMessage.hasClass("AloneMessage")) {
                             LastMessage.removeClass("AloneMessage");
@@ -78,51 +83,48 @@ function InitializeChatServer() {
                             LastMessage.addClass("MiddleMessage");
                         }
                     }
+                    // CONVERT LINKS TO LINKS
                     $('.MessageReceived').linkify({
                         target: "_blank"
                     });
                 }
-            } else if (MessageObject.ServerMessage === true) {
-                if (MessageObject.ServerMessageType === "GroupJoin") {
-                    if (MessageObject.WasHimself === true) {
+            } else if (MessageObject.ServerMessage === true) { // SERVER MESSAGE
+                if (MessageObject.ServerMessageType === "GroupJoin") { // TYPE: USER JOINED A GROUP
+                    if (MessageObject.WasHimself === true) { // HIMSELF JOINED A GROUP -> NOTIFY
                         ChatMessages.empty();
                         var Message = "{{ translate("CHAT_MESSAGES.YOU_GROUP_JOIN", {group: "ConvertTranslatedMessageWithGroupName"}) }}".replace("ConvertTranslatedMessageWithGroupName", '"' + MessageObject.GroupName + '"');
-                    } else if (MessageObject.WasHimself === false) {
+                    } else if (MessageObject.WasHimself === false) { // OTHER USER JOINED A GROUP -> NOTIFY
                         var Message = "{{ translate("CHAT_MESSAGES.USER_GROUP_JOIN", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
                     }
                     ChatMessages.append("<div class='ServerChatMessage'>" + Message + "</span>.</div><br><br>");
-                } else if (MessageObject.ServerMessageType === "UserDisconnect") {
+                } else if (MessageObject.ServerMessageType === "UserDisconnect") { // TYPE: USER DISCONNECTED -> NOTIFY
                     var TranslatedDisconnectMessage = "{{ translate("CHAT_MESSAGES.USER_DISCONNECT", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
                     ChatMessages.append("<div class='ServerChatMessage'>" + TranslatedDisconnectMessage + ".</div><br><br>");
-                } else if (MessageObject.ServerMessageType === "TypingState") {
-                    console.log("received typing");
-                    if (MessageObject.State === true) {
-                        if (MessageObject.WasHimself === true) {
-                            // YOU STARTED TYPING
-                        } else if (MessageObject.WasHimself === false) {
-                            // OTHER STARTED TYPING
-                            console.log("[SERVER REPORT] " + MessageObject.Username + " STOPPED TYPING");
+                } else if (MessageObject.ServerMessageType === "TypingState") { // SOMEBODY'S TYPING STATE CHANGED!
+                    if (MessageObject.State === true) { // IF 'SOMEBODY' STARTED TYPING
+                        if (MessageObject.WasHimself === true) { // IDENTIFY 'SOMEBODY' -> WAS HIMSELF -> NOT THAT IMPORTANT (USER KNOWS WHEN HE STARTS TYPING?)
+                            // NOTHING
+                        } else if (MessageObject.WasHimself === false) { // IDENTIFY 'SOMEBODY' -> WAS OTHER USER -> SHOW TYPING ANIMATION ON RECEIVER'S SIDE
+                            ChatMessages.append("<div class='ChatMessage TypingIndicatorMessage AloneMessage'>" + TypingIndicatorAnimationElement + "</div>");
+                            console.log("[SERVER REPORT] " + MessageObject.Username + " STARTED TYPING");
                         }
-                    } else if (MessageObject.State === false) {
-                        if (MessageObject.WasHimself === true) {
-                            // YOU STOPPED TYPING
-                        } else if (MessageObject.WasHimself === false) {
-                            // OTHER STOPPED TYPING
+                    } else if (MessageObject.State === false) { // IF 'SOMEBODY' STOPPED TYPING
+                        if (MessageObject.WasHimself === true) { // IDENTIFY 'SOMEBODY' -> WAS HIMSELF -> NOT THAT IMPORTANT (USER KNOWS WHEN HE STOPS TYPING?)
+                            // NOTHING
+                        } else if (MessageObject.WasHimself === false) { // IDENTIFY 'SOMEBODY' -> WAS OTHER USER -> REMOVE TYPING ANIMATION
+                            TypingIndicatorMessage.fadeOut("slow");
+                            TypingIndicatorMessage.remove();
                             console.log("[SERVER REPORT] " + MessageObject.Username + " STOPPED TYPING");
                         }
                     }
                 }
             }
+            // SCROLL TO BOTTOM ON NEW MESSAGE OF ANY KIND
             ChatMessages.animate({scrollTop: document.querySelector("#ChatMessages").scrollHeight}, "slow");
         };
 
-        SubscribeTextInput.keyup(function (e) {
-            if (e.keyCode === 13 && SubscribeTextInput.val().length > 0) {
-                subscribe(SubscribeTextInput.val());
-            }
-        });
 
-
+        // TYPING RECOGNITION
         var typingTimer;
         var doneTypingInterval = 2500;
         var isTyping = false;
@@ -132,17 +134,10 @@ function InitializeChatServer() {
             clearTimeout(typingTimer);
         });
 
-        ChatTextInput.keyup(function (e) {
-            // TYPING RECOGNITION
+        ChatTextInput.keyup(function () {
             clearTimeout(typingTimer);
             typingTimer = setTimeout(sendStopTyping, doneTypingInterval);
-
-            // USER PRESSED ENTER
-            if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
-                sendMessage(ChatTextInput.val());
-                ChatTextInput.val("");
-            }
-        });
+        })
 
         function sendStartTyping() {
             if (isTyping === false) {
@@ -158,20 +153,32 @@ function InitializeChatServer() {
             }
         }
 
+        function sendTypingState(state) { // SEND STATE TO CHAT SERVER
+            ChatSocket.send(JSON.stringify({ClientMessageType: "TypingState", State: state}));
+        }
+
+        // SUBSCRIBE TO CHAT
+        SubscribeTextInput.keyup(function (e) {
+            if (e.keyCode === 13 && SubscribeTextInput.val().length > 0) {
+                subscribe(SubscribeTextInput.val());
+            }
+        });
+
         function subscribe(channel) {
             ChatSocket.send(JSON.stringify({ClientMessageType: "Subscribe", Channel: channel}));
             SubscribeTextInput.hide();
             ChatTextInput.show();
         }
 
-        function sendMessage(msg) {
-            ChatSocket.send(JSON.stringify({ClientMessageType: "Message", Message: msg}));
-            ChatTextInput.val("");
-        }
-
-        function sendTypingState(state) {
-            ChatSocket.send(JSON.stringify({ClientMessageType: "TypingState", State: state}));
-        }
+        // SEND MESSAGE FROM INPUT FIELD
+        ChatTextInput.keyup(function (e) {
+            if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
+                ChatSocket.send(JSON.stringify({ClientMessageType: "Message", Message: ChatTextInput.val()}));
+                ChatTextInput.val("");
+                ChatTextInput.val("");
+                sendTypingState(false); // USER USUALLY STOPS TYPING ON SENDING
+            }
+        });
     };
 }
 
