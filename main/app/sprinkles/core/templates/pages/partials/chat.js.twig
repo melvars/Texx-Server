@@ -95,16 +95,19 @@ function InitializeChatServer() {
                     var TranslatedDisconnectMessage = "{{ translate("CHAT_MESSAGES.USER_DISCONNECT", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
                     ChatMessages.append("<div class='ServerChatMessage'>" + TranslatedDisconnectMessage + ".</div><br><br>");
                 } else if (MessageObject.ServerMessageType === "TypingState") {
+                    console.log("received typing");
                     if (MessageObject.State === true) {
                         if (MessageObject.WasHimself === true) {
-                            console.log("[SERVER REPORT] YOU STARTED TYPING");
+                            // YOU STARTED TYPING
                         } else if (MessageObject.WasHimself === false) {
-                            console.log("[SERVER REPORT] " + MessageObject.Username + " STARTED TYPING");
+                            // OTHER STARTED TYPING
+                            console.log("[SERVER REPORT] " + MessageObject.Username + " STOPPED TYPING");
                         }
                     } else if (MessageObject.State === false) {
                         if (MessageObject.WasHimself === true) {
-                            console.log("[SERVER REPORT] YOU STOPPED TYPING");
+                            // YOU STOPPED TYPING
                         } else if (MessageObject.WasHimself === false) {
+                            // OTHER STOPPED TYPING
                             console.log("[SERVER REPORT] " + MessageObject.Username + " STOPPED TYPING");
                         }
                     }
@@ -119,29 +122,20 @@ function InitializeChatServer() {
             }
         });
 
-        ChatTextInput.keyup(function (e) {
-            // USER TYPES
-            var IsTyping = true;
+
+        var typingTimer;
+        var doneTypingInterval = 2500;
+        var isTyping = false;
+
+        ChatTextInput.keydown(function () {
             sendStartTyping();
-            var ChatTypeTimeout;
-            if (ChatTypeTimeout != undefined) clearTimeout(ChatTypeTimeout);
-            ChatTypeTimeout = setTimeout(sendStopTyping, 2500);
+            clearTimeout(typingTimer);
+        });
 
-            function sendStartTyping() {
-                if (IsTyping !== true) {
-                    console.log("[TYPE LOGGER] USER STARTED TYPING");
-                    sendTypingState(true);
-                }
-                IsTyping = true;
-            }
-
-            function sendStopTyping() {
-                if (IsTyping !== false) {
-                    console.log("[TYPE LOGGER] USER STOPPED TYPING");
-                    sendTypingState(false);
-                }
-                IsTyping = false;
-            }
+        ChatTextInput.keyup(function (e) {
+            // TYPING RECOGNITION
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(sendStopTyping, doneTypingInterval);
 
             // USER PRESSED ENTER
             if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
@@ -149,6 +143,20 @@ function InitializeChatServer() {
                 ChatTextInput.val("");
             }
         });
+
+        function sendStartTyping() {
+            if (isTyping === false) {
+                sendTypingState(true);
+                isTyping = true;
+            }
+        }
+
+        function sendStopTyping() {
+            if (isTyping === true) {
+                sendTypingState(false);
+                isTyping = false;
+            }
+        }
 
         function subscribe(channel) {
             ChatSocket.send(JSON.stringify({ClientMessageType: "Subscribe", Channel: channel}));

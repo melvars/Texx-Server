@@ -86,6 +86,7 @@ class ChatProcessor implements MessageComponentInterface
                         }
                     }
                 }
+                break;
             case "TypingState":
                 if (isset($this->subscriptions[$conn->resourceId])) {
                     $target = $this->subscriptions[$conn->resourceId];
@@ -96,7 +97,7 @@ class ChatProcessor implements MessageComponentInterface
                             $MessageObject->ServerMessageType = "TypingState";
                             $MessageObject->GroupName = $channel;
                             $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
-                            $MessageObject->State = htmlspecialchars($data->State);
+                            $MessageObject->State = $data->State;
                             if ($id === $conn->resourceId) {
                                 $MessageObject->WasHimself = true;
                             } else {
@@ -107,6 +108,7 @@ class ChatProcessor implements MessageComponentInterface
                         }
                     }
                 }
+                break;
         }
     }
 
