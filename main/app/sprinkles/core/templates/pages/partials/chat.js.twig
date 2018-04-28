@@ -38,7 +38,7 @@ function InitializeChatServer() {
 
     var ChatSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
     ChatSocket.onerror = function () {
-        setTimeout(function(){
+        setTimeout(function () {
             console.log("Connection failed. Trying again...");
             InitializeChatServer();
         }, 5000);
@@ -49,10 +49,11 @@ function InitializeChatServer() {
             var LastMessage = $(".ChatMessage:last");
             var MessageObject = JSON.parse(e.data);
             if (MessageObject.ServerMessage === false) {
-                if (MessageObject.WasHimself === true) { //MessageObject.Username
+                if (MessageObject.WasHimself === true) { // SENT
                     if (!LastMessage.hasClass("MessageSent")) {
-                        ChatMessages.append("<div class='ChatMessage MessageSent AloneMessage'>" + MessageObject.Message + "</div><br><br>");
+                        ChatMessages.append("<div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + MessageObject.Message + "</div><br><br>");
                     } else if (LastMessage.hasClass("MessageSent")) {
+                        ChatMessages.append("<div class='ChatMessage MessageSent BottomMessage animated fadeInRight'>" + MessageObject.Message + "</div><br><br>");
                         if (LastMessage.hasClass("AloneMessage")) {
                             LastMessage.removeClass("AloneMessage");
                             LastMessage.addClass("TopMessage");
@@ -60,15 +61,15 @@ function InitializeChatServer() {
                             LastMessage.removeClass("BottomMessage");
                             LastMessage.addClass("MiddleMessage");
                         }
-                        ChatMessages.append("<div class='ChatMessage MessageSent BottomMessage'>" + MessageObject.Message + "</div><br><br>");
                     }
                     $('.MessageSent').linkify({
                         target: "_blank"
                     });
-                } else if (MessageObject.WasHimself === false) {
+                } else if (MessageObject.WasHimself === false) { // RECEIVED
                     if (!LastMessage.hasClass("MessageReceived")) {
-                        ChatMessages.append("<div class='ChatMessage MessageReceived AloneMessage'>" + MessageObject.Message + "</div><br><br>");
+                        ChatMessages.append("<div class='ChatMessage MessageReceived AloneMessage animated fadeInLeft'>" + MessageObject.Message + "</div><br><br>");
                     } else if (LastMessage.hasClass("MessageReceived")) {
+                        ChatMessages.append("<div class='ChatMessage MessageReceived BottomMessage animated fadeInLeft'>" + MessageObject.Message + "</div><br><br>");
                         if (LastMessage.hasClass("AloneMessage")) {
                             LastMessage.removeClass("AloneMessage");
                             LastMessage.addClass("TopMessage");
@@ -76,7 +77,6 @@ function InitializeChatServer() {
                             LastMessage.removeClass("BottomMessage");
                             LastMessage.addClass("MiddleMessage");
                         }
-                        ChatMessages.append("<div class='ChatMessage MessageReceived BottomMessage'>" + MessageObject.Message + "</div><br><br>");
                     }
                     $('.MessageReceived').linkify({
                         target: "_blank"
@@ -85,30 +85,49 @@ function InitializeChatServer() {
             } else if (MessageObject.ServerMessage === true) {
                 if (MessageObject.ServerMessageType === "GroupJoin") {
                     if (MessageObject.WasHimself === false) {
-                        var TranslatedUserJoinMessage = "{{ translate("CHAT_MESSAGES.USER_GROUP_JOIN", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
-                        ChatMessages.append("<div class='ServerChatMessage'>" + TranslatedUserJoinMessage + ".</div><br><br>");
+                        var Message = "{{ translate("CHAT_MESSAGES.USER_GROUP_JOIN", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
                     } else if (MessageObject.WasHimself === true) {
                         ChatMessages.empty();
-                        var TranslatedYouJoinMessage = "{{ translate("CHAT_MESSAGES.YOU_GROUP_JOIN", {group: "ConvertTranslatedMessageWithGroupName"}) }}".replace("ConvertTranslatedMessageWithGroupName", '"' + MessageObject.GroupName + '"');
-                        ChatMessages.append("<div class='ServerChatMessage'>" + TranslatedYouJoinMessage + "</span>.</div><br><br>");
+                        var Message = "{{ translate("CHAT_MESSAGES.YOU_GROUP_JOIN", {group: "ConvertTranslatedMessageWithGroupName"}) }}".replace("ConvertTranslatedMessageWithGroupName", '"' + MessageObject.GroupName + '"');
                     }
+                    ChatMessages.append("<div class='ServerChatMessage'>" + Message + "</span>.</div><br><br>");
                 } else if (MessageObject.ServerMessageType === "UserDisconnect") {
                     var TranslatedDisconnectMessage = "{{ translate("CHAT_MESSAGES.USER_DISCONNECT", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", MessageObject.Username);
                     ChatMessages.append("<div class='ServerChatMessage'>" + TranslatedDisconnectMessage + ".</div><br><br>");
                 }
             }
+            ChatMessages.animate({scrollTop: document.querySelector("#ChatMessages").scrollHeight}, "slow");
+            //window.scrollTo(0,document.querySelector("#ChatMessages").scrollHeight);
         };
 
-        ChatTextInput.keyup(function (e) {
-            if (e.keyCode === 13) {
-                sendMessage(ChatTextInput.val());
-                ChatTextInput.val("");
+        SubscribeTextInput.keyup(function (e) {
+            if (e.keyCode === 13 && SubscribeTextInput.val().length > 0) {
+                subscribe(SubscribeTextInput.val());
             }
         });
 
-        SubscribeTextInput.keyup(function (e) {
-            if (e.keyCode === 13) {
-                subscribe(SubscribeTextInput.val());
+        ChatTextInput.keyup(function (e) {
+            // USER TYPES
+            var IsTyping = true;
+            sendStartTyping();
+            var ChatTypeTimeout;
+            if (ChatTypeTimeout != undefined) clearTimeout(ChatTypeTimeout);
+            ChatTypeTimeout = setTimeout(sendStopTyping, 2500);
+
+            function sendStartTyping() {
+                if (IsTyping !== true) sendTypingState(true);
+                IsTyping = true;
+            }
+
+            function sendStopTyping() {
+                if (IsTyping !== false) sendTypingState(false);
+                IsTyping = false;
+            }
+
+            // USER PRESSED ENTER
+            if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
+                sendMessage(ChatTextInput.val());
+                ChatTextInput.val("");
             }
         });
 
@@ -121,6 +140,10 @@ function InitializeChatServer() {
         function sendMessage(msg) {
             ChatSocket.send(JSON.stringify({ClientMessageType: "Message", Message: msg}));
             ChatTextInput.val("");
+        }
+
+        function sendTypingState(state) {
+            ChatSocket.send(JSON.stringify({ClientMessageType: "TypingState", Message: state}));
         }
     };
 }

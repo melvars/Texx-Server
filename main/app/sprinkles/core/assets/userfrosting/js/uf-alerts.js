@@ -128,6 +128,7 @@
         _fetchSuccess: function (alerts) {
             if (alerts != null) this.alerts = $.merge(this.alerts, alerts);
             this.$element.trigger('fetch.' + this._name);
+            console.log("[ALERT LOGGER] FETCHED ALERTS");
         },
         /**
          * Failure callback for fetch
@@ -152,6 +153,7 @@
                 message: options[1]
             });
 
+            console.log("[ALERT LOGGER] PUSHED ALERT");
             return this.$element;
         },
         /**
@@ -166,6 +168,7 @@
                 $.when(this._newAlertsPromise).then(this._render.bind(this));
             }
 
+            console.log("[ALERT LOGGER] RENDERED ALERT");
             return this.$element;
         },
         /*
@@ -256,6 +259,7 @@
             // Remove plugin from element
             this.$element.removeData(this._name);
 
+            console.log("[ALERT LOGGER] DESTROYED ALERT INSTANCE");
             return this.$element;
         }
     });

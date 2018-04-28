@@ -222,19 +222,6 @@ hr.ChatHeaderDivider {
     width: 100%;
 }
 
-.ChatMessage {
-    display: block;
-    position: relative;
-    min-width: 50px;
-    max-width: 50%;
-    width: auto;
-    height: auto;
-    word-wrap: break-word;
-    text-align: center;
-    padding: 8px;
-    font-size: 0.85em;
-}
-
 .ServerChatMessage {
     display: inline-block;
     position: relative;
@@ -248,15 +235,33 @@ hr.ChatHeaderDivider {
     background: linear-gradient(to right, #ad4eff, #7c41f9);
     color: #FFF;
     font-size: x-small;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+}
+
+.ChatMessage {
+    display: inline-block;
+    position: relative;
+    min-width: 50px;
+    max-width: 50%;
+    width: auto;
+    height: auto;
+    word-wrap: break-word;
+    text-align: center;
+    padding: 8px;
+    margin-bottom: 5px;
+    font-size: 0.85em;
 }
 
 .MessageSent {
+    clear: right;
     float: right;
     background-color: #12213b;
     color: #537eaf;
 }
 
 .MessageReceived {
+    clear: left;
     float: left;
     background-color: #13223c;
     color: #a7a8a9;

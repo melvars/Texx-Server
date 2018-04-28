@@ -22,8 +22,8 @@
                 {# Override this block in a child layout template or page template to override site-level stylesheets. #}
                 {% block stylesheets_site %}
                     <!-- Include main CSS asset bundle -->
+                    {{ assets.css() | raw }}
                     {{ assets.css('css/main-site') | raw }}
-                    {{ assets.css('css/form-widgets') | raw }}
                 {% endblock %}
 
                 {# Override this block in a child layout template or page template to specify or override stylesheets for groups of similar pages. #}
@@ -104,9 +104,14 @@
             {% include "pages/partials/config.js.twig" %}
         </script>
 
+        {% block uf_alerts_template %}
+            {% include "pages/partials/alerts.html.twig" %}
+        {% endblock %}
+
         {% block scripts %}
             {# Override this block in a child layout template or page template to override site-level scripts. #}
             {% block scripts_site %}
+                {{ assets.js('js/main') | raw }}
                 {{ assets.js('js/main-site') | raw }}
             {% endblock %}
 

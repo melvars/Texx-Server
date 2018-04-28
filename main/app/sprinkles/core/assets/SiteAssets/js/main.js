@@ -4,6 +4,7 @@ var Navbar = $(".Navbar");
 var NavbarLine = $(".NavbarLine");
 var UserSearchBar = $("#UserSearchBar");
 var SearchResults = $(".SearchResults");
+var alerts = $("#alerts-page");
 var ExploreData = $("#ExploreData");
 
 /**********
@@ -79,11 +80,12 @@ UserSearchBar.keyup(function () {
         url: site.uri.public + "/api/users/u/" + RequestedUser,
         success: function (answer) {
             console.log("[SEARCH LOGGER] User " + RequestedUser + " was (finally) found! :)");
-
             var GifUrls = ["https://media.giphy.com/media/xUPGcg01dIAot4zyZG/giphy.gif", "https://media.giphy.com/media/IS9LfP9oSLdcY/giphy.gif", "https://media.giphy.com/media/5wWf7H0WTquIU1DFY4g/giphy.gif"];
             var RandomGif = Math.floor((Math.random() * GifUrls.length));
             var RandomGifUrl = GifUrls[RandomGif];
             console.image(RandomGifUrl, 0.5);
+
+            alerts.ufAlerts().ufAlerts('fetch');
 
             SearchResults.empty();
             SearchResults.append("<img class='avatar' src='" + answer.avatar + "'/><div class='full_name'>" + answer.full_name + "</div>");
@@ -91,6 +93,8 @@ UserSearchBar.keyup(function () {
         error: function () {
             console.log("[SEARCH LOGGER] 404s are not a bug - they're a feature!");
             console.log("[SEARCH LOGGER] " + RequestedUser + " not found...");
+
+            alerts.ufAlerts().ufAlerts('fetch');
 
             SearchResults.empty();
         }

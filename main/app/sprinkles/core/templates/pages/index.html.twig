@@ -42,6 +42,7 @@
                            title="{{ translate("EXPLORE_TAB.USER_SEARCH_PH") }}"
                            placeholder="{{ translate("EXPLORE_TAB.USER_SEARCH_PH") }}">
                     <br>
+                    <div id="alerts-page"></div>
                     <div class="SearchResults">
                     </div>
                     <div id="ExploreData">
@@ -142,6 +143,12 @@
 {% endblock %}
 
 {% block scripts_page %}
+    <script id="uf-alert-template" type="text/x-handlebars-template">
+        <div class="alert alert-{{type}} alert-dismissible uf-alert">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <i class="icon fa fa-fw {{icon}} pull-left"></i> <div class="uf-alert-message-container">{{message}}</div>
+        </div>
+    </script>
     <script>
         {% include "pages/partials/chat.js.twig" %}
     </script>
