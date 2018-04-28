@@ -253,7 +253,12 @@ hr.ChatHeaderDivider {
     font-size: 0.85em;
 }
 
-.TypingIndicatorMessage {
+.MessageWrapper {
+    display: inline-block;
+    width: 100%;
+}
+
+.TypingIndicatorMessage .ChatMessage {
     clear: left;
     float: left;
     background-color: #13223c;
