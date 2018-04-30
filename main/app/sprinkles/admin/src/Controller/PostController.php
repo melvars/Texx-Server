@@ -12,14 +12,14 @@ use function GuzzleHttp\Psr7\str;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
+use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\BadRequestException;
+use UserFrosting\Support\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\UploadedFile;
 use Illuminate\Database\Capsule\Manager as DB;
-use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Controller class for user-related requests, including listing users, CRUD for users, etc.

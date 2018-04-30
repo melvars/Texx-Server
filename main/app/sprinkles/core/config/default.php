@@ -115,7 +115,7 @@
         ],
         // Slim settings - see http://www.slimframework.com/docs/objects/application.html#slim-default-settings
         'settings' => [
-            'displayErrorDetails' => true
+            'displayErrorDetails' => false
         ],
         // "Site" settings that are automatically passed to Twig
         'site' => [

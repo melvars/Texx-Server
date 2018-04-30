@@ -126,7 +126,6 @@ function InitializeChatServer() {
 
         // TYPING RECOGNITION
         var typingTimer;
-        var doneTypingInterval = 2500;
         var isTyping = false;
 
         ChatTextInput.keydown(function () {
@@ -136,7 +135,9 @@ function InitializeChatServer() {
 
         ChatTextInput.keyup(function () {
             clearTimeout(typingTimer);
-            typingTimer = setTimeout(sendStopTyping, doneTypingInterval);
+            typingTimer = setTimeout(function () {
+                sendStopTyping()
+            }, 2500)
         })
 
         function sendStartTyping() {
@@ -156,6 +157,10 @@ function InitializeChatServer() {
         function sendTypingState(state) { // SEND STATE TO CHAT SERVER
             ChatSocket.send(JSON.stringify({ClientMessageType: "TypingState", State: state}));
         }
+
+        $(window).unload(function () {
+            sendStopTyping(); // USER STOPS TYPING ON PAGE CLOSE ETC
+        })
 
         // SUBSCRIBE TO CHAT
         SubscribeTextInput.keyup(function (e) {

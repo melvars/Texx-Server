@@ -8,9 +8,8 @@
 
 namespace UserFrosting\Sprinkle\Core\Controller;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\NotFoundException as NotFoundException;
+use UserFrosting\Support\Exception\ForbiddenException;
 use Illuminate\Database\Capsule\Manager as DB;
 
 /**
@@ -39,6 +38,13 @@ class CoreController extends SimpleController
         $FeedImages = DB::table('image_posts')
             ->orderBy('Created')
             ->get();
+
+        // AUTHORIZATION - ONLY FOR ADMINS RIGHT KNOW (BUILD PROCESS)
+        $authorizer = $this->ci->authorizer;
+        $currentUser = $this->ci->currentUser;
+        if (!$authorizer->checkAccess($currentUser, 'update_site_config')) {
+            throw new ForbiddenException();
+        }
 
         return $this->ci->view->render($response, 'pages/index.html.twig', [
             'friends' => $friends,
