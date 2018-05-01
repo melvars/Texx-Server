@@ -98,8 +98,31 @@
             "styles": [
                 "SiteAssets/css/normalize.css",
                 "SiteAssets/css/swiper.css",
-                "SiteAssets/css/animate.css",
-                "SiteAssets/css/main.css"
+                "SiteAssets/css/animate.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
+                    }
+                }
+            }
+        },
+        "css/DarkTheme": {
+            "styles": [
+                "SiteAssets/css/mainDark.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
+                    }
+                }
+            }
+        },
+        "css/LightTheme": {
+            "styles": [
+                "SiteAssets/css/mainLight.css"
             ],
             "options": {
                 "result": {

@@ -24,6 +24,13 @@
                     <!-- Include main CSS asset bundle -->
                     {{ assets.css() | raw }}
                     {{ assets.css('css/main-site') | raw }}
+                    {% if current_user.theme == "dark" %}
+                        {{ assets.css('css/DarkTheme') | raw }} {# DARK THEME #}
+                    {% elseif current_user.theme == "light" %}
+                        {{ assets.css('css/LightTheme') | raw }} {# LIGHT THEME #}
+                    {% else %}
+                        {{ assets.css('css/DarkTheme') | raw }} {# DEFAULT #}
+                    {% endif %}
                 {% endblock %}
 
                 {# Override this block in a child layout template or page template to specify or override stylesheets for groups of similar pages. #}
