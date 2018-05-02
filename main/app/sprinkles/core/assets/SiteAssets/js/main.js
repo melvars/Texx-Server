@@ -7,6 +7,36 @@ var SearchResults = $(".SearchResults");
 var alerts = $("#alerts-page");
 var ExploreData = $("#ExploreData");
 
+
+/*
+ENCRYPTION
+ */
+
+// encrypt
+var openpgp = window.openpgp;
+openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
+var options, encrypted;
+options = {
+    data: "LOL",
+    passwords: ['password'],
+    armor: false
+};
+openpgp.encrypt(options).then(function (ciphertext) {
+    encrypted = ciphertext.message.packets.write();
+});
+
+// decrypt
+function decrypt() {
+    options = {
+        message: openpgp.message.read(encrypted),
+        passwords: ['passwort']
+        //format: 'binary'
+    };
+    openpgp.decrypt(options).then(function (plaintext) {
+        console.log(plaintext.data)
+    })
+}
+
 /**********
  OLD BROWSER
  *********/
