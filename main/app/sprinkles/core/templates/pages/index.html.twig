@@ -150,6 +150,18 @@
         </div>
     </script>
     <script>
-        {% include "pages/partials/chat.js.twig" %}
+        function ReplaceServerMessage(Type) { // translation service
+            var LastServerMessage = $(".MessageWrapper:last .ServerChatMessage");
+            if (Type === "YouGroupJoin") {
+                var GroupName = LastServerMessage.text();
+                LastServerMessage.text("{{ translate("CHAT_MESSAGES.YOU_GROUP_JOIN", {group: "ConvertTranslatedMessageWithGroupName"}) }}".replace("ConvertTranslatedMessageWithGroupName", '"' + GroupName + '"') + ".");
+            } else if (Type === "UserGroupJoin") {
+                var Username = LastServerMessage.text();
+                LastServerMessage.text("{{ translate("CHAT_MESSAGES.USER_GROUP_JOIN", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", Username) + ".");
+            } else if (Type === "UserDisconnect") {
+                var Username = LastServerMessage.text();
+                LastServerMessage.text("{{ translate("CHAT_MESSAGES.USER_DISCONNECT", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", Username) + ".");
+            }
+        }
     </script>
 {% endblock %}
