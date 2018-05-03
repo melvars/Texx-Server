@@ -99,7 +99,8 @@
             "styles": [
                 "SiteAssets/css/normalize.css",
                 "SiteAssets/css/swiper.css",
-                "SiteAssets/css/animate.css"
+                "SiteAssets/css/animate.css",
+                "SiteAssets/css/main.css"
             ],
             "options": {
                 "result": {
@@ -111,7 +112,7 @@
         },
         "css/DarkTheme": {
             "styles": [
-                "SiteAssets/css/mainDark.css"
+                "SiteAssets/css/DarkTheme.css"
             ],
             "options": {
                 "result": {
@@ -123,7 +124,7 @@
         },
         "css/LightTheme": {
             "styles": [
-                "SiteAssets/css/mainLight.css"
+                "SiteAssets/css/LightTheme.css"
             ],
             "options": {
                 "result": {

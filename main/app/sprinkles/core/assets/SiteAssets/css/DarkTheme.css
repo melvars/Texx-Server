@@ -1,0 +1,101 @@
+html, body {
+    background-color: #0c1d34;
+    color: #426A91;
+}
+
+a {
+    color: #4a93c0;
+}
+
+hr {
+    border-top: 1px solid #112a42;
+}
+
+img {
+    pointer-events: none;
+}
+
+.main-carousel {
+    background: #EEE;
+}
+
+.carousel-cell {
+    background: #0c1d34;
+}
+
+.LeftButtonHeader {
+    filter: invert(.5);
+    -webkit-filter: invert(.5);
+    -moz-filter: invert(.5);
+}
+
+.HeaderCaption {
+    color: lightgrey;
+}
+
+.RightButtonHeader {
+    filter: invert(.5);
+    -webkit-filter: invert(.5);
+    -moz-filter: invert(.5);
+}
+
+.UserSearchBar {
+    color: #f3f4f5;
+    background-color: #13223C;
+}
+
+.SearchResults .full_name {
+    grid-column-start: 3;
+    justify-self: center; /* OR start */
+    align-self: center;
+}
+
+.ServerChatMessage {
+    background: linear-gradient(to right, #ad4eff, #7c41f9);
+    color: #FFF;
+}
+
+.TypingIndicatorMessage {
+    background-color: #13223c;
+    color: #a7a8a9;
+}
+
+.MessageSent {
+    background-color: #12213b;
+    color: #537eaf;
+}
+
+.MessageReceived {
+    background-color: #13223c;
+    color: #a7a8a9;
+}
+
+.ChatInput {
+    color: #f3f4f5;
+    background-color: #13223C;
+}
+
+.spinner > div {
+    background-color: #a7a8a9;
+}
+
+.GenderFab {
+    color: white;
+}
+
+.GenderFab.Female {
+    background: linear-gradient(to right, #ff7a88, #ff9676);
+}
+
+.GenderFab.Male {
+    background: linear-gradient(to right, #11c1d5, #1ddcb6);
+}
+
+.Navbar {
+    background-color: #13223c;
+}
+
+.NavbarLine {
+    background: #eb12b5;
+}
+
