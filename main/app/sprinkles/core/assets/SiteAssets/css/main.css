@@ -162,7 +162,7 @@ EXPLORE WINDOW
     width: 100%;
 }
 
-.SearchResults .avatar {
+.SearchResults .Avatar {
     grid-column-start: 2;
     justify-self: center;
     align-self: center;
@@ -173,7 +173,7 @@ EXPLORE WINDOW
     border-radius: 100%;
 }
 
-.SearchResults .full_name {
+.SearchResults .UsersFullName {
     grid-column-start: 3;
     justify-self: center; /* OR start */
     align-self: center;
@@ -336,6 +336,41 @@ hr.ChatHeaderDivider {
           transform: scale(1.0);
       }
 }
+
+/*********
+FRIEND TAB
+*********/
+.FriendsTabWindow {
+    position: relative;
+    height: 100%;
+    margin: 5px;
+}
+
+.FriendList {
+    display: grid;
+    grid-template-columns: 10% 20% auto 10%;
+    overflow-y: auto;
+    max-height: 45%;
+    width: 100%;
+}
+
+.FriendList .Avatar {
+    grid-column-start: 2;
+    justify-self: center;
+    align-self: center;
+    height: 50px;
+    width: 50px;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+}
+
+.FriendList .FriendName {
+    grid-column-start: 3;
+    justify-self: center; /* OR start */
+    align-self: center;
+}
+
 
 /***********
 PERSONAL TAB

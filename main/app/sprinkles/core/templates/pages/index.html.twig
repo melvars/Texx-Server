@@ -14,7 +14,8 @@
             <div class="carousel-cell FeedTab">
                 <div class="headerWrap">
                     <div class="header">
-                    <span class="LeftButtonHeader"><img src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                        <span class="LeftButtonHeader"><img
+                                    src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.FEED") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
@@ -31,7 +32,8 @@
             <div class="carousel-cell ExploreTab">
                 <div class="headerWrap">
                     <div class="header">
-                    <span class="LeftButtonHeader"><img src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                        <span class="LeftButtonHeader"><img
+                                    src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.EXPLORE") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
@@ -54,7 +56,8 @@
             <div class="carousel-cell ChatTab">
                 <div class="headerWrap">
                     <div class="header">
-                    <span class="LeftButtonHeader"><img src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                        <span class="LeftButtonHeader"><img
+                                    src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.CHAT") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
@@ -76,28 +79,30 @@
             <div class="carousel-cell FriendsTab">
                 <div class="headerWrap">
                     <div class="header">
-                    <span class="LeftButtonHeader"><img src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                        <span class="LeftButtonHeader"><img
+                                    src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.FRIENDS") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
                     <hr>
                 </div>
-                <div class="MainInTab">
-                    {% for friend in friends %}
-                        <li>
-                            <img src="{{ friend.avatar }}" alt="User Image">
-                            <a class="users-list-name"
+                <div class="MainInTab FriendsTabWindow">
+                    <div class="FriendList">
+                        {% for friend in friends %}
+                            <img class="Avatar" src="{{ friend.avatar }}" alt="Friends Image">
+                            <a class="FriendName"
                                href="{{ site.uri.public }}/users/u/{{ friend.user_name }}">{{ friend.first_name }} {{ friend.last_name }}</a>
-                            <span class="users-list-date">{{ friend.registered }}</span>
-                        </li>
-                    {% endfor %}
+                            <br>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
 
             <div class="carousel-cell PersonalTab">
                 <div class="headerWrap">
                     <div class="header">
-                    <span class="LeftButtonHeader"><img src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                        <span class="LeftButtonHeader"><img
+                                    src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.PERSONAL") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
@@ -144,9 +149,10 @@
 
 {% block scripts_page %}
     <script id="uf-alert-template" type="text/x-handlebars-template">
-        <div class="alert alert-{{type}} alert-dismissible uf-alert">
+        <div class="alert alert-{{ type }} alert-dismissible uf-alert">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <i class="icon fa fa-fw {{icon}} pull-left"></i> <div class="uf-alert-message-container">{{message}}</div>
+            <i class="icon fa fa-fw {{ icon }} pull-left"></i>
+            <div class="uf-alert-message-container">{{ message }}</div>
         </div>
     </script>
     <script>

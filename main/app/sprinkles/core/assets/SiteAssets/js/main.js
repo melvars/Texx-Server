@@ -118,7 +118,7 @@ UserSearchBar.keyup(function () {
             alerts.ufAlerts().ufAlerts('fetch');
 
             SearchResults.empty();
-            SearchResults.append("<img class='avatar' src='" + answer.avatar + "'/><div class='full_name'>" + answer.full_name + "</div>");
+            SearchResults.append("<img class='Avatar' src='" + answer.avatar + "'/><div class='UsersFullName'>" + answer.full_name + "</div>");
         },
         error: function () {
             console.log("[SEARCH LOGGER] 404s are not a bug - they're a feature!");
