@@ -52,6 +52,9 @@ build/npm-debug.log
 # Ignore compiled assets
 public/assets/*
 
+# Ignore uploads
+uploads/*
+
 # Ignore minified assets (v0.3.x)
 public/js/min/*
 public/css/min/*
