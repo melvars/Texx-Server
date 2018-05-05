@@ -115,7 +115,7 @@
         ],
         // Slim settings - see http://www.slimframework.com/docs/objects/application.html#slim-default-settings
         'settings' => [
-            'displayErrorDetails' => false
+            'displayErrorDetails' => true
         ],
         // "Site" settings that are automatically passed to Twig
         'site' => [
@@ -178,6 +178,6 @@
             'display_errors'  => 'false',
             'log_errors'      => 'true',
             // Let PHP itself render errors natively.  Useful if a fatal error is raised in our custom shutdown handler.
-            'display_errors_native' => 'false'
+            'display_errors_native' => 'true'
         ]
     ];

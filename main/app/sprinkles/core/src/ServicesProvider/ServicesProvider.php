@@ -82,7 +82,7 @@ class ServicesProvider
 
             if ($config['alert.storage'] == 'cache') {
                 return new CacheAlertStream($config['alert.key'], $c->translator, $c->cache, $c->config);
-            } elseif ($config['alert.storage'] == 'session') {
+            } else if ($config['alert.storage'] == 'session') {
                 return new SessionAlertStream($config['alert.key'], $c->translator, $c->session);
             } else {
                 throw new \Exception("Bad alert storage handler type '{$config['alert.storage']}' specified in configuration file.");
@@ -158,11 +158,11 @@ class ServicesProvider
             if ($config['cache.driver'] == 'file') {
                 $path = $c->locator->findResource('cache://', TRUE, TRUE);
                 $cacheStore = new TaggableFileStore($path);
-            } elseif ($config['cache.driver'] == 'memcached') {
+            } else if ($config['cache.driver'] == 'memcached') {
                 // We need to inject the prefix in the memcached config
                 $config = array_merge($config['cache.memcached'], ['prefix' => $config['cache.prefix']]);
                 $cacheStore = new MemcachedStore($config);
-            } elseif ($config['cache.driver'] == 'redis') {
+            } else if ($config['cache.driver'] == 'redis') {
                 // We need to inject the prefix in the redis config
                 $config = array_merge($config['cache.redis'], ['prefix' => $config['cache.prefix']]);
                 $cacheStore = new RedisStore($config);
@@ -512,7 +512,7 @@ class ServicesProvider
             if ($config['session.handler'] == 'file') {
                 $fs = new FileSystem;
                 $handler = new FileSessionHandler($fs, $c->locator->findResource('session://'), $config['session.minutes']);
-            } elseif ($config['session.handler'] == 'database') {
+            } else if ($config['session.handler'] == 'database') {
                 $connection = $c->db->connection();
                 // Table must exist, otherwise an exception will be thrown
                 $handler = new DatabaseSessionHandler($connection, $config['session.database.table'], $config['session.minutes']);
