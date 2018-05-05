@@ -8,9 +8,15 @@ var alerts = $("#alerts-page");
 var ExploreData = $("#ExploreData");
 
 
-/*
-ENCRYPTION
- */
+/***********
+ CACHE IMAGES
+ ***********/
+var cachedNavbarIcons = $(".NavbarIconWrap img").imageCaching();
+var cashedAvatarIcons = $("img.Avatar").imageCaching();
+
+/*********
+ ENCRYPTION
+ ********/
 
 // encrypt
 var openpgp = window.openpgp;
@@ -90,8 +96,10 @@ MainTabWindows.slick({
 MainTabWindows.on('beforeChange', function (event, slick, currentSlide, nextSlide) {
     currentSlide = $("#" + currentSlide);
     nextSlide = $("#" + nextSlide);
-    currentSlide.children().attr("src", (currentSlide.children().attr("src").split('.svg')[0].replace('Activated', '') + ".svg"));
-    nextSlide.children().attr("src", nextSlide.children().attr("src").split('.svg')[0] + "Activated.svg");
+    currentSlide.children().attr("data-src", (currentSlide.children().attr("data-src").split('.svg')[0].replace('Activated', '') + ".svg"));
+    nextSlide.children().attr("data-caching-key", nextSlide.children().attr("data-src").split('.svg')[0].split('/').pop() + "Activated_nav_cached");
+    nextSlide.children().attr("data-src", nextSlide.children().attr("data-src").split('.svg')[0] + "Activated.svg");
+    cachedNavbarIcons.refresh();
     $el = nextSlide;
     $el.addClass("ActiveTab");
     leftPos = $el.position().left;
@@ -118,7 +126,8 @@ UserSearchBar.keyup(function () {
             alerts.ufAlerts().ufAlerts('fetch');
 
             SearchResults.empty();
-            SearchResults.append("<img class='Avatar' src='" + answer.avatar + "'/><div class='UsersFullName'>" + answer.full_name + "</div>");
+            SearchResults.append("<img class='Avatar' data-src='" + answer.avatar + "' data-caching-key='" + answer.user_name + "_avatar_cached'/><div class='UsersFullName'>" + answer.full_name + "</div>");
+            $(".SearchResults .Avatar").imageCaching(); // refresh
         },
         error: function () {
             console.log("[SEARCH LOGGER] 404s are not a bug - they're a feature!");
