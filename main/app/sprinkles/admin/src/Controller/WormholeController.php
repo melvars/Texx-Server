@@ -51,4 +51,22 @@ class WormholeController extends SimpleController
             throw new NotFoundException(); // IT'S A FORBIDDEN EXCEPTION BUT IT'S SECRET! PSSSHT
         }
     }
+
+    public function getUsername(Request $request, Response $response, $args) {
+        $currentUser = $this->ci->currentUser; // FOR DATABASE QUERY
+
+        $access_token = $args['access_token'];
+        if (DB::table('public_keys')
+            ->where('UserID', 1)
+            ->where('Key', '=', $access_token)
+            ->exists()) {
+            $user_id = $args['user_id'];
+            $username =(DB::table('users')
+                ->where('id', $user_id)
+                ->value('user_name'));
+            $response->write($username);
+        } else {
+            throw new NotFoundException(); // IT'S A FORBIDDEN EXCEPTION BUT IT'S SECRET! PSSSHT
+        }
+    }
 }

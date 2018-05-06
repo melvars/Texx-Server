@@ -128,7 +128,7 @@
         _fetchSuccess: function (alerts) {
             if (alerts != null) this.alerts = $.merge(this.alerts, alerts);
             this.$element.trigger('fetch.' + this._name);
-            console.log("[ALERT LOGGER] FETCHED ALERTS");
+            console.log("%c[ALERT LOGGER] FETCHED ALERTS", "color: blue");
         },
         /**
          * Failure callback for fetch
@@ -153,7 +153,7 @@
                 message: options[1]
             });
 
-            console.log("[ALERT LOGGER] PUSHED ALERT");
+            console.log("%c[ALERT LOGGER] PUSHED ALERT", "color: blue");
             return this.$element;
         },
         /**
@@ -168,7 +168,7 @@
                 $.when(this._newAlertsPromise).then(this._render.bind(this));
             }
 
-            console.log("[ALERT LOGGER] RENDERED ALERT");
+            console.log("%c[ALERT LOGGER] RENDERED ALERT", "color: blue");
             return this.$element;
         },
         /*

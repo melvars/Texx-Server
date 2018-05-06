@@ -113,29 +113,27 @@ MainTabWindows.on('beforeChange', function (event, slick, currentSlide, nextSlid
  SEARCH
  ****/
 UserSearchBar.keyup(function () {
+    SearchResults.empty();
     var RequestedUser = UserSearchBar.val();
+    if (RequestedUser !== " " && RequestedUser !== "")
     $.ajax({
         url: site.uri.public + "/api/users/u/" + RequestedUser,
         success: function (answer) {
-            console.log("[SEARCH LOGGER] User " + RequestedUser + " was (finally) found! :)");
-            var GifUrls = ["https://media.giphy.com/media/xUPGcg01dIAot4zyZG/giphy.gif", "https://media.giphy.com/media/IS9LfP9oSLdcY/giphy.gif", "https://media.giphy.com/media/5wWf7H0WTquIU1DFY4g/giphy.gif"];
-            var RandomGif = Math.floor((Math.random() * GifUrls.length));
-            var RandomGifUrl = GifUrls[RandomGif];
-            console.image(RandomGifUrl, 0.5);
+            console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was found!", "color: green");
+            //var GifUrls = ["https://media.giphy.com/media/xUPGcg01dIAot4zyZG/giphy.gif", "https://media.giphy.com/media/IS9LfP9oSLdcY/giphy.gif", "https://media.giphy.com/media/5wWf7H0WTquIU1DFY4g/giphy.gif"];
+            //var RandomGif = Math.floor((Math.random() * GifUrls.length));
+            //var RandomGifUrl = GifUrls[RandomGif];
+            //console.image(RandomGifUrl, 0.5);
 
             alerts.ufAlerts().ufAlerts('fetch');
 
-            SearchResults.empty();
             SearchResults.append("<img class='Avatar' data-src='" + answer.avatar + "' data-caching-key='" + answer.user_name + "_avatar_cached'/><div class='UsersFullName'>" + answer.full_name + "</div>");
             $(".SearchResults .Avatar").imageCaching(); // refresh
         },
         error: function () {
-            console.log("[SEARCH LOGGER] 404s are not a bug - they're a feature!");
-            console.log("[SEARCH LOGGER] " + RequestedUser + " not found...");
+            console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was not found!", "color: red");
 
             alerts.ufAlerts().ufAlerts('fetch');
-
-            SearchResults.empty();
         }
     });
 });

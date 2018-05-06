@@ -10,14 +10,16 @@ function InitializeChatServer() {
     var ChatSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
     ChatSocket.onerror = function () {
         setTimeout(function () {
-            console.log("[CHATSOCKET LOGGER] Connection failed. Trying again...");
+            console.log("%c[CHATSOCKET LOGGER] Connection failed. Trying again...", "color: red");
             InitializeChatServer();
         }, 5000);
     };
     ChatSocket.onopen = function () {
-        ChatSocket.send(JSON.stringify({ClientMessageType: "Verify", Cookie: document.cookie, UserID: current_user_id}));
         // CONNECTION SUCCESSFUL!
-        console.log("[CHATSOCKET LOGGER] Chat connection established!");
+        console.log("%c[CHATSOCKET LOGGER] Chat connection established!", "color: darkorange");
+        // START VERIFICATION
+        ChatSocket.send(JSON.stringify({ClientMessageType: "Verify", Cookie: document.cookie, UserID: current_user_id}));
+        console.log("%c[CHATSOCKET LOGGER] Started chat verification process...", "color: grey");
         // GOT MESSAGE
         ChatSocket.onmessage = function (e) {
             // DECLARATIONS
@@ -31,10 +33,11 @@ function InitializeChatServer() {
             var ServerMessage = MessageObject.ServerMessage;
             var WasHimself = MessageObject.WasHimself;
             var ServerMessageType = MessageObject.ServerMessageType;
+            var Granted = MessageObject.Granted;
 
             if (ServerMessage === false) { // NO SERVER MESSAGE -> SENT BY USER
-                console.log("[CHATSOCKET LOGGER] Received a message from user!");
                 if (WasHimself === true) { // -> MESSAGE WAS FROM HIMSELF
+                    console.log("%c[CHATSOCKET LOGGER] You sent a message!", "color: darkorange");
                     if (!LastMessage.hasClass("MessageSent")) { // CHECK IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
                         ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + Message + "</div></div>");
                     } else if (LastMessage.hasClass("MessageSent")) { // IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
@@ -48,6 +51,7 @@ function InitializeChatServer() {
                         }
                     }
                 } else if (WasHimself === false) { // -> MESSAGE WAS FROM OTHER USER
+                    console.log("%c[CHATSOCKET LOGGER] You received a message!", "color: darkorange");
                     if (!LastMessage.hasClass("MessageReceived")) { // CHECK IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
                         ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageReceived AloneMessage animated fadeInLeft'>" + Message + "</div></div>");
                     } else if (LastMessage.hasClass("MessageReceived")) { // IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
@@ -66,38 +70,44 @@ function InitializeChatServer() {
                     target: "_blank"
                 });
             } else if (ServerMessage === true) { // SERVER MESSAGE
-                console.log("[CHATSOCKET LOGGER] Received a message from server!");
                 if (ServerMessageType === "GroupJoin") { // TYPE: USER JOINED A GROUP
                     if (WasHimself === true) { // HIMSELF JOINED A GROUP -> NOTIFY
                         ChatMessages.empty(); // -> EMPTY MESSAGES ON NEW GROUP JOIN
                         ChatMessages.append("<br><div class='MessageWrapper'><div class='ServerChatMessage'>" + GroupName + "</span></div></div><br>");
                         ReplaceServerMessage("YouGroupJoin"); // FOR TRANSLATION
+                        console.log("%c[CHATSOCKET LOGGER] You joined the group " + GroupName + "!", "color: darkorange");
                     } else if (WasHimself === false) { // OTHER USER JOINED A GROUP -> NOTIFY
                         ChatMessages.append("<br><div class='MessageWrapper'><div class='ServerChatMessage'>" + Username + "</span></div></div><br>");
                         ReplaceServerMessage("UserGroupJoin"); // FOR TRANSLATION
+                        console.log("%c[CHATSOCKET LOGGER] " + Username + " joined the group!", "color: darkorange");
                     }
                 } else if (ServerMessageType === "UserDisconnect") { // TYPE: USER DISCONNECTED -> NOTIFY
                     ChatMessages.append("<br><div class='MessageWrapper'><div class='ServerChatMessage'>" + Username + "</span></div></div><br>");
                     ReplaceServerMessage("UserDisconnect"); // FOR TRANSLATION
+                    console.log("%c[CHATSOCKET LOGGER] " + Username + " disconnected from server!", "color: darkorange");
                 } else if (ServerMessageType === "TypingState") { // TYPE: SOMEBODY'S TYPING STATE CHANGED!
                     if (State === true) { // IF 'SOMEBODY' STARTED TYPING
                         if (WasHimself === true) { // IDENTIFY 'SOMEBODY' -> WAS HIMSELF -> NOT THAT IMPORTANT (USER KNOWS WHEN HE STARTS TYPING?)
-                            // NOTHING
+                            console.log("%c[CHAT TYPING LOGGER] You started typing!", "color: grey");
                         } else if (WasHimself === false) { // IDENTIFY 'SOMEBODY' -> WAS OTHER USER -> SHOW TYPING ANIMATION ON RECEIVER'S SIDE
                             ChatMessages.append("<div class='MessageWrapper'><div class='ChatMessage TypingIndicatorMessage AloneMessage'>" + TypingIndicatorAnimationElement + "</div></div>");
-                            console.log("[SERVER REPORT] " + Username + " STARTED TYPING");
+                            console.log("%c[CHAT TYPING LOGGER] " + Username + " started typing!", "color: grey");
                         }
                     } else if (State === false) { // IF 'SOMEBODY' STOPPED TYPING
                         if (WasHimself === true) { // IDENTIFY 'SOMEBODY' -> WAS HIMSELF -> NOT THAT IMPORTANT (USER KNOWS WHEN HE STOPS TYPING?)
-                            // NOTHING
+                            console.log("%c[CHAT TYPING LOGGER] You stopped typing!", "color: grey");
                         } else if (WasHimself === false) { // IDENTIFY 'SOMEBODY' -> WAS OTHER USER -> REMOVE TYPING ANIMATION
                             //TypingIndicatorMessage.fadeOut("fast");
                             TypingIndicatorMessage.remove();
-                            console.log("[SERVER REPORT] " + Username + " STOPPED TYPING");
+                            console.log("%c[CHAT TYPING LOGGER] " + Username + " stopped typing!", "color: grey");
                         }
                     }
-                } else if (ServerMessageType === "Verify") { // TYPE: SERVER CHECKED ACCESS
-
+                } else if (ServerMessageType === "Verify") { // TYPE: SERVER CHECKED ACCESS -- MOSTLY HANDLED IN BACKEND
+                        if (Granted === true) {
+                            console.log("%c[CHATSOCKET LOGGER] Chat access granted!", "color: green");
+                        } else if (Granted === false) {
+                            console.log("%c[CHATSOCKET LOGGER] Chat access denied!", "color: red");
+                        }
                 }
             }
             // SCROLL TO BOTTOM ON NEW MESSAGE OF ANY KIND
@@ -159,14 +169,14 @@ function InitializeChatServer() {
         // SEND MESSAGE FROM INPUT FIELD
         ChatTextInput.keyup(function (e) {
             if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
-                ChatSocket.send(JSON.stringify({ClientMessageType: "Message", Message: ChatTextInput.val()}));
-                ChatTextInput.val("");
-                ChatTextInput.val("");
-
                 // USER USUALLY STOPS TYPING ON SENDING -> CHANGE STATE TO FALSE
                 sendTypingState(false);
                 isTyping = false;
                 clearTimeout(typingTimer);
+
+                ChatSocket.send(JSON.stringify({ClientMessageType: "Message", Message: ChatTextInput.val()}));
+                ChatTextInput.val("");
+                ChatTextInput.val("");
             }
         });
     };

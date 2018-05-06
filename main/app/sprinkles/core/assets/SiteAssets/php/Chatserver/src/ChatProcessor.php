@@ -13,22 +13,24 @@ class ChatProcessor implements MessageComponentInterface
     protected $clients;
     private $subscriptions;
     private $users;
+    private $userID;
     private $connectedUsersNames;
     private $verifiedUsers;
+    private $emptyArray;
 
     public function __construct() {
         $this->clients = new \SplObjectStorage;
         $this->subscriptions = [];
-        $this->users = [];
+        $this->users = []; // TEMPORARY WEBSOCKET USER
+        $this->userID = []; // USER ID WHICH IS DECLARED IN DB
         $this->connectedUsersNames = [];
         $this->verifiedUsers = [];
+        $this->emptyArray = array(0 => 'nothing');
     }
 
     public function onOpen(ConnectionInterface $conn) {
-        $generator = new Alliteration();
         $this->clients->attach($conn);
         $this->users[$conn->resourceId] = $conn;
-        $this->connectedUsersNames[$conn->resourceId] = $generator->getName();
     }
 
     public function onMessage(ConnectionInterface $conn, MessageInterface $msg) {
@@ -49,7 +51,10 @@ class ChatProcessor implements MessageComponentInterface
                     $MessageObject->ServerMessage = TRUE;
                     $MessageObject->ServerMessageType = "Verify";
                     $MessageObject->Granted = TRUE;
+                    $username = file_get_contents("https://beam-messenger.de/wormhole/" . $AccessToken . "/users/u/" . $data->UserID . "/username");
+                    $this->userID[$conn->resourceId] = $data->UserID;
                     $this->verifiedUsers[$conn->resourceId] = TRUE;
+                    $this->connectedUsersNames[$conn->resourceId] = $username;
                     $this->users[$conn->resourceId]->send(json_encode($MessageObject, TRUE));
                 } else {
                     $MessageObject = new \stdClass();
@@ -58,28 +63,30 @@ class ChatProcessor implements MessageComponentInterface
                     $MessageObject->Granted = FALSE;
                     $this->verifiedUsers[$conn->resourceId] = FALSE;
                     $this->users[$conn->resourceId]->send(json_encode($MessageObject, TRUE));
-                    $this->clients->detach($conn);
+                    $this->onClose($conn);
                 }
                 break;
         }
         if ($this->verifiedUsers[$conn->resourceId]) {
             switch ($data->ClientMessageType) {
                 case "Subscribe": // USER SUBSCRIBED
-                    $this->subscriptions[$conn->resourceId] = $data->Channel;
-                    foreach ($this->subscriptions as $id => $channel) {
-                        if ($this->subscriptions[$conn->resourceId] == $channel) {
-                            $MessageObject = new \stdClass();
-                            $MessageObject->ServerMessage = TRUE;
-                            $MessageObject->ServerMessageType = "GroupJoin";
-                            $MessageObject->GroupName = $channel;
-                            $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
-                            if ($id === $conn->resourceId) {
-                                $MessageObject->WasHimself = TRUE;
-                            } else {
-                                $MessageObject->WasHimself = FALSE;
+                    //if (!in_array(array_flip($this->userID)[$this->userID[$conn->resourceId]], (isset(array_flip($this->subscriptions)[$data->Channel]) ? array_flip($this->subscriptions)[$data->Channel] : array()))) { // ONLY JOIN IF NOT ALREADY JOINED
+                        $this->subscriptions[$conn->resourceId] = $data->Channel;
+                        foreach ($this->subscriptions as $id => $channel) {
+                            if ($this->subscriptions[$conn->resourceId] == $channel) {
+                                $MessageObject = new \stdClass();
+                                $MessageObject->ServerMessage = TRUE;
+                                $MessageObject->ServerMessageType = "GroupJoin";
+                                $MessageObject->GroupName = $channel;
+                                $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
+                                if ($id === $conn->resourceId) {
+                                    $MessageObject->WasHimself = TRUE;
+                                } else {
+                                    $MessageObject->WasHimself = FALSE;
+                                }
+                                $MessageJson = json_encode($MessageObject, TRUE);
+                                $this->users[$id]->send($MessageJson);
                             }
-                            $MessageJson = json_encode($MessageObject, TRUE);
-                            $this->users[$id]->send($MessageJson);
                         }
                     }
                     break;
