@@ -16,7 +16,6 @@ class ChatProcessor implements MessageComponentInterface
     private $userID;
     private $connectedUsersNames;
     private $verifiedUsers;
-    private $emptyArray;
 
     public function __construct() {
         $this->clients = new \SplObjectStorage;
@@ -25,7 +24,6 @@ class ChatProcessor implements MessageComponentInterface
         $this->userID = []; // USER ID WHICH IS DECLARED IN DB
         $this->connectedUsersNames = [];
         $this->verifiedUsers = [];
-        $this->emptyArray = array(0 => 'nothing');
     }
 
     public function onOpen(ConnectionInterface $conn) {
@@ -88,7 +86,6 @@ class ChatProcessor implements MessageComponentInterface
                                 $this->users[$id]->send($MessageJson);
                             }
                         }
-                    }
                     break;
                 case "Message": // MESSAGE RECEIVED
                     if (isset($this->subscriptions[$conn->resourceId])) {
