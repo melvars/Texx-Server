@@ -116,6 +116,7 @@
         {% endblock %}
 
         {% block scripts %}
+            <script>var current_user_id = {{ current_user.id }};</script>
             {# Override this block in a child layout template or page template to override site-level scripts. #}
             {% block scripts_site %}
                 {{ assets.js('js/main') | raw }}

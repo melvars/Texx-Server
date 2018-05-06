@@ -15,7 +15,7 @@ function InitializeChatServer() {
         }, 5000);
     };
     ChatSocket.onopen = function () {
-        ChatSocket.send(JSON.stringify({ClientMessageType: "Verify", Cookie: document.cookie}));
+        ChatSocket.send(JSON.stringify({ClientMessageType: "Verify", Cookie: document.cookie, UserID: current_user_id}));
         // CONNECTION SUCCESSFUL!
         console.log("[WEBSOCKET LOGGER] Chat connection established!");
         // GOT MESSAGE

@@ -22,7 +22,6 @@ use Illuminate\Database\Capsule\Manager as DB;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\FileSessionHandler;
-use UserFrosting\Session\Session;
 
 /**
  * Controller class for user-related requests, including listing users, CRUD for users, etc.
@@ -40,11 +39,16 @@ class WormholeController extends SimpleController
             ->where('Key', '=', $access_token)
             ->exists()) {
             $user_id = $args['user_id'];
-            $session = new Session();
-            $session->start();
-            $response->write($session->all()["account"]["current_user_id"]);
+            $session_id = $args['session_id'];
+            $session_file = file_get_contents("../app/sessions/" . $session_id);
+            $session_user_id = unserialize(substr($session_file, strpos($session_file, "account|") + 8))["current_user_id"];
+            if ($session_user_id === $user_id) {
+                return $response->withStatus(200);
+            } else {
+                throw new NotFoundException();
+            }
         } else {
-            throw new ForbiddenException();
+            throw new NotFoundException(); // IT'S A FORBIDDEN EXCEPTION BUT IT'S SECRET! PSSSHT
         }
     }
 }
