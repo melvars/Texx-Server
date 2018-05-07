@@ -42,7 +42,7 @@ class WormholeController extends SimpleController
             $session_id = $args['session_id'];
             $session_file = file_get_contents("../app/sessions/" . $session_id);
             $session_user_id = unserialize(substr($session_file, strpos($session_file, "account|") + 8))["current_user_id"];
-            if ($session_user_id === $user_id) {
+            if ($session_user_id == $user_id) {
                 return $response->withStatus(200);
             } else {
                 throw new NotFoundException();
@@ -52,7 +52,7 @@ class WormholeController extends SimpleController
         }
     }
 
-    public function getUsername(Request $request, Response $response, $args) {
+    public function getInfo(Request $request, Response $response, $args) {
         $currentUser = $this->ci->currentUser; // FOR DATABASE QUERY
 
         $access_token = $args['access_token'];
@@ -60,11 +60,23 @@ class WormholeController extends SimpleController
             ->where('UserID', 1)
             ->where('Key', '=', $access_token)
             ->exists()) {
-            $user_id = $args['user_id'];
-            $username =(DB::table('users')
-                ->where('id', $user_id)
-                ->value('user_name'));
-            $response->write($username);
+            $classMapper = $this->ci->classMapper;
+            $user = DB::table('users')
+                ->where('id', $args["user_id"])
+                ->first();
+            if (!$user) {
+                throw new NotFoundException($request, $response);
+            }
+            $classMapper = $this->ci->classMapper;
+            $user = $classMapper->createInstance('user')
+                ->where('user_name', $user->user_name)
+                ->joinLastActivity()
+                ->with('lastActivity', 'group')
+                ->first();
+
+            $result = $user->toArray();
+            $result["avatar"] = $user->avatar;
+            return $response->withJson($result, 200, JSON_PRETTY_PRINT);
         } else {
             throw new NotFoundException(); // IT'S A FORBIDDEN EXCEPTION BUT IT'S SECRET! PSSSHT
         }
