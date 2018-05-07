@@ -14,6 +14,20 @@ var ExploreData = $("#ExploreData");
 var cachedNavbarIcons = $(".NavbarIconWrap img").imageCaching();
 var cashedAvatarIcons = $("img.Avatar").imageCaching();
 
+/*****
+POPUPS
+ ****/
+function triggerErrorPopup() {
+    swal({
+        title: 'Error!',
+        text: 'Do you want to continue?',
+        footer: '<a>Why do I have this problem?</a>',
+        type: 'error',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+    });
+}
+
 /*********
  ENCRYPTION
  ********/

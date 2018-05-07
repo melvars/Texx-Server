@@ -1,13 +1,3 @@
-/**
- * jQuery ImageCaching plugin
- * Caching selected images in localStorage
- *
- * Created by Yosef(Vlad) Kaminskyi
- * Mailto: moledet[at]ukr.net
- * Version:  1.0  on 03/05/2015.
- * Dependencies:
- *      jQuery https://jquery.com/
- */
 ;(function ($) {
     function jQueryImageCaching(params) {
         var ImageCaching = {
@@ -21,11 +11,17 @@
                 ImageCaching.log('Initialization of ImageCaching');
                 for (var param in params) {
                     ImageCaching[param] = params[param];
+                    console.log("%c[CACHE LOGGER] Image caching initialized for " + params[param]['selector'] + "!", "color: brown;");
                 }
 
                 $(ImageCaching.selector).each(function () {
                     ImageCaching.applyToImage($(this));
                 });
+            },
+            getCookie(cookie) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + cookie + "=");
+                if (parts.length === 2) return parts.pop().split(";").shift();
             },
             getCacheKey: function (element) {
                 if (element.attr(ImageCaching.cachingKeyAttribute)) {
@@ -36,18 +32,18 @@
             },
             getCache: function (element) {
                 var key = this.getCacheKey(element);
-                return localStorage.getItem(key);
+                return this.getCookie(key);
             },
             setCache: function (element, imageData) {
                 var key = ImageCaching.getCacheKey(element);
                 ImageCaching.log('Set cache', key, imageData, element);
-                localStorage.setItem(key, imageData); // save image data
+                document.cookie = key + "=" + encodeURIComponent(imageData) + "; expires=Mon, 18 Dec 2102 04:48:00 CEST; path=/"; // save image data
                 return true;
             },
             removeCache: function (element) {
                 var key = ImageCaching.getCacheKey(element);
                 ImageCaching.log('Remove cache', key);
-                localStorage.removeItem(key);
+                document.cookie = key + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/"; // delete image data
                 return true;
             },
             renderImage: function (element, picture) {
