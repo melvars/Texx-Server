@@ -156,6 +156,7 @@
         </div>
     </script>
     <script>
+        var NotifySound = new Audio("{{ assets.url('assets://SiteAssets/notisound.mp3') }}");
         function ReplaceServerMessage(Type) { // translation service
             var LastServerMessage = $(".MessageWrapper:last .ServerChatMessage");
             if (Type === "YouGroupJoin") {

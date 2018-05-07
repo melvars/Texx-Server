@@ -14,7 +14,7 @@ class ChatProcessor implements MessageComponentInterface
     private $subscriptions;
     private $users;
     private $userID;
-    private $connectedUsersNames;
+    private $userInfo;
     private $verifiedUsers;
 
     public function __construct() {
@@ -22,7 +22,7 @@ class ChatProcessor implements MessageComponentInterface
         $this->subscriptions = [];
         $this->users = []; // TEMPORARY WEBSOCKET USER
         $this->userID = []; // USER ID WHICH IS DECLARED IN DB
-        $this->connectedUsersNames = [];
+        $this->userInfo = []; // JSON CONTAINING ALL INFO OF USER FROM DB
         $this->verifiedUsers = [];
     }
 
@@ -44,15 +44,14 @@ class ChatProcessor implements MessageComponentInterface
                 $UserSessionKey = $cookies["uf4"];
                 $AccessToken = file("/AccessToken.txt", FILE_IGNORE_NEW_LINES)["0"]; // SECRET
                 $KeyVerifierCode = $this->getHttpCode("https://beam-messenger.de/wormhole/" . $AccessToken . "/verify/" . $data->UserID . "/" . $UserSessionKey);
-                if ($KeyVerifierCode === "200") {
+                if ($KeyVerifierCode === "200") { // VERIFICATION SUCCEEDED
                     $MessageObject = new \stdClass();
                     $MessageObject->ServerMessage = TRUE;
                     $MessageObject->ServerMessageType = "Verify";
                     $MessageObject->Granted = TRUE;
-                    $username = file_get_contents("https://beam-messenger.de/wormhole/" . $AccessToken . "/users/u/" . $data->UserID . "/username");
-                    $this->userID[$conn->resourceId] = $data->UserID;
+                    $this->userInfo[$conn->resourceId] = json_decode(file_get_contents("https://beam-messenger.de/wormhole/" . $AccessToken . "/user/" . $data->UserID));
+                    $this->userID[$conn->resourceId] = $this->userInfo[$conn->resourceId]->id;
                     $this->verifiedUsers[$conn->resourceId] = TRUE;
-                    $this->connectedUsersNames[$conn->resourceId] = $username;
                     $this->users[$conn->resourceId]->send(json_encode($MessageObject, TRUE));
                 } else {
                     $MessageObject = new \stdClass();
@@ -76,7 +75,9 @@ class ChatProcessor implements MessageComponentInterface
                                 $MessageObject->ServerMessage = TRUE;
                                 $MessageObject->ServerMessageType = "GroupJoin";
                                 $MessageObject->GroupName = $channel;
-                                $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
+                                $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
+                                $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->first_name . " " . $this->userInfo[$conn->resourceId]->last_name;
+                                $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
                                 if ($id === $conn->resourceId) {
                                     $MessageObject->WasHimself = TRUE;
                                 } else {
@@ -95,7 +96,9 @@ class ChatProcessor implements MessageComponentInterface
                                 $MessageObject = new \stdClass();
                                 $MessageObject->ServerMessage = FALSE;
                                 $MessageObject->GroupName = $channel;
-                                $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
+                                $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
+                                $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->first_name . " " . $this->userInfo[$conn->resourceId]->last_name;
+                                $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
                                 $MessageObject->Message = htmlspecialchars($data->Message);
                                 if ($id === $conn->resourceId) {
                                     $MessageObject->WasHimself = TRUE;
@@ -117,7 +120,9 @@ class ChatProcessor implements MessageComponentInterface
                                 $MessageObject->ServerMessage = TRUE;
                                 $MessageObject->ServerMessageType = "TypingState";
                                 $MessageObject->GroupName = $channel;
-                                $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
+                                $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
+                                $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->first_name . " " . $this->userInfo[$conn->resourceId]->last_name;
+                                $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
                                 $MessageObject->State = $data->State;
                                 if ($id === $conn->resourceId) {
                                     $MessageObject->WasHimself = TRUE;
@@ -144,7 +149,9 @@ class ChatProcessor implements MessageComponentInterface
                         $MessageObject = new \stdClass();
                         $MessageObject->ServerMessage = TRUE;
                         $MessageObject->ServerMessageType = "UserDisconnect";
-                        $MessageObject->Username = $this->connectedUsersNames[$conn->resourceId];
+                        $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
+                        $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->first_name . " " . $this->userInfo[$conn->resourceId]->last_name;
+                        $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
                         $MessageJson = json_encode($MessageObject, TRUE);
                         $this->users[$id]->send($MessageJson);
                     }
@@ -154,7 +161,7 @@ class ChatProcessor implements MessageComponentInterface
         unset($this->verifiedUsers[$conn->resourceId]);
         unset($this->users[$conn->resourceId]);
         unset($this->subscriptions[$conn->resourceId]);
-        unset($this->connectedUsersNames[$conn->resourceId]);
+        unset($this->userInfo[$conn->resourceId]);
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e) {

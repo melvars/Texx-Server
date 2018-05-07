@@ -4,5 +4,5 @@
  */
 $app->group('/wormhole/{access_token}', function () {
     $this->get('/verify/{user_id}/{session_id}', 'UserFrosting\Sprinkle\Admin\Controller\WormholeController:verify');
-    $this->get('/users/u/{user_id}/username', 'UserFrosting\Sprinkle\Admin\Controller\WormholeController:getUsername');
+    $this->get('/user/{user_id}', 'UserFrosting\Sprinkle\Admin\Controller\WormholeController:getInfo');
 });

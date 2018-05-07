@@ -52,6 +52,8 @@
                 "SiteAssets/js/swiper.js",
                 "SiteAssets/js/console.image.js",
                 "SiteAssets/js/imageCaching.js",
+                "SiteAssets/js/popups.js",
+                "SiteAssets/js/push.js",
                 "SiteAssets/js/chat.js",
                 "SiteAssets/js/main.js"
             ],

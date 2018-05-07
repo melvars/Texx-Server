@@ -1,6 +1,6 @@
- /******
- GENERAL
- ******/
+/**
+ * GENERAL CHAT
+ */
 function InitializeChatServer() {
     var ChatTextInput = $("#ChatTextInput");
     var SubscribeTextInput = $("#SubscribeTextInput");
@@ -28,6 +28,8 @@ function InitializeChatServer() {
             var MessageObject = JSON.parse(e.data);
             var Message = MessageObject.Message;
             var Username = MessageObject.Username;
+            var Fullname = MessageObject.Fullname;
+            var Avatar = MessageObject.Avatar;
             var GroupName = MessageObject.GroupName;
             var State = MessageObject.State;
             var ServerMessage = MessageObject.ServerMessage;
@@ -52,6 +54,16 @@ function InitializeChatServer() {
                     }
                 } else if (WasHimself === false) { // -> MESSAGE WAS FROM OTHER USER
                     console.log("%c[CHATSOCKET LOGGER] You received a message!", "color: darkorange");
+                    NotifySound.play();
+                    Push.create(Fullname, { // CREATE NOTIFICATION
+                        body: Message,
+                        icon: Avatar,
+                        timeout: 5000,
+                        onClick: function () {
+                            window.focus();
+                            this.close();
+                        }
+                    });
                     if (!LastMessage.hasClass("MessageReceived")) { // CHECK IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
                         ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageReceived AloneMessage animated fadeInLeft'>" + Message + "</div></div>");
                     } else if (LastMessage.hasClass("MessageReceived")) { // IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN

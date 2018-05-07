@@ -43,7 +43,7 @@ class CoreController extends SimpleController
         $authorizer = $this->ci->authorizer;
         $currentUser = $this->ci->currentUser;
         if (!$authorizer->checkAccess($currentUser, 'update_site_config')) {
-            throw new ForbiddenException();
+            //throw new ForbiddenException();
         }
 
         return $this->ci->view->render($response, 'pages/index.html.twig', [

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Carbon\Carbon;
@@ -102,7 +103,7 @@ class User extends Model
      *
      * @var bool
      */
-    public $timestamps = true;
+    public $timestamps = TRUE;
 
     /**
      * Determine if the property for this object exists.
@@ -113,14 +114,13 @@ class User extends Model
      * @param string $name the name of the property to check.
      * @return bool true if the property is defined, false otherwise.
      */
-    public function __isset($name)
-    {
+    public function __isset($name) {
         if (in_array($name, [
-                'group',
-                'last_sign_in_time',
-                'avatar'
-            ])) {
-            return true;
+            'group',
+            'last_sign_in_time',
+            'avatar'
+        ])) {
+            return TRUE;
         } else {
             return parent::__isset($name);
         }
@@ -133,13 +133,12 @@ class User extends Model
      * @throws Exception the property does not exist for this object.
      * @return string the associated property.
      */
-    public function __get($name)
-    {
+    public function __get($name) {
         if ($name == 'last_sign_in_time') {
             return $this->lastActivityTime('sign_in');
-        } elseif ($name == 'avatar') {
+        } else if ($name == 'avatar') {
             // Use Gravatar as the user avatar
-            $hash = md5(strtolower(trim( $this->email)));
+            $hash = md5(strtolower(trim($this->email)));
             return 'https://www.gravatar.com/avatar/' . $hash . '?d=mm';
         } else {
             return parent::__get($name);
@@ -151,8 +150,7 @@ class User extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function activities()
-    {
+    public function activities() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
@@ -165,8 +163,7 @@ class User extends Model
      * @param bool $hardDelete Set to true to completely remove the user and all associated objects.
      * @return bool true if the deletion was successful, false otherwise.
      */
-    public function delete($hardDelete = false)
-    {
+    public function delete($hardDelete = FALSE) {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
@@ -202,8 +199,7 @@ class User extends Model
      * @param bool $checkDeleted set to true to include soft-deleted records
      * @return User|null
      */
-    public static function exists($value, $identifier = 'user_name', $checkDeleted = true)
-    {
+    public static function exists($value, $identifier = 'user_name', $checkDeleted = TRUE) {
         return static::findUnique($value, $identifier, $checkDeleted);
     }
 
@@ -212,9 +208,8 @@ class User extends Model
      *
      * @return \Illuminate\Contracts\Cache\Store
      */
-    public function getCache()
-    {
-        return static::$ci->cache->tags('_u'.$this->id);
+    public function getCache() {
+        return static::$ci->cache->tags('_u' . $this->id);
     }
 
     /**
@@ -222,8 +217,7 @@ class User extends Model
      *
      * @return string
      */
-    public function getFullNameAttribute()
-    {
+    public function getFullNameAttribute() {
         return $this->first_name . ' ' . $this->last_name;
     }
 
@@ -232,8 +226,7 @@ class User extends Model
      *
      * @return array
      */
-    public function getCachedPermissions()
-    {
+    public function getCachedPermissions() {
         if (!isset($this->cachedPermissions)) {
             $this->reloadCachedPermissions();
         }
@@ -246,8 +239,7 @@ class User extends Model
      *
      * @return User
      */
-    public function reloadCachedPermissions()
-    {
+    public function reloadCachedPermissions() {
         $this->cachedPermissions = $this->buildPermissionsDictionary();
 
         return $this;
@@ -259,8 +251,7 @@ class User extends Model
      * @param string $type The type of activity to search for.
      * @return int
      */
-    public function getSecondsSinceLastActivity($type)
-    {
+    public function getSecondsSinceLastActivity($type) {
         $time = $this->lastActivityTime($type);
         $time = $time ? $time : '0000-00-00 00:00:00';
         $time = new Carbon($time);
@@ -273,8 +264,7 @@ class User extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function group()
-    {
+    public function group() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
@@ -286,8 +276,7 @@ class User extends Model
      *
      * @return bool
      */
-    public function isMaster()
-    {
+    public function isMaster() {
         $masterId = static::$ci->config['reserved_user_ids.master'];
 
         // Need to use loose comparison for now, because some DBs return `id` as a string
@@ -299,8 +288,7 @@ class User extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function lastActivity()
-    {
+    public function lastActivity() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
@@ -313,8 +301,7 @@ class User extends Model
      * @param  string $type
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function lastActivityOfType($type = null)
-    {
+    public function lastActivityOfType($type = NULL) {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
@@ -333,12 +320,11 @@ class User extends Model
      * @param  string $type
      * @return string|null The last activity time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an activity of this type doesn't exist.
      */
-    public function lastActivityTime($type)
-    {
+    public function lastActivityTime($type) {
         $result = $this->activities()
             ->where('type', $type)
             ->max('occurred_at');
-        return $result ? $result : null;
+        return $result ? $result : NULL;
     }
 
     /**
@@ -348,8 +334,7 @@ class User extends Model
      * @param mixed[] $params Optional array of parameters used for this event handler.
      * @todo Transition to Laravel Event dispatcher to handle this
      */
-    public function onLogin($params = [])
-    {
+    public function onLogin($params = []) {
         // Add a sign in activity (time is automatically set by database)
         static::$ci->userActivityLogger->info("User {$this->user_name} signed in.", [
             'type' => 'sign_in'
@@ -364,7 +349,7 @@ class User extends Model
             } else {
                 // Hash the user's password and update
                 $passwordHash = Password::hash($params['password']);
-                if ($passwordHash === null) {
+                if ($passwordHash === NULL) {
                     Debug::debug('Notice: outdated password hash could not be updated because the new hashing algorithm is not supported.  Are you running PHP >= 5.3.7?');
                 } else {
                     $this->password = $passwordHash;
@@ -386,8 +371,7 @@ class User extends Model
      * @param mixed[] $params Optional array of parameters used for this event handler.
      * @todo Transition to Laravel Event dispatcher to handle this
      */
-    public function onLogout($params = [])
-    {
+    public function onLogout($params = []) {
         static::$ci->userActivityLogger->info("User {$this->user_name} signed out.", [
             'type' => 'sign_out'
         ]);
@@ -400,8 +384,7 @@ class User extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function passwordResets()
-    {
+    public function passwordResets() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
@@ -413,8 +396,7 @@ class User extends Model
      *
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough
      */
-    public function permissions()
-    {
+    public function permissions() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
@@ -435,8 +417,7 @@ class User extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function roles()
-    {
+    public function roles() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
@@ -450,11 +431,10 @@ class User extends Model
      * @param int $roleId
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeForRole($query, $roleId)
-    {
+    public function scopeForRole($query, $roleId) {
         return $query->join('role_users', function ($join) use ($roleId) {
             $join->on('role_users.user_id', 'users.id')
-                 ->where('role_id', $roleId);
+                ->where('role_id', $roleId);
         });
     }
 
@@ -464,8 +444,7 @@ class User extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeJoinLastActivity($query)
-    {
+    public function scopeJoinLastActivity($query) {
         $query = $query->select('users.*');
 
         $query = $query->leftJoin('activities', 'activities.id', '=', 'users.last_activity_id');
@@ -479,8 +458,7 @@ class User extends Model
      *
      * @return array
      */
-    protected function buildPermissionsDictionary()
-    {
+    protected function buildPermissionsDictionary() {
         $permissions = $this->permissions()->get();
         $cachedPermissions = [];
 

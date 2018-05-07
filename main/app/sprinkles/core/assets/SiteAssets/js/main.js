@@ -8,17 +8,31 @@ var alerts = $("#alerts-page");
 var ExploreData = $("#ExploreData");
 
 
-/***********
- CACHE IMAGES
- ***********/
+/**
+ * CACHE IMAGES
+ * @type {*|jQueryImageCaching|jQuery}
+ */
 var cachedNavbarIcons = $(".NavbarIconWrap img").imageCaching();
 var cashedAvatarIcons = $("img.Avatar").imageCaching();
 
-/*********
- ENCRYPTION
- ********/
+/**
+ * POPUPS
+ */
+function triggerErrorPopup() {
+    swal({
+        title: 'Error!',
+        text: 'Do you want to continue?',
+        footer: '<a>Why do I have this problem?</a>',
+        type: 'error',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+    });
+}
 
-// encrypt
+/**
+ * ENCRYPTION
+ */
+//encrypt
 var openpgp = window.openpgp;
 openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
 var options, encrypted;
@@ -43,9 +57,10 @@ function decrypt() {
     })
 }
 
-/**********
- OLD BROWSER
- *********/
+/**
+ * OLD BROWSER
+ * @type {boolean}
+ */
 var isIE = /*@cc_on!@*/false || !!document.documentMode;
 var isEdge = !isIE && !!window.StyleMedia;
 if (isIE || isEdge) {
@@ -54,9 +69,9 @@ if (isIE || isEdge) {
         "If you are a developer, you can help us supporting this browser on github.com/marvinborner/BEAM-Messenger/") // PLEASE DO IT ACTUALLY
 }
 
-/******
- NAVBAR
- *****/
+/**
+ * NAVBAR
+ */
 var $el, leftPos, newWidth;
 NavbarLine
     .css("left", $(".ActiveTab").position().left)
@@ -81,9 +96,9 @@ window.addEventListener("load", function () {
     }, 0);
 });
 
-/********
- SWIPEABLE
- *******/
+/**
+ * SWIPEABLE TABS
+ */
 MainTabWindows.slick({
     initialSlide: 2,
     mobileFirst: true,
@@ -109,9 +124,9 @@ MainTabWindows.on('beforeChange', function (event, slick, currentSlide, nextSlid
     }, 300);
 });
 
-/*****
- SEARCH
- ****/
+/**
+ * SEARCH
+ */
 UserSearchBar.keyup(function () {
     SearchResults.empty();
     var RequestedUser = UserSearchBar.val();
