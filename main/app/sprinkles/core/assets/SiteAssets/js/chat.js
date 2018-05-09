@@ -186,7 +186,7 @@ function InitializeChatServer() {
                 isTyping = false;
                 clearTimeout(typingTimer);
 
-                ChatSocket.send(JSON.stringify({ClientMessageType: "Message", Message: ChatTextInput.val()}));
+                ChatSocket.send(JSON.stringify({ClientMessageType: "ChatMessage", MessageType: "Private", Message: ChatTextInput.val()}));
                 ChatTextInput.val("");
                 ChatTextInput.val("");
             }

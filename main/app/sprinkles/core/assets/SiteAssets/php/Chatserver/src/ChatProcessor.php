@@ -11,7 +11,7 @@ use Nubs\RandomNameGenerator\Alliteration;
 class ChatProcessor implements MessageComponentInterface
 {
     protected $clients;
-    private $subscriptions;
+    private $channels;
     private $users;
     private $userID;
     private $userInfo;
@@ -19,7 +19,7 @@ class ChatProcessor implements MessageComponentInterface
 
     public function __construct() {
         $this->clients = new \SplObjectStorage;
-        $this->subscriptions = [];
+        $this->channels = [];
         $this->users = []; // TEMPORARY WEBSOCKET USER
         $this->userID = []; // USER ID WHICH IS DECLARED IN DB
         $this->userInfo = []; // JSON CONTAINING ALL INFO OF USER FROM DB
@@ -42,17 +42,26 @@ class ChatProcessor implements MessageComponentInterface
                     $cookies[$key] = $val;
                 }
                 $UserSessionKey = $cookies["uf4"];
-                $AccessToken = file("/AccessToken.txt", FILE_IGNORE_NEW_LINES)["0"]; // SECRET
-                $KeyVerifierCode = $this->getHttpCode("https://beam-messenger.de/wormhole/" . $AccessToken . "/verify/" . $data->UserID . "/" . $UserSessionKey);
+                $KeyVerifierCode = $this->getHttpCode("https://beam-messenger.de/wormhole/" . file("/AccessToken.txt", FILE_IGNORE_NEW_LINES)["0"] . "/verify/" . $data->UserID . "/" . $UserSessionKey);
                 if ($KeyVerifierCode === "200") { // VERIFICATION SUCCEEDED
-                    $MessageObject = new \stdClass();
-                    $MessageObject->ServerMessage = TRUE;
-                    $MessageObject->ServerMessageType = "Verify";
-                    $MessageObject->Granted = TRUE;
-                    $this->userInfo[$conn->resourceId] = json_decode(file_get_contents("https://beam-messenger.de/wormhole/" . $AccessToken . "/user/" . $data->UserID));
+                    $this->userInfo[$conn->resourceId] = json_decode(file_get_contents("https://beam-messenger.de/wormhole/" . file("/AccessToken.txt", FILE_IGNORE_NEW_LINES)["0"] . "/user/" . $data->UserID));
                     $this->userID[$conn->resourceId] = $this->userInfo[$conn->resourceId]->id;
-                    $this->verifiedUsers[$conn->resourceId] = TRUE;
-                    $this->users[$conn->resourceId]->send(json_encode($MessageObject, TRUE));
+                    if (isset($this->userInfo[$conn->resourceId]->id)) { // USER FOUND
+                        $MessageObject = new \stdClass();
+                        $MessageObject->ServerMessage = TRUE;
+                        $MessageObject->ServerMessageType = "Verify";
+                        $MessageObject->Granted = TRUE;
+                        $this->verifiedUsers[$conn->resourceId] = TRUE;
+                        $this->users[$conn->resourceId]->send(json_encode($MessageObject, TRUE));
+                    } else {
+                        $MessageObject = new \stdClass();
+                        $MessageObject->ServerMessage = TRUE;
+                        $MessageObject->ServerMessageType = "Verify";
+                        $MessageObject->Granted = FALSE;
+                        $this->verifiedUsers[$conn->resourceId] = FALSE;
+                        $this->users[$conn->resourceId]->send(json_encode($MessageObject, TRUE));
+                        $this->onClose($conn);
+                    }
                 } else {
                     $MessageObject = new \stdClass();
                     $MessageObject->ServerMessage = TRUE;
@@ -67,10 +76,10 @@ class ChatProcessor implements MessageComponentInterface
         if ($this->verifiedUsers[$conn->resourceId]) {
             switch ($data->ClientMessageType) {
                 case "Subscribe": // USER SUBSCRIBED
-                    //if (!in_array(array_flip($this->userID)[$this->userID[$conn->resourceId]], (isset(array_flip($this->subscriptions)[$data->Channel]) ? array_flip($this->subscriptions)[$data->Channel] : array()))) { // ONLY JOIN IF NOT ALREADY JOINED
-                        $this->subscriptions[$conn->resourceId] = $data->Channel;
-                        foreach ($this->subscriptions as $id => $channel) {
-                            if ($this->subscriptions[$conn->resourceId] == $channel) {
+                    //if (!in_array(array_flip($this->userID)[$this->userID[$conn->resourceId]], (isset(array_flip($this->channels)[$data->Channel]) ? array_flip($this->channels)[$data->Channel] : array()))) { // ONLY JOIN IF NOT ALREADY JOINED
+                        $this->channels[$conn->resourceId] = $data->Channel;
+                        foreach ($this->channels as $id => $channel) {
+                            if ($this->channels[$conn->resourceId] == $channel) {
                                 $MessageObject = new \stdClass();
                                 $MessageObject->ServerMessage = TRUE;
                                 $MessageObject->ServerMessageType = "GroupJoin";
@@ -88,10 +97,11 @@ class ChatProcessor implements MessageComponentInterface
                             }
                         }
                     break;
-                case "Message": // MESSAGE RECEIVED
-                    if (isset($this->subscriptions[$conn->resourceId])) {
-                        $target = $this->subscriptions[$conn->resourceId];
-                        foreach ($this->subscriptions as $id => $channel) {
+                case "ChatMessage": // MESSAGE RECEIVED
+                    if (isset($this->channels[$conn->resourceId])) {
+                        $target = $this->channels[$conn->resourceId]; // target = ALL CHANNELS TO SEND THE MESSAGE
+                        $this->getHttpCode("https://beam-messenger.de/wormhole/" . file("/AccessToken.txt", FILE_IGNORE_NEW_LINES)["0"] . "/new/message/" . $this->userInfo[$conn->resourceId]->id . "/" . $this->userInfo[array_flip($this->channels)[$target]]->id . "/" . $data->Message);
+                        foreach ($this->channels as $id => $channel) {
                             if ($channel == $target) {
                                 $MessageObject = new \stdClass();
                                 $MessageObject->ServerMessage = FALSE;
@@ -111,10 +121,16 @@ class ChatProcessor implements MessageComponentInterface
                         }
                     }
                     break;
+                case "GroupMessage": // GROUP MESSAGE RECEIVED -- RESERVED FOR LATER USE
+                    if (isset($this->channels[$conn->resourceId])) {
+                        $target = $this->channels[$conn->resourceId];
+                        // nothing
+                    }
+                    break;
                 case "TypingState": // USER STARTED TYPING
-                    if (isset($this->subscriptions[$conn->resourceId])) {
-                        $target = $this->subscriptions[$conn->resourceId];
-                        foreach ($this->subscriptions as $id => $channel) {
+                    if (isset($this->channels[$conn->resourceId])) {
+                        $target = $this->channels[$conn->resourceId];
+                        foreach ($this->channels as $id => $channel) {
                             if ($channel == $target) {
                                 $MessageObject = new \stdClass();
                                 $MessageObject->ServerMessage = TRUE;
@@ -142,9 +158,9 @@ class ChatProcessor implements MessageComponentInterface
     public function onClose(ConnectionInterface $conn) {
         $this->clients->detach($conn);
         foreach ($this->clients as $client) {
-            if (isset($this->subscriptions[$conn->resourceId])) {
-                $target = $this->subscriptions[$conn->resourceId];
-                foreach ($this->subscriptions as $id => $channel) {
+            if (isset($this->channels[$conn->resourceId])) {
+                $target = $this->channels[$conn->resourceId];
+                foreach ($this->channels as $id => $channel) {
                     if ($channel == $target) {
                         $MessageObject = new \stdClass();
                         $MessageObject->ServerMessage = TRUE;
@@ -160,7 +176,7 @@ class ChatProcessor implements MessageComponentInterface
         }
         unset($this->verifiedUsers[$conn->resourceId]);
         unset($this->users[$conn->resourceId]);
-        unset($this->subscriptions[$conn->resourceId]);
+        unset($this->channels[$conn->resourceId]);
         unset($this->userInfo[$conn->resourceId]);
     }
 

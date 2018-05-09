@@ -31,13 +31,7 @@ use Illuminate\Session\FileSessionHandler;
 class WormholeController extends SimpleController
 {
     public function verify(Request $request, Response $response, $args) {
-        $currentUser = $this->ci->currentUser; // FOR DATABASE QUERY
-
-        $access_token = $args['access_token'];
-        if (DB::table('public_keys')
-            ->where('UserID', 1)
-            ->where('Key', '=', $access_token)
-            ->exists()) {
+        if ($this->verifyAccessToken($args)) {
             $user_id = $args['user_id'];
             $session_id = $args['session_id'];
             $session_file = file_get_contents("../app/sessions/" . $session_id);
@@ -47,20 +41,26 @@ class WormholeController extends SimpleController
             } else {
                 throw new NotFoundException();
             }
-        } else {
-            throw new NotFoundException(); // IT'S A FORBIDDEN EXCEPTION BUT IT'S SECRET! PSSSHT
+        }
+    }
+
+    public function newMessage(Request $request, Response $response, $args) {
+        if ($this->verifyAccessToken($args)) {
+            $sender_id = $args['sender_id'];
+            $receiver_id = $args['receiver_id'];
+            $message = $args['message'];
+            if (($sender_id != $receiver_id) && $message) {
+                DB::table('chat_messages')
+                    ->insert(['sender_id' => $sender_id, 'receiver_id' => $receiver_id, 'message' => $message]);
+                return $response->withStatus(200);
+            } else {
+                throw new BadRequestException();
+            }
         }
     }
 
     public function getInfo(Request $request, Response $response, $args) {
-        $currentUser = $this->ci->currentUser; // FOR DATABASE QUERY
-
-        $access_token = $args['access_token'];
-        if (DB::table('public_keys')
-            ->where('UserID', 1)
-            ->where('Key', '=', $access_token)
-            ->exists()) {
-            $classMapper = $this->ci->classMapper;
+        if ($this->verifyAccessToken($args)) {
             $user = DB::table('users')
                 ->where('id', $args["user_id"])
                 ->first();
@@ -77,8 +77,19 @@ class WormholeController extends SimpleController
             $result = $user->toArray();
             $result["avatar"] = $user->avatar;
             return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+        }
+    }
+
+    private function verifyAccessToken($args) {
+        $currentUser = $this->ci->currentUser; // FOR DATABASE QUERY
+        $access_token = $args['access_token'];
+        if (DB::table('public_keys')
+            ->where('UserID', 1)
+            ->where('Key', '=', $access_token)
+            ->exists()) {
+            return true;
         } else {
-            throw new NotFoundException(); // IT'S A FORBIDDEN EXCEPTION BUT IT'S SECRET! PSSSHT
+            throw new NotFoundException();
         }
     }
 }
