@@ -100,7 +100,6 @@ class ChatProcessor implements MessageComponentInterface
                 case "ChatMessage": // MESSAGE RECEIVED
                     if (isset($this->channels[$conn->resourceId])) {
                         $target = $this->channels[$conn->resourceId]; // target = ALL CHANNELS TO SEND THE MESSAGE
-                        $this->getHttpCode("https://beam-messenger.de/wormhole/" . file("/AccessToken.txt", FILE_IGNORE_NEW_LINES)["0"] . "/new/message/" . $this->userInfo[$conn->resourceId]->id . "/" . $this->userInfo[array_flip($this->channels)[$target]]->id . "/" . $data->Message);
                         foreach ($this->channels as $id => $channel) {
                             if ($channel == $target) {
                                 $MessageObject = new \stdClass();
@@ -117,6 +116,7 @@ class ChatProcessor implements MessageComponentInterface
                                 }
                                 $MessageJson = json_encode($MessageObject, TRUE);
                                 $this->users[$id]->send($MessageJson);
+                                $this->getHttpCode("https://beam-messenger.de/wormhole/" . file("/AccessToken.txt", FILE_IGNORE_NEW_LINES)["0"] . "/new/message/" . $this->userInfo[$conn->resourceId]->id . "/" . $this->userInfo[array_flip($this->channels)[$target]]->id . "/" . $data->Message);
                             }
                         }
                     }
