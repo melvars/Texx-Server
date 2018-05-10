@@ -6,9 +6,9 @@
  *
  * Target page: account/register
  */
-$(document).ready(function() {
+$(document).ready(function () {
     // TOS modal
-    $(this).find('.js-show-tos').click(function() {
+    $(this).find('.js-show-tos').click(function () {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/account/tos",
             msgTarget: $("#alerts-page")
@@ -17,7 +17,7 @@ $(document).ready(function() {
 
     // Auto-generate username when name is filled in
     var autoGenerate = true;
-    $("#register").find('input[name=first_name], input[name=last_name]').on('input change', function() {
+    $("#register").find('input[name=first_name], input[name=last_name]').on('input change', function () {
         if (!autoGenerate) {
             return;
         }
@@ -40,26 +40,26 @@ $(document).ready(function() {
 
     // Autovalidate username field on a delay
     var timer;
-    $("#register").find('input[name=first_name], input[name=last_name], input[name=user_name]').on('input change', function() {
+    $("#register").find('input[name=first_name], input[name=last_name], input[name=user_name]').on('input change', function () {
         clearTimeout(timer); // Clear the timer so we don't end up with dupes.
-        timer = setTimeout(function() { // assign timer a new timeout 
+        timer = setTimeout(function () { // assign timer a new timeout
             $("#register").find('input[name=user_name]').valid();
-        }, 500);
+        }, 50);
     });
 
     // Enable/disable username suggestions in registration page
-    $("#register").find('#form-register-username-suggest').on('click', function(e) {
+    $("#register").find('#form-register-username-suggest').on('click', function (e) {
         e.preventDefault();
         var form = $("#register");
         $.getJSON(site.uri.public + '/account/suggest-username')
-        .done(function (data) {
-            // Set suggestion
-            form.find('input[name=user_name]').val(data.user_name);
-        });
+            .done(function (data) {
+                // Set suggestion
+                form.find('input[name=user_name]').val(data.user_name);
+            });
     });
 
     // Turn off autogenerate when someone enters stuff manually in user_name
-    $("#register").find('input[name=user_name]').on('input', function() {
+    $("#register").find('input[name=user_name]').on('input', function () {
         autoGenerate = false;
     });
 
@@ -84,10 +84,41 @@ $(document).ready(function() {
         validators: registrationValidators,
         msgTarget: $("#alerts-page"),
         keyupDelay: 500
-    }).on("submitSuccess.ufForm", function() {
-        // Reload to clear form and show alerts
-        window.location.reload();
-    }).on("submitError.ufForm", function() {
+    }).on("submitSuccess.ufForm", function () {
+        // GENERATE KEYS
+        var openpgp = window.openpgp;
+        var options;
+        var randomString = Math.random().toString(36).substr(2, 11); // PRIVKEY ENCRYPTION KEY
+        openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
+        options = {
+            userIds: [{name: $("#r-form-username").val(), email: $("#r-form-email").val()}],
+            curve: "curve25519",
+            passphrase: randomString
+        };
+        openpgp.generateKey(options).then(function (key) {
+            localStorage.setItem("PrivateKey", key.privateKeyArmored);
+            localStorage.setItem("🔒", randomString);
+
+            console.log(key.publicKeyArmored);
+            console.log(key.privateKeyArmored);
+            // SAVE PUBLIC KEY TO DATABASE
+            var data = {
+                csrf_name: site.csrf.name,
+                csrf_value: site.csrf.value,
+                PublicKey: key.publicKeyArmored
+            };
+            $.ajax({
+                type: 'POST',
+                url: site.uri.public + '/api/users/u/' + $("#r-form-username").val() + '/publickey',
+                data: data,
+                success: function (response) {
+                    console.log(response);
+                    //window.location.reload();
+                }
+            });
+
+        });
+    }).on("submitError.ufForm", function () {
         // Reload captcha
         $("#captcha").captcha();
     });

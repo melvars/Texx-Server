@@ -231,6 +231,32 @@ class UserController extends SimpleController
         return $response->withStatus(200);
     }
 
+
+    /**
+     * Sets the users public key
+     * Request type: POST
+     */
+    public function setPublicKey($request, $response, $args) {
+        $user = $this->getUserFromParams($args);
+
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
+
+        $classMapper = $this->ci->classMapper;
+        $requestedUser = $classMapper->staticMethod('user', 'where', 'user_name', $args['user_name'])
+            ->first();
+
+        if ($user->id === $requestedUser->id) {
+            $PublicKey = $request->getParsedBody()["PublicKey"];
+            Capsule::table('public_keys')
+                ->insert(['UserID' => $requestedUser->id, 'Key' => $PublicKey]);
+            return $response->withStatus(200);
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
     /**
      * Processes the request to delete an existing user.
      *

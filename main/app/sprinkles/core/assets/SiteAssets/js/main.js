@@ -32,29 +32,46 @@ function triggerErrorPopup() {
 /**
  * ENCRYPTION
  */
-//encrypt
 var openpgp = window.openpgp;
+var hkp = new openpgp.HKP('https://pgp.mit.edu');
+var options, EncryptedText, DecryptedText, PublicKey, PrivateKey, PrivateKeyObj;
 openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
-var options, encrypted;
-options = {
-    data: "LOL",
-    passwords: ['password'],
-    armor: false
-};
-openpgp.encrypt(options).then(function (ciphertext) {
-    encrypted = ciphertext.message.packets.write();
-});
 
-// decrypt
-function decrypt() {
+function generateKeys(passphrase) {
     options = {
-        message: openpgp.message.read(encrypted),
-        passwords: ['passwort']
-        //format: 'binary'
+        userIds: [{user_id: current_user_id}],
+        curve: "curve25519",
+        passphrase: passphrase
     };
-    openpgp.decrypt(options).then(function (plaintext) {
-        console.log(plaintext.data)
-    })
+
+    openpgp.generateKey(options).then(function (key) {
+        PrivateKey = key.privateKeyArmored;
+        PublicKey = key.publicKeyArmored;
+    });
+}
+
+function EncryptMessage(Message, PublicKey) {
+    options = {
+        data: Message,
+        publicKeys: openpgp.key.readArmored(PublicKey).keys
+    };
+
+    openpgp.encrypt(options).then(function (EncryptedText) {
+        EncryptedText = EncryptedText.data;
+    });
+}
+
+function DecryptMessage(EncryptedText, PrivateKey, passphrase) {
+    PrivateKeyObj = openpgp.key.readArmored(PrivateKey).keys[0];
+    PrivateKeyObj.decrypt(passphrase);
+    options = {
+        message: openpgp.message.readArmored(EncryptedText),
+        privateKeys: [PrivateKeyObj]
+    };
+
+    openpgp.decrypt(options).then(function (DecryptedText) {
+        DecryptedText = DecryptedText.data;
+    });
 }
 
 /**
@@ -134,24 +151,24 @@ UserSearchBar.keyup(function () {
     SearchResults.empty();
     var RequestedUser = UserSearchBar.val();
     if (RequestedUser !== " " && RequestedUser !== "")
-    $.ajax({
-        url: site.uri.public + "/api/users/u/" + RequestedUser,
-        success: function (answer) {
-            console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was found!", "color: green");
-            //var GifUrls = ["https://media.giphy.com/media/xUPGcg01dIAot4zyZG/giphy.gif", "https://media.giphy.com/media/IS9LfP9oSLdcY/giphy.gif", "https://media.giphy.com/media/5wWf7H0WTquIU1DFY4g/giphy.gif"];
-            //var RandomGif = Math.floor((Math.random() * GifUrls.length));
-            //var RandomGifUrl = GifUrls[RandomGif];
-            //console.image(RandomGifUrl, 0.5);
+        $.ajax({
+            url: site.uri.public + "/api/users/u/" + RequestedUser,
+            success: function (answer) {
+                console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was found!", "color: green");
+                //var GifUrls = ["https://media.giphy.com/media/xUPGcg01dIAot4zyZG/giphy.gif", "https://media.giphy.com/media/IS9LfP9oSLdcY/giphy.gif", "https://media.giphy.com/media/5wWf7H0WTquIU1DFY4g/giphy.gif"];
+                //var RandomGif = Math.floor((Math.random() * GifUrls.length));
+                //var RandomGifUrl = GifUrls[RandomGif];
+                //console.image(RandomGifUrl, 0.5);
 
-            alerts.ufAlerts().ufAlerts('fetch');
+                alerts.ufAlerts().ufAlerts('fetch');
 
-            SearchResults.append("<img class='Avatar' data-src='" + answer.avatar + "' data-caching-key='" + answer.user_name + "_avatar_cached'/><div class='UsersFullName'>" + answer.full_name + "</div>");
-            //$(".SearchResults .Avatar").imageCaching(); // refresh
-        },
-        error: function () {
-            console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was not found!", "color: red");
+                SearchResults.append("<img class='Avatar' data-src='" + answer.avatar + "' data-caching-key='" + answer.user_name + "_avatar_cached'/><div class='UsersFullName'>" + answer.full_name + "</div>");
+                //$(".SearchResults .Avatar").imageCaching(); // refresh
+            },
+            error: function () {
+                console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was not found!", "color: red");
 
-            alerts.ufAlerts().ufAlerts('fetch');
-        }
-    });
+                alerts.ufAlerts().ufAlerts('fetch');
+            }
+        });
 });

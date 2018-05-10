@@ -83,9 +83,9 @@ class WormholeController extends SimpleController
     private function verifyAccessToken($args) {
         $currentUser = $this->ci->currentUser; // FOR DATABASE QUERY
         $access_token = $args['access_token'];
-        if (DB::table('public_keys')
-            ->where('UserID', 1)
-            ->where('Key', '=', $access_token)
+        if (DB::table('access_token')
+            ->where('id', 1)
+            ->where('token', '=', $access_token)
             ->exists()) {
             return true;
         } else {

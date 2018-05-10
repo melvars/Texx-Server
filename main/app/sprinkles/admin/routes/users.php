@@ -35,6 +35,8 @@ $app->group('/api/users', function () {
 
     $this->post('/u/{user_name}/password-reset', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createPasswordReset');
 
+    $this->post('/u/{user_name}/publickey', 'UserFrosting\Sprinkle\Admin\Controller\UserController:setPublicKey');
+
     $this->put('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateInfo');
 
     $this->put('/u/{user_name}/{field}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateField');

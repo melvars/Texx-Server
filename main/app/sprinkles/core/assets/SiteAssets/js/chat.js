@@ -18,7 +18,11 @@ function InitializeChatServer() {
         // CONNECTION SUCCESSFUL!
         console.log("%c[CHATSOCKET LOGGER] Chat connection established!", "color: darkorange");
         // START VERIFICATION
-        ChatSocket.send(JSON.stringify({ClientMessageType: "Verify", Cookie: document.cookie, UserID: current_user_id}));
+        ChatSocket.send(JSON.stringify({
+            ClientMessageType: "Verify",
+            Cookie: document.cookie,
+            UserID: current_user_id
+        }));
         console.log("%c[CHATSOCKET LOGGER] Started chat verification process...", "color: grey");
         // GOT MESSAGE
         ChatSocket.onmessage = function (e) {
@@ -115,15 +119,17 @@ function InitializeChatServer() {
                         }
                     }
                 } else if (ServerMessageType === "Verify") { // TYPE: SERVER CHECKED ACCESS -- MOSTLY HANDLED IN BACKEND
-                        if (Granted === true) {
-                            console.log("%c[CHATSOCKET LOGGER] Chat access granted!", "color: green");
-                        } else if (Granted === false) {
-                            console.log("%c[CHATSOCKET LOGGER] Chat access denied!", "color: red");
-                        }
+                    if (Granted === true) {
+                        console.log("%c[CHATSOCKET LOGGER] Chat access granted!", "color: green");
+                    } else if (Granted === false) {
+                        console.log("%c[CHATSOCKET LOGGER] Chat access denied!", "color: red");
+                    }
                 }
             }
             // SCROLL TO BOTTOM ON NEW MESSAGE OF ANY KIND
-            ChatMessages.animate({scrollTop: document.querySelector("#ChatMessages").scrollHeight}, "slow");
+            if ((ChatMessages.scrollTop() + ChatMessages.innerHeight() < ChatMessages[0].scrollHeight)) {
+                ChatMessages.animate({scrollTop: document.querySelector("#ChatMessages").scrollHeight});
+            }
         };
 
 
@@ -186,7 +192,11 @@ function InitializeChatServer() {
                 isTyping = false;
                 clearTimeout(typingTimer);
 
-                ChatSocket.send(JSON.stringify({ClientMessageType: "ChatMessage", MessageType: "Private", Message: ChatTextInput.val()}));
+                ChatSocket.send(JSON.stringify({
+                    ClientMessageType: "ChatMessage",
+                    MessageType: "Private",
+                    Message: ChatTextInput.val()
+                }));
                 ChatTextInput.val("");
                 ChatTextInput.val("");
             }

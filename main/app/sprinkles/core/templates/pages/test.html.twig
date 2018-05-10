@@ -6,3 +6,54 @@
     </p>
     <input formenctype="multipart/form-data" type="submit"/>
 </form>
+
+<form method="post" action="{{ site.uri.public }}/api/users/u/marvinborner/publickey">
+    {% include "forms/csrf.html.twig" %}
+    <p>
+        <input type="text" name="PublicKey"/>
+    </p>
+    <input type="submit"/>
+</form>
+
+<script>
+    var current_user_id = {{ current_user.id }};
+    {% include "pages/partials/config.js.twig" %}
+</script>
+
+{{ assets.js('js/main') | raw }}
+<script src="{{ assets.url('assets://SiteAssets/js/encryption.js') }}"></script>
+
+
+<script>
+
+    // GENERATE KEYS
+    var openpgp = window.openpgp;
+    var options;
+    var randomString = Math.random().toString(36).substr(2, 11); // PRIVKEY ENCRYPTION KEY
+    openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
+    options = {
+        userIds: [{name: 'marvinborner', email: 'marvin@borners.de'}],
+        curve: "curve25519",
+        passphrase: randomString
+    };
+    openpgp.generateKey(options).then(function (key) {
+        localStorage.setItem("PrivateKey", key.privateKeyArmored);
+        localStorage.setItem("🔒", randomString);
+        // SAVE PUBLIC KEY TO DATABASE
+        var data = {
+            csrf_name: site.csrf.name,
+            csrf_value: site.csrf.value,
+            PublicKey: key.publicKeyArmored
+        };
+        $.ajax({
+            type: 'POST',
+            url: site.uri.public + '/api/users/u/' + 'tory.redstart' + '/publickey',
+            data: data,
+            success: function (response) {
+                console.log(response);
+                //window.location.reload();
+            }
+        });
+
+    });
+</script>

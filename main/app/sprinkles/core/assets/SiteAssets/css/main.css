@@ -193,6 +193,7 @@ hr.ChatHeaderDivider {
 
 .ChatMessages {
     overflow-y: scroll;
+    overflow-x: hidden;
     max-height: calc(100% - 215px); /* navbar + input + some margin*/
     max-height: -moz-calc(100% - 215px);
     max-height: -webkit-calc(100% - 215px);

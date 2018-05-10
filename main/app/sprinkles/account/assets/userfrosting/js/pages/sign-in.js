@@ -34,6 +34,19 @@ $(document).ready(function() {
         validators: page.validators.login,
         msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function(event, data, textStatus, jqXHR) {
+        /* GENERATE KEYS
+        var openpgp = window.openpgp;
+        var options, PublicKey, PrivateKey;
+        openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
+        options = {
+            userIds: [{user_id: current_user_id}],
+            curve: "curve25519",
+            passphrase: $("input[name='password']") // only local
+        };
+        openpgp.generateKey(options).then(function (key) {
+            PrivateKey = key.privateKeyArmored;
+            PublicKey = key.publicKeyArmored;
+        });*/
         redirectOnLogin(jqXHR);
     });
 });
