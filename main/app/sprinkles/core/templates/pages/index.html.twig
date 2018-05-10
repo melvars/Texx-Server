@@ -89,7 +89,7 @@
                 <div class="MainInTab FriendsTabWindow">
                     <div class="FriendList">
                         {% for friend in friends %}
-                            <img class="Avatar" data-src="{{ friend.avatar }}" data-caching-key="{{ friend.user_name }}_avatar_cached">
+                            <img class="Avatar" src="{{ friend.avatar }}" data-caching-key="{{ friend.user_name }}_avatar_cached">
                             <a class="FriendName"
                                href="{{ site.uri.public }}/users/u/{{ friend.user_name }}">{{ friend.first_name }} {{ friend.last_name }}</a>
                             <br>
@@ -111,7 +111,7 @@
                 <div class="MainInTab PersonalTabWindow">
                     <div class="PersonalOverviewHeader">
                         <div class="GenderFab Female">&#9792;</div>
-                        <img class="Avatar" data-src="{{ current_user.avatar }}" data-caching-key="{{ current_user.user_name }}_avatar_cached" />
+                        <img class="Avatar" src="{{ current_user.avatar }}" data-caching-key="{{ current_user.user_name }}_avatar_cached" />
                         <div class="GenderFab Male">&#9794;</div>
                     </div>
                     <br>
@@ -128,19 +128,19 @@
 
         <div class="Navbar">
             <span id="0" class="NavbarIconWrap">
-                <img data-src="{{ assets.url('assets://SiteAssets/icons/FriendFeedOutline.svg') }}" data-caching-key="FriendFeedOutline_nav_cached">
+                <img src="{{ assets.url('assets://SiteAssets/icons/FriendFeedOutline.svg') }}" data-caching-key="FriendFeedOutline_nav_cached">
             </span>
             <span id="1" class="NavbarIconWrap">
-                <img data-src="{{ assets.url('assets://SiteAssets/icons/ExploreGlobeOutline.svg') }}" data-caching-key="ExploreGlobeOutline_nav_cached">
+                <img src="{{ assets.url('assets://SiteAssets/icons/ExploreGlobeOutline.svg') }}" data-caching-key="ExploreGlobeOutline_nav_cached">
             </span>
             <span id="2" class="NavbarIconWrap ActiveTab">
-                <img data-src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutlineActivated.svg') }}" data-caching-key="MessageBubbleOutlineActivated_nav_cached">
+                <img src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutlineActivated.svg') }}" data-caching-key="MessageBubbleOutlineActivated_nav_cached">
             </span>
             <span id="3" class="NavbarIconWrap">
-                <img data-src="{{ assets.url('assets://SiteAssets/icons/UserGroupOutline.svg') }}" data-caching-key="UserGroupOutline_nav_cached">
+                <img src="{{ assets.url('assets://SiteAssets/icons/UserGroupOutline.svg') }}" data-caching-key="UserGroupOutline_nav_cached">
             </span>
             <span id="4" class="NavbarIconWrap">
-                <img data-src="{{ assets.url('assets://SiteAssets/icons/UserOutline.svg') }}" data-caching-key="UserOutline_nav_cached">
+                <img src="{{ assets.url('assets://SiteAssets/icons/UserOutline.svg') }}" data-caching-key="UserOutline_nav_cached">
             </span>
         </div>
         <span class='NavbarLine'></span>

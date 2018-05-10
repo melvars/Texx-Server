@@ -76,7 +76,6 @@ SWIPEABLE
 HEADER
 ******/
 .header {
-    -js-display: flex;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
@@ -323,18 +322,23 @@ hr.ChatHeaderDivider {
 }
 
 @-webkit-keyframes sk-bouncedelay {
-    0%, 80%, 100% { -webkit-transform: scale(0) }
-    40% { -webkit-transform: scale(1.0) }
+    0%, 80%, 100% {
+        -webkit-transform: scale(0)
+    }
+    40% {
+        -webkit-transform: scale(1.0)
+    }
 }
 
 @keyframes sk-bouncedelay {
     0%, 80%, 100% {
         -webkit-transform: scale(0);
         transform: scale(0);
-    } 40% {
-          -webkit-transform: scale(1.0);
-          transform: scale(1.0);
-      }
+    }
+    40% {
+        -webkit-transform: scale(1.0);
+        transform: scale(1.0);
+    }
 }
 
 /*********
@@ -371,7 +375,6 @@ FRIEND TAB
     align-self: center;
 }
 
-
 /***********
 PERSONAL TAB
 ***********/
@@ -382,7 +385,6 @@ PERSONAL TAB
 }
 
 .PersonalOverviewHeader {
-    -js-display: flex;
     display: flex;
     justify-content: space-evenly;
     align-items: flex-end;
@@ -421,7 +423,6 @@ PERSONAL TAB
 NAVBAR
 *****/
 .Navbar {
-    -js-display: flex;
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
@@ -434,10 +435,18 @@ NAVBAR
 }
 
 .NavbarIconWrap {
+    width: calc(100vw / 5);
+    width: -moz-calc(100vw / 5);
+    width: -webkit-calc(100vw / 5);
+}
+
+.NavbarIconWrap {
     margin: auto;
 }
 
 .NavbarIconWrap img {
+    display: block;
+    margin: 0 auto;
     height: 30px;
     width: 30px;
 }
