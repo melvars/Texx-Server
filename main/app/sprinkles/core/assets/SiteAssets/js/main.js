@@ -32,38 +32,49 @@ function triggerErrorPopup() {
 /**
  * ENCRYPTION
  */
-var openpgp = window.openpgp;
-var hkp = new openpgp.HKP('https://pgp.mit.edu');
-var options, EncryptedText, DecryptedText, PublicKey, PrivateKey, PrivateKeyObj;
+/*var openpgp = window.openpgp;
+var options, EncryptedText, DecryptedText, PrivateKey, PassPhrase, PrivateKeyObj;
+var PublicKey = [];
 openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
 
-function generateKeys(passphrase) {
-    options = {
-        userIds: [{user_id: current_user_id}],
-        curve: "curve25519",
-        passphrase: passphrase
-    };
+$.ajax({
+    type: 'GET',
+    url: site.uri.public + '/api/users/u/' + current_username + '/publickey',
+    dataType : "json",
+    success: function (response) {
+        if (response.user_id === current_user_id) {
+            PublicKey[current_username] = response.PublicKey;
+            PrivateKey = localStorage.getItem("PrivateKey");
+            PassPhrase = localStorage.getItem("🔒")
+        }
+    }
+});
 
-    openpgp.generateKey(options).then(function (key) {
-        PrivateKey = key.privateKeyArmored;
-        PublicKey = key.publicKeyArmored;
-    });
-}
-
-function EncryptMessage(Message, PublicKey) {
+function EncryptMessage(Message, Username) {
+    if (!Username in PublicKey) {
+        $.ajax({
+            type: 'GET',
+            url: site.uri.public + '/api/users/u/' + Username + '/publickey',
+            dataType : "json",
+            success: function (response) {
+                if (response.user_id === current_user_id) {
+                    PublicKey[Username] = response.PublicKey;
+                }
+            }
+        });
+    }
     options = {
         data: Message,
-        publicKeys: openpgp.key.readArmored(PublicKey).keys
+        publicKeys: openpgp.key.readArmored(PublicKey[Username]).keys
     };
-
     openpgp.encrypt(options).then(function (EncryptedText) {
         EncryptedText = EncryptedText.data;
     });
 }
 
-function DecryptMessage(EncryptedText, PrivateKey, passphrase) {
+function DecryptMessage(EncryptedText) {
     PrivateKeyObj = openpgp.key.readArmored(PrivateKey).keys[0];
-    PrivateKeyObj.decrypt(passphrase);
+    PrivateKeyObj.decrypt(PassPhrase);
     options = {
         message: openpgp.message.readArmored(EncryptedText),
         privateKeys: [PrivateKeyObj]
@@ -72,7 +83,7 @@ function DecryptMessage(EncryptedText, PrivateKey, passphrase) {
     openpgp.decrypt(options).then(function (DecryptedText) {
         DecryptedText = DecryptedText.data;
     });
-}
+}*/
 
 /**
  * OLD BROWSER

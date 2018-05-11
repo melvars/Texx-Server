@@ -1,6 +1,25 @@
 /**
  * GENERAL CHAT
  */
+var ReceiversUsername = "marvinborner"; // HARD
+var openpgp = window.openpgp;
+var options, EncryptedText;
+var PublicKey = [];
+openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
+var privKeyObj = openpgp.key.readArmored(localStorage.getItem("PrivateKey")).keys[0];
+privKeyObj.decrypt(localStorage.getItem("🔒"));
+$.ajax({
+    type: 'GET',
+    url: site.uri.public + '/api/users/u/' + ReceiversUsername + '/publickey',
+    dataType: "json",
+    success: function (response) {
+        //if (response.user_id === ReceiversUsername->id) {
+            PublicKey[ReceiversUsername] = response.PublicKey;
+            console.log(PublicKey[ReceiversUsername])
+        //}
+    }
+});
+
 function InitializeChatServer() {
     var ChatTextInput = $("#ChatTextInput");
     var SubscribeTextInput = $("#SubscribeTextInput");
@@ -187,18 +206,27 @@ function InitializeChatServer() {
         // SEND MESSAGE FROM INPUT FIELD
         ChatTextInput.keyup(function (e) {
             if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
-                // USER USUALLY STOPS TYPING ON SENDING -> CHANGE STATE TO FALSE
-                sendTypingState(false);
-                isTyping = false;
-                clearTimeout(typingTimer);
+                options = {
+                    data: ChatTextInput.val(),
+                    publicKeys: openpgp.key.readArmored(PublicKey[ReceiversUsername]).keys,
+                    privateKeys: [privKeyObj] // FOR SIGNING
+                };
+                openpgp.encrypt(options).then(function (Encrypted) {
+                    EncryptedText = Encrypted.data;
 
-                ChatSocket.send(JSON.stringify({
-                    ClientMessageType: "ChatMessage",
-                    MessageType: "Private",
-                    Message: ChatTextInput.val()
-                }));
-                ChatTextInput.val("");
-                ChatTextInput.val("");
+                    // USER USUALLY STOPS TYPING ON SENDING -> CHANGE STATE TO FALSE
+                    sendTypingState(false);
+                    isTyping = false;
+                    clearTimeout(typingTimer);
+
+                    ChatSocket.send(JSON.stringify({
+                        ClientMessageType: "ChatMessage",
+                        MessageType: "Private",
+                        Message: EncryptedText.substr(91).slice(0,-29)
+                    }));
+                    ChatTextInput.val("");
+                    ChatTextInput.val("");
+                });
             }
         });
     };

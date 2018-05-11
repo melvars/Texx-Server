@@ -237,23 +237,64 @@ class UserController extends SimpleController
      * Request type: POST
      */
     public function setPublicKey($request, $response, $args) {
-        $user = $this->getUserFromParams($args);
+        $requestedUser = $this->getUserFromParams($args);
 
-        if (!$user) {
+        if (!$requestedUser) {
             throw new NotFoundException($request, $response);
         }
 
-        $classMapper = $this->ci->classMapper;
-        $requestedUser = $classMapper->staticMethod('user', 'where', 'user_name', $args['user_name'])
-            ->first();
+        $PublicKey = $request->getParsedBody()["PublicKey"];
 
-        if ($user->id === $requestedUser->id) {
-            $PublicKey = $request->getParsedBody()["PublicKey"];
+        if ($this->ci->currentUser->id === $requestedUser->id && (Capsule::table('public_keys')
+                ->where('UserID', "=", $requestedUser->id)
+                ->exists()) === FALSE) {
             Capsule::table('public_keys')
-                ->insert(['UserID' => $requestedUser->id, 'Key' => $PublicKey]);
+                ->insert(['UserID' => $requestedUser->id, 'Key' => substr(substr($PublicKey, 100), 0,-40)]);
+            return $response->withStatus(200);
+        } else if ($this->ci->currentUser->id === $requestedUser->id) {
+            Capsule::table('public_keys')
+                ->where('UserID', $requestedUser->id)
+                ->update(['Key' => substr(substr($PublicKey, 100), 0,-40)]);
             return $response->withStatus(200);
         } else {
             throw new ForbiddenException();
+        }
+    }
+
+    /**
+     * Gets the users public key
+     * Request type: GET
+     */
+    public function getPublicKey($request, $response, $args) {
+        $requestedUser = $this->getUserFromParams($args);
+
+        if (!$requestedUser) {
+            throw new NotFoundException($request, $response);
+        }
+
+        if ((Capsule::table('public_keys')
+                ->where('UserID', "=", $requestedUser->id)
+                ->exists()) === TRUE) {
+
+            $RawPublicKey = Capsule::table('public_keys')
+                ->where('UserID', "=", $requestedUser->id)
+                ->value('Key');
+            $PublicKey = "-----BEGIN PGP PUBLIC KEY BLOCK-----\nVersion: OpenPGP.js v3.0.9\nComment: https://openpgpjs.org\n\n" . $RawPublicKey . "\n-----END PGP PUBLIC KEY BLOCK-----";
+
+            $ContentType = explode(',', $request->getHeaderLine('Accept'))[0];
+            switch ($ContentType) {
+                case 'application/json':
+                    $response->write(json_encode(array('user_id' => $requestedUser->id, 'PublicKey' => $PublicKey)));
+                    break;
+                case 'text/html':
+                    $response->write("<pre>" . $PublicKey);
+                    break;
+                default:
+                    $response->write($PublicKey);
+            }
+            return $response->withStatus(200);
+        } else {
+            throw new NotFoundException();
         }
     }
 

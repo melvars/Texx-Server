@@ -34,19 +34,40 @@ $(document).ready(function() {
         validators: page.validators.login,
         msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function(event, data, textStatus, jqXHR) {
-        /* GENERATE KEYS
-        var openpgp = window.openpgp;
-        var options, PublicKey, PrivateKey;
-        openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
-        options = {
-            userIds: [{user_id: current_user_id}],
-            curve: "curve25519",
-            passphrase: $("input[name='password']") // only local
-        };
-        openpgp.generateKey(options).then(function (key) {
-            PrivateKey = key.privateKeyArmored;
-            PublicKey = key.publicKeyArmored;
-        });*/
-        redirectOnLogin(jqXHR);
+        if (localStorage.getItem("PrivateKey") === null && localStorage.getItem("🔒") === null) {
+            // GENERATE KEYS
+            var openpgp = window.openpgp;
+            var options;
+            var randomString = Math.random().toString(36).substr(2, 11); // PRIVKEY ENCRYPTION KEY
+            openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
+            options = {
+                userIds: [{name: $("input[name=user_name]").val()}],
+                curve: "curve25519",
+                passphrase: randomString
+            };
+            openpgp.generateKey(options).then(function (key) {
+                localStorage.setItem("PrivateKey", key.privateKeyArmored);
+                localStorage.setItem("🔒", randomString);
+
+                console.log(key.publicKeyArmored);
+                console.log(key.privateKeyArmored);
+                // SAVE PUBLIC KEY TO DATABASE
+                var data = {
+                    csrf_name: site.csrf.name,
+                    csrf_value: site.csrf.value,
+                    PublicKey: key.publicKeyArmored
+                };
+                $.ajax({
+                    type: 'POST',
+                    dataType : "json",
+                    url: site.uri.public + '/api/users/u/' + $("input[name=user_name]").val() + '/publickey',
+                    data: data,
+                    async: false
+                });
+                redirectOnLogin(jqXHR);
+            });
+        } else {
+            redirectOnLogin(jqXHR);
+        }
     });
 });

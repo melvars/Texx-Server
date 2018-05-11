@@ -85,39 +85,7 @@ $(document).ready(function () {
         msgTarget: $("#alerts-page"),
         keyupDelay: 500
     }).on("submitSuccess.ufForm", function () {
-        // GENERATE KEYS
-        var openpgp = window.openpgp;
-        var options;
-        var randomString = Math.random().toString(36).substr(2, 11); // PRIVKEY ENCRYPTION KEY
-        openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
-        options = {
-            userIds: [{name: $("#r-form-username").val(), email: $("#r-form-email").val()}],
-            curve: "curve25519",
-            passphrase: randomString
-        };
-        openpgp.generateKey(options).then(function (key) {
-            localStorage.setItem("PrivateKey", key.privateKeyArmored);
-            localStorage.setItem("🔒", randomString);
-
-            console.log(key.publicKeyArmored);
-            console.log(key.privateKeyArmored);
-            // SAVE PUBLIC KEY TO DATABASE
-            var data = {
-                csrf_name: site.csrf.name,
-                csrf_value: site.csrf.value,
-                PublicKey: key.publicKeyArmored
-            };
-            $.ajax({
-                type: 'POST',
-                url: site.uri.public + '/api/users/u/' + $("#r-form-username").val() + '/publickey',
-                data: data,
-                success: function (response) {
-                    console.log(response);
-                    //window.location.reload();
-                }
-            });
-
-        });
+        window.location.reload();
     }).on("submitError.ufForm", function () {
         // Reload captcha
         $("#captcha").captcha();

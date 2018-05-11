@@ -8,7 +8,8 @@
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-            <meta name="description" content="{% block page_description %}This page has not yet been configured.{% endblock %}">
+            <meta name="description"
+                  content="{% block page_description %}This page has not yet been configured.{% endblock %}">
             <meta name="author" content="{% block page_author %}{{ site.author }}{% endblock %}">
 
             <title>{{ site.title }} | {% block page_title %}New Page{% endblock %}</title>
@@ -54,7 +55,7 @@
 
             {# Canonical page link #}
             {% if block('page_canonical') %}
-                <link href="{{site.uri.base.scheme}}://{% block page_canonical %}{% endblock %}" rel="canonical" />
+                <link href="{{ site.uri.base.scheme }}://{% block page_canonical %}{% endblock %}" rel="canonical" />
             {% endif %}
 
             <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -85,7 +86,10 @@
                         {% block content_header %}
                             <section class="content-header">
                                 <h1>{% block header_title %}{{ block('page_title') }}{% endblock %}</h1>
-                                {% if block('page_description') is not empty %}<h1><small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small></h1>{% endif %}
+                                {% if block('page_description') is not empty %}
+                                    <h1>
+                                    <small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small>
+                                    </h1>{% endif %}
                                 {% block breadcrumb %}
                                     {% include 'navigation/breadcrumb.html.twig' with {page_title: block('page_title')} %}
                                 {% endblock %}
@@ -116,7 +120,10 @@
         {% endblock %}
 
         {% block scripts %}
-            <script>var current_user_id = {{ current_user.id }};</script>
+            <script>
+                var current_user_id = {{ current_user.id }};
+                var current_username = "{{ current_user.user_name }}";
+            </script>
             {# Override this block in a child layout template or page template to override site-level scripts. #}
             {% block scripts_site %}
                 {{ assets.js('js/main') | raw }}
