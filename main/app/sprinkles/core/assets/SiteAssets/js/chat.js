@@ -1,25 +1,15 @@
 /**
- * GENERAL CHAT
+ * ENCRYPTION
  */
-var ReceiversUsername = "marvinborner"; // HARD
+var ReceiversUsername = ""; // HARD
 var openpgp = window.openpgp;
 var options, EncryptedText;
 var PublicKey = [];
 openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
-var privKeyObj = openpgp.key.readArmored(localStorage.getItem("PrivateKey")).keys[0];
-privKeyObj.decrypt(localStorage.getItem("🔒"));
-$.ajax({
-    type: 'GET',
-    url: site.uri.public + '/api/users/u/' + ReceiversUsername + '/publickey',
-    dataType: "json",
-    success: function (response) {
-        //if (response.user_id === ReceiversUsername->id) {
-            PublicKey[ReceiversUsername] = response.PublicKey;
-            console.log(PublicKey[ReceiversUsername])
-        //}
-    }
-});
 
+/**
+ * GENERAL CHAT
+ */
 function InitializeChatServer() {
     var ChatTextInput = $("#ChatTextInput");
     var SubscribeTextInput = $("#SubscribeTextInput");
@@ -49,7 +39,7 @@ function InitializeChatServer() {
             var TypingIndicatorMessage = $(".TypingIndicatorMessage").parent();
             var LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
             var MessageObject = JSON.parse(e.data);
-            var Message = MessageObject.Message;
+            var Message = MessageObject.Message; // ENCRYPTED MESSAGE (NOT ENCRYPTED ON SERVER MESSAGES)
             var Username = MessageObject.Username;
             var Fullname = MessageObject.Fullname;
             var Avatar = MessageObject.Avatar;
@@ -59,8 +49,35 @@ function InitializeChatServer() {
             var WasHimself = MessageObject.WasHimself;
             var ServerMessageType = MessageObject.ServerMessageType;
             var Granted = MessageObject.Granted;
+            ReceiversUsername = MessageObject.Receiver;
+
+            // GET PUBLIC KEY IF NOT ALREADY DID
+            if (!(ReceiversUsername in PublicKey) && ReceiversUsername !== null) {
+                $.ajax({
+                    type: 'GET',
+                    url: site.uri.public + '/api/users/u/' + ReceiversUsername + '/publickey',
+                    dataType: "json",
+                    success: function (response) {
+                        PublicKey[ReceiversUsername] = response.PublicKey;
+                        console.log(PublicKey[ReceiversUsername])
+                    }
+                });
+            }
 
             if (ServerMessage === false) { // NO SERVER MESSAGE -> SENT BY USER
+
+                // DECRYPT MESSAGE
+                var privKeyObj = openpgp.key.readArmored(localStorage.getItem("PrivateKey")).keys[0];
+                privKeyObj.decrypt(localStorage.getItem("🔒"));
+                options = {
+                    message: openpgp.message.readArmored("-----BEGIN PGP MESSAGE-----\r\nVersion: OpenPGP.js v3.0.9\r\nComment: https://openpgpjs.org\r\n\n" + Message + "\r\n-----END PGP MESSAGE-----\r\n"),
+                    //publicKeys: openpgp.key.readArmored(PublicKey[Username]).keys, // FOR VERIFICATION
+                    privateKeys: [privKeyObj]
+                };
+                openpgp.decrypt(options).then(function(plaintext) {
+                    Message = plaintext.data;
+                });
+
                 if (WasHimself === true) { // -> MESSAGE WAS FROM HIMSELF
                     console.log("%c[CHATSOCKET LOGGER] You sent a message!", "color: darkorange");
                     if (!LastMessage.hasClass("MessageSent")) { // CHECK IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
@@ -208,11 +225,12 @@ function InitializeChatServer() {
             if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
                 options = {
                     data: ChatTextInput.val(),
-                    publicKeys: openpgp.key.readArmored(PublicKey[ReceiversUsername]).keys,
-                    privateKeys: [privKeyObj] // FOR SIGNING
+                    publicKeys: openpgp.key.readArmored(PublicKey[ReceiversUsername]).keys
+                    //privateKeys: [privKeyObj] // FOR SIGNING
                 };
                 openpgp.encrypt(options).then(function (Encrypted) {
                     EncryptedText = Encrypted.data;
+                    console.log(EncryptedText);
 
                     // USER USUALLY STOPS TYPING ON SENDING -> CHANGE STATE TO FALSE
                     sendTypingState(false);
@@ -222,7 +240,7 @@ function InitializeChatServer() {
                     ChatSocket.send(JSON.stringify({
                         ClientMessageType: "ChatMessage",
                         MessageType: "Private",
-                        Message: EncryptedText.substr(91).slice(0,-29)
+                        Message: EncryptedText.substr(91).slice(0,-29) // SLICING FOR DATABASE SAVING (LESS DATA)
                     }));
                     ChatTextInput.val("");
                     ChatTextInput.val("");

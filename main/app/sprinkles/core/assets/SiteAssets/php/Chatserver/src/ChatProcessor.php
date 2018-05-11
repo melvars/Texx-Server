@@ -51,6 +51,7 @@ class ChatProcessor implements MessageComponentInterface
                         $MessageObject->ServerMessage = TRUE;
                         $MessageObject->ServerMessageType = "Verify";
                         $MessageObject->Granted = TRUE;
+                        $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name;
                         $this->verifiedUsers[$conn->resourceId] = TRUE;
                         $this->users[$conn->resourceId]->send(json_encode($MessageObject, TRUE));
                     } else {
@@ -58,6 +59,7 @@ class ChatProcessor implements MessageComponentInterface
                         $MessageObject->ServerMessage = TRUE;
                         $MessageObject->ServerMessageType = "Verify";
                         $MessageObject->Granted = FALSE;
+                        $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name;
                         $this->verifiedUsers[$conn->resourceId] = FALSE;
                         $this->users[$conn->resourceId]->send(json_encode($MessageObject, TRUE));
                         $this->onClose($conn);
@@ -67,6 +69,7 @@ class ChatProcessor implements MessageComponentInterface
                     $MessageObject->ServerMessage = TRUE;
                     $MessageObject->ServerMessageType = "Verify";
                     $MessageObject->Granted = FALSE;
+                    $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name;
                     $this->verifiedUsers[$conn->resourceId] = FALSE;
                     $this->users[$conn->resourceId]->send(json_encode($MessageObject, TRUE));
                     $this->onClose($conn);
@@ -84,6 +87,7 @@ class ChatProcessor implements MessageComponentInterface
                                 $MessageObject->ServerMessage = TRUE;
                                 $MessageObject->ServerMessageType = "GroupJoin";
                                 $MessageObject->GroupName = $channel;
+                                $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name;
                                 $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
                                 $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->first_name . " " . $this->userInfo[$conn->resourceId]->last_name;
                                 $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
@@ -105,6 +109,7 @@ class ChatProcessor implements MessageComponentInterface
                                 $MessageObject = new \stdClass();
                                 $MessageObject->ServerMessage = FALSE;
                                 $MessageObject->GroupName = $channel;
+                                $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$target]]->user_name;
                                 $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
                                 $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->first_name . " " . $this->userInfo[$conn->resourceId]->last_name;
                                 $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
@@ -136,6 +141,7 @@ class ChatProcessor implements MessageComponentInterface
                                 $MessageObject->ServerMessage = TRUE;
                                 $MessageObject->ServerMessageType = "TypingState";
                                 $MessageObject->GroupName = $channel;
+                                $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name;
                                 $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
                                 $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->first_name . " " . $this->userInfo[$conn->resourceId]->last_name;
                                 $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
