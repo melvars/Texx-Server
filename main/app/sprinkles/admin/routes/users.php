@@ -31,9 +31,13 @@ $app->group('/api/users', function () {
 
     $this->get('/u/{user_name}/permissions', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getPermissions');
 
+    $this->get('/u/{user_name}/publickey', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getPublicKey');
+
     $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:create');
 
     $this->post('/u/{user_name}/password-reset', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createPasswordReset');
+
+    $this->post('/u/{user_name}/publickey', 'UserFrosting\Sprinkle\Admin\Controller\UserController:setPublicKey');
 
     $this->put('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateInfo');
 

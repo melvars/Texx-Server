@@ -79,9 +79,8 @@ class PostController extends SimpleController
             $uploadedFile->moveTo(__DIR__ . '/../../../../../uploads' . DIRECTORY_SEPARATOR . $filename);
 
             // Store in Database
-            DB::table('image_posts')->insert(
-                ['UserID' => $currentUser->id, 'File' => $filename]
-            );
+            DB::table('image_posts')
+                ->insert(['UserID' => $currentUser->id, 'File' => $filename]);
 
             $response->write('Uploaded successfully! <br/>');
         }

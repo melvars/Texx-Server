@@ -1,4 +1,21 @@
 /**
+ * ENCRYPTION
+ */
+var ReceiversUsername = ""; // HARD
+var openpgp = window.openpgp;
+var options, EncryptedMessage, DecryptedMessage;
+var PublicKey = [];
+openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
+var privKeyObj = openpgp.key.readArmored(localStorage.getItem("PrivateKey").replace(/\r/, "")).keys[0];
+privKeyObj.decrypt(localStorage.getItem("🔒"));
+
+/**
+ * GLOBAL DECLARATIONS
+ */
+var LastMessage, Username;
+
+
+/**
  * GENERAL CHAT
  */
 function InitializeChatServer() {
@@ -18,16 +35,20 @@ function InitializeChatServer() {
         // CONNECTION SUCCESSFUL!
         console.log("%c[CHATSOCKET LOGGER] Chat connection established!", "color: darkorange");
         // START VERIFICATION
-        ChatSocket.send(JSON.stringify({ClientMessageType: "Verify", Cookie: document.cookie, UserID: current_user_id}));
+        ChatSocket.send(JSON.stringify({
+            ClientMessageType: "Verify",
+            Cookie: document.cookie,
+            UserID: current_user_id
+        }));
         console.log("%c[CHATSOCKET LOGGER] Started chat verification process...", "color: grey");
         // GOT MESSAGE
         ChatSocket.onmessage = function (e) {
             // DECLARATIONS
             var TypingIndicatorMessage = $(".TypingIndicatorMessage").parent();
-            var LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
+            LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
             var MessageObject = JSON.parse(e.data);
-            var Message = MessageObject.Message;
-            var Username = MessageObject.Username;
+            var Message = MessageObject.Message; // ENCRYPTED MESSAGE (NOT ENCRYPTED ON SERVER MESSAGES)
+            Username = MessageObject.Username;
             var Fullname = MessageObject.Fullname;
             var Avatar = MessageObject.Avatar;
             var GroupName = MessageObject.GroupName;
@@ -36,49 +57,62 @@ function InitializeChatServer() {
             var WasHimself = MessageObject.WasHimself;
             var ServerMessageType = MessageObject.ServerMessageType;
             var Granted = MessageObject.Granted;
+            ReceiversUsername = MessageObject.Receiver;
+
+            // GET PUBLIC KEY IF NOT ALREADY DID
+            if (!(ReceiversUsername in PublicKey) && ReceiversUsername !== null && ReceiversUsername !== undefined) {
+                $.ajax({
+                    type: 'GET',
+                    url: site.uri.public + '/api/users/u/' + ReceiversUsername + '/publickey',
+                    dataType: "json",
+                    success: function (response) {
+                        PublicKey[ReceiversUsername] = response.PublicKey;
+                        console.log("%c[ENCRYPTION LOGGER] Publickey of " + ReceiversUsername + ": " + PublicKey[ReceiversUsername].substr(96).slice(0, -35), "color: #20c20e; background-color: black;")
+                    }
+                });
+            }
 
             if (ServerMessage === false) { // NO SERVER MESSAGE -> SENT BY USER
-                if (WasHimself === true) { // -> MESSAGE WAS FROM HIMSELF
-                    console.log("%c[CHATSOCKET LOGGER] You sent a message!", "color: darkorange");
-                    if (!LastMessage.hasClass("MessageSent")) { // CHECK IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
-                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + Message + "</div></div>");
-                    } else if (LastMessage.hasClass("MessageSent")) { // IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
-                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent BottomMessage animated fadeInRight'>" + Message + "</div></div>");
-                        if (LastMessage.hasClass("AloneMessage")) {
-                            LastMessage.removeClass("AloneMessage");
-                            LastMessage.addClass("TopMessage");
-                        } else if (LastMessage.hasClass("BottomMessage")) {
-                            LastMessage.removeClass("BottomMessage");
-                            LastMessage.addClass("MiddleMessage");
+
+                // DECRYPT MESSAGE
+                options = {
+                    message: openpgp.message.readArmored("-----BEGIN PGP MESSAGE-----\r\nVersion: OpenPGP.js v3.0.9\r\nComment: https://openpgpjs.org\r\n\r\n" + Message + "\r\n\-----END PGP MESSAGE-----\r\n"),
+                    publicKeys: openpgp.key.readArmored(PublicKey[Username]).keys, // FOR VERIFICATION
+                    privateKeys: [privKeyObj]
+                };
+                openpgp.decrypt(options).then(function(plaintext) {
+                    DecryptedMessage = plaintext.data;
+                    if (WasHimself === true) { // -> MESSAGE WAS FROM HIMSELF -> Don't write to chat, as its done directly (on enter function at the bottom, for performance)
+                        console.log("%c[CHATSOCKET LOGGER] Message sending succeeded!", "color: darkorange");
+                    } else if (WasHimself === false) { // -> MESSAGE WAS FROM OTHER USER
+                        console.log("%c[CHATSOCKET LOGGER] You received a message!", "color: darkorange");
+                        NotifySound.play();
+                        Push.create(Fullname, { // CREATE NOTIFICATION
+                            body: DecryptedMessage,
+                            icon: Avatar,
+                            timeout: 5000,
+                            onClick: function () {
+                                window.focus();
+                                this.close();
+                            }
+                        });
+                        if (!LastMessage.hasClass("MessageReceived")) { // CHECK IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
+                            ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageReceived AloneMessage animated fadeInLeft'>" + DecryptedMessage + "</div></div>");
+                        } else if (LastMessage.hasClass("MessageReceived")) { // IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
+                            ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageReceived BottomMessage animated fadeInLeft'>" + DecryptedMessage + "</div></div>");
+                            if (LastMessage.hasClass("AloneMessage")) {
+                                LastMessage.removeClass("AloneMessage");
+                                LastMessage.addClass("TopMessage");
+                            } else if (LastMessage.hasClass("BottomMessage")) {
+                                LastMessage.removeClass("BottomMessage");
+                                LastMessage.addClass("MiddleMessage");
+                            }
                         }
                     }
-                } else if (WasHimself === false) { // -> MESSAGE WAS FROM OTHER USER
-                    console.log("%c[CHATSOCKET LOGGER] You received a message!", "color: darkorange");
-                    NotifySound.play();
-                    Push.create(Fullname, { // CREATE NOTIFICATION
-                        body: Message,
-                        icon: Avatar,
-                        timeout: 5000,
-                        onClick: function () {
-                            window.focus();
-                            this.close();
-                        }
-                    });
-                    if (!LastMessage.hasClass("MessageReceived")) { // CHECK IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
-                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageReceived AloneMessage animated fadeInLeft'>" + Message + "</div></div>");
-                    } else if (LastMessage.hasClass("MessageReceived")) { // IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
-                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageReceived BottomMessage animated fadeInLeft'>" + Message + "</div></div>");
-                        if (LastMessage.hasClass("AloneMessage")) {
-                            LastMessage.removeClass("AloneMessage");
-                            LastMessage.addClass("TopMessage");
-                        } else if (LastMessage.hasClass("BottomMessage")) {
-                            LastMessage.removeClass("BottomMessage");
-                            LastMessage.addClass("MiddleMessage");
-                        }
-                    }
-                }
+                });
+
                 // CONVERT LINKS TO LINKS
-                $('.MessageReceived').linkify({
+                $('.ChatMessage').linkify({
                     target: "_blank"
                 });
             } else if (ServerMessage === true) { // SERVER MESSAGE
@@ -115,15 +149,17 @@ function InitializeChatServer() {
                         }
                     }
                 } else if (ServerMessageType === "Verify") { // TYPE: SERVER CHECKED ACCESS -- MOSTLY HANDLED IN BACKEND
-                        if (Granted === true) {
-                            console.log("%c[CHATSOCKET LOGGER] Chat access granted!", "color: green");
-                        } else if (Granted === false) {
-                            console.log("%c[CHATSOCKET LOGGER] Chat access denied!", "color: red");
-                        }
+                    if (Granted === true) {
+                        console.log("%c[CHATSOCKET LOGGER] Chat access granted!", "color: green");
+                    } else if (Granted === false) {
+                        console.log("%c[CHATSOCKET LOGGER] Chat access denied!", "color: red");
+                    }
                 }
             }
             // SCROLL TO BOTTOM ON NEW MESSAGE OF ANY KIND
-            ChatMessages.animate({scrollTop: document.querySelector("#ChatMessages").scrollHeight}, "slow");
+            if ((ChatMessages.scrollTop() + ChatMessages.innerHeight() < ChatMessages[0].scrollHeight)) {
+                ChatMessages.animate({scrollTop: document.querySelector("#ChatMessages").scrollHeight});
+            }
         };
 
 
@@ -181,14 +217,65 @@ function InitializeChatServer() {
         // SEND MESSAGE FROM INPUT FIELD
         ChatTextInput.keyup(function (e) {
             if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
+
+                var LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
+                if (!LastMessage.hasClass("MessageSent")) { // CHECK IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
+                    ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + ChatTextInput.val() + "</div></div>");
+                } else if (LastMessage.hasClass("MessageSent")) { // IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
+                    ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent BottomMessage animated fadeInRight'>" + ChatTextInput.val() + "</div></div>");
+                    if (LastMessage.hasClass("AloneMessage")) {
+                        LastMessage.removeClass("AloneMessage");
+                        LastMessage.addClass("TopMessage");
+                    } else if (LastMessage.hasClass("BottomMessage")) {
+                        LastMessage.removeClass("BottomMessage");
+                        LastMessage.addClass("MiddleMessage");
+                    }
+                }
+
                 // USER USUALLY STOPS TYPING ON SENDING -> CHANGE STATE TO FALSE
                 sendTypingState(false);
                 isTyping = false;
                 clearTimeout(typingTimer);
 
-                ChatSocket.send(JSON.stringify({ClientMessageType: "ChatMessage", MessageType: "Private", Message: ChatTextInput.val()}));
-                ChatTextInput.val("");
-                ChatTextInput.val("");
+                // ENCRYPT AND SEND MESSAGE WITH OWN PUBLIC KEY
+                options = {
+                    data: ChatTextInput.val(),
+                    publicKeys: openpgp.key.readArmored(PublicKey[ReceiversUsername]).keys,
+                    privateKeys: [privKeyObj] // FOR SIGNING
+                };
+                openpgp.encrypt(options).then(function (Encrypted) {
+                    EncryptedMessage = Encrypted.data.substr(91).slice(0,-29); // SLICING FOR DATABASE SAVING (LESS DATA)
+                    console.log("%c[ENCRYPTION LOGGER] Encrypted message for sender: " + EncryptedMessage, "color: #20c20e; background-color: black;");
+
+                    ChatSocket.send(JSON.stringify({
+                        ClientMessageType: "ChatMessage",
+                        MessageType: "Private",
+                        EncryptedWithKey: ReceiversUsername,
+                        Message: EncryptedMessage
+                    }));
+                    ChatTextInput.val("");
+                    ChatTextInput.val("");
+                });
+
+                // ENCRYPT AND SEND MESSAGE WITH RECEIVERS PUBLIC KEY
+                options = {
+                    data: ChatTextInput.val(),
+                    publicKeys: openpgp.key.readArmored(PublicKey[ReceiversUsername]).keys,
+                    privateKeys: [privKeyObj] // FOR SIGNING
+                };
+                openpgp.encrypt(options).then(function (Encrypted) {
+                    EncryptedMessage = Encrypted.data.substr(91).slice(0,-29); // SLICING FOR DATABASE SAVING (LESS DATA)
+                    console.log("%c[ENCRYPTION LOGGER] Encrypted message for receiver: " + EncryptedMessage, "color: #20c20e; background-color: black;");
+
+                    ChatSocket.send(JSON.stringify({
+                        ClientMessageType: "ChatMessage",
+                        MessageType: "Private",
+                        EncryptedWithKey: ReceiversUsername,
+                        Message: EncryptedMessage
+                    }));
+                    ChatTextInput.val("");
+                    ChatTextInput.val("");
+                });
             }
         });
     };

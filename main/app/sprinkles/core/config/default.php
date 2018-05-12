@@ -175,7 +175,7 @@
         'php' => [
             'timezone' => 'Europe/Berlin',
             'error_reporting' => E_ALL,  // Development - report all errors and suggestions
-            'display_errors'  => 'false',
+            'display_errors'  => 'true',
             'log_errors'      => 'true',
             // Let PHP itself render errors natively.  Useful if a fatal error is raised in our custom shutdown handler.
             'display_errors_native' => 'true'
