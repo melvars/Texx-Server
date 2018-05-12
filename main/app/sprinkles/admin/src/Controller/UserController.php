@@ -246,55 +246,18 @@ class UserController extends SimpleController
         $PublicKey = $request->getParsedBody()["PublicKey"];
 
         if ($this->ci->currentUser->id === $requestedUser->id && (Capsule::table('public_keys')
-                ->where('UserID', "=", $requestedUser->id)
+                ->where('user_id', "=", $requestedUser->id)
                 ->exists()) === FALSE) {
             Capsule::table('public_keys')
-                ->insert(['UserID' => $requestedUser->id, 'Key' => substr(substr($PublicKey, 100), 0,-40)]);
+                ->insert(['user_id' => $requestedUser->id, 'key' => substr(substr($PublicKey, 100), 0,-40)]);
             return $response->withStatus(200);
         } else if ($this->ci->currentUser->id === $requestedUser->id) {
             Capsule::table('public_keys')
-                ->where('UserID', $requestedUser->id)
-                ->update(['Key' => substr(substr($PublicKey, 100), 0,-40)]);
+                ->where('user_id', $requestedUser->id)
+                ->update(['key' => substr(substr($PublicKey, 100), 0,-40)]);
             return $response->withStatus(200);
         } else {
             throw new ForbiddenException();
-        }
-    }
-
-    /**
-     * Gets the users public key
-     * Request type: GET
-     */
-    public function getPublicKey($request, $response, $args) {
-        $requestedUser = $this->getUserFromParams($args);
-
-        if (!$requestedUser) {
-            throw new NotFoundException($request, $response);
-        }
-
-        if ((Capsule::table('public_keys')
-                ->where('UserID', "=", $requestedUser->id)
-                ->exists()) === TRUE) {
-
-            $RawPublicKey = Capsule::table('public_keys')
-                ->where('UserID', "=", $requestedUser->id)
-                ->value('Key');
-            $PublicKey = "-----BEGIN PGP PUBLIC KEY BLOCK-----\nVersion: OpenPGP.js v3.0.9\nComment: https://openpgpjs.org\n\n" . $RawPublicKey . "\n-----END PGP PUBLIC KEY BLOCK-----";
-
-            $ContentType = explode(',', $request->getHeaderLine('Accept'))[0];
-            switch ($ContentType) {
-                case 'application/json':
-                    $response->write(json_encode(array('user_id' => $requestedUser->id, 'PublicKey' => $PublicKey)));
-                    break;
-                case 'text/html':
-                    $response->write("<pre>" . $PublicKey);
-                    break;
-                default:
-                    $response->write($PublicKey);
-            }
-            return $response->withStatus(200);
-        } else {
-            throw new NotFoundException();
         }
     }
 
@@ -1029,6 +992,116 @@ class UserController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/users.html.twig');
     }
+
+    /**
+     * Gets the users public key
+     * Request type: GET
+     */
+    public function getPublicKey($request, $response, $args) {
+        $requestedUser = $this->getUserFromParams($args);
+
+        if (!$requestedUser) {
+            throw new NotFoundException($request, $response);
+        }
+
+        if ((Capsule::table('public_keys')
+                ->where('user_id', "=", $requestedUser->id)
+                ->exists()) === TRUE) {
+
+            $RawPublicKey = Capsule::table('public_keys')
+                ->where('user_id', "=", $requestedUser->id)
+                ->value('key');
+            $PublicKey = "-----BEGIN PGP PUBLIC KEY BLOCK-----\nVersion: OpenPGP.js v3.0.9\nComment: https://openpgpjs.org\n\n" . $RawPublicKey . "\n-----END PGP PUBLIC KEY BLOCK-----";
+
+            $ContentType = explode(',', $request->getHeaderLine('Accept'))[0];
+            switch ($ContentType) {
+                case 'application/json':
+                    $response->write(json_encode(array('user_id' => $requestedUser->id, 'PublicKey' => $PublicKey)));
+                    break;
+                case 'text/html':
+                    $response->write("<pre>" . $PublicKey);
+                    break;
+                default:
+                    $response->write($PublicKey);
+            }
+            return $response->withStatus(200);
+        } else {
+            throw new NotFoundException();
+        }
+    }
+
+    /**
+     * Gets the users which are following the requested user
+     * Request type: GET
+     */
+    public function getFollowers($request, $response, $args) {
+        $user = $this->getUserFromParams($args);
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
+
+        $UsersFollowers = Capsule::table('user_follow')
+            ->where('user_id', "=", $user->id)
+            ->join("users", "users.id", "=", "user_follow.followed_by_id")
+            ->select("user_follow.followed_by_id as id", "users.user_name as username")
+            ->get();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_user', [
+            'user' => $user
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        $result = $UsersFollowers->toArray();
+
+        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get users which the user follows
+     * Request type: GET
+     */
+    public function getFollows($request, $response, $args) {
+        $user = $this->getUserFromParams($args);
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
+
+        $UsersFollowers = Capsule::table('user_follow')
+            ->where('followed_by_id', "=", $user->id)
+            ->join("users", "users.id", "=", "user_follow.user_id")
+            ->select("user_follow.user_id as id", "users.user_name as username")
+            ->get();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_user', [
+            'user' => $user
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        $result = $UsersFollowers->toArray();
+
+        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
 
     /**
      * Processes the request to update an existing user's basic details (first_name, last_name, email, locale, group_id)

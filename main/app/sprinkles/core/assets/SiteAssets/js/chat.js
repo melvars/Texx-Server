@@ -67,7 +67,7 @@ function InitializeChatServer() {
                     dataType: "json",
                     success: function (response) {
                         PublicKey[ReceiversUsername] = response.PublicKey;
-                        console.log("%c[ENCRYPTION LOGGER] Publickey of " + ReceiversUsername + ": " + PublicKey[ReceiversUsername].substr(96).slice(0, -35), "color: #20c20e; background-color: black;")
+                        console.log("%c[ENCRYPTION LOGGER]\nPublickey of " + ReceiversUsername + ": \n\n" + PublicKey[ReceiversUsername].substr(96).slice(0, -35), "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 5px; color: #20c20e; background-color: black;")
                     }
                 });
             }
@@ -81,6 +81,7 @@ function InitializeChatServer() {
                     privateKeys: [privKeyObj]
                 };
                 openpgp.decrypt(options).then(function(plaintext) {
+                    plaintext ? console.log("%c[ENCRYPTION LOGGER] Decrypting succeeded!", "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 2px; color: #20c20e; background-color: black;") : console.log("%c[ENCRYPTION LOGGER] Decrypting failed!", "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 2px; color: red; background-color: black;");
                     DecryptedMessage = plaintext.data;
                     if (WasHimself === true) { // -> MESSAGE WAS FROM HIMSELF -> Don't write to chat, as its done directly (on enter function at the bottom, for performance)
                         console.log("%c[CHATSOCKET LOGGER] Message sending succeeded!", "color: darkorange");
@@ -245,7 +246,7 @@ function InitializeChatServer() {
                 };
                 openpgp.encrypt(options).then(function (Encrypted) {
                     EncryptedMessage = Encrypted.data.substr(91).slice(0,-29); // SLICING FOR DATABASE SAVING (LESS DATA)
-                    console.log("%c[ENCRYPTION LOGGER] Encrypted message for sender: " + EncryptedMessage, "color: #20c20e; background-color: black;");
+                    console.log("%c[ENCRYPTION LOGGER]\nEncrypted message for sender: \n\n" + EncryptedMessage, "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 5px; color: #20c20e; background-color: black;");
 
                     ChatSocket.send(JSON.stringify({
                         ClientMessageType: "ChatMessage",
@@ -265,7 +266,7 @@ function InitializeChatServer() {
                 };
                 openpgp.encrypt(options).then(function (Encrypted) {
                     EncryptedMessage = Encrypted.data.substr(91).slice(0,-29); // SLICING FOR DATABASE SAVING (LESS DATA)
-                    console.log("%c[ENCRYPTION LOGGER] Encrypted message for receiver: " + EncryptedMessage, "color: #20c20e; background-color: black;");
+                    console.log("%c[ENCRYPTION LOGGER]\nEncrypted message for receiver: \n\n" + EncryptedMessage, "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 5px; color: #20c20e; background-color: black;");
 
                     ChatSocket.send(JSON.stringify({
                         ClientMessageType: "ChatMessage",

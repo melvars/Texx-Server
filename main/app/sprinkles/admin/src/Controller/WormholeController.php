@@ -70,12 +70,12 @@ class WormholeController extends SimpleController
             $classMapper = $this->ci->classMapper;
             $user = $classMapper->createInstance('user')
                 ->where('user_name', $user->user_name)
-                ->joinLastActivity()
-                ->with('lastActivity', 'group')
+                ->join("user_follow", "users.id", "=", "user_follow.user_id")
+                ->select("*")
                 ->first();
 
             $result = $user->toArray();
-            $result["avatar"] = $user->avatar;
+            //$result["avatar"] = $user->avatar;
             return $response->withJson($result, 200, JSON_PRETTY_PRINT);
         }
     }

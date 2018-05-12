@@ -89,7 +89,7 @@ class ChatProcessor implements MessageComponentInterface
                                 $MessageObject->GroupName = $channel;
                                 $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name;
                                 $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
-                                $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->first_name . " " . $this->userInfo[$conn->resourceId]->last_name;
+                                $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
                                 $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
                                 if ($id === $conn->resourceId) {
                                     $MessageObject->WasHimself = TRUE;
@@ -111,7 +111,7 @@ class ChatProcessor implements MessageComponentInterface
                                 $MessageObject->GroupName = $channel;
                                 $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$target]]->user_name;
                                 $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
-                                $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->first_name . " " . $this->userInfo[$conn->resourceId]->last_name;
+                                $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
                                 $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
                                 $MessageObject->Message = htmlspecialchars($data->Message);
                                 if ($id === $conn->resourceId) {
@@ -143,7 +143,7 @@ class ChatProcessor implements MessageComponentInterface
                                 $MessageObject->GroupName = $channel;
                                 $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name;
                                 $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
-                                $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->first_name . " " . $this->userInfo[$conn->resourceId]->last_name;
+                                $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
                                 $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
                                 $MessageObject->State = $data->State;
                                 if ($id === $conn->resourceId) {
@@ -172,7 +172,7 @@ class ChatProcessor implements MessageComponentInterface
                         $MessageObject->ServerMessage = TRUE;
                         $MessageObject->ServerMessageType = "UserDisconnect";
                         $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
-                        $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->first_name . " " . $this->userInfo[$conn->resourceId]->last_name;
+                        $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
                         $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
                         $MessageJson = json_encode($MessageObject, TRUE);
                         $this->users[$id]->send($MessageJson);
