@@ -60,22 +60,33 @@ class WormholeController extends SimpleController
     }
 
     public function getInfo(Request $request, Response $response, $args) {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
         if ($this->verifyAccessToken($args)) {
-            $user = DB::table('users')
-                ->where('id', $args["user_id"])
+            $user = $classMapper->staticMethod('user', 'where', 'id', $args['user_id'])
                 ->first();
             if (!$user) {
                 throw new NotFoundException($request, $response);
             }
-            $classMapper = $this->ci->classMapper;
-            $user = $classMapper->createInstance('user')
-                ->where('user_name', $user->user_name)
-                ->join("user_follow", "users.id", "=", "user_follow.user_id")
-                ->select("*")
-                ->first();
+
+            $UsersFollower = DB::table('user_follow')
+                ->where('user_id', $user->id)
+                ->join("users", "users.id", "=", "user_follow.followed_by_id")
+                ->select("user_follow.followed_by_id as id", "users.user_name as username")
+                ->get(); // TODO: MULTI FOLLOWER ARRAY!
+
+            $UsersFollows = DB::table('user_follow')
+                ->where('followed_by_id', $user->id)
+                ->join("users", "users.id", "=", "user_follow.user_id")
+                ->select("user_follow.user_id as id", "users.user_name as username")
+                ->get(); // TODO: MULTI FOLLOWER ARRAY!
 
             $result = $user->toArray();
-            //$result["avatar"] = $user->avatar;
+            //print_r($user);
+            $result["avatar"] = $user->avatar;
+            $result["followers"] = $UsersFollower;
+            $result["follows"] = $UsersFollows;
             return $response->withJson($result, 200, JSON_PRETTY_PRINT);
         }
     }
