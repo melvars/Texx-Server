@@ -35,6 +35,8 @@ $app->group('/api/users', function () {
 
     $this->get('/u/{user_name}/follows', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getFollows'); // GET USERS WHICH THE USER FOLLOWS
 
+    $this->get('/u/{user_name}/friends', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getFriends'); // GET USERS WHICH THE USER FOLLOWS AND WHICH ARE FOLLOWING THE USER
+
     $this->get('/u/{user_name}/publickey', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getPublicKey');
 
     $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:create');

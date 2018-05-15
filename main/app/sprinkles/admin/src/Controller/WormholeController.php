@@ -74,16 +74,15 @@ class WormholeController extends SimpleController
                 ->where('user_id', $user->id)
                 ->join("users", "users.id", "=", "user_follow.followed_by_id")
                 ->select("user_follow.followed_by_id as id", "users.user_name as username")
-                ->get(); // TODO: MULTI FOLLOWER ARRAY!
+                ->get();
 
             $UsersFollows = DB::table('user_follow')
                 ->where('followed_by_id', $user->id)
                 ->join("users", "users.id", "=", "user_follow.user_id")
                 ->select("user_follow.user_id as id", "users.user_name as username")
-                ->get(); // TODO: MULTI FOLLOWER ARRAY!
+                ->get();
 
             $result = $user->toArray();
-            //print_r($user);
             $result["avatar"] = $user->avatar;
             $result["followers"] = $UsersFollower;
             $result["follows"] = $UsersFollows;

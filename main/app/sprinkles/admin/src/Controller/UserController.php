@@ -1042,12 +1042,6 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        $UsersFollowers = Capsule::table('user_follow')
-            ->where('user_id', "=", $user->id)
-            ->join("users", "users.id", "=", "user_follow.followed_by_id")
-            ->select("user_follow.followed_by_id as id", "users.user_name as username")
-            ->get();
-
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
@@ -1060,6 +1054,12 @@ class UserController extends SimpleController
         ])) {
             throw new ForbiddenException();
         }
+
+        $UsersFollowers = Capsule::table('user_follow')
+            ->where('user_id', "=", $user->id)
+            ->join("users", "users.id", "=", "user_follow.followed_by_id")
+            ->select("user_follow.followed_by_id as id", "users.user_name as username")
+            ->get();
 
         $result = $UsersFollowers->toArray();
 
@@ -1078,11 +1078,41 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        $UsersFollowers = Capsule::table('user_follow')
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_user', [
+            'user' => $user
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        $UsersFollows = Capsule::table('user_follow')
             ->where('followed_by_id', "=", $user->id)
             ->join("users", "users.id", "=", "user_follow.user_id")
             ->select("user_follow.user_id as id", "users.user_name as username")
             ->get();
+
+        $result = $UsersFollows->toArray();
+
+        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get users which the user follows and which are following the user
+     * Request type: GET
+     */
+    public function getFriends($request, $response, $args) {
+        $user = $this->getUserFromParams($args);
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
@@ -1097,7 +1127,16 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        $result = $UsersFollowers->toArray();
+
+        $UsersFriends = Capsule::table('user_follow')
+            //->select("user_follow.followed_by_id as id", "users.user_name as username")
+            ->where('user_follow.user_id', "=", $user->id)
+            ->orWhere('user_follow.followed_by_id', "=", $user->id)
+            ->join("user_follow", "user_follow.user_id", "=", "user_follow.followed_by_id")
+            //->join("users", "users.id", "=", "user_follow.followed_by_id")
+            ->get();
+
+        $result = $UsersFriends->toArray();
 
         return $response->withJson($result, 200, JSON_PRETTY_PRINT);
     }

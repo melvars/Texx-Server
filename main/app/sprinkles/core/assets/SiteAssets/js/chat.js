@@ -24,7 +24,7 @@ function InitializeChatServer() {
     var ChatMessages = $("#ChatMessages");
     var TypingIndicatorAnimationElement = "<div class='spinner'><div class='bounce1'></div><div class='bounce2'></div><div class='bounce3'></div></div>";
 
-    var ChatSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
+    const ChatSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
     ChatSocket.onerror = function () {
         setTimeout(function () {
             console.log("%c[CHATSOCKET LOGGER] Connection failed. Trying again...", "color: red");
@@ -73,14 +73,13 @@ function InitializeChatServer() {
             }
 
             if (ServerMessage === false) { // NO SERVER MESSAGE -> SENT BY USER
-
                 // DECRYPT MESSAGE
                 options = {
                     message: openpgp.message.readArmored("-----BEGIN PGP MESSAGE-----\r\nVersion: OpenPGP.js v3.0.9\r\nComment: https://openpgpjs.org\r\n\r\n" + Message + "\r\n\-----END PGP MESSAGE-----\r\n"),
                     publicKeys: openpgp.key.readArmored(PublicKey[Username]).keys, // FOR VERIFICATION
                     privateKeys: [privKeyObj]
                 };
-                openpgp.decrypt(options).then(function(plaintext) {
+                openpgp.decrypt(options).then(function (plaintext) {
                     plaintext ? console.log("%c[ENCRYPTION LOGGER] Decrypting succeeded!", "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 2px; color: #20c20e; background-color: black;") : console.log("%c[ENCRYPTION LOGGER] Decrypting failed!", "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 2px; color: red; background-color: black;");
                     DecryptedMessage = plaintext.data;
                     if (WasHimself === true) { // -> MESSAGE WAS FROM HIMSELF -> Don't write to chat, as its done directly (on enter function at the bottom, for performance)
@@ -204,8 +203,13 @@ function InitializeChatServer() {
 
         // SUBSCRIBE TO CHAT
         SubscribeTextInput.keyup(function (e) {
-            if (e.keyCode === 13 && SubscribeTextInput.val().length > 0) {
-                subscribe(SubscribeTextInput.val());
+            if (ChatSocket.readyState === 1) {
+                if (e.keyCode === 13 && SubscribeTextInput.val().length > 0) {
+                    subscribe(SubscribeTextInput.val());
+                }
+            } else {
+                console.log("%c[CHATSOCKET LOGGER] Not connected to Websocket anymore! Trying to connect again...", "color: red");
+                InitializeChatServer();
             }
         });
 
@@ -217,66 +221,70 @@ function InitializeChatServer() {
 
         // SEND MESSAGE FROM INPUT FIELD
         ChatTextInput.keyup(function (e) {
-            if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
-
-                var LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
-                if (!LastMessage.hasClass("MessageSent")) { // CHECK IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
-                    ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + ChatTextInput.val() + "</div></div>");
-                } else if (LastMessage.hasClass("MessageSent")) { // IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
-                    ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent BottomMessage animated fadeInRight'>" + ChatTextInput.val() + "</div></div>");
-                    if (LastMessage.hasClass("AloneMessage")) {
-                        LastMessage.removeClass("AloneMessage");
-                        LastMessage.addClass("TopMessage");
-                    } else if (LastMessage.hasClass("BottomMessage")) {
-                        LastMessage.removeClass("BottomMessage");
-                        LastMessage.addClass("MiddleMessage");
+            if (ChatSocket.readyState === 1) {
+                if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
+                    var LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
+                    if (!LastMessage.hasClass("MessageSent")) { // CHECK IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
+                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + ChatTextInput.val() + "</div></div>");
+                    } else if (LastMessage.hasClass("MessageSent")) { // IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
+                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent BottomMessage animated fadeInRight'>" + ChatTextInput.val() + "</div></div>");
+                        if (LastMessage.hasClass("AloneMessage")) {
+                            LastMessage.removeClass("AloneMessage");
+                            LastMessage.addClass("TopMessage");
+                        } else if (LastMessage.hasClass("BottomMessage")) {
+                            LastMessage.removeClass("BottomMessage");
+                            LastMessage.addClass("MiddleMessage");
+                        }
                     }
+
+                    // USER USUALLY STOPS TYPING ON SENDING -> CHANGE STATE TO FALSE
+                    sendTypingState(false);
+                    isTyping = false;
+                    clearTimeout(typingTimer);
+
+                    // ENCRYPT AND SEND MESSAGE WITH OWN PUBLIC KEY
+                    options = {
+                        data: ChatTextInput.val(),
+                        publicKeys: openpgp.key.readArmored(PublicKey[ReceiversUsername]).keys,
+                        privateKeys: [privKeyObj] // FOR SIGNING
+                    };
+                    openpgp.encrypt(options).then(function (Encrypted) {
+                        EncryptedMessage = Encrypted.data.substr(91).slice(0, -29); // SLICING FOR DATABASE SAVING (LESS DATA)
+                        console.log("%c[ENCRYPTION LOGGER]\nEncrypted message for sender: \n\n" + EncryptedMessage, "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 5px; color: #20c20e; background-color: black;");
+
+                        ChatSocket.send(JSON.stringify({
+                            ClientMessageType: "ChatMessage",
+                            MessageType: "Private",
+                            EncryptedWithKey: ReceiversUsername,
+                            Message: EncryptedMessage
+                        }));
+                        ChatTextInput.val("");
+                        ChatTextInput.val("");
+                    });
+
+                    // ENCRYPT AND SEND MESSAGE WITH RECEIVERS PUBLIC KEY
+                    options = {
+                        data: ChatTextInput.val(),
+                        publicKeys: openpgp.key.readArmored(PublicKey[ReceiversUsername]).keys,
+                        privateKeys: [privKeyObj] // FOR SIGNING
+                    };
+                    openpgp.encrypt(options).then(function (Encrypted) {
+                        EncryptedMessage = Encrypted.data.substr(91).slice(0, -29); // SLICING FOR DATABASE SAVING (LESS DATA)
+                        console.log("%c[ENCRYPTION LOGGER]\nEncrypted message for receiver: \n\n" + EncryptedMessage, "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 5px; color: #20c20e; background-color: black;");
+
+                        ChatSocket.send(JSON.stringify({
+                            ClientMessageType: "ChatMessage",
+                            MessageType: "Private",
+                            EncryptedWithKey: ReceiversUsername,
+                            Message: EncryptedMessage
+                        }));
+                        ChatTextInput.val("");
+                        ChatTextInput.val("");
+                    });
+                } else {
+                    console.log("%c[CHATSOCKET LOGGER] Not connected to Websocket anymore! Trying to connect again...", "color: red");
+                    InitializeChatServer();
                 }
-
-                // USER USUALLY STOPS TYPING ON SENDING -> CHANGE STATE TO FALSE
-                sendTypingState(false);
-                isTyping = false;
-                clearTimeout(typingTimer);
-
-                // ENCRYPT AND SEND MESSAGE WITH OWN PUBLIC KEY
-                options = {
-                    data: ChatTextInput.val(),
-                    publicKeys: openpgp.key.readArmored(PublicKey[ReceiversUsername]).keys,
-                    privateKeys: [privKeyObj] // FOR SIGNING
-                };
-                openpgp.encrypt(options).then(function (Encrypted) {
-                    EncryptedMessage = Encrypted.data.substr(91).slice(0,-29); // SLICING FOR DATABASE SAVING (LESS DATA)
-                    console.log("%c[ENCRYPTION LOGGER]\nEncrypted message for sender: \n\n" + EncryptedMessage, "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 5px; color: #20c20e; background-color: black;");
-
-                    ChatSocket.send(JSON.stringify({
-                        ClientMessageType: "ChatMessage",
-                        MessageType: "Private",
-                        EncryptedWithKey: ReceiversUsername,
-                        Message: EncryptedMessage
-                    }));
-                    ChatTextInput.val("");
-                    ChatTextInput.val("");
-                });
-
-                // ENCRYPT AND SEND MESSAGE WITH RECEIVERS PUBLIC KEY
-                options = {
-                    data: ChatTextInput.val(),
-                    publicKeys: openpgp.key.readArmored(PublicKey[ReceiversUsername]).keys,
-                    privateKeys: [privKeyObj] // FOR SIGNING
-                };
-                openpgp.encrypt(options).then(function (Encrypted) {
-                    EncryptedMessage = Encrypted.data.substr(91).slice(0,-29); // SLICING FOR DATABASE SAVING (LESS DATA)
-                    console.log("%c[ENCRYPTION LOGGER]\nEncrypted message for receiver: \n\n" + EncryptedMessage, "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 5px; color: #20c20e; background-color: black;");
-
-                    ChatSocket.send(JSON.stringify({
-                        ClientMessageType: "ChatMessage",
-                        MessageType: "Private",
-                        EncryptedWithKey: ReceiversUsername,
-                        Message: EncryptedMessage
-                    }));
-                    ChatTextInput.val("");
-                    ChatTextInput.val("");
-                });
             }
         });
     };

@@ -173,7 +173,7 @@ UserSearchBar.keyup(function () {
 
                 alerts.ufAlerts().ufAlerts('fetch');
 
-                SearchResults.append("<img class='Avatar' data-src='" + answer.avatar + "' data-caching-key='" + answer.user_name + "_avatar_cached'/><div class='UsersFullName'>" + answer.full_name + "</div>");
+                SearchResults.append("<img class='Avatar' src='" + answer.avatar + "'/><div class='UsersFullName'>" + answer.full_name + "</div>");
                 //$(".SearchResults .Avatar").imageCaching(); // refresh
             },
             error: function () {

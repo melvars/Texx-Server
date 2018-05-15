@@ -21,6 +21,7 @@ GENERAL
 ::-webkit-scrollbar {
     width: 0;
     background: transparent;
+    display: none;
 }
 
 html, body {
@@ -110,7 +111,8 @@ FEED WINDOW
     max-height: -webkit-calc(100% - 155px);
     max-width: 100%;
     margin: 15px;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .FeedImage {
