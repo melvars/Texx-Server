@@ -293,10 +293,9 @@ function InitializeChatServer() {
             ReceiversUsername = $(this).attr("data-username");
             ReceiversId = $(this).attr("data-id");
             ChatSocket.send(JSON.stringify({
-                ClientMessageType: "ChatMessage",
-                MessageType: "Private",
-                EncryptedWithKey: ReceiversUsername,
-                Message: EncryptedMessage
+                ClientMessageType: "SetReceiver",
+                ReceiversId: ReceiversId,
+                ReceiversUsername: ReceiversUsername
             }));
         });
     };

@@ -15,7 +15,7 @@ class ChatProcessor implements MessageComponentInterface
     private $userID;
     private $userInfo;
     private $verifiedUsers;
-    private $receiverID;
+    private $ReceiversId;
 
     public function __construct() {
         $this->clients = new \SplObjectStorage;
@@ -23,7 +23,7 @@ class ChatProcessor implements MessageComponentInterface
         $this->users = []; // TEMPORARY WEBSOCKET USER
         $this->userID = []; // USER ID WHICH IS DECLARED IN DB
         $this->userInfo = []; // JSON CONTAINING ALL INFO OF USER FROM DB
-        $this->receiverID = [];
+        $this->ReceiversId = [];
         $this->verifiedUsers = [];
     }
 
@@ -103,7 +103,11 @@ class ChatProcessor implements MessageComponentInterface
                     }
                     break;
                 case "SetReceiver": // USER CLICKED ON NEW CHAT
-                    $this->receiverID[$conn->resourceId] = $data->receiver;
+                    foreach ($this->userInfo[$conn->resourceId]->friends as $friend) {
+                        if ($data->ReceiversId === $friend->id) {
+                            $this->ReceiversId[$conn->resourceId] = $data->ReceiversId;
+                        }
+                    }
                     break;
                 case "ChatMessage": // MESSAGE RECEIVED
                     if (isset($this->channels[$conn->resourceId])) {
