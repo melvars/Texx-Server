@@ -249,12 +249,12 @@ class UserController extends SimpleController
                 ->where('user_id', "=", $requestedUser->id)
                 ->exists()) === FALSE) {
             Capsule::table('public_keys')
-                ->insert(['user_id' => $requestedUser->id, 'key' => substr(substr($PublicKey, 100), 0,-40)]);
+                ->insert(['user_id' => $requestedUser->id, 'key' => substr(substr($PublicKey, 100), 0, -40)]);
             return $response->withStatus(200);
         } else if ($this->ci->currentUser->id === $requestedUser->id) {
             Capsule::table('public_keys')
                 ->where('user_id', $requestedUser->id)
-                ->update(['key' => substr(substr($PublicKey, 100), 0,-40)]);
+                ->update(['key' => substr(substr($PublicKey, 100), 0, -40)]);
             return $response->withStatus(200);
         } else {
             throw new ForbiddenException();
@@ -1127,16 +1127,22 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
+        $UsersFriends = Capsule::select("SELECT id FROM (SELECT user_id AS id FROM user_follow WHERE followed_by_id = $user->id UNION ALL SELECT followed_by_id FROM user_follow WHERE user_id = $user->id) t GROUP BY id HAVING COUNT(id) > 1");
 
-        $UsersFriends = Capsule::table('user_follow')
-            //->select("user_follow.followed_by_id as id", "users.user_name as username")
-            ->where('user_follow.user_id', "=", $user->id)
-            ->orWhere('user_follow.followed_by_id', "=", $user->id)
-            ->join("user_follow", "user_follow.user_id", "=", "user_follow.followed_by_id")
-            //->join("users", "users.id", "=", "user_follow.followed_by_id")
-            ->get();
+        /*
+        $UsersFriends = Capsule::table('user_follow as f1')
+            ->select("u1.user_name as username", "u2.user_name as username")
+            ->leftJoin("users as u1", "u1.id", "=", "f1.user_id")
+            ->leftJoin("users as u2", "u2.id", "=", "f1.followed_by_id")
+            ->whereExists(function ($query) {
+                $query->select(Capsule::raw(1))
+                    ->from("user_follow as f2")
+                    ->where("f2.user_id", "=", "f1.followed_by_id");
+            })
+            //->select("user_follow.user_id as id", "users.user_name as username")
+            ->get();*/
 
-        $result = $UsersFriends->toArray();
+        $result = $UsersFriends;
 
         return $response->withJson($result, 200, JSON_PRETTY_PRINT);
     }
