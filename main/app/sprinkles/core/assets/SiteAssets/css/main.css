@@ -193,6 +193,39 @@ hr.ChatHeaderDivider {
     margin-bottom: 0.6em; /* cause of symmetry things */
 }
 
+/* receiver select window */
+.SelectReceiver .ReceiverSelector {
+    display: grid;
+    grid-template-columns: 10% 20% auto 10%;
+    overflow-y: auto;
+    max-height: 45%;
+    width: 100%;
+    z-index: 9999;
+}
+
+.SelectReceiver .ReceiverSelector .Avatar {
+    grid-column-start: 2;
+    justify-self: center;
+    align-self: center;
+    height: 50px;
+    width: 50px;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+}
+
+.SelectReceiver .ReceiverSelector .UsersFullName {
+    grid-column-start: 3;
+    justify-self: center; /* OR start */
+    align-self: center;
+}
+
+
+/* main chat */
+.SelectedReceiver {
+    display: none;
+}
+
 .ChatMessages {
     overflow-y: scroll;
     overflow-x: hidden;

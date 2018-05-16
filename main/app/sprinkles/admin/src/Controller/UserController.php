@@ -1129,6 +1129,14 @@ class UserController extends SimpleController
 
         $UsersFriends = Capsule::select("SELECT id FROM (SELECT user_id AS id FROM user_follow WHERE followed_by_id = $user->id UNION ALL SELECT followed_by_id FROM user_follow WHERE user_id = $user->id) t GROUP BY id HAVING COUNT(id) > 1");
 
+        foreach ($UsersFriends as $Key => $UsersFriendId) { // NOT THAT EFFICIENT...
+            $UsersFriendInformation = Capsule::table('users')
+                ->where('id', "=", $UsersFriendId->id)
+                ->select("users.id", "users.user_name as username")
+                ->get();
+            $UsersFriends[$Key] = $UsersFriendInformation[0];
+        }
+
         /*
         $UsersFriends = Capsule::table('user_follow as f1')
             ->select("u1.user_name as username", "u2.user_name as username")

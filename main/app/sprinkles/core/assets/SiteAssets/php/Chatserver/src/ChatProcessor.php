@@ -103,7 +103,7 @@ class ChatProcessor implements MessageComponentInterface
                     }
                     break;
                 case "SetReceiver": // USER CLICKED ON NEW CHAT
-
+                    $this->receiverID[$conn->resourceId] = $data->receiver;
                     break;
                 case "ChatMessage": // MESSAGE RECEIVED
                     if (isset($this->channels[$conn->resourceId])) {

@@ -1,7 +1,7 @@
 /**
  * ENCRYPTION
  */
-var ReceiversUsername = ""; // HARD
+var ReceiversUsername, ReceiversId;
 var openpgp = window.openpgp;
 var options, EncryptedMessage, DecryptedMessage;
 var PublicKey = [];
@@ -286,6 +286,18 @@ function InitializeChatServer() {
                     InitializeChatServer();
                 }
             }
+        });
+
+        // SET RECEIVER
+        $(document).on("click", ".ReceiverSelector", function () {
+            ReceiversUsername = $(this).attr("data-username");
+            ReceiversId = $(this).attr("data-id");
+            ChatSocket.send(JSON.stringify({
+                ClientMessageType: "ChatMessage",
+                MessageType: "Private",
+                EncryptedWithKey: ReceiversUsername,
+                Message: EncryptedMessage
+            }));
         });
     };
 }

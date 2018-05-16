@@ -4,6 +4,7 @@ var Navbar = $(".Navbar");
 var NavbarLine = $(".NavbarLine");
 var UserSearchBar = $("#UserSearchBar");
 var SearchResults = $(".SearchResults");
+var SelectReceiver = $(".SelectReceiver");
 var alerts = $("#alerts-page");
 var ExploreData = $("#ExploreData");
 
@@ -182,4 +183,29 @@ UserSearchBar.keyup(function () {
                 alerts.ufAlerts().ufAlerts('fetch');
             }
         });
+});
+
+/**
+ * SEVERAL API REQUESTS/REFRESHES
+ */
+// CHAT RECEIVERS -- more in chat.js
+$(document).ready(function () {
+    $.ajax({
+        url: site.uri.public + "/api/users/u/" + current_username + "/friends",
+        success: function (receivers) {
+            receivers.forEach(function (receiver) {
+                $.ajax({ // not that efficient...
+                    url: site.uri.public + "/api/users/u/" + receiver.username,
+                    success: function (receiversInfo) {
+                        SelectReceiver.append("<div class='ReceiverSelector' data-username='" + receiversInfo.user_name + "' data-id='" + receiversInfo.id + "'><img class='Avatar' src='" + receiversInfo.avatar + "'/><div class='UsersFullName'>" + receiversInfo.full_name + "</div></div>");
+                    }
+                });
+            })
+        },
+        error: function () {
+            console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was not found!", "color: red");
+
+            alerts.ufAlerts().ufAlerts('fetch');
+        }
+    });
 });
