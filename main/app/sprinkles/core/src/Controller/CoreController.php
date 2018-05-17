@@ -29,12 +29,6 @@ class CoreController extends SimpleController
      */
 
     public function pageIndex($request, $response, $args) {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        $friends = $classMapper->staticMethod('user', 'orderBy', 'created_at', 'desc')
-            ->get();
-
         $FeedImages = DB::table('image_posts')
             ->orderBy('Created')
             ->get();
@@ -47,7 +41,6 @@ class CoreController extends SimpleController
         }
 
         return $this->ci->view->render($response, 'pages/index.html.twig', [
-            'friends' => $friends,
             'FeedImages' => $FeedImages
         ]);
     }

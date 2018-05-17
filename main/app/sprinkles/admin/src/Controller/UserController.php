@@ -1129,26 +1129,19 @@ class UserController extends SimpleController
 
         $UsersFriends = Capsule::select("SELECT id FROM (SELECT user_id AS id FROM user_follow WHERE followed_by_id = $user->id UNION ALL SELECT followed_by_id FROM user_follow WHERE user_id = $user->id) t GROUP BY id HAVING COUNT(id) > 1");
 
-        foreach ($UsersFriends as $Key => $UsersFriendId) { // NOT THAT EFFICIENT...
-            $UsersFriendInformation = Capsule::table('users')
-                ->where('id', "=", $UsersFriendId->id)
-                ->select("users.id", "users.user_name as username")
-                ->get();
-            $UsersFriends[$Key] = $UsersFriendInformation[0];
-        }
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
 
-        /*
-        $UsersFriends = Capsule::table('user_follow as f1')
-            ->select("u1.user_name as username", "u2.user_name as username")
-            ->leftJoin("users as u1", "u1.id", "=", "f1.user_id")
-            ->leftJoin("users as u2", "u2.id", "=", "f1.followed_by_id")
-            ->whereExists(function ($query) {
-                $query->select(Capsule::raw(1))
-                    ->from("user_follow as f2")
-                    ->where("f2.user_id", "=", "f1.followed_by_id");
-            })
-            //->select("user_follow.user_id as id", "users.user_name as username")
-            ->get();*/
+        foreach ($UsersFriends as $Key => $UsersFriendId) { // NOT THAT EFFICIENT...
+            $UsersFriendInformation = $classMapper->createInstance('user')// select doesnt work with instance
+            ->where('id', $UsersFriendId->id)
+                ->get();
+
+            $UsersFriends[$Key]->id = $UsersFriendInformation[0]->id;
+            $UsersFriends[$Key]->username = $UsersFriendInformation[0]->user_name;
+            $UsersFriends[$Key]->avatar = $UsersFriendInformation[0]->avatar;
+            $UsersFriends[$Key]->full_name = $UsersFriendInformation[0]->full_name;
+        }
 
         $result = $UsersFriends;
 

@@ -25,13 +25,13 @@
 
 
 <script>
-        $.ajax({
-            type: 'GET',
-            url: site.uri.public + '/api/users/u/' + 'marvinborner' + '/publickey',
-            dataType : "json",
-            success: function (response) {
-                console.log(response);
-                //window.location.reload();
-            }
-        });
+    $.ajax({
+        type: 'GET',
+        url: site.uri.public + '/api/users/u/' + 'marvinborner' + '/publickey',
+        dataType : "json",
+        success: function (response) {
+            console.log(response);
+            //window.location.reload();
+        }
+    });
 </script>

@@ -5,6 +5,7 @@ var NavbarLine = $(".NavbarLine");
 var UserSearchBar = $("#UserSearchBar");
 var SearchResults = $(".SearchResults");
 var SelectReceiver = $(".SelectReceiver");
+var FriendList = $(".FriendList");
 var alerts = $("#alerts-page");
 var ExploreData = $("#ExploreData");
 
@@ -193,13 +194,9 @@ $(document).ready(function () {
     $.ajax({
         url: site.uri.public + "/api/users/u/" + current_username + "/friends",
         success: function (receivers) {
-            receivers.forEach(function (receiver) {
-                $.ajax({ // not that efficient...
-                    url: site.uri.public + "/api/users/u/" + receiver.username,
-                    success: function (receiversInfo) {
-                        SelectReceiver.append("<div class='ReceiverSelector' data-username='" + receiversInfo.user_name + "' data-id='" + receiversInfo.id + "'><img class='Avatar' src='" + receiversInfo.avatar + "'/><div class='UsersFullName'>" + receiversInfo.full_name + "</div></div>");
-                    }
-                });
+            receivers.forEach(function (receiversInfo) {
+                SelectReceiver.append("<div class='ReceiverSelector' data-username='" + receiversInfo.username + "' data-id='" + receiversInfo.id + "'><img class='Avatar' src='" + receiversInfo.avatar + "'/><div class='UsersFullName'>" + receiversInfo.full_name + "</div></div>");
+                FriendList.append("<img class='Avatar' src='" + receiversInfo.avatar + "'><a class='FriendName' href='" + site.uri.public + "/users/u/" + receiversInfo.username + "'>" + receiversInfo.full_name + "</a><br>");
             })
         },
         error: function () {

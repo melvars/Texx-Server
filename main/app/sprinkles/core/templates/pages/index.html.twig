@@ -93,12 +93,6 @@
                 </div>
                 <div class="MainInTab FriendsTabWindow">
                     <div class="FriendList">
-                        {% for friend in friends %}
-                            <img class="Avatar" src="{{ friend.avatar }}" data-caching-key="{{ friend.user_name }}_avatar_cached">
-                            <a class="FriendName"
-                               href="{{ site.uri.public }}/users/u/{{ friend.user_name }}">{{ friend.first_name }} {{ friend.last_name }}</a>
-                            <br>
-                        {% endfor %}
                     </div>
                 </div>
             </div>
