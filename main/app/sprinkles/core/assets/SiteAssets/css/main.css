@@ -327,10 +327,6 @@ hr.ChatHeaderDivider {
     border-radius: 25px;
 }
 
-#ChatTextInput {
-    display: none;
-}
-
 /* TYPING INDICATOR ANIMATION */
 .spinner {
     width: 70px;

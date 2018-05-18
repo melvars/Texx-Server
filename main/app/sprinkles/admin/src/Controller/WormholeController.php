@@ -82,13 +82,17 @@ class WormholeController extends SimpleController
                 ->select("user_follow.user_id as id", "users.user_name as username")
                 ->get();
 
-            $UsersFriends = DB::select("SELECT id FROM (SELECT user_id AS id FROM user_follow WHERE followed_by_id = $user->id UNION ALL SELECT followed_by_id FROM user_follow WHERE user_id = $user->id) t GROUP BY id HAVING COUNT(id) > 1");
+            $UsersFriends = Capsule::select("SELECT id FROM (SELECT user_id AS id FROM user_follow WHERE followed_by_id = $user->id UNION ALL SELECT followed_by_id FROM user_follow WHERE user_id = $user->id) t GROUP BY id HAVING COUNT(id) > 1");
+            /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+            $classMapper = $this->ci->classMapper;
             foreach ($UsersFriends as $Key => $UsersFriendId) { // NOT THAT EFFICIENT...
-                $UsersFriendInformation = DB::table('users')
-                    ->where('id', "=", $UsersFriendId->id)
-                    ->select("users.id", "users.user_name as username")
+                $UsersFriendInformation = $classMapper->createInstance('user')// select doesnt work with instance
+                ->where('id', $UsersFriendId->id)
                     ->get();
-                $UsersFriends[$Key] = $UsersFriendInformation[0];
+                $UsersFriends[$Key]->id = $UsersFriendInformation[0]->id;
+                $UsersFriends[$Key]->username = $UsersFriendInformation[0]->user_name;
+                $UsersFriends[$Key]->avatar = $UsersFriendInformation[0]->avatar;
+                $UsersFriends[$Key]->full_name = $UsersFriendInformation[0]->full_name;
             }
 
             $result = $user->toArray();

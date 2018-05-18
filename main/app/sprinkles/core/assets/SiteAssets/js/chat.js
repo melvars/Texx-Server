@@ -57,7 +57,21 @@ function InitializeChatServer() {
             var WasHimself = MessageObject.WasHimself;
             var ServerMessageType = MessageObject.ServerMessageType;
             var Granted = MessageObject.Granted;
-            ReceiversUsername = MessageObject.Receiver;
+            var Success = MessageObject.Success;
+
+
+            // GET OWN PUBLIC KEY FIRST
+            if (!(current_username in PublicKey)) {
+                $.ajax({
+                    type: 'GET',
+                    url: site.uri.public + '/api/users/u/' + current_username + '/publickey',
+                    dataType: "json",
+                    success: function (response) {
+                        PublicKey[current_username] = response.PublicKey;
+                        console.log("%c[ENCRYPTION LOGGER]\nPublickey of " + current_username + ": \n\n" + PublicKey[current_username].substr(96).slice(0, -35), "font-family: monospace; white-space: pre; display: inline-block; border-radius: 10px; padding: 5px; color: #20c20e; background-color: black;")
+                    }
+                });
+            }
 
             // GET PUBLIC KEY IF NOT ALREADY DID
             if (!(ReceiversUsername in PublicKey) && ReceiversUsername !== null && ReceiversUsername !== undefined) {
@@ -76,7 +90,7 @@ function InitializeChatServer() {
                 // DECRYPT MESSAGE
                 options = {
                     message: openpgp.message.readArmored("-----BEGIN PGP MESSAGE-----\r\nVersion: OpenPGP.js v3.0.9\r\nComment: https://openpgpjs.org\r\n\r\n" + Message + "\r\n\-----END PGP MESSAGE-----\r\n"),
-                    publicKeys: openpgp.key.readArmored(PublicKey[Username]).keys, // FOR VERIFICATION
+                    //publicKeys: openpgp.key.readArmored(PublicKey[Username]).keys, // FOR VERIFICATION
                     privateKeys: [privKeyObj]
                 };
                 openpgp.decrypt(options).then(function (plaintext) {
@@ -154,6 +168,13 @@ function InitializeChatServer() {
                     } else if (Granted === false) {
                         console.log("%c[CHATSOCKET LOGGER] Chat access denied!", "color: red");
                     }
+                } else if (ServerMessageType === "SetReceiver") { // TYPE: SERVER CHECKED ACCESS -- MOSTLY HANDLED IN BACKEND
+                    if (Success === true) {
+                        console.log("%c[CHATSOCKET LOGGER] Setting receiver succeeded!", "color: green");
+                        $(".SelectedReceiver").show();
+                    } else if (Success === false) {
+                        console.log("%c[CHATSOCKET LOGGER] Setting receiver failed!", "color: red");
+                    }
                 }
             }
             // SCROLL TO BOTTOM ON NEW MESSAGE OF ANY KIND
@@ -208,13 +229,12 @@ function InitializeChatServer() {
                     subscribe(SubscribeTextInput.val());
                 }
             } else {
-                console.log("%c[CHATSOCKET LOGGER] Not connected to Websocket anymore! Trying to connect again...", "color: red");
-                InitializeChatServer();
+                NotConnectedAnymore();
             }
         });
 
         function subscribe(channel) {
-            ChatSocket.send(JSON.stringify({ClientMessageType: "Subscribe", Channel: channel}));
+            //ChatSocket.send(JSON.stringify({ClientMessageType: "Subscribe", Channel: channel}));
             SubscribeTextInput.hide();
             ChatTextInput.show();
         }
@@ -245,7 +265,7 @@ function InitializeChatServer() {
                     // ENCRYPT AND SEND MESSAGE WITH OWN PUBLIC KEY
                     options = {
                         data: ChatTextInput.val(),
-                        publicKeys: openpgp.key.readArmored(PublicKey[ReceiversUsername]).keys,
+                        publicKeys: openpgp.key.readArmored(PublicKey[current_username]).keys,
                         privateKeys: [privKeyObj] // FOR SIGNING
                     };
                     openpgp.encrypt(options).then(function (Encrypted) {
@@ -254,8 +274,7 @@ function InitializeChatServer() {
 
                         ChatSocket.send(JSON.stringify({
                             ClientMessageType: "ChatMessage",
-                            MessageType: "Private",
-                            EncryptedWithKey: ReceiversUsername,
+                            EncryptedWithKey: current_username,
                             Message: EncryptedMessage
                         }));
                         ChatTextInput.val("");
@@ -274,19 +293,22 @@ function InitializeChatServer() {
 
                         ChatSocket.send(JSON.stringify({
                             ClientMessageType: "ChatMessage",
-                            MessageType: "Private",
                             EncryptedWithKey: ReceiversUsername,
                             Message: EncryptedMessage
                         }));
                         ChatTextInput.val("");
                         ChatTextInput.val("");
                     });
-                } else {
-                    console.log("%c[CHATSOCKET LOGGER] Not connected to Websocket anymore! Trying to connect again...", "color: red");
-                    InitializeChatServer();
                 }
+            } else {
+                NotConnectedAnymore();
             }
         });
+
+        function NotConnectedAnymore() {
+            console.log("%c[CHATSOCKET LOGGER] Not connected to Websocket anymore! Trying to connect again...", "color: red");
+            InitializeChatServer();
+        }
 
         // SET RECEIVER
         $(document).on("click", ".ReceiverSelector", function () {
