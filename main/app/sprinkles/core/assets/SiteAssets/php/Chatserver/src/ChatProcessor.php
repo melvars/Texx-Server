@@ -121,13 +121,14 @@ class ChatProcessor implements MessageComponentInterface
                     $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
                     $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
                     $MessageObject->Message = htmlspecialchars($data->Message);
-                    $MessageJson = json_encode($MessageObject, TRUE);
 
-                    if ($data->EncryptedWithKey === $this->userInfo[$ReceiversResourceId]->user_name) {
+                    if ($data->EncryptedWithKeyOfUsername === $this->userInfo[$ReceiversResourceId]->user_name) {
                         $MessageObject->WasHimself = FALSE;
+                        $MessageJson = json_encode($MessageObject, TRUE);
                         $this->users[$ReceiversResourceId]->send($MessageJson); // SEND TO RECEIVER
-                    } else if ($data->EncryptedWithKey === $MessageObject->Username) {
+                    } else if ($data->EncryptedWithKeyOfUsername === $MessageObject->Username) {
                         $MessageObject->WasHimself = TRUE;
+                        $MessageJson = json_encode($MessageObject, TRUE);
                         $this->users[$conn->resourceId]->send($MessageJson); // SEND TO SENDER (FOR VERIFICATION)
                     }
                     break;

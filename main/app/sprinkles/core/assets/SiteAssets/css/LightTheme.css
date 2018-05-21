@@ -92,7 +92,10 @@ img {
 }
 
 .Navbar {
-    background-color: #e4e4e4;
+    background-color: #FDFEFF;
+    -webkit-box-shadow: 0 -1px 5px rgba(50, 50, 50, 0.3);
+    -moz-box-shadow: 0 -1px 5px rgba(50, 50, 50, 0.3);
+    box-shadow: 0 -1px 5px rgba(50, 50, 50, 0.3);
 }
 
 .NavbarLine {

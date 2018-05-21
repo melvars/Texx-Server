@@ -90,7 +90,7 @@ function InitializeChatServer() {
                 // DECRYPT MESSAGE
                 options = {
                     message: openpgp.message.readArmored("-----BEGIN PGP MESSAGE-----\r\nVersion: OpenPGP.js v3.0.9\r\nComment: https://openpgpjs.org\r\n\r\n" + Message + "\r\n\-----END PGP MESSAGE-----\r\n"),
-                    //publicKeys: openpgp.key.readArmored(PublicKey[Username]).keys, // FOR VERIFICATION
+                    publicKeys: openpgp.key.readArmored(PublicKey[Username]).keys, // FOR VERIFICATION
                     privateKeys: [privKeyObj]
                 };
                 openpgp.decrypt(options).then(function (plaintext) {
@@ -98,7 +98,7 @@ function InitializeChatServer() {
                     DecryptedMessage = plaintext.data;
                     if (WasHimself) { // -> MESSAGE WAS FROM HIMSELF -> Don't write to chat, as its done directly (on enter function at the bottom, for performance)
                         console.log("%c[CHATSOCKET LOGGER] Message sending succeeded!", "color: darkorange");
-                    } else if (!WasHimself) { // -> MESSAGE WAS FROM OTHER USER
+                    } else if (!WasHimself) { // -> MESSAGE WAS FROM OTHER USER -> decrypt
                         console.log("%c[CHATSOCKET LOGGER] You received a message!", "color: darkorange");
                         NotifySound.play();
                         Push.create(Fullname, { // CREATE NOTIFICATION
@@ -171,6 +171,9 @@ function InitializeChatServer() {
                 } else if (ServerMessageType === "SetReceiver") { // TYPE: SERVER CHECKED ACCESS -- MOSTLY HANDLED IN BACKEND
                     if (Success) {
                         console.log("%c[CHATSOCKET LOGGER] Setting receiver succeeded!", "color: green");
+                        $(".SelectReceiver").hide();
+                        $(".SelectedReceiver > *").addClass("animated slideInRight");
+                        $(".ChatTab .headerWrap .header .HeaderCaption").text(ReceiversUsername);
                         $(".SelectedReceiver").show();
                     } else if (!Success) {
                         console.log("%c[CHATSOCKET LOGGER] Setting receiver failed!", "color: red");
@@ -274,7 +277,7 @@ function InitializeChatServer() {
 
                         ChatSocket.send(JSON.stringify({
                             ClientMessageType: "ChatMessage",
-                            EncryptedWithKey: current_username,
+                            EncryptedWithKeyOfUsername: current_username,
                             Message: EncryptedMessage
                         }));
                         ChatTextInput.val("");
@@ -293,7 +296,7 @@ function InitializeChatServer() {
 
                         ChatSocket.send(JSON.stringify({
                             ClientMessageType: "ChatMessage",
-                            EncryptedWithKey: ReceiversUsername,
+                            EncryptedWithKeyOfUsername: ReceiversUsername,
                             Message: EncryptedMessage
                         }));
                         ChatTextInput.val("");
