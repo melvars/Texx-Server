@@ -53,7 +53,6 @@ class ChatProcessor implements MessageComponentInterface
 
                     $MessageObject = new \stdClass();
                     $MessageObject->ServerMessage = TRUE;
-                    if (isset($this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name)) $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name;
                     $MessageObject->ServerMessageType = "Verify";
                     if (isset($this->userInfo[$conn->resourceId]->id)) { // USER FOUND
                         $MessageObject->Granted = TRUE;
@@ -69,7 +68,6 @@ class ChatProcessor implements MessageComponentInterface
                     $MessageObject->ServerMessage = TRUE;
                     $MessageObject->ServerMessageType = "Verify";
                     $MessageObject->Granted = FALSE;
-                    if (isset($this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name)) $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name;
                     $this->verifiedUsers[$conn->resourceId] = FALSE;
                     $this->users[$conn->resourceId]->send(json_encode($MessageObject, TRUE));
                     $this->onClose($conn);
@@ -101,35 +99,68 @@ class ChatProcessor implements MessageComponentInterface
                     }
                     break;*/
                 case "SetReceiver": // USER CLICKED ON NEW CHAT
-                    foreach ($this->userInfo[$conn->resourceId]->friends as $friend) {
-                        if ($data->ReceiversId === $friend->id) {
-                            $this->ReceiversId[$conn->resourceId] = $data->ReceiversId;
-                        }
-                    }
                     $MessageObject = new \stdClass();
                     $MessageObject->ServerMessage = TRUE;
                     $MessageObject->ServerMessageType = "SetReceiver";
-                    $this->ReceiversId[$conn->resourceId] !== $data->ReceiversId ? $MessageObject->Success = FALSE : $MessageObject->Success = TRUE;
+                    $MessageObject->Success = FALSE; // WILL BE PROBABLY OVERRIDDEN
+                    foreach ($this->userInfo[$conn->resourceId]->friends as $friend) { // CHECK IF USERS ARE FRIENDS
+                        if ($data->ReceiversId == $friend->id) {
+                            $this->ReceiversId[$conn->resourceId] = $data->ReceiversId;
+                            $MessageObject->Success = TRUE; // ARE FRIENDS
+                        }
+                    }
                     $this->users[$conn->resourceId]->send(json_encode($MessageObject, TRUE));
                     break;
                 case "ChatMessage": // MESSAGE RECEIVED
                     $ReceiversId = $this->ReceiversId[$conn->resourceId];
-                    $ReceiversResourceId = $this->ResourceId[$ReceiversId];
-                    $MessageObject = new \stdClass();
-                    $MessageObject->ServerMessage = FALSE;
-                    $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
-                    $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
-                    $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
-                    $MessageObject->Message = htmlspecialchars($data->Message);
+                    if (isset($this->ResourceId[$ReceiversId])) {
+                        $ReceiversResourceId = $this->ResourceId[$ReceiversId];
+                        $MessageObject = new \stdClass();
+                        $MessageObject->ServerMessage = FALSE;
+                        $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
+                        $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
+                        $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
+                        $MessageObject->Message = htmlspecialchars($data->Message);
 
-                    if ($data->EncryptedWithKeyOfUsername === $this->userInfo[$ReceiversResourceId]->user_name) {
-                        $MessageObject->WasHimself = FALSE;
-                        $MessageJson = json_encode($MessageObject, TRUE);
-                        $this->users[$ReceiversResourceId]->send($MessageJson); // SEND TO RECEIVER
-                    } else if ($data->EncryptedWithKeyOfUsername === $MessageObject->Username) {
-                        $MessageObject->WasHimself = TRUE;
-                        $MessageJson = json_encode($MessageObject, TRUE);
-                        $this->users[$conn->resourceId]->send($MessageJson); // SEND TO SENDER (FOR VERIFICATION)
+                        if ($data->EncryptedWithKeyOfUsername === $this->userInfo[$ReceiversResourceId]->user_name) {
+                            $MessageObject->WasHimself = FALSE;
+                            $MessageJson = json_encode($MessageObject, TRUE);
+                            $this->users[$ReceiversResourceId]->send($MessageJson); // SEND TO RECEIVER
+
+                            // SAVE IN DATABASE
+                            $url = "https://beam-messenger.de/wormhole/" . file("/AccessToken.txt", FILE_IGNORE_NEW_LINES)["0"] . "/new/message/" . $this->userInfo[$conn->resourceId]->id . "/" . $this->userInfo[$ReceiversResourceId]->id . "/";
+                            $data = array('message' => $data->Message);
+                            $options = array(
+                                'http' => array(
+                                    'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                                    'method' => 'POST',
+                                    'content' => http_build_query($data)
+                                )
+                            );
+                            $context = stream_context_create($options);
+                            $result = file_get_contents($url, FALSE, $context);
+                            if ($result === FALSE) { /* Handle error */
+                            }
+
+                        } else if ($data->EncryptedWithKeyOfUsername === $MessageObject->Username) {
+                            $MessageObject->WasHimself = TRUE;
+                            $MessageJson = json_encode($MessageObject, TRUE);
+                            $this->users[$conn->resourceId]->send($MessageJson); // SEND TO SENDER (FOR VERIFICATION)
+                        }
+                    } else { // USER ISN'T ONLINE -> ONLY STORE IN DATABASE
+                        $url = "https://beam-messenger.de/wormhole/" . file("/AccessToken.txt", FILE_IGNORE_NEW_LINES)["0"] . "/new/message/" . $this->userInfo[$conn->resourceId]->id . "/" . $this->ReceiversId[$conn->resourceId] . "/";
+                        $data = array('message' => $data->Message);
+                        $options = array(
+                            'http' => array(
+                                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                                'method' => 'POST',
+                                'content' => http_build_query($data)
+                            )
+                        );
+                        $context = stream_context_create($options);
+                        $result = file_get_contents($url, FALSE, $context);
+                        if ($result === FALSE) { /* Handle error */
+                        }
                     }
                     break;
                 case "GroupMessage": // GROUP MESSAGE RECEIVED -- RESERVED FOR LATER USE (CHANNEL BASED RIGHT NOW)
@@ -140,7 +171,6 @@ class ChatProcessor implements MessageComponentInterface
                                 $MessageObject = new \stdClass();
                                 $MessageObject->ServerMessage = FALSE;
                                 $MessageObject->GroupName = $channel;
-                                if (isset($this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name)) $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name;
                                 $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
                                 $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
                                 $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
@@ -154,24 +184,21 @@ class ChatProcessor implements MessageComponentInterface
                     }
                     break;
                 case "TypingState": // USER STARTED TYPING
-                    if (isset($this->channels[$conn->resourceId])) {
-                        $target = $this->channels[$conn->resourceId];
-                        foreach ($this->channels as $id => $channel) {
-                            if ($channel == $target) {
-                                $MessageObject = new \stdClass();
-                                $MessageObject->ServerMessage = TRUE;
-                                $MessageObject->ServerMessageType = "TypingState";
-                                $MessageObject->GroupName = $channel;
-                                if (isset($this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name)) $MessageObject->Receiver = $this->userInfo[array_flip($this->channels)[$this->channels[$conn->resourceId]]]->user_name;
-                                $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
-                                $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
-                                $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
-                                $MessageObject->State = $data->State;
-                                $id === $conn->resourceId ? $MessageObject->WasHimself = TRUE : $MessageObject->WasHimself = FALSE;
-                                $MessageJson = json_encode($MessageObject, TRUE);
-                                $this->users[$id]->send($MessageJson);
-                            }
-                        }
+                    // GET RECEIVERS DATA
+                    $ReceiversId = $this->ReceiversId[$conn->resourceId];
+                    if (isset($this->ResourceId[$ReceiversId])) { // ONLY SEND IF OTHER USER EXISTS
+                        $ReceiversResourceId = $this->ResourceId[$ReceiversId];
+                        $MessageObject = new \stdClass();
+                        $MessageObject->ServerMessage = TRUE;
+                        $MessageObject->ServerMessageType = "TypingState";
+                        $MessageObject->Receiver = $this->userInfo[$ReceiversResourceId]->user_name;
+                        $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
+                        $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
+                        $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
+                        $MessageObject->State = $data->State;
+                        $ReceiversResourceId === $conn->resourceId ? $MessageObject->WasHimself = TRUE : $MessageObject->WasHimself = FALSE;
+                        $MessageJson = json_encode($MessageObject, TRUE);
+                        $this->users[$ReceiversResourceId]->send($MessageJson);
                     }
                     break;
             }

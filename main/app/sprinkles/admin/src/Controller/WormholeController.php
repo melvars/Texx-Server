@@ -44,11 +44,11 @@ class WormholeController extends SimpleController
         }
     }
 
-    public function newMessage(Request $request, Response $response, $args) {
+    public function newMessage($request, Response $response, $args) {
         if ($this->verifyAccessToken($args)) {
             $sender_id = $args['sender_id'];
             $receiver_id = $args['receiver_id'];
-            $message = $args['message'];
+            $message = $request->getParsedBody()["message"];
             if (($sender_id != $receiver_id) && $message) {
                 DB::table('chat_messages')
                     ->insert(['sender_id' => $sender_id, 'receiver_id' => $receiver_id, 'message' => $message]);
@@ -82,7 +82,7 @@ class WormholeController extends SimpleController
                 ->select("user_follow.user_id as id", "users.user_name as username")
                 ->get();
 
-            $UsersFriends = Capsule::select("SELECT id FROM (SELECT user_id AS id FROM user_follow WHERE followed_by_id = $user->id UNION ALL SELECT followed_by_id FROM user_follow WHERE user_id = $user->id) t GROUP BY id HAVING COUNT(id) > 1");
+            $UsersFriends = DB::select("SELECT id FROM (SELECT user_id AS id FROM user_follow WHERE followed_by_id = $user->id UNION ALL SELECT followed_by_id FROM user_follow WHERE user_id = $user->id) t GROUP BY id HAVING COUNT(id) > 1");
             /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
             $classMapper = $this->ci->classMapper;
             foreach ($UsersFriends as $Key => $UsersFriendId) { // NOT THAT EFFICIENT...

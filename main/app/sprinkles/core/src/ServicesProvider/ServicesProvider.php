@@ -238,6 +238,9 @@ class ServicesProvider
             $csrfBlacklist['^/' . $config['assets.raw.path']] = [
                 'GET'
             ];
+            $csrfBlacklist['^/wormhole'] = [
+                'POST'
+            ];
 
             $config->set('csrf.blacklist', $csrfBlacklist);
 

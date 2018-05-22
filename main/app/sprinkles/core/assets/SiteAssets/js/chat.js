@@ -45,10 +45,8 @@ function InitializeChatServer() {
         ChatSocket.onmessage = function (e) {
             // DECLARATIONS
             var TypingIndicatorMessage = $(".TypingIndicatorMessage").parent();
-            LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
             var MessageObject = JSON.parse(e.data);
             var Message = MessageObject.Message; // ENCRYPTED MESSAGE (NOT ENCRYPTED ON SERVER MESSAGES)
-            Username = MessageObject.Username;
             var Fullname = MessageObject.Fullname;
             var Avatar = MessageObject.Avatar;
             var GroupName = MessageObject.GroupName;
@@ -58,6 +56,10 @@ function InitializeChatServer() {
             var ServerMessageType = MessageObject.ServerMessageType;
             var Granted = MessageObject.Granted;
             var Success = MessageObject.Success;
+
+            // GLOBAL OVERWRITES
+            LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
+            Username = MessageObject.Username;
 
 
             // GET OWN PUBLIC KEY FIRST
