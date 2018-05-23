@@ -12,8 +12,7 @@ use React\Stream\ThroughStream;
  */
 class UtilTest extends TestCase
 {
-    public function testPipeReturnsDestinationStream()
-    {
+    public function testPipeReturnsDestinationStream() {
         $readable = $this->getMockBuilder('React\Stream\ReadableStreamInterface')->getMock();
 
         $writable = $this->getMockBuilder('React\Stream\WritableStreamInterface')->getMock();
@@ -23,13 +22,12 @@ class UtilTest extends TestCase
         $this->assertSame($writable, $ret);
     }
 
-    public function testPipeNonReadableSourceShouldDoNothing()
-    {
+    public function testPipeNonReadableSourceShouldDoNothing() {
         $readable = $this->getMockBuilder('React\Stream\ReadableStreamInterface')->getMock();
         $readable
             ->expects($this->any())
             ->method('isReadable')
-            ->willReturn(false);
+            ->willReturn(FALSE);
 
         $writable = $this->getMockBuilder('React\Stream\WritableStreamInterface')->getMock();
         $writable
@@ -42,13 +40,12 @@ class UtilTest extends TestCase
         Util::pipe($readable, $writable);
     }
 
-    public function testPipeIntoNonWritableDestinationShouldPauseSource()
-    {
+    public function testPipeIntoNonWritableDestinationShouldPauseSource() {
         $readable = $this->getMockBuilder('React\Stream\ReadableStreamInterface')->getMock();
         $readable
             ->expects($this->any())
             ->method('isReadable')
-            ->willReturn(true);
+            ->willReturn(TRUE);
         $readable
             ->expects($this->once())
             ->method('pause');
@@ -57,7 +54,7 @@ class UtilTest extends TestCase
         $writable
             ->expects($this->any())
             ->method('isWritable')
-            ->willReturn(false);
+            ->willReturn(FALSE);
         $writable
             ->expects($this->never())
             ->method('end');
@@ -65,13 +62,12 @@ class UtilTest extends TestCase
         Util::pipe($readable, $writable);
     }
 
-    public function testPipeClosingDestPausesSource()
-    {
+    public function testPipeClosingDestPausesSource() {
         $readable = $this->getMockBuilder('React\Stream\ReadableStreamInterface')->getMock();
         $readable
             ->expects($this->any())
             ->method('isReadable')
-            ->willReturn(true);
+            ->willReturn(TRUE);
         $readable
             ->expects($this->once())
             ->method('pause');
@@ -83,15 +79,14 @@ class UtilTest extends TestCase
         $writable->close();
     }
 
-    public function testPipeWithEnd()
-    {
+    public function testPipeWithEnd() {
         $readable = new Stub\ReadableStreamStub();
 
         $writable = $this->getMockBuilder('React\Stream\WritableStreamInterface')->getMock();
         $writable
             ->expects($this->any())
             ->method('isWritable')
-            ->willReturn(true);
+            ->willReturn(TRUE);
         $writable
             ->expects($this->once())
             ->method('end');
@@ -101,38 +96,36 @@ class UtilTest extends TestCase
         $readable->end();
     }
 
-    public function testPipeWithoutEnd()
-    {
+    public function testPipeWithoutEnd() {
         $readable = new Stub\ReadableStreamStub();
 
         $writable = $this->getMockBuilder('React\Stream\WritableStreamInterface')->getMock();
         $writable
             ->expects($this->any())
             ->method('isWritable')
-            ->willReturn(true);
+            ->willReturn(TRUE);
         $writable
             ->expects($this->never())
             ->method('end');
 
-        Util::pipe($readable, $writable, array('end' => false));
+        Util::pipe($readable, $writable, array('end' => FALSE));
 
         $readable->end();
     }
 
-    public function testPipeWithTooSlowWritableShouldPauseReadable()
-    {
+    public function testPipeWithTooSlowWritableShouldPauseReadable() {
         $readable = new Stub\ReadableStreamStub();
 
         $writable = $this->getMockBuilder('React\Stream\WritableStreamInterface')->getMock();
         $writable
             ->expects($this->any())
             ->method('isWritable')
-            ->willReturn(true);
+            ->willReturn(TRUE);
         $writable
             ->expects($this->once())
             ->method('write')
             ->with('some data')
-            ->will($this->returnValue(false));
+            ->will($this->returnValue(FALSE));
 
         $readable->pipe($writable);
 
@@ -141,17 +134,16 @@ class UtilTest extends TestCase
         $this->assertTrue($readable->paused);
     }
 
-    public function testPipeWithTooSlowWritableShouldResumeOnDrain()
-    {
+    public function testPipeWithTooSlowWritableShouldResumeOnDrain() {
         $readable = new Stub\ReadableStreamStub();
 
-        $onDrain = null;
+        $onDrain = NULL;
 
         $writable = $this->getMockBuilder('React\Stream\WritableStreamInterface')->getMock();
         $writable
             ->expects($this->any())
             ->method('isWritable')
-            ->willReturn(true);
+            ->willReturn(TRUE);
         $writable
             ->expects($this->any())
             ->method('on')
@@ -170,8 +162,7 @@ class UtilTest extends TestCase
         $this->assertFalse($readable->paused);
     }
 
-    public function testPipeWithWritableResourceStream()
-    {
+    public function testPipeWithWritableResourceStream() {
         $readable = new Stub\ReadableStreamStub();
 
         $stream = fopen('php://temp', 'r+');
@@ -188,8 +179,7 @@ class UtilTest extends TestCase
         $this->assertSame('hello, I am some random data', stream_get_contents($stream));
     }
 
-    public function testPipeSetsUpListeners()
-    {
+    public function testPipeSetsUpListeners() {
         $source = new ThroughStream();
         $dest = new ThroughStream();
 
@@ -204,8 +194,7 @@ class UtilTest extends TestCase
         $this->assertCount(1, $dest->listeners('drain'));
     }
 
-    public function testPipeClosingSourceRemovesListeners()
-    {
+    public function testPipeClosingSourceRemovesListeners() {
         $source = new ThroughStream();
         $dest = new ThroughStream();
 
@@ -218,8 +207,7 @@ class UtilTest extends TestCase
         $this->assertCount(0, $dest->listeners('drain'));
     }
 
-    public function testPipeClosingDestRemovesListeners()
-    {
+    public function testPipeClosingDestRemovesListeners() {
         $source = new ThroughStream();
         $dest = new ThroughStream();
 
@@ -232,12 +220,11 @@ class UtilTest extends TestCase
         $this->assertCount(0, $dest->listeners('drain'));
     }
 
-    public function testPipeDuplexIntoSelfEndsOnEnd()
-    {
+    public function testPipeDuplexIntoSelfEndsOnEnd() {
         $readable = $this->getMockBuilder('React\Stream\ReadableStreamInterface')->getMock();
-        $readable->expects($this->any())->method('isReadable')->willReturn(true);
+        $readable->expects($this->any())->method('isReadable')->willReturn(TRUE);
         $writable = $this->getMockBuilder('React\Stream\WritableStreamInterface')->getMock();
-        $writable->expects($this->any())->method('isWritable')->willReturn(true);
+        $writable->expects($this->any())->method('isWritable')->willReturn(TRUE);
         $duplex = new CompositeStream($readable, $writable);
 
         Util::pipe($duplex, $duplex);
@@ -248,8 +235,7 @@ class UtilTest extends TestCase
     }
 
     /** @test */
-    public function forwardEventsShouldSetupForwards()
-    {
+    public function forwardEventsShouldSetupForwards() {
         $source = new ThroughStream();
         $target = new ThroughStream();
 
@@ -261,13 +247,11 @@ class UtilTest extends TestCase
         $source->emit('foo', array('bar'));
     }
 
-    private function createLoopMock()
-    {
+    private function createLoopMock() {
         return $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
     }
 
-    private function notEqualTo($value)
-    {
+    private function notEqualTo($value) {
         return new \PHPUnit_Framework_Constraint_Not($value);
     }
 }

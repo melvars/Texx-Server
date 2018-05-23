@@ -34,16 +34,15 @@ class LazyAssetManager extends AssetManager
      * Constructor.
      *
      * @param AssetFactory $factory The asset factory
-     * @param array        $loaders An array of loaders indexed by alias
+     * @param array $loaders An array of loaders indexed by alias
      */
-    public function __construct(AssetFactory $factory, $loaders = array())
-    {
+    public function __construct(AssetFactory $factory, $loaders = array()) {
         $this->factory = $factory;
         $this->loaders = array();
         $this->resources = array();
         $this->formulae = array();
-        $this->loaded = false;
-        $this->loading = false;
+        $this->loaded = FALSE;
+        $this->loading = FALSE;
 
         foreach ($loaders as $alias => $loader) {
             $this->setLoader($alias, $loader);
@@ -53,25 +52,23 @@ class LazyAssetManager extends AssetManager
     /**
      * Adds a loader to the asset manager.
      *
-     * @param string                 $alias  An alias for the loader
+     * @param string $alias An alias for the loader
      * @param FormulaLoaderInterface $loader A loader
      */
-    public function setLoader($alias, FormulaLoaderInterface $loader)
-    {
+    public function setLoader($alias, FormulaLoaderInterface $loader) {
         $this->loaders[$alias] = $loader;
-        $this->loaded = false;
+        $this->loaded = FALSE;
     }
 
     /**
      * Adds a resource to the asset manager.
      *
      * @param ResourceInterface $resource A resource
-     * @param string            $loader   The loader alias for this resource
+     * @param string $loader The loader alias for this resource
      */
-    public function addResource(ResourceInterface $resource, $loader)
-    {
+    public function addResource(ResourceInterface $resource, $loader) {
         $this->resources[$loader][] = $resource;
-        $this->loaded = false;
+        $this->loaded = FALSE;
     }
 
     /**
@@ -79,8 +76,7 @@ class LazyAssetManager extends AssetManager
      *
      * @return array An array of resources
      */
-    public function getResources()
-    {
+    public function getResources() {
         $resources = array();
         foreach ($this->resources as $r) {
             $resources = array_merge($resources, $r);
@@ -96,8 +92,7 @@ class LazyAssetManager extends AssetManager
      *
      * @return Boolean If there is a formula
      */
-    public function hasFormula($name)
-    {
+    public function hasFormula($name) {
         if (!$this->loaded) {
             $this->load();
         }
@@ -114,8 +109,7 @@ class LazyAssetManager extends AssetManager
      *
      * @throws \InvalidArgumentException If there is no formula by that name
      */
-    public function getFormula($name)
-    {
+    public function getFormula($name) {
         if (!$this->loaded) {
             $this->load();
         }
@@ -130,11 +124,10 @@ class LazyAssetManager extends AssetManager
     /**
      * Sets a formula on the asset manager.
      *
-     * @param string $name    An asset name
-     * @param array  $formula A formula
+     * @param string $name An asset name
+     * @param array $formula A formula
      */
-    public function setFormula($name, array $formula)
-    {
+    public function setFormula($name, array $formula) {
         $this->formulae[$name] = $formula;
     }
 
@@ -143,17 +136,16 @@ class LazyAssetManager extends AssetManager
      *
      * @throws \LogicException If a resource has been added to an invalid loader
      */
-    public function load()
-    {
+    public function load() {
         if ($this->loading) {
             return;
         }
 
         if ($diff = array_diff(array_keys($this->resources), array_keys($this->loaders))) {
-            throw new \LogicException('The following loader(s) are not registered: '.implode(', ', $diff));
+            throw new \LogicException('The following loader(s) are not registered: ' . implode(', ', $diff));
         }
 
-        $this->loading = true;
+        $this->loading = TRUE;
 
         foreach ($this->resources as $loader => $resources) {
             foreach ($resources as $resource) {
@@ -161,12 +153,11 @@ class LazyAssetManager extends AssetManager
             }
         }
 
-        $this->loaded = true;
-        $this->loading = false;
+        $this->loaded = TRUE;
+        $this->loading = FALSE;
     }
 
-    public function get($name)
-    {
+    public function get($name) {
         if (!$this->loaded) {
             $this->load();
         }
@@ -180,8 +171,7 @@ class LazyAssetManager extends AssetManager
         return parent::get($name);
     }
 
-    public function has($name)
-    {
+    public function has($name) {
         if (!$this->loaded) {
             $this->load();
         }
@@ -189,8 +179,7 @@ class LazyAssetManager extends AssetManager
         return isset($this->formulae[$name]) || parent::has($name);
     }
 
-    public function getNames()
-    {
+    public function getNames() {
         if (!$this->loaded) {
             $this->load();
         }
@@ -198,13 +187,11 @@ class LazyAssetManager extends AssetManager
         return array_unique(array_merge(parent::getNames(), array_keys($this->formulae)));
     }
 
-    public function isDebug()
-    {
+    public function isDebug() {
         return $this->factory->isDebug();
     }
 
-    public function getLastModified(AssetInterface $asset)
-    {
+    public function getLastModified(AssetInterface $asset) {
         return $this->factory->getLastModified($asset);
     }
 }

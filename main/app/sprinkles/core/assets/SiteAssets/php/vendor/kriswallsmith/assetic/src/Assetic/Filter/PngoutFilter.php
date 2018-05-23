@@ -24,26 +24,26 @@ use Assetic\Util\FilesystemUtils;
 class PngoutFilter extends BaseProcessFilter
 {
     // -c#
-    const COLOR_GREY       = '0';
-    const COLOR_RGB        = '2';
-    const COLOR_PAL        = '3';
+    const COLOR_GREY = '0';
+    const COLOR_RGB = '2';
+    const COLOR_PAL = '3';
     const COLOR_GRAY_ALPHA = '4';
-    const COLOR_RGB_ALPHA  = '6';
+    const COLOR_RGB_ALPHA = '6';
 
     // -f#
-    const FILTER_NONE  = '0';
-    const FILTER_X     = '1';
-    const FILTER_Y     = '2';
-    const FILTER_X_Y   = '3';
+    const FILTER_NONE = '0';
+    const FILTER_X = '1';
+    const FILTER_Y = '2';
+    const FILTER_X_Y = '3';
     const FILTER_PAETH = '4';
     const FILTER_MIXED = '5';
 
     // -s#
-    const STRATEGY_XTREME        = '0';
-    const STRATEGY_INTENSE       = '1';
+    const STRATEGY_XTREME = '0';
+    const STRATEGY_INTENSE = '1';
     const STRATEGY_LONGEST_MATCH = '2';
-    const STRATEGY_HUFFMAN_ONLY  = '3';
-    const STRATEGY_UNCOMPRESSED  = '4';
+    const STRATEGY_HUFFMAN_ONLY = '3';
+    const STRATEGY_UNCOMPRESSED = '4';
 
     private $pngoutBin;
     private $color;
@@ -56,53 +56,46 @@ class PngoutFilter extends BaseProcessFilter
      *
      * @param string $pngoutBin Path to the pngout binary
      */
-    public function __construct($pngoutBin = '/usr/bin/pngout')
-    {
+    public function __construct($pngoutBin = '/usr/bin/pngout') {
         $this->pngoutBin = $pngoutBin;
     }
 
-    public function setColor($color)
-    {
+    public function setColor($color) {
         $this->color = $color;
     }
 
-    public function setFilter($filter)
-    {
+    public function setFilter($filter) {
         $this->filter = $filter;
     }
 
-    public function setStrategy($strategy)
-    {
+    public function setStrategy($strategy) {
         $this->strategy = $strategy;
     }
 
-    public function setBlockSplitThreshold($blockSplitThreshold)
-    {
+    public function setBlockSplitThreshold($blockSplitThreshold) {
         $this->blockSplitThreshold = $blockSplitThreshold;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $pb = $this->createProcessBuilder(array($this->pngoutBin));
 
-        if (null !== $this->color) {
-            $pb->add('-c'.$this->color);
+        if (NULL !== $this->color) {
+            $pb->add('-c' . $this->color);
         }
 
-        if (null !== $this->filter) {
-            $pb->add('-f'.$this->filter);
+        if (NULL !== $this->filter) {
+            $pb->add('-f' . $this->filter);
         }
 
-        if (null !== $this->strategy) {
-            $pb->add('-s'.$this->strategy);
+        if (NULL !== $this->strategy) {
+            $pb->add('-s' . $this->strategy);
         }
 
-        if (null !== $this->blockSplitThreshold) {
-            $pb->add('-b'.$this->blockSplitThreshold);
+        if (NULL !== $this->blockSplitThreshold) {
+            $pb->add('-b' . $this->blockSplitThreshold);
         }
 
         $pb->add($input = FilesystemUtils::createTemporaryFile('pngout_in'));

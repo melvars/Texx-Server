@@ -28,14 +28,12 @@ class EmberPrecompileFilter extends BaseNodeFilter
     private $emberBin;
     private $nodeBin;
 
-    public function __construct($handlebarsBin = '/usr/bin/ember-precompile', $nodeBin = null)
-    {
+    public function __construct($handlebarsBin = '/usr/bin/ember-precompile', $nodeBin = NULL) {
         $this->emberBin = $handlebarsBin;
         $this->nodeBin = $nodeBin;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $pb = $this->createProcessBuilder($this->nodeBin
             ? array($this->nodeBin, $this->emberBin)
             : array($this->emberBin));
@@ -47,7 +45,7 @@ class EmberPrecompileFilter extends BaseNodeFilter
         }
 
         $inputDirPath = FilesystemUtils::createThrowAwayDirectory('ember_in');
-        $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName;
+        $inputPath = $inputDirPath . DIRECTORY_SEPARATOR . $templateName;
         $outputPath = FilesystemUtils::createTemporaryFile('ember_out');
 
         file_put_contents($inputPath, $asset->getContent());
@@ -81,7 +79,6 @@ class EmberPrecompileFilter extends BaseNodeFilter
         $asset->setContent($compiledJs);
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 }

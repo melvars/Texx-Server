@@ -1,20 +1,23 @@
 <?php
+
 namespace Ratchet;
+
 use Ratchet\Mock\ConnectionDecorator;
 
 /**
  * @covers Ratchet\AbstractConnectionDecorator
  * @covers Ratchet\ConnectionInterface
  */
-class AbstractConnectionDecoratorTest extends \PHPUnit_Framework_TestCase {
+class AbstractConnectionDecoratorTest extends \PHPUnit_Framework_TestCase
+{
     protected $mock;
     protected $l1;
     protected $l2;
 
     public function setUp() {
         $this->mock = $this->getMock('\Ratchet\ConnectionInterface');
-        $this->l1   = new ConnectionDecorator($this->mock);
-        $this->l2   = new ConnectionDecorator($this->l1);
+        $this->l1 = new ConnectionDecorator($this->mock);
+        $this->l2 = new ConnectionDecorator($this->l1);
     }
 
     public function testGet() {
@@ -84,9 +87,9 @@ class AbstractConnectionDecoratorTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetConnection() {
-        $class  = new \ReflectionClass('\\Ratchet\\AbstractConnectionDecorator');
+        $class = new \ReflectionClass('\\Ratchet\\AbstractConnectionDecorator');
         $method = $class->getMethod('getConnection');
-        $method->setAccessible(true);
+        $method->setAccessible(TRUE);
 
         $conn = $method->invokeArgs($this->l1, array());
 
@@ -94,9 +97,9 @@ class AbstractConnectionDecoratorTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetConnectionLevel2() {
-        $class  = new \ReflectionClass('\\Ratchet\\AbstractConnectionDecorator');
+        $class = new \ReflectionClass('\\Ratchet\\AbstractConnectionDecorator');
         $method = $class->getMethod('getConnection');
-        $method->setAccessible(true);
+        $method->setAccessible(TRUE);
 
         $conn = $method->invokeArgs($this->l2, array());
 

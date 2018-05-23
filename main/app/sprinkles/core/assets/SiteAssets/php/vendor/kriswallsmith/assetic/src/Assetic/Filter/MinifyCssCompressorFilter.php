@@ -24,12 +24,10 @@ use Assetic\Asset\AssetInterface;
  */
 class MinifyCssCompressorFilter implements FilterInterface
 {
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $asset->setContent(\Minify_CSS_Compressor::process($asset->getContent()));
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Psr7;
 
 use InvalidArgumentException;
@@ -23,17 +24,17 @@ class Request implements RequestInterface
     private $uri;
 
     /**
-     * @param string                               $method  HTTP method
-     * @param string|UriInterface                  $uri     URI
-     * @param array                                $headers Request headers
-     * @param string|null|resource|StreamInterface $body    Request body
-     * @param string                               $version Protocol version
+     * @param string $method HTTP method
+     * @param string|UriInterface $uri URI
+     * @param array $headers Request headers
+     * @param string|null|resource|StreamInterface $body Request body
+     * @param string $version Protocol version
      */
     public function __construct(
         $method,
         $uri,
         array $headers = [],
-        $body = null,
+        $body = NULL,
         $version = '1.1'
     ) {
         if (!($uri instanceof UriInterface)) {
@@ -49,14 +50,13 @@ class Request implements RequestInterface
             $this->updateHostFromUri();
         }
 
-        if ($body !== '' && $body !== null) {
+        if ($body !== '' && $body !== NULL) {
             $this->stream = stream_for($body);
         }
     }
 
-    public function getRequestTarget()
-    {
-        if ($this->requestTarget !== null) {
+    public function getRequestTarget() {
+        if ($this->requestTarget !== NULL) {
             return $this->requestTarget;
         }
 
@@ -71,8 +71,7 @@ class Request implements RequestInterface
         return $target;
     }
 
-    public function withRequestTarget($requestTarget)
-    {
+    public function withRequestTarget($requestTarget) {
         if (preg_match('#\s#', $requestTarget)) {
             throw new InvalidArgumentException(
                 'Invalid request target provided; cannot contain whitespace'
@@ -84,25 +83,21 @@ class Request implements RequestInterface
         return $new;
     }
 
-    public function getMethod()
-    {
+    public function getMethod() {
         return $this->method;
     }
 
-    public function withMethod($method)
-    {
+    public function withMethod($method) {
         $new = clone $this;
         $new->method = strtoupper($method);
         return $new;
     }
 
-    public function getUri()
-    {
+    public function getUri() {
         return $this->uri;
     }
 
-    public function withUri(UriInterface $uri, $preserveHost = false)
-    {
+    public function withUri(UriInterface $uri, $preserveHost = FALSE) {
         if ($uri === $this->uri) {
             return $this;
         }
@@ -117,15 +112,14 @@ class Request implements RequestInterface
         return $new;
     }
 
-    private function updateHostFromUri()
-    {
+    private function updateHostFromUri() {
         $host = $this->uri->getHost();
 
         if ($host == '') {
             return;
         }
 
-        if (($port = $this->uri->getPort()) !== null) {
+        if (($port = $this->uri->getPort()) !== NULL) {
             $host .= ':' . $port;
         }
 

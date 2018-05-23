@@ -1,18 +1,18 @@
 <form method="post" action="{{ site.uri.public }}/api/posts/image">
     {% include "forms/csrf.html.twig" %}
     <p>
-        <label>Upload file:</label><br/>
-        <input formenctype="multipart/form-data" type="file" name="image"/>
+        <label>Upload file:</label><br />
+        <input formenctype="multipart/form-data" type="file" name="image" />
     </p>
-    <input formenctype="multipart/form-data" type="submit"/>
+    <input formenctype="multipart/form-data" type="submit" />
 </form>
 
 <form method="post" action="{{ site.uri.public }}/api/users/u/marvinborner/publickey">
     {% include "forms/csrf.html.twig" %}
     <p>
-        <input type="text" name="PublicKey"/>
+        <input type="text" name="PublicKey" />
     </p>
-    <input type="submit"/>
+    <input type="submit" />
 </form>
 
 <script>
@@ -28,7 +28,7 @@
     $.ajax({
         type: 'GET',
         url: site.uri.public + '/api/users/u/' + 'marvinborner' + '/publickey',
-        dataType : "json",
+        dataType: "json",
         success: function (response) {
             console.log(response);
             //window.location.reload();

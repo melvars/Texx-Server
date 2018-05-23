@@ -19,8 +19,7 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 class ProcessBuilderTest extends TestCase
 {
-    public function testInheritEnvironmentVars()
-    {
+    public function testInheritEnvironmentVars() {
         $proc = ProcessBuilder::create()
             ->add('foo')
             ->getProcess();
@@ -29,14 +28,13 @@ class ProcessBuilderTest extends TestCase
 
         $proc = ProcessBuilder::create()
             ->add('foo')
-            ->inheritEnvironmentVariables(false)
+            ->inheritEnvironmentVariables(FALSE)
             ->getProcess();
 
         $this->assertFalse($proc->areEnvironmentVariablesInherited());
     }
 
-    public function testAddEnvironmentVariables()
-    {
+    public function testAddEnvironmentVariables() {
         $pb = new ProcessBuilder();
         $env = array(
             'foo' => 'bar',
@@ -46,8 +44,7 @@ class ProcessBuilderTest extends TestCase
             ->add('command')
             ->setEnv('foo', 'bar2')
             ->addEnvironmentVariables($env)
-            ->getProcess()
-        ;
+            ->getProcess();
 
         $this->assertSame($env, $proc->getEnv());
     }
@@ -55,27 +52,24 @@ class ProcessBuilderTest extends TestCase
     /**
      * @expectedException \Symfony\Component\Process\Exception\InvalidArgumentException
      */
-    public function testNegativeTimeoutFromSetter()
-    {
+    public function testNegativeTimeoutFromSetter() {
         $pb = new ProcessBuilder();
         $pb->setTimeout(-1);
     }
 
-    public function testNullTimeout()
-    {
+    public function testNullTimeout() {
         $pb = new ProcessBuilder();
         $pb->setTimeout(10);
-        $pb->setTimeout(null);
+        $pb->setTimeout(NULL);
 
         $r = new \ReflectionObject($pb);
         $p = $r->getProperty('timeout');
-        $p->setAccessible(true);
+        $p->setAccessible(TRUE);
 
         $this->assertNull($p->getValue($pb));
     }
 
-    public function testShouldSetArguments()
-    {
+    public function testShouldSetArguments() {
         $pb = new ProcessBuilder(array('initial'));
         $pb->setArguments(array('second'));
 
@@ -84,8 +78,7 @@ class ProcessBuilderTest extends TestCase
         $this->assertContains('second', $proc->getCommandLine());
     }
 
-    public function testPrefixIsPrependedToAllGeneratedProcess()
-    {
+    public function testPrefixIsPrependedToAllGeneratedProcess() {
         $pb = new ProcessBuilder();
         $pb->setPrefix('/usr/bin/php');
 
@@ -104,8 +97,7 @@ class ProcessBuilderTest extends TestCase
         }
     }
 
-    public function testArrayPrefixesArePrependedToAllGeneratedProcess()
-    {
+    public function testArrayPrefixesArePrependedToAllGeneratedProcess() {
         $pb = new ProcessBuilder();
         $pb->setPrefix(array('/usr/bin/php', 'composer.phar'));
 
@@ -124,8 +116,7 @@ class ProcessBuilderTest extends TestCase
         }
     }
 
-    public function testShouldEscapeArguments()
-    {
+    public function testShouldEscapeArguments() {
         $pb = new ProcessBuilder(array('%path%', 'foo " bar', '%baz%baz'));
         $proc = $pb->getProcess();
 
@@ -136,8 +127,7 @@ class ProcessBuilderTest extends TestCase
         }
     }
 
-    public function testShouldEscapeArgumentsAndPrefix()
-    {
+    public function testShouldEscapeArgumentsAndPrefix() {
         $pb = new ProcessBuilder(array('arg'));
         $pb->setPrefix('%prefix%');
         $proc = $pb->getProcess();
@@ -152,13 +142,11 @@ class ProcessBuilderTest extends TestCase
     /**
      * @expectedException \Symfony\Component\Process\Exception\LogicException
      */
-    public function testShouldThrowALogicExceptionIfNoPrefixAndNoArgument()
-    {
+    public function testShouldThrowALogicExceptionIfNoPrefixAndNoArgument() {
         ProcessBuilder::create()->getProcess();
     }
 
-    public function testShouldNotThrowALogicExceptionIfNoArgument()
-    {
+    public function testShouldNotThrowALogicExceptionIfNoArgument() {
         $process = ProcessBuilder::create()
             ->setPrefix('/usr/bin/php')
             ->getProcess();
@@ -170,8 +158,7 @@ class ProcessBuilderTest extends TestCase
         }
     }
 
-    public function testShouldNotThrowALogicExceptionIfNoPrefix()
-    {
+    public function testShouldNotThrowALogicExceptionIfNoPrefix() {
         $process = ProcessBuilder::create(array('/usr/bin/php'))
             ->getProcess();
 
@@ -182,8 +169,7 @@ class ProcessBuilderTest extends TestCase
         }
     }
 
-    public function testShouldReturnProcessWithDisabledOutput()
-    {
+    public function testShouldReturnProcessWithDisabledOutput() {
         $process = ProcessBuilder::create(array('/usr/bin/php'))
             ->disableOutput()
             ->getProcess();
@@ -191,8 +177,7 @@ class ProcessBuilderTest extends TestCase
         $this->assertTrue($process->isOutputDisabled());
     }
 
-    public function testShouldReturnProcessWithEnabledOutput()
-    {
+    public function testShouldReturnProcessWithEnabledOutput() {
         $process = ProcessBuilder::create(array('/usr/bin/php'))
             ->disableOutput()
             ->enableOutput()
@@ -205,14 +190,12 @@ class ProcessBuilderTest extends TestCase
      * @expectedException \Symfony\Component\Process\Exception\InvalidArgumentException
      * @expectedExceptionMessage Symfony\Component\Process\ProcessBuilder::setInput only accepts strings, Traversable objects or stream resources.
      */
-    public function testInvalidInput()
-    {
+    public function testInvalidInput() {
         $builder = ProcessBuilder::create();
         $builder->setInput(array());
     }
 
-    public function testDoesNotPrefixExec()
-    {
+    public function testDoesNotPrefixExec() {
         if ('\\' === DIRECTORY_SEPARATOR) {
             $this->markTestSkipped('This test cannot run on Windows.');
         }

@@ -20,8 +20,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
 {
     private $directories;
 
-    public function __construct($directories)
-    {
+    public function __construct($directories) {
         $this->directories = array();
 
         foreach ($directories as $directory) {
@@ -29,24 +28,21 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
         }
     }
 
-    public function addDirectory(IteratorResourceInterface $directory)
-    {
+    public function addDirectory(IteratorResourceInterface $directory) {
         $this->directories[] = $directory;
     }
 
-    public function isFresh($timestamp)
-    {
+    public function isFresh($timestamp) {
         foreach ($this->getFileResources() as $file) {
             if (!$file->isFresh($timestamp)) {
-                return false;
+                return FALSE;
             }
         }
 
-        return true;
+        return TRUE;
     }
 
-    public function getContent()
-    {
+    public function getContent() {
         $parts = array();
         foreach ($this->getFileResources() as $file) {
             $parts[] = $file->getContent();
@@ -60,32 +56,29 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
      *
      * @return string An identifying string
      */
-    public function __toString()
-    {
+    public function __toString() {
         $parts = array();
         foreach ($this->directories as $directory) {
-            $parts[] = (string) $directory;
+            $parts[] = (string)$directory;
         }
 
         return implode(',', $parts);
     }
 
-    public function getIterator()
-    {
+    public function getIterator() {
         return new \ArrayIterator($this->getFileResources());
     }
 
     /**
      * Returns the relative version of a filename.
      *
-     * @param ResourceInterface $file      The file
+     * @param ResourceInterface $file The file
      * @param ResourceInterface $directory The directory
      *
      * @return string The name to compare with files from other directories
      */
-    protected function getRelativeName(ResourceInterface $file, ResourceInterface $directory)
-    {
-        return substr((string) $file, strlen((string) $directory));
+    protected function getRelativeName(ResourceInterface $file, ResourceInterface $directory) {
+        return substr((string)$file, strlen((string)$directory));
     }
 
     /**
@@ -93,8 +86,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
      *
      * @return array An array of file resources
      */
-    private function getFileResources()
-    {
+    private function getFileResources() {
         $paths = array();
 
         foreach ($this->directories as $directory) {

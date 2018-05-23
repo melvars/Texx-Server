@@ -1,11 +1,14 @@
 <?php
+
 namespace Ratchet\RFC6455\Test\Unit\Handshake;
+
 use Ratchet\RFC6455\Handshake\RequestVerifier;
 
 /**
  * @covers Ratchet\RFC6455\Handshake\RequestVerifier
  */
-class RequestVerifierTest extends \PHPUnit_Framework_TestCase {
+class RequestVerifierTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * @var RequestVerifier
      */
@@ -17,15 +20,16 @@ class RequestVerifierTest extends \PHPUnit_Framework_TestCase {
 
     public static function methodProvider() {
         return array(
-            array(true,  'GET'),
-            array(true,  'get'),
-            array(true,  'Get'),
-            array(false, 'POST'),
-            array(false, 'DELETE'),
-            array(false, 'PUT'),
-            array(false, 'PATCH')
+            array(TRUE, 'GET'),
+            array(TRUE, 'get'),
+            array(TRUE, 'Get'),
+            array(FALSE, 'POST'),
+            array(FALSE, 'DELETE'),
+            array(FALSE, 'PUT'),
+            array(FALSE, 'PATCH')
         );
     }
+
     /**
      * @dataProvider methodProvider
      */
@@ -35,18 +39,18 @@ class RequestVerifierTest extends \PHPUnit_Framework_TestCase {
 
     public static function httpVersionProvider() {
         return array(
-            array(true,  1.1),
-            array(true,  '1.1'),
-            array(true,  1.2),
-            array(true,  '1.2'),
-            array(true,  2),
-            array(true,  '2'),
-            array(true,  '2.0'),
-            array(false, '1.0'),
-            array(false, 1),
-            array(false, '0.9'),
-            array(false, ''),
-            array(false, 'hello')
+            array(TRUE, 1.1),
+            array(TRUE, '1.1'),
+            array(TRUE, 1.2),
+            array(TRUE, '1.2'),
+            array(TRUE, 2),
+            array(TRUE, '2'),
+            array(TRUE, '2.0'),
+            array(FALSE, '1.0'),
+            array(FALSE, 1),
+            array(FALSE, '0.9'),
+            array(FALSE, ''),
+            array(FALSE, 'hello')
         );
     }
 
@@ -59,12 +63,12 @@ class RequestVerifierTest extends \PHPUnit_Framework_TestCase {
 
     public static function uRIProvider() {
         return array(
-            array(true, '/chat'),
-            array(true, '/hello/world?key=val'),
-            array(false, '/chat#bad'),
-            array(false, 'nope'),
-            array(false, '/ ಠ_ಠ '),
-            array(false, '/✖')
+            array(TRUE, '/chat'),
+            array(TRUE, '/hello/world?key=val'),
+            array(FALSE, '/chat#bad'),
+            array(FALSE, 'nope'),
+            array(FALSE, '/ ಠ_ಠ '),
+            array(FALSE, '/✖')
         );
     }
 
@@ -77,8 +81,8 @@ class RequestVerifierTest extends \PHPUnit_Framework_TestCase {
 
     public static function hostProvider() {
         return array(
-            array(true, ['server.example.com']),
-            array(false, [])
+            array(TRUE, ['server.example.com']),
+            array(FALSE, [])
         );
     }
 
@@ -91,11 +95,11 @@ class RequestVerifierTest extends \PHPUnit_Framework_TestCase {
 
     public static function upgradeProvider() {
         return array(
-            array(true,  ['websocket']),
-            array(true,  ['Websocket']),
-            array(true,  ['webSocket']),
-            array(false, []),
-            array(false, [''])
+            array(TRUE, ['websocket']),
+            array(TRUE, ['Websocket']),
+            array(TRUE, ['webSocket']),
+            array(FALSE, []),
+            array(FALSE, [''])
         );
     }
 
@@ -108,18 +112,18 @@ class RequestVerifierTest extends \PHPUnit_Framework_TestCase {
 
     public static function connectionProvider() {
         return array(
-            array(true,  ['Upgrade']),
-            array(true,  ['upgrade']),
-            array(true,  ['keep-alive', 'Upgrade']),
-            array(true,  ['Upgrade', 'keep-alive']),
-            array(true,  ['keep-alive', 'Upgrade', 'something']),
+            array(TRUE, ['Upgrade']),
+            array(TRUE, ['upgrade']),
+            array(TRUE, ['keep-alive', 'Upgrade']),
+            array(TRUE, ['Upgrade', 'keep-alive']),
+            array(TRUE, ['keep-alive', 'Upgrade', 'something']),
             // as seen in Firefox 47.0.1 - see https://github.com/ratchetphp/RFC6455/issues/14
-            array(true,  ['keep-alive, Upgrade']),
-            array(true,  ['Upgrade, keep-alive']),
-            array(true,  ['keep-alive, Upgrade, something']),
-            array(true,  ['keep-alive, Upgrade', 'something']),
-            array(false, ['']),
-            array(false, [])
+            array(TRUE, ['keep-alive, Upgrade']),
+            array(TRUE, ['Upgrade, keep-alive']),
+            array(TRUE, ['keep-alive, Upgrade, something']),
+            array(TRUE, ['keep-alive, Upgrade', 'something']),
+            array(FALSE, ['']),
+            array(FALSE, [])
         );
     }
 
@@ -132,19 +136,19 @@ class RequestVerifierTest extends \PHPUnit_Framework_TestCase {
 
     public static function keyProvider() {
         return array(
-            array(true,  ['hkfa1L7uwN6DCo4IS3iWAw==']),
-            array(true,  ['765vVoQpKSGJwPzJIMM2GA==']),
-            array(true,  ['AQIDBAUGBwgJCgsMDQ4PEC==']),
-            array(true,  ['axa2B/Yz2CdpfQAY2Q5P7w==']),
-            array(false, [0]),
-            array(false, ['Hello World']),
-            array(false, ['1234567890123456']),
-            array(false, ['123456789012345678901234']),
-            array(true,  [base64_encode('UTF8allthngs+✓')]),
-            array(true,  ['dGhlIHNhbXBsZSBub25jZQ==']),
-            array(false, []),
-            array(false, ['dGhlIHNhbXBsZSBub25jZQ==', 'Some other value']),
-            array(false, ['Some other value', 'dGhlIHNhbXBsZSBub25jZQ=='])
+            array(TRUE, ['hkfa1L7uwN6DCo4IS3iWAw==']),
+            array(TRUE, ['765vVoQpKSGJwPzJIMM2GA==']),
+            array(TRUE, ['AQIDBAUGBwgJCgsMDQ4PEC==']),
+            array(TRUE, ['axa2B/Yz2CdpfQAY2Q5P7w==']),
+            array(FALSE, [0]),
+            array(FALSE, ['Hello World']),
+            array(FALSE, ['1234567890123456']),
+            array(FALSE, ['123456789012345678901234']),
+            array(TRUE, [base64_encode('UTF8allthngs+✓')]),
+            array(TRUE, ['dGhlIHNhbXBsZSBub25jZQ==']),
+            array(FALSE, []),
+            array(FALSE, ['dGhlIHNhbXBsZSBub25jZQ==', 'Some other value']),
+            array(FALSE, ['Some other value', 'dGhlIHNhbXBsZSBub25jZQ=='])
         );
     }
 
@@ -157,14 +161,14 @@ class RequestVerifierTest extends \PHPUnit_Framework_TestCase {
 
     public static function versionProvider() {
         return array(
-            array(true,  [13]),
-            array(true,  ['13']),
-            array(false, [12]),
-            array(false, [14]),
-            array(false, ['14']),
-            array(false, ['hi']),
-            array(false, ['']),
-            array(false, [])
+            array(TRUE, [13]),
+            array(TRUE, ['13']),
+            array(FALSE, [12]),
+            array(FALSE, [14]),
+            array(FALSE, ['14']),
+            array(FALSE, ['hi']),
+            array(FALSE, ['']),
+            array(FALSE, [])
         );
     }
 

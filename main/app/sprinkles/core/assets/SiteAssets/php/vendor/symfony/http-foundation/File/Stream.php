@@ -21,8 +21,7 @@ class Stream extends File
     /**
      * {@inheritdoc}
      */
-    public function getSize()
-    {
-        return false;
+    public function getSize() {
+        return FALSE;
     }
 }

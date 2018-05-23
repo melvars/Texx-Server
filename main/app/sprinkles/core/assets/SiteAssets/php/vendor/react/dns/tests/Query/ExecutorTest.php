@@ -17,8 +17,7 @@ class ExecutorTest extends TestCase
     private $dumper;
     private $executor;
 
-    public function setUp()
-    {
+    public function setUp() {
         $this->loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $this->parser = $this->getMockBuilder('React\Dns\Protocol\Parser')->getMock();
         $this->dumper = new BinaryDumper();
@@ -27,8 +26,7 @@ class ExecutorTest extends TestCase
     }
 
     /** @test */
-    public function queryShouldCreateUdpRequest()
-    {
+    public function queryShouldCreateUdpRequest() {
         $timer = $this->createTimerMock();
         $this->loop
             ->expects($this->any())
@@ -40,16 +38,15 @@ class ExecutorTest extends TestCase
             ->expects($this->once())
             ->method('createConnection')
             ->with('8.8.8.8:53', 'udp')
-            ->will($this->returnNewConnectionMock(false));
+            ->will($this->returnNewConnectionMock(FALSE));
 
         $query = new Query('igor.io', Message::TYPE_A, Message::CLASS_IN, 1345656451);
         $this->executor->query('8.8.8.8:53', $query);
     }
 
     /** @test */
-    public function resolveShouldRejectIfRequestIsLargerThan512Bytes()
-    {
-        $query = new Query(str_repeat('a', 512).'.igor.io', Message::TYPE_A, Message::CLASS_IN, 1345656451);
+    public function resolveShouldRejectIfRequestIsLargerThan512Bytes() {
+        $query = new Query(str_repeat('a', 512) . '.igor.io', Message::TYPE_A, Message::CLASS_IN, 1345656451);
         $promise = $this->executor->query('8.8.8.8:53', $query);
 
         $this->setExpectedException('RuntimeException', 'DNS query for ' . $query->name . ' failed: Requested transport "tcp" not available, only UDP is supported in this version');
@@ -57,9 +54,8 @@ class ExecutorTest extends TestCase
     }
 
     /** @test */
-    public function resolveShouldCloseConnectionWhenCancelled()
-    {
-        $conn = $this->createConnectionMock(false);
+    public function resolveShouldCloseConnectionWhenCancelled() {
+        $conn = $this->createConnectionMock(FALSE);
         $conn->expects($this->once())->method('close');
 
         $timer = $this->createTimerMock();
@@ -85,13 +81,12 @@ class ExecutorTest extends TestCase
     }
 
     /** @test */
-    public function resolveShouldNotStartOrCancelTimerWhenCancelledWithTimeoutIsNull()
-    {
+    public function resolveShouldNotStartOrCancelTimerWhenCancelledWithTimeoutIsNull() {
         $this->loop
             ->expects($this->never())
             ->method('addTimer');
 
-        $this->executor = new Executor($this->loop, $this->parser, $this->dumper, null);
+        $this->executor = new Executor($this->loop, $this->parser, $this->dumper, NULL);
 
         $query = new Query('igor.io', Message::TYPE_A, Message::CLASS_IN, 1345656451);
         $promise = $this->executor->query('127.0.0.1:53', $query);
@@ -103,8 +98,7 @@ class ExecutorTest extends TestCase
     }
 
     /** @test */
-    public function resolveShouldRejectIfResponseIsTruncated()
-    {
+    public function resolveShouldRejectIfResponseIsTruncated() {
         $timer = $this->createTimerMock();
 
         $this->loop
@@ -129,8 +123,7 @@ class ExecutorTest extends TestCase
     }
 
     /** @test */
-    public function resolveShouldFailIfUdpThrow()
-    {
+    public function resolveShouldFailIfUdpThrow() {
         $this->loop
             ->expects($this->never())
             ->method('addTimer');
@@ -154,8 +147,7 @@ class ExecutorTest extends TestCase
     }
 
     /** @test */
-    public function resolveShouldCancelTimerWhenFullResponseIsReceived()
-    {
+    public function resolveShouldCancelTimerWhenFullResponseIsReceived() {
         $conn = $this->createConnectionMock();
 
         $this->parser
@@ -189,14 +181,13 @@ class ExecutorTest extends TestCase
     }
 
     /** @test */
-    public function resolveShouldCloseConnectionOnTimeout()
-    {
+    public function resolveShouldCloseConnectionOnTimeout() {
         $this->executor = $this->createExecutorMock();
         $this->executor
             ->expects($this->at(0))
             ->method('createConnection')
             ->with('8.8.8.8:53', 'udp')
-            ->will($this->returnNewConnectionMock(false));
+            ->will($this->returnNewConnectionMock(FALSE));
 
         $timer = $this->createTimerMock();
 
@@ -223,8 +214,7 @@ class ExecutorTest extends TestCase
         Block\await($promise, $this->loop);
     }
 
-    private function returnStandardResponse()
-    {
+    private function returnStandardResponse() {
         $that = $this;
         $callback = function ($data) use ($that) {
             $response = new Message();
@@ -235,8 +225,7 @@ class ExecutorTest extends TestCase
         return $this->returnCallback($callback);
     }
 
-    private function returnTruncatedResponse()
-    {
+    private function returnTruncatedResponse() {
         $that = $this;
         $callback = function ($data) use ($that) {
             $response = new Message();
@@ -247,8 +236,7 @@ class ExecutorTest extends TestCase
         return $this->returnCallback($callback);
     }
 
-    public function convertMessageToStandardResponse(Message $response)
-    {
+    public function convertMessageToStandardResponse(Message $response) {
         $response->header->set('qr', 1);
         $response->questions[] = new Record('igor.io', Message::TYPE_A, Message::CLASS_IN);
         $response->answers[] = new Record('igor.io', Message::TYPE_A, Message::CLASS_IN, 3600, '178.79.169.131');
@@ -257,8 +245,7 @@ class ExecutorTest extends TestCase
         return $response;
     }
 
-    public function convertMessageToTruncatedResponse(Message $response)
-    {
+    public function convertMessageToTruncatedResponse(Message $response) {
         $this->convertMessageToStandardResponse($response);
         $response->header->set('tc', 1);
         $response->prepare();
@@ -266,8 +253,7 @@ class ExecutorTest extends TestCase
         return $response;
     }
 
-    private function returnNewConnectionMock($emitData = true)
-    {
+    private function returnNewConnectionMock($emitData = TRUE) {
         $conn = $this->createConnectionMock($emitData);
 
         $callback = function () use ($conn) {
@@ -277,29 +263,26 @@ class ExecutorTest extends TestCase
         return $this->returnCallback($callback);
     }
 
-    private function createConnectionMock($emitData = true)
-    {
+    private function createConnectionMock($emitData = TRUE) {
         $conn = $this->getMockBuilder('React\Stream\DuplexStreamInterface')->getMock();
         $conn
             ->expects($this->any())
             ->method('on')
             ->with('data', $this->isInstanceOf('Closure'))
             ->will($this->returnCallback(function ($name, $callback) use ($emitData) {
-                $emitData && $callback(null);
+                $emitData && $callback(NULL);
             }));
 
         return $conn;
     }
 
-    private function createTimerMock()
-    {
+    private function createTimerMock() {
         return $this->getMockBuilder(
             interface_exists('React\EventLoop\TimerInterface') ? 'React\EventLoop\TimerInterface' : 'React\EventLoop\Timer\TimerInterface'
         )->getMock();
     }
 
-    private function createExecutorMock()
-    {
+    private function createExecutorMock() {
         return $this->getMockBuilder('React\Dns\Query\Executor')
             ->setConstructorArgs(array($this->loop, $this->parser, $this->dumper))
             ->setMethods(array('createConnection'))

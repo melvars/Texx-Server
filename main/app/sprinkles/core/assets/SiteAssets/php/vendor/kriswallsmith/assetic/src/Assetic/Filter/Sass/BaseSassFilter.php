@@ -12,18 +12,15 @@ abstract class BaseSassFilter extends BaseProcessFilter implements DependencyExt
 {
     protected $loadPaths = array();
 
-    public function setLoadPaths(array $loadPaths)
-    {
+    public function setLoadPaths(array $loadPaths) {
         $this->loadPaths = $loadPaths;
     }
 
-    public function addLoadPath($loadPath)
-    {
+    public function addLoadPath($loadPath) {
         $this->loadPaths[] = $loadPath;
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
+    public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         $loadPaths = $this->loadPaths;
         if ($loadPath) {
             array_unshift($loadPaths, $loadPath);
@@ -49,16 +46,16 @@ abstract class BaseSassFilter extends BaseProcessFilter implements DependencyExt
                 );
             } else {
                 $needles = array(
-                    $reference.'.scss',
-                    $reference.'.sass',
-                    self::partialize($reference).'.scss',
-                    self::partialize($reference).'.sass',
+                    $reference . '.scss',
+                    $reference . '.sass',
+                    self::partialize($reference) . '.scss',
+                    self::partialize($reference) . '.sass',
                 );
             }
 
             foreach ($loadPaths as $loadPath) {
                 foreach ($needles as $needle) {
-                    if (file_exists($file = $loadPath.'/'.$needle)) {
+                    if (file_exists($file = $loadPath . '/' . $needle)) {
                         $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
                         foreach ($coll as $leaf) {
                             /** @var $leaf AssetInterface */
@@ -76,18 +73,17 @@ abstract class BaseSassFilter extends BaseProcessFilter implements DependencyExt
         return $children;
     }
 
-    private static function partialize($reference)
-    {
+    private static function partialize($reference) {
         $parts = pathinfo($reference);
 
         if ('.' === $parts['dirname']) {
-            $partial = '_'.$parts['filename'];
+            $partial = '_' . $parts['filename'];
         } else {
-            $partial = $parts['dirname'].DIRECTORY_SEPARATOR.'_'.$parts['filename'];
+            $partial = $parts['dirname'] . DIRECTORY_SEPARATOR . '_' . $parts['filename'];
         }
 
         if (isset($parts['extension'])) {
-            $partial .= '.'.$parts['extension'];
+            $partial .= '.' . $parts['extension'];
         }
 
         return $partial;

@@ -24,6 +24,7 @@ function InitializeChatServer() {
     var ChatMessages = $("#ChatMessages");
     var TypingIndicatorAnimationElement = "<div class='spinner'><div class='bounce1'></div><div class='bounce2'></div><div class='bounce3'></div></div>";
 
+    var WebSocketConnectTimerStart = performance.now(); // START CONNECTION EXECUTION TIMER
     const ChatSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
     ChatSocket.onerror = function () {
         setTimeout(function () {
@@ -33,14 +34,15 @@ function InitializeChatServer() {
     };
     ChatSocket.onopen = function () {
         // CONNECTION SUCCESSFUL!
-        console.log("%c[CHATSOCKET LOGGER] Chat connection established!", "color: darkorange");
+        var WebSocketConnectTimerEnd = performance.now(); // END CONNECTION EXECUTION TIMER
+        console.log("%c[CHATSOCKET LOGGER] Chat connection established! (Took " + +(WebSocketConnectTimerEnd - WebSocketConnectTimerStart) + " milliseconds)", "color: darkorange");
         // START VERIFICATION
         ChatSocket.send(JSON.stringify({
             ClientMessageType: "Verify",
             Cookie: document.cookie,
             UserID: current_user_id
         }));
-        console.log("%c[CHATSOCKET LOGGER] Started chat verification process...", "color: grey");
+        console.log("%c[CHATSOCKET LOGGER] Started chat verification process...", "color: gray");
         // GOT MESSAGE
         ChatSocket.onmessage = function (e) {
             // DECLARATIONS
@@ -60,7 +62,6 @@ function InitializeChatServer() {
             // GLOBAL OVERWRITES
             LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
             Username = MessageObject.Username;
-
 
             // GET OWN PUBLIC KEY FIRST
             if (!(current_username in PublicKey)) {
@@ -91,7 +92,7 @@ function InitializeChatServer() {
             if (!ServerMessage) { // NO SERVER MESSAGE -> SENT BY USER
                 // DECRYPT MESSAGE
                 options = {
-                    message: openpgp.message.readArmored("-----BEGIN PGP MESSAGE-----\r\nVersion: OpenPGP.js v3.0.9\r\nComment: https://openpgpjs.org\r\n\r\n" + Message + "\r\n\-----END PGP MESSAGE-----\r\n"),
+                    message: openpgp.message.readArmored("-----BEGIN PGP MESSAGE-----\r\nVersion: OpenPGP.js v3.0.9\r\nComment: https://openpgpjs.org\r\n\r\n" + Message + "\r\n\-----END PGP MESSAGE-----\r\n"), // FORMAT MESSAGE
                     publicKeys: openpgp.key.readArmored(PublicKey[Username]).keys, // FOR VERIFICATION
                     privateKeys: [privKeyObj]
                 };
@@ -150,24 +151,25 @@ function InitializeChatServer() {
                 } else if (ServerMessageType === "TypingState") { // TYPE: SOMEBODY'S TYPING STATE CHANGED!
                     if (State) { // IF 'SOMEBODY' STARTED TYPING
                         if (WasHimself) { // IDENTIFY 'SOMEBODY' -> WAS HIMSELF -> NOT THAT IMPORTANT (USER KNOWS WHEN HE STARTS TYPING?)
-                            console.log("%c[CHAT TYPING LOGGER] You started typing!", "color: grey");
+                            console.log("%c[CHAT TYPING LOGGER] You started typing!", "color: gray");
                         } else if (!WasHimself) { // IDENTIFY 'SOMEBODY' -> WAS OTHER USER -> SHOW TYPING ANIMATION ON RECEIVER'S SIDE
                             ChatMessages.append("<div class='MessageWrapper'><div class='ChatMessage TypingIndicatorMessage AloneMessage'>" + TypingIndicatorAnimationElement + "</div></div>");
-                            console.log("%c[CHAT TYPING LOGGER] " + Username + " started typing!", "color: grey");
+                            console.log("%c[CHAT TYPING LOGGER] " + Username + " started typing!", "color: gray");
                         }
                     } else if (!State) { // IF 'SOMEBODY' STOPPED TYPING
                         if (WasHimself) { // IDENTIFY 'SOMEBODY' -> WAS HIMSELF -> NOT THAT IMPORTANT (USER KNOWS WHEN HE STOPS TYPING?)
-                            console.log("%c[CHAT TYPING LOGGER] You stopped typing!", "color: grey");
+                            console.log("%c[CHAT TYPING LOGGER] You stopped typing!", "color: gray");
                         } else if (!WasHimself) { // IDENTIFY 'SOMEBODY' -> WAS OTHER USER -> REMOVE TYPING ANIMATION
                             //TypingIndicatorMessage.fadeOut("fast");
                             TypingIndicatorMessage.remove();
-                            console.log("%c[CHAT TYPING LOGGER] " + Username + " stopped typing!", "color: grey");
+                            console.log("%c[CHAT TYPING LOGGER] " + Username + " stopped typing!", "color: gray");
                         }
                     }
                 } else if (ServerMessageType === "Verify") { // TYPE: SERVER CHECKED ACCESS -- MOSTLY HANDLED IN BACKEND
                     if (Granted) {
                         console.log("%c[CHATSOCKET LOGGER] Chat access granted!", "color: green");
                     } else if (!Granted) {
+                        triggerErrorPopup("ChatNotAllowed");
                         console.log("%c[CHATSOCKET LOGGER] Chat access denied!", "color: red");
                     }
                 } else if (ServerMessageType === "SetReceiver") { // TYPE: SERVER CHECKED ACCESS -- MOSTLY HANDLED IN BACKEND

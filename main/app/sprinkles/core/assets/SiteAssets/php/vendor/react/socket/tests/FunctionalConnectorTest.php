@@ -12,8 +12,7 @@ class FunctionalConnectorTest extends TestCase
     const TIMEOUT = 1.0;
 
     /** @test */
-    public function connectionToTcpServerShouldSucceedWithLocalhost()
-    {
+    public function connectionToTcpServerShouldSucceedWithLocalhost() {
         $loop = Factory::create();
 
         $server = new TcpServer(9998, $loop);

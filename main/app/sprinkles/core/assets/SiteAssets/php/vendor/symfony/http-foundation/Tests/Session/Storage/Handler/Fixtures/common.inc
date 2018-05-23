@@ -3,7 +3,7 @@
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler;
 
 $parent = __DIR__;
-while (!@file_exists($parent.'/vendor/autoload.php')) {
+while (!@file_exists($parent . '/vendor/autoload.php')) {
     if (!@file_exists($parent)) {
         // open_basedir restriction in effect
         break;
@@ -16,7 +16,7 @@ while (!@file_exists($parent.'/vendor/autoload.php')) {
     $parent = dirname($parent);
 }
 
-require $parent.'/vendor/autoload.php';
+require $parent . '/vendor/autoload.php';
 
 error_reporting(-1);
 ini_set('html_errors', 0);
@@ -55,20 +55,17 @@ class TestSessionHandler extends AbstractSessionHandler
 {
     private $data;
 
-    public function __construct($data = '')
-    {
+    public function __construct($data = '') {
         $this->data = $data;
     }
 
-    public function open($path, $name)
-    {
+    public function open($path, $name) {
         echo __FUNCTION__, "\n";
 
         return parent::open($path, $name);
     }
 
-    public function validateId($sessionId)
-    {
+    public function validateId($sessionId) {
         echo __FUNCTION__, "\n";
 
         return parent::validateId($sessionId);
@@ -77,8 +74,7 @@ class TestSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function read($sessionId)
-    {
+    public function read($sessionId) {
         echo __FUNCTION__, "\n";
 
         return parent::read($sessionId);
@@ -87,18 +83,16 @@ class TestSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $data)
-    {
+    public function updateTimestamp($sessionId, $data) {
         echo __FUNCTION__, "\n";
 
-        return true;
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function write($sessionId, $data)
-    {
+    public function write($sessionId, $data) {
         echo __FUNCTION__, "\n";
 
         return parent::write($sessionId, $data);
@@ -107,45 +101,39 @@ class TestSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function destroy($sessionId)
-    {
+    public function destroy($sessionId) {
         echo __FUNCTION__, "\n";
 
         return parent::destroy($sessionId);
     }
 
-    public function close()
-    {
+    public function close() {
         echo __FUNCTION__, "\n";
 
-        return true;
+        return TRUE;
     }
 
-    public function gc($maxLifetime)
-    {
+    public function gc($maxLifetime) {
         echo __FUNCTION__, "\n";
 
-        return true;
+        return TRUE;
     }
 
-    protected function doRead($sessionId)
-    {
-        echo __FUNCTION__.': ', $this->data, "\n";
+    protected function doRead($sessionId) {
+        echo __FUNCTION__ . ': ', $this->data, "\n";
 
         return $this->data;
     }
 
-    protected function doWrite($sessionId, $data)
-    {
-        echo __FUNCTION__.': ', $data, "\n";
+    protected function doWrite($sessionId, $data) {
+        echo __FUNCTION__ . ': ', $data, "\n";
 
-        return true;
+        return TRUE;
     }
 
-    protected function doDestroy($sessionId)
-    {
+    protected function doDestroy($sessionId) {
         echo __FUNCTION__, "\n";
 
-        return true;
+        return TRUE;
     }
 }

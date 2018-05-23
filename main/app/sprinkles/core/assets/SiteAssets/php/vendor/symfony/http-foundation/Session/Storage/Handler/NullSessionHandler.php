@@ -21,56 +21,49 @@ class NullSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function close()
-    {
-        return true;
+    public function close() {
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateId($sessionId)
-    {
-        return true;
+    public function validateId($sessionId) {
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doRead($sessionId)
-    {
+    protected function doRead($sessionId) {
         return '';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $data)
-    {
-        return true;
+    public function updateTimestamp($sessionId, $data) {
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doWrite($sessionId, $data)
-    {
-        return true;
+    protected function doWrite($sessionId, $data) {
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doDestroy($sessionId)
-    {
-        return true;
+    protected function doDestroy($sessionId) {
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime)
-    {
-        return true;
+    public function gc($maxlifetime) {
+        return TRUE;
     }
 }

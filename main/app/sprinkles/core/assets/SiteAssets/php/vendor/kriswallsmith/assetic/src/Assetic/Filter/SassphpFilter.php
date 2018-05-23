@@ -26,8 +26,7 @@ class SassphpFilter implements DependencyExtractorInterface
     private $includePaths = array();
     private $outputStyle;
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $sass = new \Sass();
 
         $includePaths = array_merge(
@@ -45,31 +44,26 @@ class SassphpFilter implements DependencyExtractorInterface
         $asset->setContent($css);
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 
-    public function setOutputStyle($outputStyle)
-    {
+    public function setOutputStyle($outputStyle) {
         $this->outputStyle = $outputStyle;
     }
 
-    public function setIncludePaths(array $paths)
-    {
+    public function setIncludePaths(array $paths) {
         $this->includePaths = $paths;
     }
 
-    public function addIncludePath($path)
-    {
+    public function addIncludePath($path) {
         $this->includePaths[] = $path;
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
+    public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         $children = array();
 
         $includePaths = $this->includePaths;
-        if (null !== $loadPath && !in_array($loadPath, $includePaths)) {
+        if (NULL !== $loadPath && !in_array($loadPath, $includePaths)) {
             array_unshift($includePaths, $loadPath);
         }
 
@@ -113,8 +107,7 @@ class SassphpFilter implements DependencyExtractorInterface
         return $children;
     }
 
-    private function partialize($reference)
-    {
+    private function partialize($reference) {
         $parts = pathinfo($reference);
 
         if ('.' === $parts['dirname']) {

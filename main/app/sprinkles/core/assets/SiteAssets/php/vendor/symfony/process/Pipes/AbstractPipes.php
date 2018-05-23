@@ -24,27 +24,25 @@ abstract class AbstractPipes implements PipesInterface
 
     private $inputBuffer = '';
     private $input;
-    private $blocked = true;
+    private $blocked = TRUE;
 
     /**
      * @param resource|string|int|float|bool|\Iterator|null $input
      */
-    public function __construct($input)
-    {
+    public function __construct($input) {
         if (is_resource($input) || $input instanceof \Iterator) {
             $this->input = $input;
-        } elseif (is_string($input)) {
+        } else if (is_string($input)) {
             $this->inputBuffer = $input;
         } else {
-            $this->inputBuffer = (string) $input;
+            $this->inputBuffer = (string)$input;
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function close()
-    {
+    public function close() {
         foreach ($this->pipes as $pipe) {
             fclose($pipe);
         }
@@ -56,19 +54,17 @@ abstract class AbstractPipes implements PipesInterface
      *
      * @return bool
      */
-    protected function hasSystemCallBeenInterrupted()
-    {
+    protected function hasSystemCallBeenInterrupted() {
         $lastError = error_get_last();
 
         // stream_select returns false when the `select` system call is interrupted by an incoming signal
-        return isset($lastError['message']) && false !== stripos($lastError['message'], 'interrupted system call');
+        return isset($lastError['message']) && FALSE !== stripos($lastError['message'], 'interrupted system call');
     }
 
     /**
      * Unblocks streams.
      */
-    protected function unblock()
-    {
+    protected function unblock() {
         if (!$this->blocked) {
             return;
         }
@@ -80,7 +76,7 @@ abstract class AbstractPipes implements PipesInterface
             stream_set_blocking($this->input, 0);
         }
 
-        $this->blocked = false;
+        $this->blocked = FALSE;
     }
 
     /**
@@ -88,8 +84,7 @@ abstract class AbstractPipes implements PipesInterface
      *
      * @throws InvalidArgumentException When an input iterator yields a non supported value
      */
-    protected function write()
-    {
+    protected function write() {
         if (!isset($this->pipes[0])) {
             return;
         }
@@ -97,21 +92,21 @@ abstract class AbstractPipes implements PipesInterface
 
         if ($input instanceof \Iterator) {
             if (!$input->valid()) {
-                $input = null;
-            } elseif (is_resource($input = $input->current())) {
+                $input = NULL;
+            } else if (is_resource($input = $input->current())) {
                 stream_set_blocking($input, 0);
-            } elseif (!isset($this->inputBuffer[0])) {
+            } else if (!isset($this->inputBuffer[0])) {
                 if (!is_string($input)) {
                     if (!is_scalar($input)) {
                         throw new InvalidArgumentException(sprintf('%s yielded a value of type "%s", but only scalars and stream resources are supported', get_class($this->input), gettype($input)));
                     }
-                    $input = (string) $input;
+                    $input = (string)$input;
                 }
                 $this->inputBuffer = $input;
                 $this->input->next();
-                $input = null;
+                $input = NULL;
             } else {
-                $input = null;
+                $input = NULL;
             }
         }
 
@@ -119,7 +114,7 @@ abstract class AbstractPipes implements PipesInterface
         $w = array($this->pipes[0]);
 
         // let's have a look if something changed in streams
-        if (false === @stream_select($r, $w, $e, 0, 0)) {
+        if (FALSE === @stream_select($r, $w, $e, 0, 0)) {
             return;
         }
 
@@ -133,7 +128,7 @@ abstract class AbstractPipes implements PipesInterface
             }
 
             if ($input) {
-                for (;;) {
+                for (; ;) {
                     $data = fread($input, self::CHUNK_SIZE);
                     if (!isset($data[0])) {
                         break;
@@ -150,7 +145,7 @@ abstract class AbstractPipes implements PipesInterface
                     if ($this->input instanceof \Iterator) {
                         $this->input->next();
                     } else {
-                        $this->input = null;
+                        $this->input = NULL;
                     }
                 }
             }
@@ -158,10 +153,10 @@ abstract class AbstractPipes implements PipesInterface
 
         // no input to read on resource, buffer is empty
         if (!isset($this->inputBuffer[0]) && !($this->input instanceof \Iterator ? $this->input->valid() : $this->input)) {
-            $this->input = null;
+            $this->input = NULL;
             fclose($this->pipes[0]);
             unset($this->pipes[0]);
-        } elseif (!$w) {
+        } else if (!$w) {
             return array($this->pipes[0]);
         }
     }

@@ -25,17 +25,15 @@ class TwigFormulaLoader implements FormulaLoaderInterface
     private $twig;
     private $logger;
 
-    public function __construct(\Twig_Environment $twig, LoggerInterface $logger = null)
-    {
+    public function __construct(\Twig_Environment $twig, LoggerInterface $logger = NULL) {
         $this->twig = $twig;
         $this->logger = $logger;
     }
 
-    public function load(ResourceInterface $resource)
-    {
+    public function load(ResourceInterface $resource) {
         try {
-            $tokens = $this->twig->tokenize(new \Twig_Source($resource->getContent(), (string) $resource));
-            $nodes  = $this->twig->parse($tokens);
+            $tokens = $this->twig->tokenize(new \Twig_Source($resource->getContent(), (string)$resource));
+            $nodes = $this->twig->parse($tokens);
         } catch (\Exception $e) {
             if ($this->logger) {
                 $this->logger->error(sprintf('The template "%s" contains an error: %s', $resource, $e->getMessage()));
@@ -54,8 +52,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
      *
      * @return array An array of asset formulae indexed by name
      */
-    private function loadNode(\Twig_Node $node)
-    {
+    private function loadNode(\Twig_Node $node) {
         $formulae = array();
 
         if ($node instanceof AsseticNode) {
@@ -63,24 +60,24 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                 $node->getAttribute('inputs'),
                 $node->getAttribute('filters'),
                 array(
-                    'output'  => $node->getAttribute('asset')->getTargetPath(),
-                    'name'    => $node->getAttribute('name'),
-                    'debug'   => $node->getAttribute('debug'),
+                    'output' => $node->getAttribute('asset')->getTargetPath(),
+                    'name' => $node->getAttribute('name'),
+                    'debug' => $node->getAttribute('debug'),
                     'combine' => $node->getAttribute('combine'),
-                    'vars'    => $node->getAttribute('vars'),
+                    'vars' => $node->getAttribute('vars'),
                 ),
             );
-        } elseif ($node instanceof AsseticFilterNode) {
+        } else if ($node instanceof AsseticFilterNode) {
             $name = $node->getAttribute('name');
 
             $arguments = array();
             foreach ($node->getNode('arguments') as $argument) {
-                $arguments[] = eval('return '.$this->twig->compile($argument).';');
+                $arguments[] = eval('return ' . $this->twig->compile($argument) . ';');
             }
 
             $invoker = $this->twig->getExtension('Assetic\Extension\Twig\AsseticExtension')->getFilterInvoker($name);
 
-            $inputs  = isset($arguments[0]) ? (array) $arguments[0] : array();
+            $inputs = isset($arguments[0]) ? (array)$arguments[0] : array();
             $filters = $invoker->getFilters();
             $options = array_replace($invoker->getOptions(), isset($arguments[1]) ? $arguments[1] : array());
 

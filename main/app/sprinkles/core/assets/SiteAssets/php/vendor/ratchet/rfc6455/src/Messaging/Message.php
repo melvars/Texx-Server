@@ -1,7 +1,9 @@
 <?php
+
 namespace Ratchet\RFC6455\Messaging;
 
-class Message implements \IteratorAggregate, MessageInterface {
+class Message implements \IteratorAggregate, MessageInterface
+{
     /**
      * @var \SplDoublyLinkedList
      */
@@ -27,7 +29,7 @@ class Message implements \IteratorAggregate, MessageInterface {
      */
     public function isCoalesced() {
         if (count($this->_frames) == 0) {
-            return false;
+            return FALSE;
         }
 
         $last = $this->_frames->top();

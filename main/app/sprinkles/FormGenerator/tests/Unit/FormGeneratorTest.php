@@ -6,6 +6,7 @@
  * @copyright Copyright (c) 2017 Louis Charette
  * @license   https://github.com/lcharette/UF_FormGenerator/blob/master/LICENSE (MIT License)
  */
+
 namespace UserFrosting\Tests\Unit;
 
 use UserFrosting\Tests\TestCase;
@@ -29,8 +30,7 @@ class FormGeneratorTest extends TestCase
 {
     var $basePath;
 
-    public function setUp()
-    {
+    public function setUp() {
         parent::setUp();
         $this->basePath = __DIR__ . '/data';
     }
@@ -38,8 +38,7 @@ class FormGeneratorTest extends TestCase
     /**
      * Test the base `Test` element class works on it's own
      */
-    public function testTextFormElement()
-    {
+    public function testTextFormElement() {
         // Get Schema
         $loader = new YamlFileLoader($this->basePath . '/good.json');
         $schema = new RequestSchemaRepository($loader->load());
@@ -76,8 +75,7 @@ class FormGeneratorTest extends TestCase
      * value is passed to the constructor. Should return the same as the
      * previous test, but with the `value` setup instead of empty
      */
-    public function testTextFormElementWithData()
-    {
+    public function testTextFormElementWithData() {
         // Get Schema
         $loader = new YamlFileLoader($this->basePath . '/good.json');
         $schema = new RequestSchemaRepository($loader->load());
@@ -113,8 +111,7 @@ class FormGeneratorTest extends TestCase
      * This test is the same as the one before, but we test the `owener` field with some data
      * This make sure the `default` schema field will work correctly when empty data is passed
      */
-    public function testTextFormElementWithEmptyData()
-    {
+    public function testTextFormElementWithEmptyData() {
         // Get Schema
         $loader = new YamlFileLoader($this->basePath . '/good.json');
         $schema = new RequestSchemaRepository($loader->load());
@@ -151,8 +148,7 @@ class FormGeneratorTest extends TestCase
      * Test the Form Class.
      * Run the test with no current values (empty form)
      */
-    public function testForm()
-    {
+    public function testForm() {
         // Get Schema
         $loader = new YamlFileLoader($this->basePath . '/good.json');
         $schema = new RequestSchemaRepository($loader->load());
@@ -233,7 +229,7 @@ class FormGeneratorTest extends TestCase
                 'name' => 'active',
                 'id' => 'field_active',
                 'type' => 'checkbox',
-                'binary' => true
+                'binary' => TRUE
             ],
             'hidden' => [
                 'value' => 'Something',
@@ -257,8 +253,7 @@ class FormGeneratorTest extends TestCase
     /**
      * Test the Form Clas with values to make sure filled form works correctly
      */
-    public function testFormWithData()
-    {
+    public function testFormWithData() {
         // Get Schema
         $loader = new YamlFileLoader($this->basePath . '/good.json');
         $schema = new RequestSchemaRepository($loader->load());
@@ -271,7 +266,7 @@ class FormGeneratorTest extends TestCase
             "status" => 1,
             "hiddenString" => "The Bar secret code is...",
             "completion" => 12,
-            "active" => true
+            "active" => TRUE
         ];
 
         // Generate the form
@@ -351,7 +346,7 @@ class FormGeneratorTest extends TestCase
                 'id' => 'field_active',
                 'type' => 'checkbox',
                 'checked' => 'checked', //Value here !
-                'binary' => true
+                'binary' => TRUE
             ],
             'hidden' => [
                 'value' => 'Something',
@@ -376,8 +371,7 @@ class FormGeneratorTest extends TestCase
      * Test a non existant input type. It's supposed to not find the class and
      * default back to the `Text` element class.
      */
-    public function testUndefinedFormElement()
-    {
+    public function testUndefinedFormElement() {
         // Get Schema
         $loader = new YamlFileLoader($this->basePath . '/bad.json');
         $schema = new RequestSchemaRepository($loader->load());

@@ -1,4 +1,5 @@
 <?php
+
 namespace Nubs\RandomNameGenerator;
 
 use PHPUnit_Framework_TestCase;
@@ -22,8 +23,7 @@ class AllTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function getNameBasic()
-    {
+    public function getNameBasic() {
         $generator = All::create();
         $name = $generator->getName();
         $this->assertRegexp('/.+/', $name);
@@ -40,8 +40,7 @@ class AllTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function getNameForced()
-    {
+    public function getNameForced() {
         $numberGenerator = $this->createMock('\Cinam\Randomizer\NumberGenerator');
         $numberGenerator->expects($this->exactly(2))->method('getInt')->will($this->onConsecutiveCalls(20, 5));
         $randomizer = new Randomizer($numberGenerator);
@@ -63,8 +62,7 @@ class AllTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function toStringBasic()
-    {
+    public function toStringBasic() {
         $generator = All::create();
         $name = (string)$generator;
         $this->assertRegexp('/.+/', $name);

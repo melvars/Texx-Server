@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Psr7;
 
 use Psr\Http\Message\StreamInterface;
@@ -19,10 +20,9 @@ class LazyOpenStream implements StreamInterface
 
     /**
      * @param string $filename File to lazily open
-     * @param string $mode     fopen mode to use when opening the stream
+     * @param string $mode fopen mode to use when opening the stream
      */
-    public function __construct($filename, $mode)
-    {
+    public function __construct($filename, $mode) {
         $this->filename = $filename;
         $this->mode = $mode;
     }
@@ -32,8 +32,7 @@ class LazyOpenStream implements StreamInterface
      *
      * @return StreamInterface
      */
-    protected function createStream()
-    {
+    protected function createStream() {
         return stream_for(try_fopen($this->filename, $this->mode));
     }
 }

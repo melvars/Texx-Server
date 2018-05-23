@@ -1,5 +1,7 @@
 <?php
+
 namespace Ratchet\Http;
+
 use Ratchet\MessageInterface;
 use Ratchet\ConnectionInterface;
 use GuzzleHttp\Psr7 as gPsr;
@@ -9,7 +11,8 @@ use GuzzleHttp\Psr7 as gPsr;
  * and parses HTTP headers, returning a PSR-7 Request object
  * once it's been buffered
  */
-class HttpRequestParser implements MessageInterface {
+class HttpRequestParser implements MessageInterface
+{
     const EOM = "\r\n\r\n";
 
     /**
@@ -21,7 +24,7 @@ class HttpRequestParser implements MessageInterface {
 
     /**
      * @param \Ratchet\ConnectionInterface $context
-     * @param string                       $data Data stream to buffer
+     * @param string $data Data stream to buffer
      * @return \Psr\Http\Message\RequestInterface
      * @throws \OverflowException If the message buffer has become too large
      */
@@ -47,7 +50,7 @@ class HttpRequestParser implements MessageInterface {
 
     /**
      * Determine if the message has been buffered as per the HTTP specification
-     * @param  string  $message
+     * @param  string $message
      * @return boolean
      */
     public function isEom($message) {

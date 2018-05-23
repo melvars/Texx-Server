@@ -15,7 +15,7 @@ $fm->define('UserFrosting\Sprinkle\Account\Database\Models\User')->setDefinition
     'user_name' => Faker::unique()->firstNameMale(),
     'first_name' => Faker::firstNameMale(),
     'last_name' => Faker::firstNameMale(),
-    'email'    => Faker::unique()->email(),
+    'email' => Faker::unique()->email(),
     'locale' => 'en_US',
     'flag_verified' => 1,
     'flag_enabled' => 1,

@@ -6,8 +6,7 @@ use React\Socket\Connection;
 
 class ConnectionTest extends TestCase
 {
-    public function testCloseConnectionWillCloseSocketResource()
-    {
+    public function testCloseConnectionWillCloseSocketResource() {
         if (defined('HHVM_VERSION')) {
             $this->markTestSkipped('HHVM does not support socket operation on test memory stream');
         }
@@ -21,8 +20,7 @@ class ConnectionTest extends TestCase
         $this->assertFalse(is_resource($resource));
     }
 
-    public function testCloseConnectionWillRemoveResourceFromLoopBeforeClosingResource()
-    {
+    public function testCloseConnectionWillRemoveResourceFromLoopBeforeClosingResource() {
         if (defined('HHVM_VERSION')) {
             $this->markTestSkipped('HHVM does not support socket operation on test memory stream');
         }
@@ -31,10 +29,10 @@ class ConnectionTest extends TestCase
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('addWriteStream')->with($resource);
 
-        $onRemove = null;
+        $onRemove = NULL;
         $loop->expects($this->once())->method('removeWriteStream')->with($this->callback(function ($param) use (&$onRemove) {
             $onRemove = is_resource($param);
-            return true;
+            return TRUE;
         }));
 
         $connection = new Connection($resource, $loop);

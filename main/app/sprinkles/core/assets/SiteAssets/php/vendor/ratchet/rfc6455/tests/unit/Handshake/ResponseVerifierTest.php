@@ -1,11 +1,14 @@
 <?php
+
 namespace Ratchet\RFC6455\Test\Unit\Handshake;
+
 use Ratchet\RFC6455\Handshake\ResponseVerifier;
 
 /**
  * @covers Ratchet\RFC6455\Handshake\ResponseVerifier
  */
-class ResponseVerifierTest extends \PHPUnit_Framework_TestCase {
+class ResponseVerifierTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * @var ResponseVerifier
      */
@@ -17,11 +20,11 @@ class ResponseVerifierTest extends \PHPUnit_Framework_TestCase {
 
     public static function subProtocolsProvider() {
         return [
-            [true,  ['a'], ['a']]
-          , [true,  ['b', 'a'], ['c', 'd', 'a']]
-          , [false, ['a', 'b', 'c'], ['d']]
-          , [true,  [], []]
-          , [true,  ['a', 'b'], []]
+            [TRUE, ['a'], ['a']]
+            , [TRUE, ['b', 'a'], ['c', 'd', 'a']]
+            , [FALSE, ['a', 'b', 'c'], ['d']]
+            , [TRUE, [], []]
+            , [TRUE, ['a', 'b'], []]
         ];
     }
 

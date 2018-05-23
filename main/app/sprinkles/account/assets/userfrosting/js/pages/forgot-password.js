@@ -6,13 +6,13 @@
  *
  * Target page: account/forgot-password
  */
-$(document).ready(function() {
+$(document).ready(function () {
 
     // TODO: Process form
     $("#request-password-reset").ufForm({
         validators: page.validators.forgot_password,
         msgTarget: $("#alerts-page")
-    }).on("submitSuccess.ufForm", function() {
+    }).on("submitSuccess.ufForm", function () {
         // Forward to login page on success
         window.location.replace(site.uri.public + "/account/sign-in");
     });

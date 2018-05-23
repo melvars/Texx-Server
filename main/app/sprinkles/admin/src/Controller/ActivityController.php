@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -31,8 +32,7 @@ class ActivityController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getList($request, $response, $args)
-    {
+    public function getList($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -67,8 +67,7 @@ class ActivityController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageList($request, $response, $args)
-    {
+    public function pageList($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 

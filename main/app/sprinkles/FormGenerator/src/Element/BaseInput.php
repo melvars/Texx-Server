@@ -6,6 +6,7 @@
  * @copyright Copyright (c) 2017 Louis Charette
  * @license   https://github.com/lcharette/UF_FormGenerator/blob/master/LICENSE (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\FormGenerator\Element;
 
 use UserFrosting\Sprinkle\FormGenerator\Element\InputInterface;
@@ -20,7 +21,8 @@ use UserFrosting\Sprinkle\Core\Facades\Debug;
  * @abstract
  * @implements InputInterface
  */
-abstract class BaseInput implements InputInterface {
+abstract class BaseInput implements InputInterface
+{
 
     /**
      * @var String The name of the input.
@@ -46,8 +48,7 @@ abstract class BaseInput implements InputInterface {
      * @param mixed $value (default: null)
      * @return void
      */
-    public function __construct($name, $element, $value = null)
-    {
+    public function __construct($name, $element, $value = NULL) {
         $this->name = $name;
         $this->element = $element;
         $this->value = $value;
@@ -60,8 +61,7 @@ abstract class BaseInput implements InputInterface {
      * @access public
      * @return void
      */
-    public function parse()
-    {
+    public function parse() {
         $this->applyTransformations();
         return $this->element;
     }
@@ -89,7 +89,7 @@ abstract class BaseInput implements InputInterface {
      * @return string The input current value
      */
     public function getValue() {
-        if (isset($this->value) && $this->value !== null) {
+        if (isset($this->value) && $this->value !== NULL) {
             return $this->value;
         } else if (isset($this->element['default'])) {
             return $this->element['default'];

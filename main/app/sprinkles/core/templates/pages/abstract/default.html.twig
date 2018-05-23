@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body_attributes %}
-    class="hold-transition skin-{{site.AdminLTE.skin}} layout-top-nav"
+    class="hold-transition skin-{{ site.AdminLTE.skin }} layout-top-nav"
 {% endblock %}
 
 {% block content %}
@@ -22,7 +22,10 @@
                 {% block content_header %}
                     <section class="content-header">
                         <h1>{% block header_title %}{{ block('page_title') }}{% endblock %}</h1>
-                        {% if block('page_description') is not empty %}<h1><small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small></h1>{% endif %}
+                        {% if block('page_description') is not empty %}
+                            <h1>
+                            <small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small>
+                            </h1>{% endif %}
                         {% block breadcrumb %}
                             {% include 'navigation/breadcrumb.html.twig' with {page_title: block('page_title')} %}
                         {% endblock %}

@@ -37,30 +37,26 @@ class SprocketsFilter extends BaseProcessFilter implements DependencyExtractorIn
      * Constructor.
      *
      * @param string $sprocketsLib Path to the Sprockets lib/ directory
-     * @param string $rubyBin      Path to the ruby binary
+     * @param string $rubyBin Path to the ruby binary
      */
-    public function __construct($sprocketsLib = null, $rubyBin = '/usr/bin/ruby')
-    {
+    public function __construct($sprocketsLib = NULL, $rubyBin = '/usr/bin/ruby') {
         $this->sprocketsLib = $sprocketsLib;
         $this->rubyBin = $rubyBin;
         $this->includeDirs = array();
     }
 
-    public function addIncludeDir($directory)
-    {
+    public function addIncludeDir($directory) {
         $this->includeDirs[] = $directory;
     }
 
-    public function setAssetRoot($assetRoot)
-    {
+    public function setAssetRoot($assetRoot) {
         $this->assetRoot = $assetRoot;
     }
 
     /**
      * Hack around a bit, get the job done.
      */
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         static $format = <<<'EOF'
 #!/usr/bin/env ruby
 
@@ -79,11 +75,11 @@ EOF;
         $more = '';
 
         foreach ($this->includeDirs as $directory) {
-            $more .= 'options[:load_path] << '.var_export($directory, true)."\n";
+            $more .= 'options[:load_path] << ' . var_export($directory, TRUE) . "\n";
         }
 
-        if (null !== $this->assetRoot) {
-            $more .= 'options[:asset_root] = '.var_export($this->assetRoot, true)."\n";
+        if (NULL !== $this->assetRoot) {
+            $more .= 'options[:asset_root] = ' . var_export($this->assetRoot, TRUE) . "\n";
         }
 
         if ($more) {
@@ -96,10 +92,10 @@ EOF;
         $input = FilesystemUtils::createTemporaryFile('sprockets_in');
         file_put_contents($input, sprintf($format,
             $this->sprocketsLib
-                ? sprintf('File.join(%s, \'sprockets\')', var_export($this->sprocketsLib, true))
+                ? sprintf('File.join(%s, \'sprockets\')', var_export($this->sprocketsLib, TRUE))
                 : '\'sprockets\'',
             $this->getHack($asset),
-            var_export($tmpAsset, true),
+            var_export($tmpAsset, TRUE),
             $more
         ));
 
@@ -120,18 +116,15 @@ EOF;
         $asset->setContent($proc->getOutput());
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
+    public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         // todo
         return array();
     }
 
-    private function getHack(AssetInterface $asset)
-    {
+    private function getHack(AssetInterface $asset) {
         static $format = <<<'EOF'
 
 module Sprockets
@@ -146,7 +139,7 @@ end
 EOF;
 
         if ($dir = $asset->getSourceDirectory()) {
-            return sprintf($format, var_export($dir, true));
+            return sprintf($format, var_export($dir, TRUE));
         }
     }
 }

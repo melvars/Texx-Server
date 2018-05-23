@@ -18,8 +18,7 @@ namespace Symfony\Polyfill\Php70;
  */
 final class Php70
 {
-    public static function intdiv($dividend, $divisor)
-    {
+    public static function intdiv($dividend, $divisor) {
         $dividend = self::intArg($dividend, __FUNCTION__, 1);
         $divisor = self::intArg($divisor, __FUNCTION__, 2);
 
@@ -33,10 +32,9 @@ final class Php70
         return ($dividend - ($dividend % $divisor)) / $divisor;
     }
 
-    public static function preg_replace_callback_array(array $patterns, $subject, $limit = -1, &$count = 0)
-    {
+    public static function preg_replace_callback_array(array $patterns, $subject, $limit = -1, &$count = 0) {
         $count = 0;
-        $result = (string) $subject;
+        $result = (string)$subject;
         if (0 === $limit = self::intArg($limit, __FUNCTION__, 3)) {
             return $result;
         }
@@ -49,19 +47,19 @@ final class Php70
         return $result;
     }
 
-    public static function error_clear_last()
-    {
+    public static function error_clear_last() {
         static $handler;
         if (!$handler) {
-             $handler = function() { return false; };
+            $handler = function () {
+                return FALSE;
+            };
         }
         set_error_handler($handler);
         @trigger_error('');
         restore_error_handler();
     }
 
-    public static function intArg($value, $caller, $pos)
-    {
+    public static function intArg($value, $caller, $pos) {
         if (is_int($value)) {
             return $value;
         }
@@ -69,6 +67,6 @@ final class Php70
             throw new \TypeError(sprintf('%s() expects parameter %d to be integer, %s given', $caller, $pos, gettype($value)));
         }
 
-        return (int) $value;
+        return (int)$value;
     }
 }

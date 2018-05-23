@@ -29,14 +29,13 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * {@inheritdoc}
      */
-    public function open($savePath, $sessionName)
-    {
+    public function open($savePath, $sessionName) {
         $this->sessionName = $sessionName;
         if (!headers_sent() && !ini_get('session.cache_limiter') && '0' !== ini_get('session.cache_limiter')) {
-            header(sprintf('Cache-Control: max-age=%d, private, must-revalidate', 60 * (int) ini_get('session.cache_expire')));
+            header(sprintf('Cache-Control: max-age=%d, private, must-revalidate', 60 * (int)ini_get('session.cache_expire')));
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -64,8 +63,7 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * {@inheritdoc}
      */
-    public function validateId($sessionId)
-    {
+    public function validateId($sessionId) {
         $this->prefetchData = $this->read($sessionId);
         $this->prefetchId = $sessionId;
 
@@ -75,22 +73,21 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * {@inheritdoc}
      */
-    public function read($sessionId)
-    {
-        if (null !== $this->prefetchId) {
+    public function read($sessionId) {
+        if (NULL !== $this->prefetchId) {
             $prefetchId = $this->prefetchId;
             $prefetchData = $this->prefetchData;
-            $this->prefetchId = $this->prefetchData = null;
+            $this->prefetchId = $this->prefetchData = NULL;
 
             if ($prefetchId === $sessionId || '' === $prefetchData) {
-                $this->newSessionId = '' === $prefetchData ? $sessionId : null;
+                $this->newSessionId = '' === $prefetchData ? $sessionId : NULL;
 
                 return $prefetchData;
             }
         }
 
         $data = $this->doRead($sessionId);
-        $this->newSessionId = '' === $data ? $sessionId : null;
+        $this->newSessionId = '' === $data ? $sessionId : NULL;
         if (\PHP_VERSION_ID < 70000) {
             $this->prefetchData = $data;
         }
@@ -101,24 +98,23 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * {@inheritdoc}
      */
-    public function write($sessionId, $data)
-    {
+    public function write($sessionId, $data) {
         if (\PHP_VERSION_ID < 70000 && $this->prefetchData) {
             $readData = $this->prefetchData;
-            $this->prefetchData = null;
+            $this->prefetchData = NULL;
 
             if ($readData === $data) {
                 return $this->updateTimestamp($sessionId, $data);
             }
         }
-        if (null === $this->igbinaryEmptyData) {
+        if (NULL === $this->igbinaryEmptyData) {
             // see https://github.com/igbinary/igbinary/issues/146
             $this->igbinaryEmptyData = \function_exists('igbinary_serialize') ? igbinary_serialize(array()) : '';
         }
         if ('' === $data || $this->igbinaryEmptyData === $data) {
             return $this->destroy($sessionId);
         }
-        $this->newSessionId = null;
+        $this->newSessionId = NULL;
 
         return $this->doWrite($sessionId, $data);
     }
@@ -126,10 +122,9 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * {@inheritdoc}
      */
-    public function destroy($sessionId)
-    {
+    public function destroy($sessionId) {
         if (\PHP_VERSION_ID < 70000) {
-            $this->prefetchData = null;
+            $this->prefetchData = NULL;
         }
         if (!headers_sent() && ini_get('session.use_cookies')) {
             if (!$this->sessionName) {
@@ -137,14 +132,14 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
             }
             $sessionCookie = sprintf(' %s=', urlencode($this->sessionName));
             $sessionCookieWithId = sprintf('%s%s;', $sessionCookie, urlencode($sessionId));
-            $sessionCookieFound = false;
+            $sessionCookieFound = FALSE;
             $otherCookies = array();
             foreach (headers_list() as $h) {
                 if (0 !== stripos($h, 'Set-Cookie:')) {
                     continue;
                 }
                 if (11 === strpos($h, $sessionCookie, 11)) {
-                    $sessionCookieFound = true;
+                    $sessionCookieFound = TRUE;
 
                     if (11 !== strpos($h, $sessionCookieWithId, 11)) {
                         $otherCookies[] = $h;
@@ -156,7 +151,7 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
             if ($sessionCookieFound) {
                 header_remove('Set-Cookie');
                 foreach ($otherCookies as $h) {
-                    header($h, false);
+                    header($h, FALSE);
                 }
             } else {
                 setcookie($this->sessionName, '', 0, ini_get('session.cookie_path'), ini_get('session.cookie_domain'), ini_get('session.cookie_secure'), ini_get('session.cookie_httponly'));

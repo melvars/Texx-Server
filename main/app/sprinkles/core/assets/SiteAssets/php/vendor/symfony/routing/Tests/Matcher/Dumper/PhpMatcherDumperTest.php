@@ -31,16 +31,14 @@ class PhpMatcherDumperTest extends TestCase
      */
     private $dumpPath;
 
-    protected function setUp()
-    {
+    protected function setUp() {
         parent::setUp();
 
         $this->matcherClass = uniqid('ProjectUrlMatcher');
-        $this->dumpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'php_matcher.'.$this->matcherClass.'.php';
+        $this->dumpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'php_matcher.' . $this->matcherClass . '.php';
     }
 
-    protected function tearDown()
-    {
+    protected function tearDown() {
         parent::tearDown();
 
         @unlink($this->dumpPath);
@@ -49,8 +47,7 @@ class PhpMatcherDumperTest extends TestCase
     /**
      * @expectedException \LogicException
      */
-    public function testDumpWhenSchemeIsUsedWithoutAProperDumper()
-    {
+    public function testDumpWhenSchemeIsUsedWithoutAProperDumper() {
         $collection = new RouteCollection();
         $collection->add('secure', new Route(
             '/secure',
@@ -64,17 +61,16 @@ class PhpMatcherDumperTest extends TestCase
         $dumper->dump();
     }
 
-    public function testRedirectPreservesUrlEncoding()
-    {
+    public function testRedirectPreservesUrlEncoding() {
         $collection = new RouteCollection();
         $collection->add('foo', new Route('/foo:bar/'));
 
-        $class = $this->generateDumpedMatcher($collection, true);
+        $class = $this->generateDumpedMatcher($collection, TRUE);
 
         $matcher = $this->getMockBuilder($class)
-                        ->setMethods(array('redirect'))
-                        ->setConstructorArgs(array(new RequestContext()))
-                        ->getMock();
+            ->setMethods(array('redirect'))
+            ->setConstructorArgs(array(new RequestContext()))
+            ->getMock();
 
         $matcher->expects($this->once())->method('redirect')->with('/foo%3Abar/', 'foo')->willReturn(array());
 
@@ -84,16 +80,14 @@ class PhpMatcherDumperTest extends TestCase
     /**
      * @dataProvider getRouteCollections
      */
-    public function testDump(RouteCollection $collection, $fixture, $options = array())
-    {
-        $basePath = __DIR__.'/../../Fixtures/dumper/';
+    public function testDump(RouteCollection $collection, $fixture, $options = array()) {
+        $basePath = __DIR__ . '/../../Fixtures/dumper/';
 
         $dumper = new PhpMatcherDumper($collection);
-        $this->assertStringEqualsFile($basePath.$fixture, $dumper->dump($options), '->dump() correctly dumps routes as optimized PHP code.');
+        $this->assertStringEqualsFile($basePath . $fixture, $dumper->dump($options), '->dump() correctly dumps routes as optimized PHP code.');
     }
 
-    public function getRouteCollections()
-    {
+    public function getRouteCollections() {
         /* test case 1 */
 
         $collection = new RouteCollection();
@@ -244,7 +238,7 @@ class PhpMatcherDumperTest extends TestCase
         $route5 = new Route('/route5', array(), array(), array(), 'c.example.com');
         $collection1->add('route5', $route5);
 
-        $route6 = new Route('/route6', array(), array(), array(), null);
+        $route6 = new Route('/route6', array(), array(), array(), NULL);
         $collection1->add('route6', $route6);
 
         $collection->addCollection($collection1);
@@ -268,10 +262,10 @@ class PhpMatcherDumperTest extends TestCase
         $route15 = new Route('/route15/{name}', array(), array(), array(), 'c.example.com');
         $collection1->add('route15', $route15);
 
-        $route16 = new Route('/route16/{name}', array('var1' => 'val'), array(), array(), null);
+        $route16 = new Route('/route16/{name}', array('var1' => 'val'), array(), array(), NULL);
         $collection1->add('route16', $route16);
 
-        $route17 = new Route('/route17', array(), array(), array(), null);
+        $route17 = new Route('/route17', array(), array(), array(), NULL);
         $collection1->add('route17', $route17);
 
         $collection->addCollection($collection1);
@@ -419,22 +413,21 @@ class PhpMatcherDumperTest extends TestCase
         $trailingSlashCollection->add('regex_not_trailing_slash_POST_method', new Route('/not-trailing/regex/post-method/{param}', array(), array(), array(), '', array(), array('POST')));
 
         return array(
-           array(new RouteCollection(), 'url_matcher0.php', array()),
-           array($collection, 'url_matcher1.php', array()),
-           array($redirectCollection, 'url_matcher2.php', array('base_class' => 'Symfony\Component\Routing\Tests\Fixtures\RedirectableUrlMatcher')),
-           array($rootprefixCollection, 'url_matcher3.php', array()),
-           array($headMatchCasesCollection, 'url_matcher4.php', array()),
-           array($groupOptimisedCollection, 'url_matcher5.php', array('base_class' => 'Symfony\Component\Routing\Tests\Fixtures\RedirectableUrlMatcher')),
-           array($trailingSlashCollection, 'url_matcher6.php', array()),
-           array($trailingSlashCollection, 'url_matcher7.php', array('base_class' => 'Symfony\Component\Routing\Tests\Fixtures\RedirectableUrlMatcher')),
+            array(new RouteCollection(), 'url_matcher0.php', array()),
+            array($collection, 'url_matcher1.php', array()),
+            array($redirectCollection, 'url_matcher2.php', array('base_class' => 'Symfony\Component\Routing\Tests\Fixtures\RedirectableUrlMatcher')),
+            array($rootprefixCollection, 'url_matcher3.php', array()),
+            array($headMatchCasesCollection, 'url_matcher4.php', array()),
+            array($groupOptimisedCollection, 'url_matcher5.php', array('base_class' => 'Symfony\Component\Routing\Tests\Fixtures\RedirectableUrlMatcher')),
+            array($trailingSlashCollection, 'url_matcher6.php', array()),
+            array($trailingSlashCollection, 'url_matcher7.php', array('base_class' => 'Symfony\Component\Routing\Tests\Fixtures\RedirectableUrlMatcher')),
         );
     }
 
     /**
      * @param $dumper
      */
-    private function generateDumpedMatcher(RouteCollection $collection, $redirectableStub = false)
-    {
+    private function generateDumpedMatcher(RouteCollection $collection, $redirectableStub = FALSE) {
         $options = array('class' => $this->matcherClass);
 
         if ($redirectableStub) {
@@ -453,7 +446,6 @@ class PhpMatcherDumperTest extends TestCase
 
 abstract class RedirectableUrlMatcherStub extends UrlMatcher implements RedirectableUrlMatcherInterface
 {
-    public function redirect($path, $route, $scheme = null)
-    {
+    public function redirect($path, $route, $scheme = NULL) {
     }
 }

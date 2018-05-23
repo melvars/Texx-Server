@@ -28,13 +28,11 @@ class ServiceRouterLoader extends ObjectRouteLoader
      */
     private $container;
 
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(ContainerInterface $container) {
         $this->container = $container;
     }
 
-    protected function getServiceObject($id)
-    {
+    protected function getServiceObject($id) {
         return $this->container->get($id);
     }
 }

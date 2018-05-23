@@ -6,6 +6,7 @@
  * @copyright Copyright (c) 2017 Louis Charette
  * @license   https://github.com/lcharette/UF_FormGenerator/blob/master/LICENSE (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\FormGenerator\Element;
 
 /**
@@ -13,7 +14,9 @@ namespace UserFrosting\Sprinkle\FormGenerator\Element;
  *
  * Interface for Form elements classes
  */
-interface InputInterface {
-    public function __construct($name, $element, $value = null);
+interface InputInterface
+{
+    public function __construct($name, $element, $value = NULL);
+
     public function parse();
 }

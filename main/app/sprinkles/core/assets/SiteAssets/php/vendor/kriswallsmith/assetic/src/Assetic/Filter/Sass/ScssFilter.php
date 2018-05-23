@@ -19,10 +19,9 @@ namespace Assetic\Filter\Sass;
  */
 class ScssFilter extends SassFilter
 {
-    public function __construct($sassPath = '/usr/bin/sass', $rubyPath = null)
-    {
+    public function __construct($sassPath = '/usr/bin/sass', $rubyPath = NULL) {
         parent::__construct($sassPath, $rubyPath);
 
-        $this->setScss(true);
+        $this->setScss(TRUE);
     }
 }

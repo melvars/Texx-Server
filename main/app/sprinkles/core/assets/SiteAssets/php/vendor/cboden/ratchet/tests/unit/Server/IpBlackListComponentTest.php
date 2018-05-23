@@ -1,11 +1,14 @@
 <?php
+
 namespace Ratchet\Server;
+
 use Ratchet\Server\IpBlackList;
 
 /**
  * @covers Ratchet\Server\IpBlackList
  */
-class IpBlackListTest extends \PHPUnit_Framework_TestCase {
+class IpBlackListTest extends \PHPUnit_Framework_TestCase
+{
     protected $blocker;
     protected $mock;
 
@@ -48,7 +51,7 @@ class IpBlackListTest extends \PHPUnit_Framework_TestCase {
 
     public function testOnMessageDecoration() {
         $conn = $this->newConn();
-        $msg  = 'Hello not being blocked';
+        $msg = 'Hello not being blocked';
 
         $this->mock->expects($this->once())->method('onMessage')->with($conn, $msg);
 
@@ -75,21 +78,20 @@ class IpBlackListTest extends \PHPUnit_Framework_TestCase {
     public function testAddAndRemoveWithFluentInterfaces() {
         $blockOne = '127.0.0.1';
         $blockTwo = '192.168.1.1';
-        $unblock  = '75.119.207.140';
+        $unblock = '75.119.207.140';
 
         $this->blocker
             ->blockAddress($unblock)
             ->blockAddress($blockOne)
             ->unblockAddress($unblock)
-            ->blockAddress($blockTwo)
-        ;
+            ->blockAddress($blockTwo);
 
         $this->assertEquals(array($blockOne, $blockTwo), $this->blocker->getBlockedAddresses());
     }
 
     public function testDecoratorPassesErrors() {
         $conn = $this->newConn();
-        $e    = new \Exception('I threw an error');
+        $e = new \Exception('I threw an error');
 
         $this->mock->expects($this->once())->method('onError')->with($conn, $e);
 
@@ -99,9 +101,9 @@ class IpBlackListTest extends \PHPUnit_Framework_TestCase {
     public function addressProvider() {
         return array(
             array('127.0.0.1', '127.0.0.1')
-          , array('localhost', 'localhost')
-          , array('fe80::1%lo0', 'fe80::1%lo0')
-          , array('127.0.0.1', '127.0.0.1:6392')
+        , array('localhost', 'localhost')
+        , array('fe80::1%lo0', 'fe80::1%lo0')
+        , array('127.0.0.1', '127.0.0.1:6392')
         );
     }
 

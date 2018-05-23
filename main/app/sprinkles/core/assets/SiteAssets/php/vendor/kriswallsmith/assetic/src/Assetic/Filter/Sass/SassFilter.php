@@ -23,9 +23,9 @@ use Assetic\Util\FilesystemUtils;
  */
 class SassFilter extends BaseSassFilter
 {
-    const STYLE_NESTED     = 'nested';
-    const STYLE_EXPANDED   = 'expanded';
-    const STYLE_COMPACT    = 'compact';
+    const STYLE_NESTED = 'nested';
+    const STYLE_EXPANDED = 'expanded';
+    const STYLE_COMPACT = 'compact';
     const STYLE_COMPRESSED = 'compressed';
 
     private $sassPath;
@@ -42,72 +42,59 @@ class SassFilter extends BaseSassFilter
     private $noCache;
     private $compass;
 
-    public function __construct($sassPath = '/usr/bin/sass', $rubyPath = null)
-    {
+    public function __construct($sassPath = '/usr/bin/sass', $rubyPath = NULL) {
         $this->sassPath = $sassPath;
         $this->rubyPath = $rubyPath;
         $this->cacheLocation = FilesystemUtils::getTemporaryDirectory();
     }
 
-    public function setUnixNewlines($unixNewlines)
-    {
+    public function setUnixNewlines($unixNewlines) {
         $this->unixNewlines = $unixNewlines;
     }
 
-    public function setScss($scss)
-    {
+    public function setScss($scss) {
         $this->scss = $scss;
     }
 
-    public function setStyle($style)
-    {
+    public function setStyle($style) {
         $this->style = $style;
     }
 
-    public function setPrecision($precision)
-    {
+    public function setPrecision($precision) {
         $this->precision = $precision;
     }
 
-    public function setQuiet($quiet)
-    {
+    public function setQuiet($quiet) {
         $this->quiet = $quiet;
     }
 
-    public function setDebugInfo($debugInfo)
-    {
+    public function setDebugInfo($debugInfo) {
         $this->debugInfo = $debugInfo;
     }
 
-    public function setLineNumbers($lineNumbers)
-    {
+    public function setLineNumbers($lineNumbers) {
         $this->lineNumbers = $lineNumbers;
     }
 
-    public function setSourceMap($sourceMap)
-    {
+    public function setSourceMap($sourceMap) {
         $this->sourceMap = $sourceMap;
     }
 
-    public function setCacheLocation($cacheLocation)
-    {
+    public function setCacheLocation($cacheLocation) {
         $this->cacheLocation = $cacheLocation;
     }
 
-    public function setNoCache($noCache)
-    {
+    public function setNoCache($noCache) {
         $this->noCache = $noCache;
     }
 
-    public function setCompass($compass)
-    {
+    public function setCompass($compass) {
         $this->compass = $compass;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $sassProcessArgs = array($this->sassPath);
-        if (null !== $this->rubyPath) {
+        if (NULL !== $this->rubyPath) {
             $sassProcessArgs = array_merge(explode(' ', $this->rubyPath), $sassProcessArgs);
         }
 
@@ -121,7 +108,7 @@ class SassFilter extends BaseSassFilter
             $pb->add('--unix-newlines');
         }
 
-        if (true === $this->scss || (null === $this->scss && 'scss' == pathinfo($asset->getSourcePath(), PATHINFO_EXTENSION))) {
+        if (TRUE === $this->scss || (NULL === $this->scss && 'scss' == pathinfo($asset->getSourcePath(), PATHINFO_EXTENSION))) {
             $pb->add('--scss');
         }
 
@@ -180,7 +167,6 @@ class SassFilter extends BaseSassFilter
         $asset->setContent($proc->getOutput());
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 }

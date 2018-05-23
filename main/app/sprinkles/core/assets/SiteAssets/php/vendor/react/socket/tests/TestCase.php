@@ -10,8 +10,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-    protected function expectCallableExactly($amount)
-    {
+    protected function expectCallableExactly($amount) {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->exactly($amount))
@@ -20,8 +19,7 @@ class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function expectCallableOnce()
-    {
+    protected function expectCallableOnce() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -30,8 +28,7 @@ class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function expectCallableOnceWith($value)
-    {
+    protected function expectCallableOnceWith($value) {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -41,8 +38,7 @@ class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function expectCallableNever()
-    {
+    protected function expectCallableNever() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->never())
@@ -51,13 +47,11 @@ class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function createCallableMock()
-    {
+    protected function createCallableMock() {
         return $this->getMockBuilder('React\Tests\Socket\Stub\CallableStub')->getMock();
     }
 
-    protected function buffer(ReadableStreamInterface $stream, LoopInterface $loop, $timeout)
-    {
+    protected function buffer(ReadableStreamInterface $stream, LoopInterface $loop, $timeout) {
         if (!$stream->isReadable()) {
             return '';
         }
@@ -82,15 +76,14 @@ class TestCase extends BaseTestCase
         ), $loop, $timeout);
     }
 
-    public function setExpectedException($exception, $exceptionMessage = '', $exceptionCode = null)
-    {
+    public function setExpectedException($exception, $exceptionMessage = '', $exceptionCode = NULL) {
         if (method_exists($this, 'expectException')) {
             // PHPUnit 5+
             $this->expectException($exception);
             if ($exceptionMessage !== '') {
                 $this->expectExceptionMessage($exceptionMessage);
             }
-            if ($exceptionCode !== null) {
+            if ($exceptionCode !== NULL) {
                 $this->expectExceptionCode($exceptionCode);
             }
         } else {

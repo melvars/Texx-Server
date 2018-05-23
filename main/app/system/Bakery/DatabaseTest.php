@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -23,8 +24,7 @@ trait DatabaseTest
      * @access protected
      * @return bool True if success
      */
-    protected function testDB()
-    {
+    protected function testDB() {
         // Boot db
         $this->ci->db;
 
@@ -41,12 +41,12 @@ trait DatabaseTest
         try {
             Capsule::connection()->getPdo();
         } catch (\PDOException $e) {
-            $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':".PHP_EOL;
-            $message .= "Exception: " . $e->getMessage() . PHP_EOL.PHP_EOL;
+            $message = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':" . PHP_EOL;
+            $message .= "Exception: " . $e->getMessage() . PHP_EOL . PHP_EOL;
             $message .= "Please check your database configuration and/or google the exception shown above and run command again.";
             throw new \Exception($message);
         }
 
-        return true;
+        return TRUE;
     }
 }

@@ -2,14 +2,13 @@
 
 namespace React\Promise;
 
-function resolve($promiseOrValue = null)
-{
+function resolve($promiseOrValue = NULL) {
     if ($promiseOrValue instanceof ExtendedPromiseInterface) {
         return $promiseOrValue;
     }
 
     if (method_exists($promiseOrValue, 'then')) {
-        $canceller = null;
+        $canceller = NULL;
 
         if (method_exists($promiseOrValue, 'cancel')) {
             $canceller = [$promiseOrValue, 'cancel'];
@@ -23,8 +22,7 @@ function resolve($promiseOrValue = null)
     return new FulfilledPromise($promiseOrValue);
 }
 
-function reject($promiseOrValue = null)
-{
+function reject($promiseOrValue = NULL) {
     if ($promiseOrValue instanceof PromiseInterface) {
         return resolve($promiseOrValue)->then(function ($value) {
             return new RejectedPromise($value);
@@ -34,15 +32,13 @@ function reject($promiseOrValue = null)
     return new RejectedPromise($promiseOrValue);
 }
 
-function all($promisesOrValues)
-{
+function all($promisesOrValues) {
     return map($promisesOrValues, function ($val) {
         return $val;
     });
 }
 
-function race($promisesOrValues)
-{
+function race($promisesOrValues) {
     $cancellationQueue = new CancellationQueue();
     $cancellationQueue->enqueue($promisesOrValues);
 
@@ -64,16 +60,14 @@ function race($promisesOrValues)
     }, $cancellationQueue);
 }
 
-function any($promisesOrValues)
-{
+function any($promisesOrValues) {
     return some($promisesOrValues, 1)
         ->then(function ($val) {
             return array_shift($val);
         });
 }
 
-function some($promisesOrValues, $howMany)
-{
+function some($promisesOrValues, $howMany) {
     $cancellationQueue = new CancellationQueue();
     $cancellationQueue->enqueue($promisesOrValues);
 
@@ -100,9 +94,9 @@ function some($promisesOrValues, $howMany)
                 }
 
                 $toResolve = $howMany;
-                $toReject  = ($len - $toResolve) + 1;
-                $values    = [];
-                $reasons   = [];
+                $toReject = ($len - $toResolve) + 1;
+                $values = [];
+                $reasons = [];
 
                 foreach ($array as $i => $promiseOrValue) {
                     $fulfiller = function ($val) use ($i, &$values, &$toResolve, $toReject, $resolve) {
@@ -138,8 +132,7 @@ function some($promisesOrValues, $howMany)
     }, $cancellationQueue);
 }
 
-function map($promisesOrValues, callable $mapFunc)
-{
+function map($promisesOrValues, callable $mapFunc) {
     $cancellationQueue = new CancellationQueue();
     $cancellationQueue->enqueue($promisesOrValues);
 
@@ -152,11 +145,11 @@ function map($promisesOrValues, callable $mapFunc)
                 }
 
                 $toResolve = count($array);
-                $values    = [];
+                $values = [];
 
                 foreach ($array as $i => $promiseOrValue) {
                     $cancellationQueue->enqueue($promiseOrValue);
-                    $values[$i] = null;
+                    $values[$i] = NULL;
 
                     resolve($promiseOrValue)
                         ->then($mapFunc)
@@ -176,8 +169,7 @@ function map($promisesOrValues, callable $mapFunc)
     }, $cancellationQueue);
 }
 
-function reduce($promisesOrValues, callable $reduceFunc, $initialValue = null)
-{
+function reduce($promisesOrValues, callable $reduceFunc, $initialValue = NULL) {
     $cancellationQueue = new CancellationQueue();
     $cancellationQueue->enqueue($promisesOrValues);
 
@@ -214,15 +206,14 @@ function reduce($promisesOrValues, callable $reduceFunc, $initialValue = null)
 }
 
 // Internal functions
-function _checkTypehint(callable $callback, $object)
-{
+function _checkTypehint(callable $callback, $object) {
     if (!is_object($object)) {
-        return true;
+        return TRUE;
     }
 
     if (is_array($callback)) {
         $callbackReflection = new \ReflectionMethod($callback[0], $callback[1]);
-    } elseif (is_object($callback) && !$callback instanceof \Closure) {
+    } else if (is_object($callback) && !$callback instanceof \Closure) {
         $callbackReflection = new \ReflectionMethod($callback, '__invoke');
     } else {
         $callbackReflection = new \ReflectionFunction($callback);
@@ -231,13 +222,13 @@ function _checkTypehint(callable $callback, $object)
     $parameters = $callbackReflection->getParameters();
 
     if (!isset($parameters[0])) {
-        return true;
+        return TRUE;
     }
 
     $expectedException = $parameters[0];
 
     if (!$expectedException->getClass()) {
-        return true;
+        return TRUE;
     }
 
     return $expectedException->getClass()->isInstance($object);

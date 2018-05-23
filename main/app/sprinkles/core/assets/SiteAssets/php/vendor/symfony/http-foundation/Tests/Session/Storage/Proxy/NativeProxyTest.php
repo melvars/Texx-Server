@@ -23,14 +23,12 @@ use Symfony\Component\HttpFoundation\Session\Storage\Proxy\NativeProxy;
  */
 class NativeProxyTest extends TestCase
 {
-    public function testIsWrapper()
-    {
+    public function testIsWrapper() {
         $proxy = new NativeProxy();
         $this->assertFalse($proxy->isWrapper());
     }
 
-    public function testGetSaveHandlerName()
-    {
+    public function testGetSaveHandlerName() {
         $name = ini_get('session.save_handler');
         $proxy = new NativeProxy();
         $this->assertEquals($name, $proxy->getSaveHandlerName());

@@ -15,7 +15,7 @@
 
 return [
     "VALIDATE" => [
-        "PASSWORD_MISMATCH"             => "Ihr Passwort und das Bestätigungspasswort müssen übereinstimmen.",
-        "USERNAME"                      => "Benutzernamen dürfen nur aus Kleinbuchstaben, Zahlen, '.', '-' und '_' bestehen."
+        "PASSWORD_MISMATCH" => "Ihr Passwort und das Bestätigungspasswort müssen übereinstimmen.",
+        "USERNAME" => "Benutzernamen dürfen nur aus Kleinbuchstaben, Zahlen, '.', '-' und '_' bestehen."
     ]
 ];

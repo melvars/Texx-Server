@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Psr7;
 
 use Psr\Http\Message\StreamInterface;
@@ -23,79 +24,65 @@ class BufferStream implements StreamInterface
      *                 but will return false to inform writers to slow down
      *                 until the buffer has been drained by reading from it.
      */
-    public function __construct($hwm = 16384)
-    {
+    public function __construct($hwm = 16384) {
         $this->hwm = $hwm;
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getContents();
     }
 
-    public function getContents()
-    {
+    public function getContents() {
         $buffer = $this->buffer;
         $this->buffer = '';
 
         return $buffer;
     }
 
-    public function close()
-    {
+    public function close() {
         $this->buffer = '';
     }
 
-    public function detach()
-    {
+    public function detach() {
         $this->close();
     }
 
-    public function getSize()
-    {
+    public function getSize() {
         return strlen($this->buffer);
     }
 
-    public function isReadable()
-    {
-        return true;
+    public function isReadable() {
+        return TRUE;
     }
 
-    public function isWritable()
-    {
-        return true;
+    public function isWritable() {
+        return TRUE;
     }
 
-    public function isSeekable()
-    {
-        return false;
+    public function isSeekable() {
+        return FALSE;
     }
 
-    public function rewind()
-    {
+    public function rewind() {
         $this->seek(0);
     }
 
-    public function seek($offset, $whence = SEEK_SET)
-    {
+    public function seek($offset, $whence = SEEK_SET) {
         throw new \RuntimeException('Cannot seek a BufferStream');
     }
 
-    public function eof()
-    {
+    public function eof() {
         return strlen($this->buffer) === 0;
     }
 
-    public function tell()
-    {
+    public function tell() {
         throw new \RuntimeException('Cannot determine the position of a BufferStream');
     }
 
     /**
      * Reads data from the buffer.
      */
-    public function read($length)
-    {
+    public function read($length) {
         $currentLength = strlen($this->buffer);
 
         if ($length >= $currentLength) {
@@ -114,24 +101,22 @@ class BufferStream implements StreamInterface
     /**
      * Writes data to the buffer.
      */
-    public function write($string)
-    {
+    public function write($string) {
         $this->buffer .= $string;
 
         // TODO: What should happen here?
         if (strlen($this->buffer) >= $this->hwm) {
-            return false;
+            return FALSE;
         }
 
         return strlen($string);
     }
 
-    public function getMetadata($key = null)
-    {
+    public function getMetadata($key = NULL) {
         if ($key == 'hwm') {
             return $this->hwm;
         }
 
-        return $key ? null : [];
+        return $key ? NULL : [];
     }
 }

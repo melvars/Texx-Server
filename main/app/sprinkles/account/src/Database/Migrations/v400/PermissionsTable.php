@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
@@ -36,10 +37,9 @@ class PermissionsTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function up()
-    {
+    public function up() {
         if (!$this->schema->hasTable('permissions')) {
-            $this->schema->create('permissions', function(Blueprint $table) {
+            $this->schema->create('permissions', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('slug')->comment('A code that references a specific action or URI that an assignee of this permission has access to.');
                 $table->string('name');
@@ -57,16 +57,14 @@ class PermissionsTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function down()
-    {
+    public function down() {
         $this->schema->drop('permissions');
     }
 
     /**
      * {@inheritDoc}
      */
-    public function seed()
-    {
+    public function seed() {
         // Skip this if table is not empty
         if (Permission::count() == 0) {
 

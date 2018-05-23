@@ -26,30 +26,26 @@ class StringAsset extends BaseAsset
     /**
      * Constructor.
      *
-     * @param string $content    The content of the asset
-     * @param array  $filters    Filters for the asset
+     * @param string $content The content of the asset
+     * @param array $filters Filters for the asset
      * @param string $sourceRoot The source asset root directory
      * @param string $sourcePath The source asset path
      */
-    public function __construct($content, $filters = array(), $sourceRoot = null, $sourcePath = null)
-    {
+    public function __construct($content, $filters = array(), $sourceRoot = NULL, $sourcePath = NULL) {
         $this->string = $content;
 
         parent::__construct($filters, $sourceRoot, $sourcePath);
     }
 
-    public function load(FilterInterface $additionalFilter = null)
-    {
+    public function load(FilterInterface $additionalFilter = NULL) {
         $this->doLoad($this->string, $additionalFilter);
     }
 
-    public function setLastModified($lastModified)
-    {
+    public function setLastModified($lastModified) {
         $this->lastModified = $lastModified;
     }
 
-    public function getLastModified()
-    {
+    public function getLastModified() {
         return $this->lastModified;
     }
 }

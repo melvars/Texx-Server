@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Psr7;
 
 use Psr\Http\Message\StreamInterface;
@@ -36,20 +37,18 @@ class PumpStream implements StreamInterface
      *                         amount of data to return. The callable MUST
      *                         return a string when called, or false on error
      *                         or EOF.
-     * @param array $options   Stream options:
+     * @param array $options Stream options:
      *                         - metadata: Hash of metadata to use with stream.
      *                         - size: Size of the stream, if known.
      */
-    public function __construct(callable $source, array $options = [])
-    {
+    public function __construct(callable $source, array $options = []) {
         $this->source = $source;
-        $this->size = isset($options['size']) ? $options['size'] : null;
+        $this->size = isset($options['size']) ? $options['size'] : NULL;
         $this->metadata = isset($options['metadata']) ? $options['metadata'] : [];
         $this->buffer = new BufferStream();
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         try {
             return copy_to_string($this);
         } catch (\Exception $e) {
@@ -57,64 +56,52 @@ class PumpStream implements StreamInterface
         }
     }
 
-    public function close()
-    {
+    public function close() {
         $this->detach();
     }
 
-    public function detach()
-    {
-        $this->tellPos = false;
-        $this->source = null;
+    public function detach() {
+        $this->tellPos = FALSE;
+        $this->source = NULL;
     }
 
-    public function getSize()
-    {
+    public function getSize() {
         return $this->size;
     }
 
-    public function tell()
-    {
+    public function tell() {
         return $this->tellPos;
     }
 
-    public function eof()
-    {
+    public function eof() {
         return !$this->source;
     }
 
-    public function isSeekable()
-    {
-        return false;
+    public function isSeekable() {
+        return FALSE;
     }
 
-    public function rewind()
-    {
+    public function rewind() {
         $this->seek(0);
     }
 
-    public function seek($offset, $whence = SEEK_SET)
-    {
+    public function seek($offset, $whence = SEEK_SET) {
         throw new \RuntimeException('Cannot seek a PumpStream');
     }
 
-    public function isWritable()
-    {
-        return false;
+    public function isWritable() {
+        return FALSE;
     }
 
-    public function write($string)
-    {
+    public function write($string) {
         throw new \RuntimeException('Cannot write to a PumpStream');
     }
 
-    public function isReadable()
-    {
-        return true;
+    public function isReadable() {
+        return TRUE;
     }
 
-    public function read($length)
-    {
+    public function read($length) {
         $data = $this->buffer->read($length);
         $readLen = strlen($data);
         $this->tellPos += $readLen;
@@ -129,8 +116,7 @@ class PumpStream implements StreamInterface
         return $data;
     }
 
-    public function getContents()
-    {
+    public function getContents() {
         $result = '';
         while (!$this->eof()) {
             $result .= $this->read(1000000);
@@ -139,22 +125,20 @@ class PumpStream implements StreamInterface
         return $result;
     }
 
-    public function getMetadata($key = null)
-    {
+    public function getMetadata($key = NULL) {
         if (!$key) {
             return $this->metadata;
         }
 
-        return isset($this->metadata[$key]) ? $this->metadata[$key] : null;
+        return isset($this->metadata[$key]) ? $this->metadata[$key] : NULL;
     }
 
-    private function pump($length)
-    {
+    private function pump($length) {
         if ($this->source) {
             do {
                 $data = call_user_func($this->source, $length);
-                if ($data === false || $data === null) {
-                    $this->source = null;
+                if ($data === FALSE || $data === NULL) {
+                    $this->source = NULL;
                     return;
                 }
                 $this->buffer->write($data);

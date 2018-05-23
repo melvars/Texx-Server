@@ -1,5 +1,7 @@
 <?php
+
 namespace Ratchet\Http;
+
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use Psr\Http\Message\RequestInterface;
@@ -9,7 +11,8 @@ use Psr\Http\Message\RequestInterface;
  * This protects other websites from open WebSocket connections to your application.
  * Note: This can be spoofed from non-web browser clients
  */
-class OriginCheck implements HttpServerInterface {
+class OriginCheck implements HttpServerInterface
+{
     use CloseResponseTrait;
 
     /**
@@ -21,7 +24,7 @@ class OriginCheck implements HttpServerInterface {
 
     /**
      * @param MessageComponentInterface $component Component/Application to decorate
-     * @param array                     $allowed   An array of allowed domains that are allowed to connect from
+     * @param array $allowed An array of allowed domains that are allowed to connect from
      */
     public function __construct(MessageComponentInterface $component, array $allowed = []) {
         $this->_component = $component;
@@ -31,7 +34,7 @@ class OriginCheck implements HttpServerInterface {
     /**
      * {@inheritdoc}
      */
-    public function onOpen(ConnectionInterface $conn, RequestInterface $request = null) {
+    public function onOpen(ConnectionInterface $conn, RequestInterface $request = NULL) {
         $header = (string)$request->getHeader('Origin')[0];
         $origin = parse_url($header, PHP_URL_HOST) ?: $header;
 

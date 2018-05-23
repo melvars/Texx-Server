@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 class HtmlRenderer extends ErrorRenderer
@@ -14,8 +15,7 @@ class HtmlRenderer extends ErrorRenderer
      *
      * @return string
      */
-    public function render()
-    {
+    public function render() {
         $title = 'UserFrosting Application Error';
 
         if ($this->displayErrorDetails) {
@@ -60,8 +60,7 @@ class HtmlRenderer extends ErrorRenderer
      * @param Exception $exception
      * @return string
      */
-    public function renderException($exception)
-    {
+    public function renderException($exception) {
         $html = sprintf('<div><strong>Type:</strong> %s</div>', get_class($exception));
 
         if (($code = $exception->getCode())) {
@@ -93,8 +92,7 @@ class HtmlRenderer extends ErrorRenderer
      *
      * @return string
      */
-    public function renderRequest()
-    {
+    public function renderRequest() {
         $method = $this->request->getMethod();
         $uri = $this->request->getUri();
         $params = $this->request->getParams();
@@ -120,8 +118,7 @@ class HtmlRenderer extends ErrorRenderer
      *
      * @return string
      */
-    public function renderResponseHeaders()
-    {
+    public function renderResponseHeaders() {
         $html = '<h3>Response headers:</h3>';
         $html .= '<em>Additional response headers may have been set by Slim after the error handling routine.  Please check your browser console for a complete list.</em><br>';
 
@@ -137,11 +134,10 @@ class HtmlRenderer extends ErrorRenderer
      *
      * @return string
      */
-    protected function renderTable($data)
-    {
+    protected function renderTable($data) {
         $html = '<table><tr><th>Name</th><th>Value</th></tr>';
         foreach ($data as $name => $value) {
-            $value = print_r($value, true);
+            $value = print_r($value, TRUE);
             $html .= "<tr><td>$name</td><td>$value</td></tr>";
         }
         $html .= '</table>';

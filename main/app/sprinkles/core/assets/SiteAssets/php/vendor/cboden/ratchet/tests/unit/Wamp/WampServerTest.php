@@ -1,11 +1,14 @@
 <?php
+
 namespace Ratchet\Wamp;
+
 use Ratchet\AbstractMessageComponentTestCase;
 
 /**
  * @covers Ratchet\Wamp\WampServer
  */
-class WampServerTest extends AbstractMessageComponentTestCase {
+class WampServerTest extends AbstractMessageComponentTestCase
+{
     public function getConnectionClassString() {
         return '\Ratchet\Wamp\WampConnection';
     }
@@ -23,10 +26,10 @@ class WampServerTest extends AbstractMessageComponentTestCase {
 
         $this->_app->expects($this->once())->method('onPublish')->with(
             $this->isExpectedConnection()
-          , new \PHPUnit_Framework_Constraint_IsInstanceOf('\Ratchet\Wamp\Topic')
-          , $published
-          , array()
-          , array()
+            , new \PHPUnit_Framework_Constraint_IsInstanceOf('\Ratchet\Wamp\Topic')
+            , $published
+            , array()
+            , array()
         );
 
         $this->_serv->onMessage($this->_conn, json_encode(array(7, 'topic', $published)));

@@ -3,14 +3,14 @@
 $.tablesorter.addParser({
     // set a unique id
     id: 'metanum',
-    is: function(s) {
-      // return false so this parser is not auto detected
-      return false;
+    is: function (s) {
+        // return false so this parser is not auto detected
+        return false;
     },
-    format: function(s, table, cell, cellIndex) {
-      var $cell = $(cell);
-      // returns metadata, or cell text (s) if it doesn't exist
-      return $cell.attr('data-num') || s;
+    format: function (s, table, cell, cellIndex) {
+        var $cell = $(cell);
+        // returns metadata, or cell text (s) if it doesn't exist
+        return $cell.attr('data-num') || s;
 
     },
     // set type to numeric
@@ -20,14 +20,14 @@ $.tablesorter.addParser({
 $.tablesorter.addParser({
     // set a unique id
     id: 'metatext',
-    is: function(s) {
-      // return false so this parser is not auto detected
-      return false;
+    is: function (s) {
+        // return false so this parser is not auto detected
+        return false;
     },
-    format: function(s, table, cell, cellIndex) {
-      var $cell = $(cell);
-      // returns metadata, or cell text (s) if it doesn't exist
-      return $cell.attr('data-text') || s;
+    format: function (s, table, cell, cellIndex) {
+        var $cell = $(cell);
+        // returns metadata, or cell text (s) if it doesn't exist
+        return $cell.attr('data-text') || s;
 
     },
 
@@ -37,15 +37,15 @@ $.tablesorter.addParser({
 $.tablesorter.addParser({
     // set a unique id
     id: 'isblank',
-    is: function(s) {
-      // return false so this parser is not auto detected
-      return false;
+    is: function (s) {
+        // return false so this parser is not auto detected
+        return false;
     },
-    format: function(s, table, cell, cellIndex) {
-      var $cell = $(cell);
-      // returns 1 if blank (whitespace), 0 otherwise
-      var isBlank = $cell.html().trim() == "&nbsp;" ? 1 : 0;
-      return isBlank;
+    format: function (s, table, cell, cellIndex) {
+        var $cell = $(cell);
+        // returns 1 if blank (whitespace), 0 otherwise
+        var isBlank = $cell.html().trim() == "&nbsp;" ? 1 : 0;
+        return isBlank;
 
     },
 

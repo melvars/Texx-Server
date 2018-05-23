@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -26,8 +27,7 @@ class UserPermissionSprunje extends PermissionSprunje
     /**
      * {@inheritDoc}
      */
-    protected function baseQuery()
-    {
+    protected function baseQuery() {
         // Requires a user id
         if (!isset($this->options['user_id'])) {
             throw new BadRequestException();

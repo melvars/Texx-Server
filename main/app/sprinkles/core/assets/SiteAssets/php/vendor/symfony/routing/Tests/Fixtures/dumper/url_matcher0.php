@@ -10,13 +10,11 @@ use Symfony\Component\Routing\RequestContext;
  */
 class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
 {
-    public function __construct(RequestContext $context)
-    {
+    public function __construct(RequestContext $context) {
         $this->context = $context;
     }
 
-    public function match($rawPathinfo)
-    {
+    public function match($rawPathinfo) {
         $allow = array();
         $pathinfo = rawurldecode($rawPathinfo);
         $trimmedPathinfo = rtrim($pathinfo, '/');

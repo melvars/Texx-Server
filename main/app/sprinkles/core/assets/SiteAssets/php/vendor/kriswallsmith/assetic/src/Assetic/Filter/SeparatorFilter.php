@@ -31,17 +31,14 @@ class SeparatorFilter implements FilterInterface
      *
      * @param string $separator Separator to use between assets
      */
-    public function __construct($separator = ';')
-    {
+    public function __construct($separator = ';') {
         $this->separator = $separator;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $asset->setContent($asset->getContent() . $this->separator);
     }
 }

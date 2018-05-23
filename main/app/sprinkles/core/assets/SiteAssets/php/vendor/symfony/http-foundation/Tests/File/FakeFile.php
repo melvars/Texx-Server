@@ -17,29 +17,24 @@ class FakeFile extends OrigFile
 {
     private $realpath;
 
-    public function __construct($realpath, $path)
-    {
+    public function __construct($realpath, $path) {
         $this->realpath = $realpath;
-        parent::__construct($path, false);
+        parent::__construct($path, FALSE);
     }
 
-    public function isReadable()
-    {
-        return true;
+    public function isReadable() {
+        return TRUE;
     }
 
-    public function getRealpath()
-    {
+    public function getRealpath() {
         return $this->realpath;
     }
 
-    public function getSize()
-    {
+    public function getSize() {
         return 42;
     }
 
-    public function getMTime()
-    {
+    public function getMTime() {
         return time();
     }
 }

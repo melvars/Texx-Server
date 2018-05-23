@@ -5,8 +5,7 @@ namespace React\Promise;
 class FunctionResolveTest extends TestCase
 {
     /** @test */
-    public function shouldResolveAnImmediateValue()
-    {
+    public function shouldResolveAnImmediateValue() {
         $expected = 123;
 
         $mock = $this->createCallableMock();
@@ -23,8 +22,7 @@ class FunctionResolveTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveAFulfilledPromise()
-    {
+    public function shouldResolveAFulfilledPromise() {
         $expected = 123;
 
         $resolved = new FulfilledPromise($expected);
@@ -43,8 +41,7 @@ class FunctionResolveTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveAThenable()
-    {
+    public function shouldResolveAThenable() {
         $thenable = new SimpleFulfilledTestThenable();
 
         $mock = $this->createCallableMock();
@@ -61,8 +58,7 @@ class FunctionResolveTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveACancellableThenable()
-    {
+    public function shouldResolveACancellableThenable() {
         $thenable = new SimpleTestCancellableThenable();
 
         $promise = resolve($thenable);
@@ -72,8 +68,7 @@ class FunctionResolveTest extends TestCase
     }
 
     /** @test */
-    public function shouldRejectARejectedPromise()
-    {
+    public function shouldRejectARejectedPromise() {
         $expected = 123;
 
         $resolved = new RejectedPromise($expected);
@@ -92,10 +87,9 @@ class FunctionResolveTest extends TestCase
     }
 
     /** @test */
-    public function shouldSupportDeepNestingInPromiseChains()
-    {
+    public function shouldSupportDeepNestingInPromiseChains() {
         $d = new Deferred();
-        $d->resolve(false);
+        $d->resolve(FALSE);
 
         $result = resolve(resolve($d->promise()->then(function ($val) {
             $d = new Deferred();
@@ -116,14 +110,13 @@ class FunctionResolveTest extends TestCase
         $mock
             ->expects($this->once())
             ->method('__invoke')
-            ->with($this->identicalTo(true));
+            ->with($this->identicalTo(TRUE));
 
         $result->then($mock);
     }
 
     /** @test */
-    public function shouldSupportVeryDeepNestedPromises()
-    {
+    public function shouldSupportVeryDeepNestedPromises() {
         $deferreds = [];
 
         // @TODO Increase count once global-queue is merged
@@ -133,13 +126,13 @@ class FunctionResolveTest extends TestCase
 
             $last = $p;
             for ($j = 0; $j < 10; $j++) {
-                $last = $last->then(function($result) {
+                $last = $last->then(function ($result) {
                     return $result;
                 });
             }
         }
 
-        $p = null;
+        $p = NULL;
         foreach ($deferreds as $d) {
             if ($p) {
                 $d->resolve($p);
@@ -148,20 +141,19 @@ class FunctionResolveTest extends TestCase
             $p = $d->promise();
         }
 
-        $deferreds[0]->resolve(true);
+        $deferreds[0]->resolve(TRUE);
 
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
             ->method('__invoke')
-            ->with($this->identicalTo(true));
+            ->with($this->identicalTo(TRUE));
 
         $deferreds[0]->promise()->then($mock);
     }
 
     /** @test */
-    public function returnsExtendePromiseForSimplePromise()
-    {
+    public function returnsExtendePromiseForSimplePromise() {
         $promise = $this
             ->getMockBuilder('React\Promise\PromiseInterface')
             ->getMock();

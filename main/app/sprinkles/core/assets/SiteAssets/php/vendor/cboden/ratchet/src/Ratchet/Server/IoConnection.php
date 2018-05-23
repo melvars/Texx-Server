@@ -1,12 +1,15 @@
 <?php
+
 namespace Ratchet\Server;
+
 use Ratchet\ConnectionInterface;
 use React\Socket\ConnectionInterface as ReactConn;
 
 /**
  * {@inheritdoc}
  */
-class IoConnection implements ConnectionInterface {
+class IoConnection implements ConnectionInterface
+{
     /**
      * @var \React\Socket\ConnectionInterface
      */

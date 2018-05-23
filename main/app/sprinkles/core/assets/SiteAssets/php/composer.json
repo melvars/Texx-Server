@@ -1,11 +1,11 @@
 {
-    "autoload": {
-        "psr-4": {
-            "Websocket\\": "Chatserver/src"
-        }
-    },
-    "require": {
-        "cboden/ratchet": "^0.4.1",
-        "nubs/random-name-generator": "^2.1"
+  "autoload": {
+    "psr-4": {
+      "Websocket\\": "Chatserver/src"
     }
+  },
+  "require": {
+    "cboden/ratchet": "^0.4.1",
+    "nubs/random-name-generator": "^2.1"
+  }
 }

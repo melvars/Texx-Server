@@ -6,6 +6,7 @@
  * @copyright Copyright (c) 2017 Louis Charette
  * @license   https://github.com/lcharette/UF_FormGenerator/blob/master/LICENSE (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\FormGenerator;
 
 use Illuminate\Contracts\Config\Repository;
@@ -20,7 +21,8 @@ use UserFrosting\Fortress\RequestSchema\RequestSchemaInterface;
  * The FormGenerator class, which is used to return the `form` part from a Fortress
  * schema for html form generator in Twig.
  */
-class Form {
+class Form
+{
 
     /**
      * @var RequestSchemaInterface The form fields definition
@@ -44,8 +46,7 @@ class Form {
      * @param array|object $data (default: [])
      * @return void
      */
-    public function __construct(RequestSchemaInterface $schema, $data = [])
-    {
+    public function __construct(RequestSchemaInterface $schema, $data = []) {
         $this->setSchema($schema);
         $this->setData($data);
     }
@@ -55,8 +56,7 @@ class Form {
      *
      * @param array|object $data The form values
      */
-    public function setData($data)
-    {
+    public function setData($data) {
         if ($data instanceof Collection || $data instanceof Model) {
             $this->data = $data->toArray();
         } else if (is_array($data) || $data instanceof Repository) {
@@ -71,8 +71,7 @@ class Form {
      *
      * @param RequestSchemaInterface $schema A RequestSchemaInterface object, containing the form definition.
      */
-    public function setSchema(RequestSchemaInterface $schema)
-    {
+    public function setSchema(RequestSchemaInterface $schema) {
         $this->schema = $schema;
     }
 
@@ -83,8 +82,7 @@ class Form {
      * @param mixed $value
      * @return void
      */
-    public function setValue($inputName, $value)
-    {
+    public function setValue($inputName, $value) {
         $this->data[$inputName] = $value;
     }
 
@@ -94,12 +92,11 @@ class Form {
      * Use `setCustomFormData` to set any other tag.
      *
      * @param string $inputName The input name where the argument will be added
-     * @param string $property  The argument name. Example "data-color"
-     * @param string $data      The value of the argument
+     * @param string $property The argument name. Example "data-color"
+     * @param string $data The value of the argument
      * @return void
      */
-    public function setInputArgument($inputName, $property, $data)
-    {
+    public function setInputArgument($inputName, $property, $data) {
         if ($this->schema->has($inputName)) {
             // Get the element and force set the property
             $element = $this->schema->get($inputName);
@@ -115,12 +112,11 @@ class Form {
      * `setInputArgument` and `setValue`.
      *
      * @param string $inputName The select name to add options to
-     * @param array  $data      An array of `value => label` options
-     * @param string $selected  The selected key
+     * @param array $data An array of `value => label` options
+     * @param string $selected The selected key
      * @return void
      */
-    public function setOptions($inputName, $data = [], $selected = null)
-    {
+    public function setOptions($inputName, $data = [], $selected = NULL) {
         // Set opdations
         $this->setInputArgument($inputName, 'options', $data);
 
@@ -139,8 +135,7 @@ class Form {
      * @param string $namespace
      * @return void
      */
-    public function setFormNamespace($namespace)
-    {
+    public function setFormNamespace($namespace) {
         $this->formNamespace = $namespace;
     }
 
@@ -150,8 +145,7 @@ class Form {
      *
      * @return array The form fields data
      */
-    public function generate()
-    {
+    public function generate() {
         $form = collect([]);
 
         // Loop all the the fields in the schema
@@ -161,10 +155,10 @@ class Form {
             if (isset($input['form'])) {
 
                 // Get the value from the data
-                $value = isset($this->data[$name]) ? $this->data[$name] : null;
+                $value = isset($this->data[$name]) ? $this->data[$name] : NULL;
 
                 // Add the namespace to the name if it's defined
-                $name = ($this->formNamespace != "") ? $this->formNamespace."[".$name."]" : $name;
+                $name = ($this->formNamespace != "") ? $this->formNamespace . "[" . $name . "]" : $name;
 
                 // Get the element class and make sure it exist
                 $type = (isset($input['form']['type'])) ? $input['form']['type'] : "text";

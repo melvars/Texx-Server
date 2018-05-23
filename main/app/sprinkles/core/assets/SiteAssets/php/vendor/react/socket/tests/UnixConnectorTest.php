@@ -10,26 +10,22 @@ class UnixConnectorTest extends TestCase
     private $loop;
     private $connector;
 
-    public function setUp()
-    {
+    public function setUp() {
         $this->loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $this->connector = new UnixConnector($this->loop);
     }
 
-    public function testInvalid()
-    {
+    public function testInvalid() {
         $promise = $this->connector->connect('google.com:80');
-        $promise->then(null, $this->expectCallableOnce());
+        $promise->then(NULL, $this->expectCallableOnce());
     }
 
-    public function testInvalidScheme()
-    {
+    public function testInvalidScheme() {
         $promise = $this->connector->connect('tcp://google.com:80');
-        $promise->then(null, $this->expectCallableOnce());
+        $promise->then(NULL, $this->expectCallableOnce());
     }
 
-    public function testValid()
-    {
+    public function testValid() {
         // random unix domain socket path
         $path = sys_get_temp_dir() . '/test' . uniqid() . '.sock';
 
@@ -38,7 +34,7 @@ class UnixConnectorTest extends TestCase
 
         // skip test if we can not create a test server (Windows etc.)
         if (!$server) {
-            $this->markTestSkipped('Unable to create socket "' . $path . '": ' . $errstr . '(' . $errno .')');
+            $this->markTestSkipped('Unable to create socket "' . $path . '": ' . $errstr . '(' . $errno . ')');
             return;
         }
 
@@ -47,8 +43,8 @@ class UnixConnectorTest extends TestCase
         $promise->then($this->expectCallableOnce());
 
         // remember remote and local address of this connection and close again
-        $remote = $local = false;
-        $promise->then(function(ConnectionInterface $conn) use (&$remote, &$local) {
+        $remote = $local = FALSE;
+        $promise->then(function (ConnectionInterface $conn) use (&$remote, &$local) {
             $remote = $conn->getRemoteAddress();
             $local = $conn->getLocalAddress();
             $conn->close();

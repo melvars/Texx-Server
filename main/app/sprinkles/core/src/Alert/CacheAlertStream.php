@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Alert;
 
 use Illuminate\Cache\Repository as Cache;
@@ -18,30 +19,29 @@ use UserFrosting\Support\Repository\Repository;
  *    the alerts. Note that the tags are added each time instead of the
  *    constructor since the session_id can change when the user logs in or out
  *
- *    @author Louis Charette
+ * @author Louis Charette
  */
 class CacheAlertStream extends AlertStream
 {
     /**
-     *    @var Cache Object We use the cache object so that added messages will automatically appear in the cache.
+     * @var Cache Object We use the cache object so that added messages will automatically appear in the cache.
      */
     protected $cache;
 
     /**
-     *    @var Repository Object We use the cache object so that added messages will automatically appear in the cache.
+     * @var Repository Object We use the cache object so that added messages will automatically appear in the cache.
      */
     protected $config;
 
     /**
      *    Create a new message stream.
      *
-     *    @param string $messagesKey Store the messages under this key
-     *    @param MessageTranslator|null $translator
-     *    @param Cache $cache
-     *    @param Repository $config
+     * @param string $messagesKey Store the messages under this key
+     * @param MessageTranslator|null $translator
+     * @param Cache $cache
+     * @param Repository $config
      */
-    public function __construct($messagesKey, MessageTranslator $translator = null, Cache $cache, Repository $config)
-    {
+    public function __construct($messagesKey, MessageTranslator $translator = NULL, Cache $cache, Repository $config) {
         $this->cache = $cache;
         $this->config = $config;
         parent::__construct($messagesKey, $translator);
@@ -50,12 +50,11 @@ class CacheAlertStream extends AlertStream
     /**
      *    Get the messages from this message stream.
      *
-     *    @return array An array of messages, each of which is itself an array containing 'type' and 'message' fields.
+     * @return array An array of messages, each of which is itself an array containing 'type' and 'message' fields.
      */
-    public function messages()
-    {
-        if ($this->cache->tags('_s'.session_id())->has($this->messagesKey)) {
-            return $this->cache->tags('_s'.session_id())->get($this->messagesKey) ?: [];
+    public function messages() {
+        if ($this->cache->tags('_s' . session_id())->has($this->messagesKey)) {
+            return $this->cache->tags('_s' . session_id())->get($this->messagesKey) ?: [];
         } else {
             return [];
         }
@@ -64,21 +63,19 @@ class CacheAlertStream extends AlertStream
     /**
      *    Clear all messages from this message stream.
      *
-     *    @return void
+     * @return void
      */
-    public function resetMessageStream()
-    {
-        $this->cache->tags('_s'.session_id())->forget($this->messagesKey);
+    public function resetMessageStream() {
+        $this->cache->tags('_s' . session_id())->forget($this->messagesKey);
     }
 
     /**
      *    Save messages to the stream
      *
-     *    @param  string $messages The message
-     *    @return void
+     * @param  string $messages The message
+     * @return void
      */
-    protected function saveMessages($messages)
-    {
-        $this->cache->tags('_s'.session_id())->forever($this->messagesKey, $messages);
+    protected function saveMessages($messages) {
+        $this->cache->tags('_s' . session_id())->forever($this->messagesKey, $messages);
     }
 }

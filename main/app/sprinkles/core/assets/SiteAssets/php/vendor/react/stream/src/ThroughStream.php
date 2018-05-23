@@ -75,85 +75,77 @@ use InvalidArgumentException;
  */
 final class ThroughStream extends EventEmitter implements DuplexStreamInterface
 {
-    private $readable = true;
-    private $writable = true;
-    private $closed = false;
-    private $paused = false;
-    private $drain = false;
+    private $readable = TRUE;
+    private $writable = TRUE;
+    private $closed = FALSE;
+    private $paused = FALSE;
+    private $drain = FALSE;
     private $callback;
 
-    public function __construct($callback = null)
-    {
-        if ($callback !== null && !is_callable($callback)) {
+    public function __construct($callback = NULL) {
+        if ($callback !== NULL && !is_callable($callback)) {
             throw new InvalidArgumentException('Invalid transformation callback given');
         }
 
         $this->callback = $callback;
     }
 
-    public function pause()
-    {
-        $this->paused = true;
+    public function pause() {
+        $this->paused = TRUE;
     }
 
-    public function resume()
-    {
+    public function resume() {
         if ($this->drain) {
-            $this->drain = false;
+            $this->drain = FALSE;
             $this->emit('drain');
         }
-        $this->paused = false;
+        $this->paused = FALSE;
     }
 
-    public function pipe(WritableStreamInterface $dest, array $options = array())
-    {
+    public function pipe(WritableStreamInterface $dest, array $options = array()) {
         return Util::pipe($this, $dest, $options);
     }
 
-    public function isReadable()
-    {
+    public function isReadable() {
         return $this->readable;
     }
 
-    public function isWritable()
-    {
+    public function isWritable() {
         return $this->writable;
     }
 
-    public function write($data)
-    {
+    public function write($data) {
         if (!$this->writable) {
-            return false;
+            return FALSE;
         }
 
-        if ($this->callback !== null) {
+        if ($this->callback !== NULL) {
             try {
                 $data = call_user_func($this->callback, $data);
             } catch (\Exception $e) {
                 $this->emit('error', array($e));
                 $this->close();
 
-                return false;
+                return FALSE;
             }
         }
 
         $this->emit('data', array($data));
 
         if ($this->paused) {
-            $this->drain = true;
-            return false;
+            $this->drain = TRUE;
+            return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 
-    public function end($data = null)
-    {
+    public function end($data = NULL) {
         if (!$this->writable) {
             return;
         }
 
-        if (null !== $data) {
+        if (NULL !== $data) {
             $this->write($data);
 
             // return if write() already caused the stream to close
@@ -162,27 +154,26 @@ final class ThroughStream extends EventEmitter implements DuplexStreamInterface
             }
         }
 
-        $this->readable = false;
-        $this->writable = false;
-        $this->paused = true;
-        $this->drain = false;
+        $this->readable = FALSE;
+        $this->writable = FALSE;
+        $this->paused = TRUE;
+        $this->drain = FALSE;
 
         $this->emit('end');
         $this->close();
     }
 
-    public function close()
-    {
+    public function close() {
         if ($this->closed) {
             return;
         }
 
-        $this->readable = false;
-        $this->writable = false;
-        $this->closed = true;
-        $this->paused = true;
-        $this->drain = false;
-        $this->callback = null;
+        $this->readable = FALSE;
+        $this->writable = FALSE;
+        $this->closed = TRUE;
+        $this->paused = TRUE;
+        $this->drain = FALSE;
+        $this->callback = NULL;
 
         $this->emit('close');
         $this->removeAllListeners();

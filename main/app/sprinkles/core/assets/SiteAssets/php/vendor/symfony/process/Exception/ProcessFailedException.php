@@ -22,13 +22,12 @@ class ProcessFailedException extends RuntimeException
 {
     private $process;
 
-    public function __construct(Process $process)
-    {
+    public function __construct(Process $process) {
         if ($process->isSuccessful()) {
             throw new InvalidArgumentException('Expected a failed process, but the given process was successful.');
         }
 
-        $error = sprintf('The command "%s" failed.'."\n\nExit Code: %s(%s)\n\nWorking directory: %s",
+        $error = sprintf('The command "%s" failed.' . "\n\nExit Code: %s(%s)\n\nWorking directory: %s",
             $process->getCommandLine(),
             $process->getExitCode(),
             $process->getExitCodeText(),
@@ -47,8 +46,7 @@ class ProcessFailedException extends RuntimeException
         $this->process = $process;
     }
 
-    public function getProcess()
-    {
+    public function getProcess() {
         return $this->process;
     }
 }

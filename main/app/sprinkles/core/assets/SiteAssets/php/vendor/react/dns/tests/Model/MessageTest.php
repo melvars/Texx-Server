@@ -8,8 +8,7 @@ use React\Dns\Model\Message;
 
 class MessageTest extends TestCase
 {
-    public function testCreateRequestDesiresRecusion()
-    {
+    public function testCreateRequestDesiresRecusion() {
         $query = new Query('igor.io', Message::TYPE_A, Message::CLASS_IN, 1345656451);
         $request = Message::createRequestForQuery($query);
 
@@ -17,8 +16,7 @@ class MessageTest extends TestCase
         $this->assertSame(1, $request->header->get('rd'));
     }
 
-    public function testCreateResponseWithNoAnswers()
-    {
+    public function testCreateResponseWithNoAnswers() {
         $query = new Query('igor.io', Message::TYPE_A, Message::CLASS_IN, 1345656451);
         $answers = array();
         $request = Message::createResponseWithAnswersForQuery($query, $answers);

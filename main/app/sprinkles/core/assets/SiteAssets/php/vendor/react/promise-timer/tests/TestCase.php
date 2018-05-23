@@ -9,13 +9,11 @@ class TestCase extends BaseTestCase
 {
     protected $loop;
 
-    public function setUp()
-    {
+    public function setUp() {
         $this->loop = Factory::create();
     }
 
-    protected function expectCallableOnce()
-    {
+    protected function expectCallableOnce() {
         $mock = $this->createCallableMock();
 
         $mock
@@ -25,8 +23,7 @@ class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function expectCallableNever()
-    {
+    protected function expectCallableNever() {
         $mock = $this->createCallableMock();
 
         $mock
@@ -39,23 +36,19 @@ class TestCase extends BaseTestCase
     /**
      * @link https://github.com/reactphp/react/blob/master/tests/React/Tests/Socket/TestCase.php (taken from reactphp/react)
      */
-    protected function createCallableMock()
-    {
+    protected function createCallableMock() {
         return $this->getMockBuilder('React\Tests\Promise\Timer\CallableStub')->getMock();
     }
 
-    protected function expectPromiseRejected($promise)
-    {
+    protected function expectPromiseRejected($promise) {
         return $promise->then($this->expectCallableNever(), $this->expectCallableOnce());
     }
 
-    protected function expectPromiseResolved($promise)
-    {
+    protected function expectPromiseResolved($promise) {
         return $promise->then($this->expectCallableOnce(), $this->expectCallableNever());
     }
 
-    protected function expectPromisePending($promise)
-    {
+    protected function expectPromisePending($promise) {
         return $promise->then($this->expectCallableNever(), $this->expectCallableNever());
     }
 }

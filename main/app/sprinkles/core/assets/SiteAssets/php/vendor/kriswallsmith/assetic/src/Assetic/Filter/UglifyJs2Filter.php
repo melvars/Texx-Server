@@ -33,57 +33,47 @@ class UglifyJs2Filter extends BaseNodeFilter
     private $wrap;
     private $defines;
 
-    public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
-    {
+    public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = NULL) {
         $this->uglifyjsBin = $uglifyjsBin;
         $this->nodeBin = $nodeBin;
     }
 
-    public function setCompress($compress)
-    {
+    public function setCompress($compress) {
         $this->compress = $compress;
     }
 
-    public function setBeautify($beautify)
-    {
+    public function setBeautify($beautify) {
         $this->beautify = $beautify;
     }
 
-    public function setMangle($mangle)
-    {
+    public function setMangle($mangle) {
         $this->mangle = $mangle;
     }
 
-    public function setScrewIe8($screwIe8)
-    {
+    public function setScrewIe8($screwIe8) {
         $this->screwIe8 = $screwIe8;
     }
 
-    public function setComments($comments)
-    {
+    public function setComments($comments) {
         $this->comments = $comments;
     }
 
-    public function setWrap($wrap)
-    {
+    public function setWrap($wrap) {
         $this->wrap = $wrap;
     }
 
-    public function setDefines(array $defines)
-    {
+    public function setDefines(array $defines) {
         $this->defines = $defines;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $pb = $this->createProcessBuilder(
             $this->nodeBin
-            ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin)
+                ? array($this->nodeBin, $this->uglifyjsBin)
+                : array($this->uglifyjsBin)
         );
 
         if ($this->compress) {
@@ -107,7 +97,7 @@ class UglifyJs2Filter extends BaseNodeFilter
         }
 
         if ($this->comments) {
-            $pb->add('--comments')->add(true === $this->comments ? 'all' : $this->comments);
+            $pb->add('--comments')->add(TRUE === $this->comments ? 'all' : $this->comments);
         }
 
         if ($this->wrap) {
@@ -119,7 +109,7 @@ class UglifyJs2Filter extends BaseNodeFilter
         }
 
         // input and output files
-        $input  = FilesystemUtils::createTemporaryFile('uglifyjs2_in');
+        $input = FilesystemUtils::createTemporaryFile('uglifyjs2_in');
         $output = FilesystemUtils::createTemporaryFile('uglifyjs2_out');
 
         file_put_contents($input, $asset->getContent());

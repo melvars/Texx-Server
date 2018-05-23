@@ -20,27 +20,25 @@ use Assetic\Asset\AssetInterface;
  */
 class CssRewriteFilter extends BaseCssFilter
 {
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $sourceBase = $asset->getSourceRoot();
         $sourcePath = $asset->getSourcePath();
         $targetPath = $asset->getTargetPath();
 
-        if (null === $sourcePath || null === $targetPath || $sourcePath == $targetPath) {
+        if (NULL === $sourcePath || NULL === $targetPath || $sourcePath == $targetPath) {
             return;
         }
 
         // learn how to get from the target back to the source
-        if (false !== strpos($sourceBase, '://')) {
-            list($scheme, $url) = explode('://', $sourceBase.'/'.$sourcePath, 2);
+        if (FALSE !== strpos($sourceBase, '://')) {
+            list($scheme, $url) = explode('://', $sourceBase . '/' . $sourcePath, 2);
             list($host, $path) = explode('/', $url, 2);
 
-            $host = $scheme.'://'.$host.'/';
-            $path = false === strpos($path, '/') ? '' : dirname($path);
+            $host = $scheme . '://' . $host . '/';
+            $path = FALSE === strpos($path, '/') ? '' : dirname($path);
             $path .= '/';
         } else {
             // assume source and target are on the same host
@@ -49,12 +47,12 @@ class CssRewriteFilter extends BaseCssFilter
             // pop entries off the target until it fits in the source
             if ('.' == dirname($sourcePath)) {
                 $path = str_repeat('../', substr_count($targetPath, '/'));
-            } elseif ('.' == $targetDir = dirname($targetPath)) {
-                $path = dirname($sourcePath).'/';
+            } else if ('.' == $targetDir = dirname($targetPath)) {
+                $path = dirname($sourcePath) . '/';
             } else {
                 $path = '';
                 while (0 !== strpos($sourcePath, $targetDir)) {
-                    if (false !== $pos = strrpos($targetDir, '/')) {
+                    if (FALSE !== $pos = strrpos($targetDir, '/')) {
                         $targetDir = substr($targetDir, 0, $pos);
                         $path .= '../';
                     } else {
@@ -63,19 +61,19 @@ class CssRewriteFilter extends BaseCssFilter
                         break;
                     }
                 }
-                $path .= ltrim(substr(dirname($sourcePath).'/', strlen($targetDir)), '/');
+                $path .= ltrim(substr(dirname($sourcePath) . '/', strlen($targetDir)), '/');
             }
         }
 
         $content = $this->filterReferences($asset->getContent(), function ($matches) use ($host, $path) {
-            if (false !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//') || 0 === strpos($matches['url'], 'data:')) {
+            if (FALSE !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//') || 0 === strpos($matches['url'], 'data:')) {
                 // absolute or protocol-relative or data uri
                 return $matches[0];
             }
 
             if (isset($matches['url'][0]) && '/' == $matches['url'][0]) {
                 // root relative
-                return str_replace($matches['url'], $host.$matches['url'], $matches[0]);
+                return str_replace($matches['url'], $host . $matches['url'], $matches[0]);
             }
 
             // document relative
@@ -86,7 +84,7 @@ class CssRewriteFilter extends BaseCssFilter
             }
 
             $parts = array();
-            foreach (explode('/', $host.$path.$url) as $part) {
+            foreach (explode('/', $host . $path . $url) as $part) {
                 if ('..' === $part && count($parts) && '..' !== end($parts)) {
                     array_pop($parts);
                 } else {

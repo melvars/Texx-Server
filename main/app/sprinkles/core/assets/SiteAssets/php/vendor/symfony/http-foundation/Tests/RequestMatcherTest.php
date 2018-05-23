@@ -20,32 +20,29 @@ class RequestMatcherTest extends TestCase
     /**
      * @dataProvider getMethodData
      */
-    public function testMethod($requestMethod, $matcherMethod, $isMatch)
-    {
+    public function testMethod($requestMethod, $matcherMethod, $isMatch) {
         $matcher = new RequestMatcher();
         $matcher->matchMethod($matcherMethod);
         $request = Request::create('', $requestMethod);
         $this->assertSame($isMatch, $matcher->matches($request));
 
-        $matcher = new RequestMatcher(null, null, $matcherMethod);
+        $matcher = new RequestMatcher(NULL, NULL, $matcherMethod);
         $request = Request::create('', $requestMethod);
         $this->assertSame($isMatch, $matcher->matches($request));
     }
 
-    public function getMethodData()
-    {
+    public function getMethodData() {
         return array(
-            array('get', 'get', true),
-            array('get', array('get', 'post'), true),
-            array('get', 'post', false),
-            array('get', 'GET', true),
-            array('get', array('GET', 'POST'), true),
-            array('get', 'POST', false),
+            array('get', 'get', TRUE),
+            array('get', array('get', 'post'), TRUE),
+            array('get', 'post', FALSE),
+            array('get', 'GET', TRUE),
+            array('get', array('GET', 'POST'), TRUE),
+            array('get', 'POST', FALSE),
         );
     }
 
-    public function testScheme()
-    {
+    public function testScheme() {
         $httpRequest = $request = $request = Request::create('');
         $httpsRequest = $request = $request = Request::create('', 'get', array(), array(), array(), array('HTTPS' => 'on'));
 
@@ -66,34 +63,31 @@ class RequestMatcherTest extends TestCase
     /**
      * @dataProvider getHostData
      */
-    public function testHost($pattern, $isMatch)
-    {
+    public function testHost($pattern, $isMatch) {
         $matcher = new RequestMatcher();
         $request = Request::create('', 'get', array(), array(), array(), array('HTTP_HOST' => 'foo.example.com'));
 
         $matcher->matchHost($pattern);
         $this->assertSame($isMatch, $matcher->matches($request));
 
-        $matcher = new RequestMatcher(null, $pattern);
+        $matcher = new RequestMatcher(NULL, $pattern);
         $this->assertSame($isMatch, $matcher->matches($request));
     }
 
-    public function getHostData()
-    {
+    public function getHostData() {
         return array(
-            array('.*\.example\.com', true),
-            array('\.example\.com$', true),
-            array('^.*\.example\.com$', true),
-            array('.*\.sensio\.com', false),
-            array('.*\.example\.COM', true),
-            array('\.example\.COM$', true),
-            array('^.*\.example\.COM$', true),
-            array('.*\.sensio\.COM', false),
+            array('.*\.example\.com', TRUE),
+            array('\.example\.com$', TRUE),
+            array('^.*\.example\.com$', TRUE),
+            array('.*\.sensio\.com', FALSE),
+            array('.*\.example\.COM', TRUE),
+            array('\.example\.COM$', TRUE),
+            array('^.*\.example\.COM$', TRUE),
+            array('.*\.sensio\.COM', FALSE),
         );
     }
 
-    public function testPath()
-    {
+    public function testPath() {
         $matcher = new RequestMatcher();
 
         $request = Request::create('/admin/foo');
@@ -111,8 +105,7 @@ class RequestMatcherTest extends TestCase
         $this->assertFalse($matcher->matches($request));
     }
 
-    public function testPathWithLocaleIsNotSupported()
-    {
+    public function testPathWithLocaleIsNotSupported() {
         $matcher = new RequestMatcher();
         $request = Request::create('/en/login');
         $request->setLocale('en');
@@ -121,16 +114,14 @@ class RequestMatcherTest extends TestCase
         $this->assertFalse($matcher->matches($request));
     }
 
-    public function testPathWithEncodedCharacters()
-    {
+    public function testPathWithEncodedCharacters() {
         $matcher = new RequestMatcher();
         $request = Request::create('/admin/fo%20o');
         $matcher->matchPath('^/admin/fo o*$');
         $this->assertTrue($matcher->matches($request));
     }
 
-    public function testAttributes()
-    {
+    public function testAttributes() {
         $matcher = new RequestMatcher();
 
         $request = Request::create('/admin/foo');

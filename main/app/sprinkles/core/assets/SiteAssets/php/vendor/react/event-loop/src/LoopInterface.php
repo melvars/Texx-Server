@@ -46,7 +46,7 @@ interface LoopInterface
      * The execution order of listeners when multiple streams become ready at
      * the same time is not guaranteed.
      *
-     * @param resource $stream   The PHP stream resource to check.
+     * @param resource $stream The PHP stream resource to check.
      * @param callable $listener Invoked when the stream is ready.
      * @throws \Exception if the given resource type is not supported by this loop implementation
      * @see self::removeReadStream()
@@ -103,7 +103,7 @@ interface LoopInterface
      * As such, it's recommended to use `stream_set_read_buffer($stream, 0);`
      * to disable PHP's internal read buffer in this case.
      *
-     * @param resource $stream   The PHP stream resource to check.
+     * @param resource $stream The PHP stream resource to check.
      * @param callable $listener Invoked when the stream is ready.
      * @throws \Exception if the given resource type is not supported by this loop implementation
      * @see self::removeWriteStream()
@@ -195,7 +195,7 @@ interface LoopInterface
      * See also [event loop implementations](#loop-implementations) for more details.
      *
      * @param int|float $interval The number of seconds to wait before execution.
-     * @param callable  $callback The callback to invoke.
+     * @param callable $callback The callback to invoke.
      *
      * @return TimerInterface
      */
@@ -278,7 +278,7 @@ interface LoopInterface
      * accuracy or below.
      *
      * @param int|float $interval The number of seconds to wait before execution.
-     * @param callable  $callback The callback to invoke.
+     * @param callable $callback The callback to invoke.
      *
      * @return TimerInterface
      */

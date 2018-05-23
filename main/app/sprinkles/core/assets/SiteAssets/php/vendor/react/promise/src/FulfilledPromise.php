@@ -6,8 +6,7 @@ class FulfilledPromise implements ExtendedPromiseInterface, CancellablePromiseIn
 {
     private $value;
 
-    public function __construct($value = null)
-    {
+    public function __construct($value = NULL) {
         if ($value instanceof PromiseInterface) {
             throw new \InvalidArgumentException('You cannot create React\Promise\FulfilledPromise with a promise. Use React\Promise\resolve($promiseOrValue) instead.');
         }
@@ -15,9 +14,8 @@ class FulfilledPromise implements ExtendedPromiseInterface, CancellablePromiseIn
         $this->value = $value;
     }
 
-    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
-    {
-        if (null === $onFulfilled) {
+    public function then(callable $onFulfilled = NULL, callable $onRejected = NULL, callable $onProgress = NULL) {
+        if (NULL === $onFulfilled) {
             return $this;
         }
 
@@ -30,9 +28,8 @@ class FulfilledPromise implements ExtendedPromiseInterface, CancellablePromiseIn
         }
     }
 
-    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
-    {
-        if (null === $onFulfilled) {
+    public function done(callable $onFulfilled = NULL, callable $onRejected = NULL, callable $onProgress = NULL) {
+        if (NULL === $onFulfilled) {
             return;
         }
 
@@ -43,13 +40,11 @@ class FulfilledPromise implements ExtendedPromiseInterface, CancellablePromiseIn
         }
     }
 
-    public function otherwise(callable $onRejected)
-    {
+    public function otherwise(callable $onRejected) {
         return $this;
     }
 
-    public function always(callable $onFulfilledOrRejected)
-    {
+    public function always(callable $onFulfilledOrRejected) {
         return $this->then(function ($value) use ($onFulfilledOrRejected) {
             return resolve($onFulfilledOrRejected())->then(function () use ($value) {
                 return $value;
@@ -57,12 +52,10 @@ class FulfilledPromise implements ExtendedPromiseInterface, CancellablePromiseIn
         });
     }
 
-    public function progress(callable $onProgress)
-    {
+    public function progress(callable $onProgress) {
         return $this;
     }
 
-    public function cancel()
-    {
+    public function cancel() {
     }
 }

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\ServicesProvider;
 
 use Birke\Rememberme\Authenticator as RememberMe;
@@ -40,8 +41,7 @@ class ServicesProvider
      *
      * @param Container $container A DI container implementing ArrayAccess and container-interop.
      */
-    public function register($container)
-    {
+    public function register($container) {
         /**
          * Extend the asset manager service to see assets for the current user's theme.
          */
@@ -192,11 +192,11 @@ class ServicesProvider
         $container['authLogger'] = function ($c) {
             $logger = new Logger('auth');
 
-            $logFile = $c->get('locator')->findResource('log://userfrosting.log', true, true);
+            $logFile = $c->get('locator')->findResource('log://userfrosting.log', TRUE, TRUE);
 
             $handler = new StreamHandler($logFile);
 
-            $formatter = new MixedFormatter(null, null, true);
+            $formatter = new MixedFormatter(NULL, NULL, TRUE);
 
             $handler->setFormatter($formatter);
             $logger->pushHandler($handler);
@@ -219,7 +219,7 @@ class ServicesProvider
                  * @return bool returns true no matter what.
                  */
                 'always' => function () {
-                    return true;
+                    return TRUE;
                 },
 
                 /**
@@ -240,10 +240,10 @@ class ServicesProvider
                  */
                 'equals_num' => function ($val1, $val2) {
                     if (!is_numeric($val1)) {
-                        return false;
+                        return FALSE;
                     }
                     if (!is_numeric($val2)) {
-                        return false;
+                        return FALSE;
                     }
 
                     return ($val1 == $val2);
@@ -258,9 +258,9 @@ class ServicesProvider
                  */
                 'has_role' => function ($user_id, $role_id) {
                     return Capsule::table('role_users')
-                        ->where('user_id', $user_id)
-                        ->where('role_id', $role_id)
-                        ->count() > 0;
+                            ->where('user_id', $user_id)
+                            ->where('role_id', $role_id)
+                            ->count() > 0;
                 },
 
                 /**
@@ -347,14 +347,14 @@ class ServicesProvider
              * This method is invoked when a user attempts to perform certain public actions when they are already logged in.
              *
              * @todo Forward to user's landing page or last visited page
-             * @param \Psr\Http\Message\ServerRequestInterface $request  
-             * @param \Psr\Http\Message\ResponseInterface      $response 
+             * @param \Psr\Http\Message\ServerRequestInterface $request
+             * @param \Psr\Http\Message\ResponseInterface $response
              * @param array $args
              * @return \Psr\Http\Message\ResponseInterface
              */
             return function (Request $request, Response $response, array $args) use ($c) {
                 $redirect = $c->router->pathFor('dashboard');
-        
+
                 return $response->withRedirect($redirect, 302);
             };
         };
@@ -367,8 +367,8 @@ class ServicesProvider
              * This method is invoked when a user completes the login process.
              *
              * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
-             * @param \Psr\Http\Message\ServerRequestInterface $request  
-             * @param \Psr\Http\Message\ResponseInterface      $response 
+             * @param \Psr\Http\Message\ServerRequestInterface $request
+             * @param \Psr\Http\Message\ResponseInterface $response
              * @param array $args
              * @return \Psr\Http\Message\ResponseInterface
              */
@@ -376,7 +376,7 @@ class ServicesProvider
                 // Backwards compatibility for the deprecated determineRedirectOnLogin service
                 if ($c->has('determineRedirectOnLogin')) {
                     $determineRedirectOnLogin = $c->determineRedirectOnLogin;
-            
+
                     return $determineRedirectOnLogin($response)->withStatus(200);
                 }
 

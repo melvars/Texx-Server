@@ -1,5 +1,7 @@
 <?php
+
 namespace Ratchet\RFC6455\Handshake;
+
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -7,7 +9,8 @@ use Psr\Http\Message\RequestInterface;
  * Verification rules come from section 4.2.1 of the RFC6455 document
  * @todo Currently just returning invalid - should consider returning appropriate HTTP status code error #s
  */
-class RequestVerifier {
+class RequestVerifier
+{
     const VERSION = 13;
 
     /**
@@ -54,15 +57,15 @@ class RequestVerifier {
      */
     public function verifyRequestURI($val) {
         if ($val[0] !== '/') {
-            return false;
+            return FALSE;
         }
 
-        if (false !== strstr($val, '#')) {
-            return false;
+        if (FALSE !== strstr($val, '#')) {
+            return FALSE;
         }
 
         if (!extension_loaded('mbstring')) {
-            return true;
+            return TRUE;
         }
 
         return mb_check_encoding($val, 'US-ASCII');
@@ -100,10 +103,10 @@ class RequestVerifier {
                 }
             );
             if (count($upgrades) > 0) {
-                return true;
+                return TRUE;
             }
         }
-        return false;
+        return FALSE;
     }
 
     /**

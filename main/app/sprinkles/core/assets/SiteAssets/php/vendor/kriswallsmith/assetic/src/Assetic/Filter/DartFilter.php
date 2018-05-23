@@ -24,23 +24,20 @@ class DartFilter extends BaseProcessFilter
 {
     private $dartBin;
 
-    public function __construct($dartBin = '/usr/bin/dart2js')
-    {
+    public function __construct($dartBin = '/usr/bin/dart2js') {
         $this->dartBin = $dartBin;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-        $input  = FilesystemUtils::createTemporaryFile('dart');
+    public function filterLoad(AssetInterface $asset) {
+        $input = FilesystemUtils::createTemporaryFile('dart');
         $output = FilesystemUtils::createTemporaryFile('dart');
 
         file_put_contents($input, $asset->getContent());
 
         $pb = $this->createProcessBuilder()
             ->add($this->dartBin)
-            ->add('-o'.$output)
-            ->add($input)
-        ;
+            ->add('-o' . $output)
+            ->add($input);
 
         $proc = $pb->getProcess();
         $code = $proc->run();
@@ -60,13 +57,11 @@ class DartFilter extends BaseProcessFilter
         $this->cleanup($output);
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 
-    private function cleanup($file)
-    {
-        foreach (glob($file.'*') as $related) {
+    private function cleanup($file) {
+        foreach (glob($file . '*') as $related) {
             unlink($related);
         }
     }

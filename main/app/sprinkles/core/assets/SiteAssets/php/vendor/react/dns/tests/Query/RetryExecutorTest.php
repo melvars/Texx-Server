@@ -15,11 +15,10 @@ use React\Dns\Query\CancellationException;
 class RetryExecutorTest extends TestCase
 {
     /**
-    * @covers React\Dns\Query\RetryExecutor
-    * @test
-    */
-    public function queryShouldDelegateToDecoratedExecutor()
-    {
+     * @covers React\Dns\Query\RetryExecutor
+     * @test
+     */
+    public function queryShouldDelegateToDecoratedExecutor() {
         $executor = $this->createExecutorMock();
         $executor
             ->expects($this->once())
@@ -34,11 +33,10 @@ class RetryExecutorTest extends TestCase
     }
 
     /**
-    * @covers React\Dns\Query\RetryExecutor
-    * @test
-    */
-    public function queryShouldRetryQueryOnTimeout()
-    {
+     * @covers React\Dns\Query\RetryExecutor
+     * @test
+     */
+    public function queryShouldRetryQueryOnTimeout() {
         $response = $this->createStandardResponse();
 
         $executor = $this->createExecutorMock();
@@ -70,11 +68,10 @@ class RetryExecutorTest extends TestCase
     }
 
     /**
-    * @covers React\Dns\Query\RetryExecutor
-    * @test
-    */
-    public function queryShouldStopRetryingAfterSomeAttempts()
-    {
+     * @covers React\Dns\Query\RetryExecutor
+     * @test
+     */
+    public function queryShouldStopRetryingAfterSomeAttempts() {
         $executor = $this->createExecutorMock();
         $executor
             ->expects($this->exactly(3))
@@ -99,11 +96,10 @@ class RetryExecutorTest extends TestCase
     }
 
     /**
-    * @covers React\Dns\Query\RetryExecutor
-    * @test
-    */
-    public function queryShouldForwardNonTimeoutErrors()
-    {
+     * @covers React\Dns\Query\RetryExecutor
+     * @test
+     */
+    public function queryShouldForwardNonTimeoutErrors() {
         $executor = $this->createExecutorMock();
         $executor
             ->expects($this->once())
@@ -131,8 +127,7 @@ class RetryExecutorTest extends TestCase
      * @covers React\Dns\Query\RetryExecutor
      * @test
      */
-    public function queryShouldCancelQueryOnCancel()
-    {
+    public function queryShouldCancelQueryOnCancel() {
         $cancelled = 0;
 
         $executor = $this->createExecutorMock();
@@ -148,7 +143,7 @@ class RetryExecutorTest extends TestCase
 
                 return $deferred->promise();
             })
-        );
+            );
 
         $retryExecutor = new RetryExecutor($executor, 2);
 
@@ -162,8 +157,7 @@ class RetryExecutorTest extends TestCase
         $this->assertEquals(1, $cancelled);
     }
 
-    protected function expectPromiseOnce($return = null)
-    {
+    protected function expectPromiseOnce($return = NULL) {
         $mock = $this->createPromiseMock();
         $mock
             ->expects($this->once())
@@ -173,18 +167,15 @@ class RetryExecutorTest extends TestCase
         return $mock;
     }
 
-    protected function createExecutorMock()
-    {
+    protected function createExecutorMock() {
         return $this->getMockBuilder('React\Dns\Query\ExecutorInterface')->getMock();
     }
 
-    protected function createPromiseMock()
-    {
+    protected function createPromiseMock() {
         return $this->getMockBuilder('React\Promise\PromiseInterface')->getMock();
     }
 
-    protected function createStandardResponse()
-    {
+    protected function createStandardResponse() {
         $response = new Message();
         $response->header->set('qr', 1);
         $response->questions[] = new Record('igor.io', Message::TYPE_A, Message::CLASS_IN);

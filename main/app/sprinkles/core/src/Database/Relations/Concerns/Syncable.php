@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Relations\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
@@ -22,12 +23,11 @@ trait Syncable
      * Synchronizes an array of data for related models with a parent model.
      *
      * @param mixed[] $data
-     * @param bool $deleting          Delete models from the database that are not represented in the input data.
-     * @param bool $forceCreate       Ignore mass assignment restrictions on child models.
-     * @param string $relatedKeyName  The primary key used to determine which child models are new, updated, or deleted.
+     * @param bool $deleting Delete models from the database that are not represented in the input data.
+     * @param bool $forceCreate Ignore mass assignment restrictions on child models.
+     * @param string $relatedKeyName The primary key used to determine which child models are new, updated, or deleted.
      */
-    public function sync($data, $deleting = true, $forceCreate = false, $relatedKeyName = null)
-    {
+    public function sync($data, $deleting = TRUE, $forceCreate = FALSE, $relatedKeyName = NULL) {
         $changes = [
             'created' => [], 'deleted' => [], 'updated' => [],
         ];
@@ -71,9 +71,9 @@ trait Syncable
         if ($deleting && count($deleteIds) > 0) {
             // Remove global scopes to avoid ambiguous keys
             $this->getRelated()
-                 ->withoutGlobalScopes()
-                 ->whereIn($relatedKeyName, $deleteIds)
-                 ->delete();
+                ->withoutGlobalScopes()
+                ->whereIn($relatedKeyName, $deleteIds)
+                ->delete();
 
             $changes['deleted'] = $this->castKeys($deleteIds);
         }
@@ -82,11 +82,11 @@ trait Syncable
         foreach ($updateRows as $id => $row) {
             // Remove global scopes to avoid ambiguous keys
             $this->getRelated()
-                 ->withoutGlobalScopes()
-                 ->where($relatedKeyName, $id)
-                 ->update($row);
+                ->withoutGlobalScopes()
+                ->where($relatedKeyName, $id)
+                ->update($row);
         }
-        
+
         $changes['updated'] = $this->castKeys($updateIds);
 
         // Insert the new rows
@@ -109,24 +109,22 @@ trait Syncable
     /**
      * Cast the given keys to integers if they are numeric and string otherwise.
      *
-     * @param  array  $keys
+     * @param  array $keys
      * @return array
      */
-    protected function castKeys(array $keys)
-    {
-        return (array) array_map(function ($v) {
+    protected function castKeys(array $keys) {
+        return (array)array_map(function ($v) {
             return $this->castKey($v);
         }, $keys);
     }
-    
+
     /**
      * Cast the given key to an integer if it is numeric.
      *
-     * @param  mixed  $key
+     * @param  mixed $key
      * @return mixed
      */
-    protected function castKey($key)
-    {
-        return is_numeric($key) ? (int) $key : (string) $key;
+    protected function castKey($key) {
+        return is_numeric($key) ? (int)$key : (string)$key;
     }
 }

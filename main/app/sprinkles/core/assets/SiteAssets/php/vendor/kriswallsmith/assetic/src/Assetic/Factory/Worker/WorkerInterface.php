@@ -24,8 +24,8 @@ interface WorkerInterface
     /**
      * Processes an asset.
      *
-     * @param AssetInterface $asset   An asset
-     * @param AssetFactory   $factory The factory
+     * @param AssetInterface $asset An asset
+     * @param AssetFactory $factory The factory
      *
      * @return AssetInterface|null May optionally return a replacement asset
      */

@@ -14,7 +14,7 @@ class MessageBufferTest extends \PHPUnit_Framework_TestCase
      * buffer with many many frames without blowing the stack (pre-v0.4 issue)
      */
     public function testProcessingLotsOfFramesInASingleChunk() {
-        $frame = new Frame('a', true, Frame::OP_TEXT);
+        $frame = new Frame('a', TRUE, Frame::OP_TEXT);
 
         $frameRaw = $frame->getContents();
 
@@ -28,8 +28,8 @@ class MessageBufferTest extends \PHPUnit_Framework_TestCase
                 $messageCount++;
                 $this->assertEquals('a', $message->getPayload());
             },
-            null,
-            false
+            NULL,
+            FALSE
         );
 
         $messageBuffer->onData($data);

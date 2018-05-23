@@ -24,7 +24,7 @@ class Connection extends EventEmitter implements ConnectionInterface
      *
      * @internal
      */
-    public $unix = false;
+    public $unix = FALSE;
 
     /**
      * Internal flag whether encryption has been enabled on this connection
@@ -34,15 +34,14 @@ class Connection extends EventEmitter implements ConnectionInterface
      *
      * @internal
      */
-    public $encryptionEnabled = false;
+    public $encryptionEnabled = FALSE;
 
     /** @internal */
     public $stream;
 
     private $input;
 
-    public function __construct($resource, LoopInterface $loop)
-    {
+    public function __construct($resource, LoopInterface $loop) {
         // PHP < 5.6.8 suffers from a buffer indicator bug on secure TLS connections
         // as a work-around we always read the complete buffer until its end.
         // The buffer size is limited due to TCP/IP buffers anyway, so this
@@ -65,8 +64,8 @@ class Connection extends EventEmitter implements ConnectionInterface
         $this->input = new DuplexResourceStream(
             $resource,
             $loop,
-            $clearCompleteBuffer ? -1 : null,
-            new WritableResourceStream($resource, $loop, null, $limitWriteChunks ? 8192 : null)
+            $clearCompleteBuffer ? -1 : NULL,
+            new WritableResourceStream($resource, $loop, NULL, $limitWriteChunks ? 8192 : NULL)
         );
 
         $this->stream = $resource;
@@ -76,50 +75,41 @@ class Connection extends EventEmitter implements ConnectionInterface
         $this->input->on('close', array($this, 'close'));
     }
 
-    public function isReadable()
-    {
+    public function isReadable() {
         return $this->input->isReadable();
     }
 
-    public function isWritable()
-    {
+    public function isWritable() {
         return $this->input->isWritable();
     }
 
-    public function pause()
-    {
+    public function pause() {
         $this->input->pause();
     }
 
-    public function resume()
-    {
+    public function resume() {
         $this->input->resume();
     }
 
-    public function pipe(WritableStreamInterface $dest, array $options = array())
-    {
+    public function pipe(WritableStreamInterface $dest, array $options = array()) {
         return $this->input->pipe($dest, $options);
     }
 
-    public function write($data)
-    {
+    public function write($data) {
         return $this->input->write($data);
     }
 
-    public function end($data = null)
-    {
+    public function end($data = NULL) {
         $this->input->end($data);
     }
 
-    public function close()
-    {
+    public function close() {
         $this->input->close();
         $this->handleClose();
         $this->removeAllListeners();
     }
 
-    public function handleClose()
-    {
+    public function handleClose() {
         if (!is_resource($this->stream)) {
             return;
         }
@@ -131,23 +121,20 @@ class Connection extends EventEmitter implements ConnectionInterface
         // Underlying Stream implementation will take care of closing file
         // handle, so we otherwise keep this open here.
         @stream_socket_shutdown($this->stream, STREAM_SHUT_RDWR);
-        stream_set_blocking($this->stream, false);
+        stream_set_blocking($this->stream, FALSE);
     }
 
-    public function getRemoteAddress()
-    {
-        return $this->parseAddress(@stream_socket_get_name($this->stream, true));
+    public function getRemoteAddress() {
+        return $this->parseAddress(@stream_socket_get_name($this->stream, TRUE));
     }
 
-    public function getLocalAddress()
-    {
-        return $this->parseAddress(@stream_socket_get_name($this->stream, false));
+    public function getLocalAddress() {
+        return $this->parseAddress(@stream_socket_get_name($this->stream, FALSE));
     }
 
-    private function parseAddress($address)
-    {
-        if ($address === false) {
-            return null;
+    private function parseAddress($address) {
+        if ($address === FALSE) {
+            return NULL;
         }
 
         if ($this->unix) {
@@ -159,8 +146,8 @@ class Connection extends EventEmitter implements ConnectionInterface
 
             // work around unknown addresses should return null value: https://3v4l.org/5C1lo and https://bugs.php.net/bug.php?id=74556
             // PHP uses "\0" string and HHVM uses empty string (colon removed above)
-            if ($address === '' || $address[0] === "\x00" ) {
-                return null;
+            if ($address === '' || $address[0] === "\x00") {
+                return NULL;
             }
 
             return 'unix://' . $address;
@@ -168,7 +155,7 @@ class Connection extends EventEmitter implements ConnectionInterface
 
         // check if this is an IPv6 address which includes multiple colons but no square brackets
         $pos = strrpos($address, ':');
-        if ($pos !== false && strpos($address, ':') < $pos && substr($address, 0, 1) !== '[') {
+        if ($pos !== FALSE && strpos($address, ':') < $pos && substr($address, 0, 1) !== '[') {
             $port = substr($address, $pos + 1);
             $address = '[' . substr($address, 0, $pos) . ']:' . $port;
         }

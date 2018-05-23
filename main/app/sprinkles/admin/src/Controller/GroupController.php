@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Carbon\Carbon;
@@ -43,8 +44,7 @@ class GroupController extends SimpleController
      * Request type: POST
      * @see getModalCreateGroup
      */
-    public function create($request, $response, $args)
-    {
+    public function create($request, $response, $args) {
         // Get POST parameters: name, slug, icon, description
         $params = $request->getParsedBody();
 
@@ -69,13 +69,13 @@ class GroupController extends SimpleController
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        $error = false;
+        $error = FALSE;
 
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            $error = true;
+            $error = TRUE;
         }
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -84,12 +84,12 @@ class GroupController extends SimpleController
         // Check if name or slug already exists
         if ($classMapper->staticMethod('group', 'where', 'name', $data['name'])->first()) {
             $ms->addMessageTranslated('danger', 'GROUP.NAME.IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($classMapper->staticMethod('group', 'where', 'slug', $data['slug'])->first()) {
             $ms->addMessageTranslated('danger', 'GROUP.SLUG.IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($error) {
@@ -101,7 +101,7 @@ class GroupController extends SimpleController
 
         // All checks passed!  log events/activities and create group
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
+        Capsule::transaction(function () use ($classMapper, $data, $ms, $config, $currentUser) {
             // Create the group
             $group = $classMapper->createInstance('group', $data);
 
@@ -132,8 +132,7 @@ class GroupController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      * Request type: DELETE
      */
-    public function delete($request, $response, $args)
-    {
+    public function delete($request, $response, $args) {
         $group = $this->getGroupFromParams($args);
 
         // If the group doesn't exist, return 404
@@ -179,7 +178,7 @@ class GroupController extends SimpleController
         $groupName = $group->name;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($group, $groupName, $currentUser) {
+        Capsule::transaction(function () use ($group, $groupName, $currentUser) {
             $group->delete();
             unset($group);
 
@@ -206,8 +205,7 @@ class GroupController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getInfo($request, $response, $args)
-    {
+    public function getInfo($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
@@ -246,8 +244,7 @@ class GroupController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getList($request, $response, $args)
-    {
+    public function getList($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -272,8 +269,7 @@ class GroupController extends SimpleController
         return $sprunje->toResponse($response);
     }
 
-    public function getModalConfirmDelete($request, $response, $args)
-    {
+    public function getModalConfirmDelete($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -323,8 +319,7 @@ class GroupController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalCreate($request, $response, $args)
-    {
+    public function getModalCreate($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -369,7 +364,7 @@ class GroupController extends SimpleController
                 'submit_text' => $translator->translate('CREATE')
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
+                'validators' => $validator->rules('json', FALSE)
             ]
         ]);
     }
@@ -381,8 +376,7 @@ class GroupController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEdit($request, $response, $args)
-    {
+    public function getModalEdit($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -433,13 +427,12 @@ class GroupController extends SimpleController
                 'submit_text' => $translator->translate('UPDATE')
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
+                'validators' => $validator->rules('json', FALSE)
             ]
         ]);
     }
 
-    public function getUsers($request, $response, $args)
-    {
+    public function getUsers($request, $response, $args) {
         $group = $this->getGroupFromParams($args);
 
         // If the group no longer exists, forward to main group listing page
@@ -486,8 +479,7 @@ class GroupController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageInfo($request, $response, $args)
-    {
+    public function pageInfo($request, $response, $args) {
         $group = $this->getGroupFromParams($args);
 
         // If the group no longer exists, forward to main group listing page
@@ -504,8 +496,8 @@ class GroupController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_group', [
-                'group' => $group
-            ])) {
+            'group' => $group
+        ])) {
             throw new ForbiddenException();
         }
 
@@ -559,8 +551,7 @@ class GroupController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageList($request, $response, $args)
-    {
+    public function pageList($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
@@ -586,8 +577,7 @@ class GroupController extends SimpleController
      * Request type: PUT
      * @see getModalGroupEdit
      */
-    public function updateInfo($request, $response, $args)
-    {
+    public function updateInfo($request, $response, $args) {
         // Get the group based on slug in URL
         $group = $this->getGroupFromParams($args);
 
@@ -611,13 +601,13 @@ class GroupController extends SimpleController
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        $error = false;
+        $error = FALSE;
 
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            $error = true;
+            $error = TRUE;
         }
 
         // Determine targeted fields
@@ -650,7 +640,7 @@ class GroupController extends SimpleController
             $classMapper->staticMethod('group', 'where', 'name', $data['name'])->first()
         ) {
             $ms->addMessageTranslated('danger', 'GROUP.NAME.IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if (
@@ -659,7 +649,7 @@ class GroupController extends SimpleController
             $classMapper->staticMethod('group', 'where', 'slug', $data['slug'])->first()
         ) {
             $ms->addMessageTranslated('danger', 'GROUP.SLUG.IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($error) {
@@ -667,7 +657,7 @@ class GroupController extends SimpleController
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($data, $group, $currentUser) {
+        Capsule::transaction(function () use ($data, $group, $currentUser) {
             // Update the group and generate success messages
             foreach ($data as $name => $value) {
                 if ($value != $group->$name) {
@@ -691,8 +681,7 @@ class GroupController extends SimpleController
         return $response->withStatus(200);
     }
 
-    protected function getGroupFromParams($params)
-    {
+    protected function getGroupFromParams($params) {
         // Load the request schema
         $schema = new RequestSchema('schema://requests/group/get-by-slug.yaml');
 
@@ -706,7 +695,7 @@ class GroupController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery\Command;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -25,24 +26,22 @@ class Setup extends BaseCommand
     /**
      * envfile path
      */
-    protected $envPath = \UserFrosting\APP_DIR. '/.env';
+    protected $envPath = \UserFrosting\APP_DIR . '/.env';
 
     /**
      * {@inheritDoc}
      */
-    protected function configure()
-    {
+    protected function configure() {
         $this->setName("setup")
-             ->setDescription("UserFrosting configuration wizard")
-             ->setHelp("Helper command to setup the database and email configuration. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.")
-             ->addOption("force", "f", InputOption::VALUE_NONE, "If `.env` file exist, force setup to run again");
+            ->setDescription("UserFrosting configuration wizard")
+            ->setHelp("Helper command to setup the database and email configuration. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.")
+            ->addOption("force", "f", InputOption::VALUE_NONE, "If `.env` file exist, force setup to run again");
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         // Get config
         $config = $this->ci->config;
 
@@ -75,8 +74,7 @@ class Setup extends BaseCommand
      * @access public
      * @return void
      */
-    public function setupEnv()
-    {
+    public function setupEnv() {
         // Get config
         $config = $this->ci->config;
 
@@ -112,7 +110,7 @@ class Setup extends BaseCommand
                 // Use custom validator to accept empty password
                 return $password;
             });
-    
+
             $dbParams = [
                 'driver' => $driverName,
                 'host' => $host,
@@ -133,10 +131,10 @@ class Setup extends BaseCommand
             $conn = $capsule->getConnection();
             $conn->getPdo();
             $this->io->success("Database connection successful");
-            $success = true;
+            $success = TRUE;
         } catch (\PDOException $e) {
-            $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':".PHP_EOL;
-            $message .= "Exception: " . $e->getMessage() . PHP_EOL.PHP_EOL;
+            $message = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':" . PHP_EOL;
+            $message .= "Exception: " . $e->getMessage() . PHP_EOL . PHP_EOL;
             $message .= "Please check your database configuration and/or google the exception shown above and run the command again.";
             $this->io->error($message);
             exit(1);
@@ -191,8 +189,7 @@ class Setup extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function databaseDrivers()
-    {
+    protected function databaseDrivers() {
         return collect([
             [
                 "driver" => "mysql",
@@ -216,7 +213,7 @@ class Setup extends BaseCommand
                 "driver" => "sqlite",
                 "name" => "SQLite",
                 "defaultDBName" => \UserFrosting\DB_DIR . \UserFrosting\DS . 'userfrosting.db',
-                "defaultPort" => null
+                "defaultPort" => NULL
             ]
         ]);
     }

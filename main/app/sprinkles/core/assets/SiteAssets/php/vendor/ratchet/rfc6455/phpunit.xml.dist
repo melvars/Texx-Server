@@ -8,7 +8,7 @@
         backupStaticAttributes="false"
         syntaxCheck="false"
         stopOnError="false"
-        >
+>
 
     <testsuites>
         <testsuite name="tests">

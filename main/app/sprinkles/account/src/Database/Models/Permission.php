@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -37,14 +38,13 @@ class Permission extends Model
     /**
      * @var bool Enable timestamps for this class.
      */
-    public $timestamps = true;
+    public $timestamps = TRUE;
 
     /**
      * Delete this permission from the database, removing associations with roles.
      *
      */
-    public function delete()
-    {
+    public function delete() {
         // Remove all role associations
         $this->roles()->detach();
 
@@ -59,8 +59,7 @@ class Permission extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function roles()
-    {
+    public function roles() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
@@ -74,11 +73,10 @@ class Permission extends Model
      * @param int $roleId
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeForRole($query, $roleId)
-    {
+    public function scopeForRole($query, $roleId) {
         return $query->join('permission_roles', function ($join) use ($roleId) {
             $join->on('permission_roles.permission_id', 'permissions.id')
-                 ->where('role_id', $roleId);
+                ->where('role_id', $roleId);
         });
     }
 
@@ -89,11 +87,10 @@ class Permission extends Model
      * @param int $roleId
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeNotForRole($query, $roleId)
-    {
+    public function scopeNotForRole($query, $roleId) {
         return $query->join('permission_roles', function ($join) use ($roleId) {
             $join->on('permission_roles.permission_id', 'permissions.id')
-                 ->where('role_id', '!=', $roleId);
+                ->where('role_id', '!=', $roleId);
         });
     }
 
@@ -102,8 +99,7 @@ class Permission extends Model
      *
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough
      */
-    public function users()
-    {
+    public function users() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 

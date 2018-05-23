@@ -13,16 +13,17 @@ const ITERATIONS = 10000000;
 
 use Evenement\EventEmitter;
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $emitter = new EventEmitter();
 
-$emitter->on('event', function () {});
+$emitter->on('event', function () {
+});
 
-$start = microtime(true);
+$start = microtime(TRUE);
 for ($i = 0; $i < ITERATIONS; $i++) {
     $emitter->emit('event');
 }
-$time = microtime(true) - $start;
+$time = microtime(TRUE) - $start;
 
 echo 'Emitting ', number_format(ITERATIONS), ' events took: ', number_format($time, 2), 's', PHP_EOL;

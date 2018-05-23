@@ -8,8 +8,7 @@ class LazyPromiseTest extends TestCase
 {
     use PromiseTest\FullTestTrait;
 
-    public function getPromiseTestAdapter(callable $canceller = null)
-    {
+    public function getPromiseTestAdapter(callable $canceller = NULL) {
         $d = new Deferred($canceller);
 
         $factory = function () use ($d) {
@@ -17,19 +16,18 @@ class LazyPromiseTest extends TestCase
         };
 
         return new CallbackPromiseAdapter([
-            'promise'  => function () use ($factory) {
+            'promise' => function () use ($factory) {
                 return new LazyPromise($factory);
             },
             'resolve' => [$d, 'resolve'],
-            'reject'  => [$d, 'reject'],
-            'notify'  => [$d, 'progress'],
-            'settle'  => [$d, 'resolve'],
+            'reject' => [$d, 'reject'],
+            'notify' => [$d, 'progress'],
+            'settle' => [$d, 'resolve'],
         ]);
     }
 
     /** @test */
-    public function shouldNotCallFactoryIfThenIsNotInvoked()
-    {
+    public function shouldNotCallFactoryIfThenIsNotInvoked() {
         $factory = $this->createCallableMock();
         $factory
             ->expects($this->never())
@@ -39,8 +37,7 @@ class LazyPromiseTest extends TestCase
     }
 
     /** @test */
-    public function shouldCallFactoryIfThenIsInvoked()
-    {
+    public function shouldCallFactoryIfThenIsInvoked() {
         $factory = $this->createCallableMock();
         $factory
             ->expects($this->once())
@@ -51,8 +48,7 @@ class LazyPromiseTest extends TestCase
     }
 
     /** @test */
-    public function shouldReturnPromiseFromFactory()
-    {
+    public function shouldReturnPromiseFromFactory() {
         $factory = $this->createCallableMock();
         $factory
             ->expects($this->once())
@@ -71,21 +67,19 @@ class LazyPromiseTest extends TestCase
     }
 
     /** @test */
-    public function shouldReturnPromiseIfFactoryReturnsNull()
-    {
+    public function shouldReturnPromiseIfFactoryReturnsNull() {
         $factory = $this->createCallableMock();
         $factory
             ->expects($this->once())
             ->method('__invoke')
-            ->will($this->returnValue(null));
+            ->will($this->returnValue(NULL));
 
         $p = new LazyPromise($factory);
         $this->assertInstanceOf('React\\Promise\\PromiseInterface', $p->then());
     }
 
     /** @test */
-    public function shouldReturnRejectedPromiseIfFactoryThrowsException()
-    {
+    public function shouldReturnRejectedPromiseIfFactoryThrowsException() {
         $exception = new \Exception();
 
         $factory = $this->createCallableMock();

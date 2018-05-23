@@ -21,16 +21,15 @@ final class Factory
      *
      * @return LoopInterface
      */
-    public static function create()
-    {
+    public static function create() {
         // @codeCoverageIgnoreStart
-        if (class_exists('libev\EventLoop', false)) {
+        if (class_exists('libev\EventLoop', FALSE)) {
             return new ExtLibevLoop();
-        } elseif (class_exists('EvLoop', false)) {
+        } else if (class_exists('EvLoop', FALSE)) {
             return new ExtEvLoop();
-        } elseif (class_exists('EventBase', false)) {
+        } else if (class_exists('EventBase', FALSE)) {
             return new ExtEventLoop();
-        } elseif (function_exists('event_base_new') && PHP_VERSION_ID < 70000) {
+        } else if (function_exists('event_base_new') && PHP_VERSION_ID < 70000) {
             // only use ext-libevent on PHP < 7 for now
             return new ExtLibeventLoop();
         }

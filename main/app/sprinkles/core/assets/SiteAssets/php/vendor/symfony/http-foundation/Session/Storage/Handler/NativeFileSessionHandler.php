@@ -28,9 +28,8 @@ class NativeFileSessionHandler extends NativeSessionHandler
      * @throws \InvalidArgumentException On invalid $savePath
      * @throws \RuntimeException         When failing to create the save directory
      */
-    public function __construct($savePath = null)
-    {
-        if (null === $savePath) {
+    public function __construct($savePath = NULL) {
+        if (NULL === $savePath) {
             $savePath = ini_get('session.save_path');
         }
 
@@ -45,7 +44,7 @@ class NativeFileSessionHandler extends NativeSessionHandler
             $baseDir = ltrim(strrchr($savePath, ';'), ';');
         }
 
-        if ($baseDir && !is_dir($baseDir) && !@mkdir($baseDir, 0777, true) && !is_dir($baseDir)) {
+        if ($baseDir && !is_dir($baseDir) && !@mkdir($baseDir, 0777, TRUE) && !is_dir($baseDir)) {
             throw new \RuntimeException(sprintf('Session Storage was not able to create directory "%s"', $baseDir));
         }
 

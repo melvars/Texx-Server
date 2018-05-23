@@ -49,11 +49,10 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
     /**
      * Constructor.
      *
-     * @param string $nodeBin   The path to the node binary
-     * @param array  $nodePaths An array of node paths
+     * @param string $nodeBin The path to the node binary
+     * @param array $nodePaths An array of node paths
      */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
-    {
+    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array()) {
         $this->nodeBin = $nodeBin;
         $this->setNodePaths($nodePaths);
         $this->treeOptions = array();
@@ -63,13 +62,11 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
     /**
      * @param bool $compress
      */
-    public function setCompress($compress)
-    {
+    public function setCompress($compress) {
         $this->addTreeOption('compress', $compress);
     }
 
-    public function setLoadPaths(array $loadPaths)
-    {
+    public function setLoadPaths(array $loadPaths) {
         $this->loadPaths = $loadPaths;
     }
 
@@ -78,8 +75,7 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
      *
      * @param string $path Load path (absolute)
      */
-    public function addLoadPath($path)
-    {
+    public function addLoadPath($path) {
         $this->loadPaths[] = $path;
     }
 
@@ -87,8 +83,7 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
      * @param string $code
      * @param string $value
      */
-    public function addTreeOption($code, $value)
-    {
+    public function addTreeOption($code, $value) {
         $this->treeOptions[$code] = $value;
     }
 
@@ -96,13 +91,11 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
      * @param string $code
      * @param string $value
      */
-    public function addParserOption($code, $value)
-    {
+    public function addParserOption($code, $value) {
         $this->parserOptions[$code] = $value;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         static $format = <<<'EOF'
 var less = require('less');
 var sys  = require(process.binding('natives').util ? 'util' : 'sys');
@@ -156,18 +149,16 @@ EOF;
         $asset->setContent($proc->getOutput());
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 
     /**
      * @todo support for import-once
      * @todo support for import (less) "lib.css"
      */
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
+    public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         $loadPaths = $this->loadPaths;
-        if (null !== $loadPath) {
+        if (NULL !== $loadPath) {
             $loadPaths[] = $loadPath;
         }
 
@@ -188,7 +179,7 @@ EOF;
             }
 
             foreach ($loadPaths as $loadPath) {
-                if (file_exists($file = $loadPath.'/'.$reference)) {
+                if (file_exists($file = $loadPath . '/' . $reference)) {
                     $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
                     foreach ($coll as $leaf) {
                         $leaf->ensureFilter($this);

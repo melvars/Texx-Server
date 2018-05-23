@@ -1,11 +1,14 @@
 <?php
+
 namespace Ratchet\Application\Server;
+
 use Ratchet\Server\FlashPolicy;
 
 /**
  * @covers Ratchet\Server\FlashPolicy
  */
-class FlashPolicyTest extends \PHPUnit_Framework_TestCase {
+class FlashPolicyTest extends \PHPUnit_Framework_TestCase
+{
 
     protected $_policy;
 
@@ -42,16 +45,16 @@ class FlashPolicyTest extends \PHPUnit_Framework_TestCase {
 
     public static function siteControl() {
         return array(
-            array(true, 'all')
-          , array(true, 'none')
-          , array(true, 'master-only')
-          , array(false, 'by-content-type')
-          , array(false, 'by-ftp-filename')
-          , array(false, '')
-          , array(false, 'all ')
-          , array(false, 'asdf')
-          , array(false, '@893830')
-          , array(false, '*')
+            array(TRUE, 'all')
+        , array(TRUE, 'none')
+        , array(TRUE, 'master-only')
+        , array(FALSE, 'by-content-type')
+        , array(FALSE, 'by-ftp-filename')
+        , array(FALSE, '')
+        , array(FALSE, 'all ')
+        , array(FALSE, 'asdf')
+        , array(FALSE, '@893830')
+        , array(FALSE, '*')
         );
     }
 
@@ -64,23 +67,23 @@ class FlashPolicyTest extends \PHPUnit_Framework_TestCase {
 
     public static function URI() {
         return array(
-            array(true, '*')
-          , array(true, 'example.com')
-          , array(true, 'exam-ple.com')
-          , array(true, '*.example.com')
-          , array(true, 'www.example.com')
-          , array(true, 'dev.dev.example.com')
-          , array(true, 'http://example.com')
-          , array(true, 'https://example.com')
-          , array(true, 'http://*.example.com')
-          , array(false, 'exam*ple.com')
-          , array(true, '127.0.255.1')
-          , array(true, 'localhost')
-          , array(false, 'www.example.*')
-          , array(false, 'www.exa*le.com')
-          , array(false, 'www.example.*com')
-          , array(false, '*.example.*')
-          , array(false, 'gasldf*$#a0sdf0a8sdf')
+            array(TRUE, '*')
+        , array(TRUE, 'example.com')
+        , array(TRUE, 'exam-ple.com')
+        , array(TRUE, '*.example.com')
+        , array(TRUE, 'www.example.com')
+        , array(TRUE, 'dev.dev.example.com')
+        , array(TRUE, 'http://example.com')
+        , array(TRUE, 'https://example.com')
+        , array(TRUE, 'http://*.example.com')
+        , array(FALSE, 'exam*ple.com')
+        , array(TRUE, '127.0.255.1')
+        , array(TRUE, 'localhost')
+        , array(FALSE, 'www.example.*')
+        , array(FALSE, 'www.exa*le.com')
+        , array(FALSE, 'www.example.*com')
+        , array(FALSE, '*.example.*')
+        , array(FALSE, 'gasldf*$#a0sdf0a8sdf')
         );
     }
 
@@ -93,20 +96,20 @@ class FlashPolicyTest extends \PHPUnit_Framework_TestCase {
 
     public static function ports() {
         return array(
-            array(true, '*')
-          , array(true, '80')
-          , array(true, '80,443')
-          , array(true, '507,516-523')
-          , array(true, '507,516-523,333')
-          , array(true, '507,516-523,507,516-523')
-          , array(false, '516-')
-          , array(true, '516-523,11')
-          , array(false, '516,-523,11')
-          , array(false, 'example')
-          , array(false, 'asdf,123')
-          , array(false, '--')
-          , array(false, ',,,')
-          , array(false, '838*')
+            array(TRUE, '*')
+        , array(TRUE, '80')
+        , array(TRUE, '80,443')
+        , array(TRUE, '507,516-523')
+        , array(TRUE, '507,516-523,333')
+        , array(TRUE, '507,516-523,507,516-523')
+        , array(FALSE, '516-')
+        , array(TRUE, '516-523,11')
+        , array(FALSE, '516,-523,11')
+        , array(FALSE, 'example')
+        , array(FALSE, 'asdf,123')
+        , array(FALSE, '--')
+        , array(FALSE, ',,,')
+        , array(FALSE, '838*')
         );
     }
 

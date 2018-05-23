@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
 use UserFrosting\Support\Message\UserMessage;
@@ -21,8 +22,7 @@ class PhpMailerExceptionHandler extends ExceptionHandler
      *
      * @return array
      */
-    protected function determineUserMessages()
-    {
+    protected function determineUserMessages() {
         return [
             new UserMessage("ERROR.MAIL")
         ];

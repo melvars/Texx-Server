@@ -29,8 +29,7 @@ class TraceableUrlMatcher extends UrlMatcher
 
     protected $traces;
 
-    public function getTraces($pathinfo)
-    {
+    public function getTraces($pathinfo) {
         $this->traces = array();
 
         try {
@@ -41,17 +40,15 @@ class TraceableUrlMatcher extends UrlMatcher
         return $this->traces;
     }
 
-    public function getTracesForRequest(Request $request)
-    {
+    public function getTracesForRequest(Request $request) {
         $this->request = $request;
         $traces = $this->getTraces($request->getPathInfo());
-        $this->request = null;
+        $this->request = NULL;
 
         return $traces;
     }
 
-    protected function matchCollection($pathinfo, RouteCollection $routes)
-    {
+    protected function matchCollection($pathinfo, RouteCollection $routes) {
         foreach ($routes as $name => $route) {
             $compiledRoute = $route->compile();
 
@@ -119,23 +116,22 @@ class TraceableUrlMatcher extends UrlMatcher
                 if (!$route->hasScheme($scheme)) {
                     $this->addTrace(sprintf('Scheme "%s" does not match any of the required schemes (%s); the user will be redirected to first required scheme', $scheme, implode(', ', $requiredSchemes)), self::ROUTE_ALMOST_MATCHES, $name, $route);
 
-                    return true;
+                    return TRUE;
                 }
             }
 
             $this->addTrace('Route matches!', self::ROUTE_MATCHES, $name, $route);
 
-            return true;
+            return TRUE;
         }
     }
 
-    private function addTrace($log, $level = self::ROUTE_DOES_NOT_MATCH, $name = null, $route = null)
-    {
+    private function addTrace($log, $level = self::ROUTE_DOES_NOT_MATCH, $name = NULL, $route = NULL) {
         $this->traces[] = array(
             'log' => $log,
             'name' => $name,
             'level' => $level,
-            'path' => null !== $route ? $route->getPath() : null,
+            'path' => NULL !== $route ? $route->getPath() : NULL,
         );
     }
 }

@@ -32,31 +32,29 @@ class StreamedResponse extends Response
 
     /**
      * @param callable|null $callback A valid PHP callback or null to set it later
-     * @param int           $status   The response status code
-     * @param array         $headers  An array of response headers
+     * @param int $status The response status code
+     * @param array $headers An array of response headers
      */
-    public function __construct(callable $callback = null, $status = 200, $headers = array())
-    {
-        parent::__construct(null, $status, $headers);
+    public function __construct(callable $callback = NULL, $status = 200, $headers = array()) {
+        parent::__construct(NULL, $status, $headers);
 
-        if (null !== $callback) {
+        if (NULL !== $callback) {
             $this->setCallback($callback);
         }
-        $this->streamed = false;
-        $this->headersSent = false;
+        $this->streamed = FALSE;
+        $this->headersSent = FALSE;
     }
 
     /**
      * Factory method for chainability.
      *
      * @param callable|null $callback A valid PHP callback or null to set it later
-     * @param int           $status   The response status code
-     * @param array         $headers  An array of response headers
+     * @param int $status The response status code
+     * @param array $headers An array of response headers
      *
      * @return static
      */
-    public static function create($callback = null, $status = 200, $headers = array())
-    {
+    public static function create($callback = NULL, $status = 200, $headers = array()) {
         return new static($callback, $status, $headers);
     }
 
@@ -67,8 +65,7 @@ class StreamedResponse extends Response
      *
      * @return $this
      */
-    public function setCallback(callable $callback)
-    {
+    public function setCallback(callable $callback) {
         $this->callback = $callback;
 
         return $this;
@@ -81,13 +78,12 @@ class StreamedResponse extends Response
      *
      * @return $this
      */
-    public function sendHeaders()
-    {
+    public function sendHeaders() {
         if ($this->headersSent) {
             return $this;
         }
 
-        $this->headersSent = true;
+        $this->headersSent = TRUE;
 
         return parent::sendHeaders();
     }
@@ -99,15 +95,14 @@ class StreamedResponse extends Response
      *
      * @return $this
      */
-    public function sendContent()
-    {
+    public function sendContent() {
         if ($this->streamed) {
             return $this;
         }
 
-        $this->streamed = true;
+        $this->streamed = TRUE;
 
-        if (null === $this->callback) {
+        if (NULL === $this->callback) {
             throw new \LogicException('The Response callback must not be null.');
         }
 
@@ -123,9 +118,8 @@ class StreamedResponse extends Response
      *
      * @return $this
      */
-    public function setContent($content)
-    {
-        if (null !== $content) {
+    public function setContent($content) {
+        if (NULL !== $content) {
             throw new \LogicException('The content cannot be set on a StreamedResponse instance.');
         }
 
@@ -137,8 +131,7 @@ class StreamedResponse extends Response
      *
      * @return false
      */
-    public function getContent()
-    {
-        return false;
+    public function getContent() {
+        return FALSE;
     }
 }

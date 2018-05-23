@@ -27,24 +27,21 @@ use Leafo\ScssPhp\Compiler;
  */
 class ScssphpFilter implements DependencyExtractorInterface
 {
-    private $compass = false;
+    private $compass = FALSE;
     private $importPaths = array();
     private $customFunctions = array();
     private $formatter;
     private $variables = array();
 
-    public function enableCompass($enable = true)
-    {
-        $this->compass = (Boolean) $enable;
+    public function enableCompass($enable = TRUE) {
+        $this->compass = (Boolean)$enable;
     }
 
-    public function isCompassEnabled()
-    {
+    public function isCompassEnabled() {
         return $this->compass;
     }
 
-    public function setFormatter($formatter)
-    {
+    public function setFormatter($formatter) {
         $legacyFormatters = array(
             'scss_formatter' => 'Leafo\ScssPhp\Formatter\Expanded',
             'scss_formatter_nested' => 'Leafo\ScssPhp\Formatter\Nested',
@@ -61,33 +58,27 @@ class ScssphpFilter implements DependencyExtractorInterface
         $this->formatter = $formatter;
     }
 
-    public function setVariables(array $variables)
-    {
+    public function setVariables(array $variables) {
         $this->variables = $variables;
     }
 
-    public function addVariable($variable)
-    {
+    public function addVariable($variable) {
         $this->variables[] = $variable;
     }
 
-    public function setImportPaths(array $paths)
-    {
+    public function setImportPaths(array $paths) {
         $this->importPaths = $paths;
     }
 
-    public function addImportPath($path)
-    {
+    public function addImportPath($path) {
         $this->importPaths[] = $path;
     }
 
-    public function registerFunction($name, $callable)
-    {
+    public function registerFunction($name, $callable) {
         $this->customFunctions[$name] = $callable;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $sc = new Compiler();
 
         if ($this->compass) {
@@ -117,14 +108,12 @@ class ScssphpFilter implements DependencyExtractorInterface
         $asset->setContent($sc->compile($asset->getContent()));
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
+    public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         $sc = new Compiler();
-        if ($loadPath !== null) {
+        if ($loadPath !== NULL) {
             $sc->addImportPath($loadPath);
         }
 

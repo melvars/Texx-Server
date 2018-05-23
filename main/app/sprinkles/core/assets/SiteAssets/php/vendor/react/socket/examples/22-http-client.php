@@ -22,7 +22,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $uri = isset($argv[1]) ? $argv[1] : 'www.google.com';
 
-if (strpos($uri, '://') === false) {
+if (strpos($uri, '://') === FALSE) {
     $uri = 'http://' . $uri;
 }
 $parts = parse_url($uri);

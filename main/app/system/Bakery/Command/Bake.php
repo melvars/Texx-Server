@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,18 +43,16 @@ class Bake extends BaseCommand
     /**
      * {@inheritDoc}
      */
-    protected function configure()
-    {
+    protected function configure() {
         $this->setName("bake")
-             ->setDescription("UserFrosting installation command")
-             ->setHelp("This command combine the <info>debug</info>, <info>migrate</info> and <info>build-assets</info> commands.");
+            ->setDescription("UserFrosting installation command")
+            ->setHelp("This command combine the <info>debug</info>, <info>migrate</info> and <info>build-assets</info> commands.");
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         $this->io->writeln("<info>{$this->title}</info>");
 
         $command = $this->getApplication()->find('setup');

@@ -8,8 +8,7 @@ use React\Dns\Config\FilesystemFactory;
 class FilesystemFactoryTest extends TestCase
 {
     /** @test */
-    public function parseEtcResolvConfShouldParseCorrectly()
-    {
+    public function parseEtcResolvConfShouldParseCorrectly() {
         $contents = '#
 # Mac OS X Notice
 #
@@ -25,7 +24,7 @@ nameserver 8.8.8.8
 ';
         $expected = array('127.0.0.1', '8.8.8.8');
 
-        $capturedConfig = null;
+        $capturedConfig = NULL;
 
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $factory = new FilesystemFactory($loop);
@@ -38,14 +37,13 @@ nameserver 8.8.8.8
     }
 
     /** @test */
-    public function createShouldLoadStuffFromFilesystem()
-    {
+    public function createShouldLoadStuffFromFilesystem() {
         $this->markTestIncomplete('Filesystem API is incomplete');
 
         $expected = array('8.8.8.8');
 
-        $triggerListener = null;
-        $capturedConfig = null;
+        $triggerListener = NULL;
+        $capturedConfig = NULL;
 
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop
@@ -58,7 +56,7 @@ nameserver 8.8.8.8
             }));
 
         $factory = new FilesystemFactory($loop);
-        $factory->create(__DIR__.'/../Fixtures/etc/resolv.conf')->then(function ($config) use (&$capturedConfig) {
+        $factory->create(__DIR__ . '/../Fixtures/etc/resolv.conf')->then(function ($config) use (&$capturedConfig) {
             $capturedConfig = $config;
         });
 

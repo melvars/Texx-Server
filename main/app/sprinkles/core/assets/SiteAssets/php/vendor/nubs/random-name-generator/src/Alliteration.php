@@ -1,4 +1,5 @@
 <?php
+
 namespace Nubs\RandomNameGenerator;
 
 use Cinam\Randomizer\Randomizer;
@@ -23,8 +24,7 @@ class Alliteration extends AbstractGenerator implements Generator
      * @api
      * @param \Cinam\Randomizer\Randomizer $randomizer The random number generator.
      */
-    public function __construct(Randomizer $randomizer = null)
-    {
+    public function __construct(Randomizer $randomizer = NULL) {
         $this->_randomizer = $randomizer;
         $this->_adjectives = file(__DIR__ . '/adjectives.txt', FILE_IGNORE_NEW_LINES);
         $this->_nouns = file(__DIR__ . '/nouns.txt', FILE_IGNORE_NEW_LINES);
@@ -36,8 +36,7 @@ class Alliteration extends AbstractGenerator implements Generator
      * @api
      * @return string A random alliterative name.
      */
-    public function getName()
-    {
+    public function getName() {
         $adjective = $this->_getRandomWord($this->_adjectives);
         $noun = $this->_getRandomWord($this->_nouns, $adjective[0]);
 
@@ -51,9 +50,8 @@ class Alliteration extends AbstractGenerator implements Generator
      * @param string $startingLetter The desired starting letter of the word.
      * @return string The random word.
      */
-    protected function _getRandomWord(array $words, $startingLetter = null)
-    {
-        $wordsToSearch = $startingLetter === null ? $words : preg_grep("/^{$startingLetter}/", $words);
+    protected function _getRandomWord(array $words, $startingLetter = NULL) {
+        $wordsToSearch = $startingLetter === NULL ? $words : preg_grep("/^{$startingLetter}/", $words);
         return $this->_randomizer ? $this->_randomizer->getArrayValue($wordsToSearch) : $wordsToSearch[array_rand($wordsToSearch)];
     }
 }

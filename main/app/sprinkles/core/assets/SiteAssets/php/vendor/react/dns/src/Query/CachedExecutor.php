@@ -9,14 +9,12 @@ class CachedExecutor implements ExecutorInterface
     private $executor;
     private $cache;
 
-    public function __construct(ExecutorInterface $executor, RecordCache $cache)
-    {
+    public function __construct(ExecutorInterface $executor, RecordCache $cache) {
         $this->executor = $executor;
         $this->cache = $cache;
     }
 
-    public function query($nameserver, Query $query)
-    {
+    public function query($nameserver, Query $query) {
         $executor = $this->executor;
         $cache = $this->cache;
 
@@ -40,16 +38,14 @@ class CachedExecutor implements ExecutorInterface
     /**
      * @deprecated unused, exists for BC only
      */
-    public function buildResponse(Query $query, array $cachedRecords)
-    {
+    public function buildResponse(Query $query, array $cachedRecords) {
         return Message::createResponseWithAnswersForQuery($query, $cachedRecords);
     }
 
     /**
      * @deprecated unused, exists for BC only
      */
-    protected function generateId()
-    {
+    protected function generateId() {
         return mt_rand(0, 0xffff);
     }
 }

@@ -6,8 +6,7 @@ class RejectedPromise implements ExtendedPromiseInterface, CancellablePromiseInt
 {
     private $reason;
 
-    public function __construct($reason = null)
-    {
+    public function __construct($reason = NULL) {
         if ($reason instanceof PromiseInterface) {
             throw new \InvalidArgumentException('You cannot create React\Promise\RejectedPromise with a promise. Use React\Promise\reject($promiseOrValue) instead.');
         }
@@ -15,9 +14,8 @@ class RejectedPromise implements ExtendedPromiseInterface, CancellablePromiseInt
         $this->reason = $reason;
     }
 
-    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
-    {
-        if (null === $onRejected) {
+    public function then(callable $onFulfilled = NULL, callable $onRejected = NULL, callable $onProgress = NULL) {
+        if (NULL === $onRejected) {
             return $this;
         }
 
@@ -30,9 +28,8 @@ class RejectedPromise implements ExtendedPromiseInterface, CancellablePromiseInt
         }
     }
 
-    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
-    {
-        if (null === $onRejected) {
+    public function done(callable $onFulfilled = NULL, callable $onRejected = NULL, callable $onProgress = NULL) {
+        if (NULL === $onRejected) {
             throw UnhandledRejectionException::resolve($this->reason);
         }
 
@@ -47,30 +44,26 @@ class RejectedPromise implements ExtendedPromiseInterface, CancellablePromiseInt
         }
     }
 
-    public function otherwise(callable $onRejected)
-    {
+    public function otherwise(callable $onRejected) {
         if (!_checkTypehint($onRejected, $this->reason)) {
             return $this;
         }
 
-        return $this->then(null, $onRejected);
+        return $this->then(NULL, $onRejected);
     }
 
-    public function always(callable $onFulfilledOrRejected)
-    {
-        return $this->then(null, function ($reason) use ($onFulfilledOrRejected) {
+    public function always(callable $onFulfilledOrRejected) {
+        return $this->then(NULL, function ($reason) use ($onFulfilledOrRejected) {
             return resolve($onFulfilledOrRejected())->then(function () use ($reason) {
                 return new RejectedPromise($reason);
             });
         });
     }
 
-    public function progress(callable $onProgress)
-    {
+    public function progress(callable $onProgress) {
         return $this;
     }
 
-    public function cancel()
-    {
+    public function cancel() {
     }
 }

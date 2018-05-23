@@ -12,8 +12,7 @@ use React\Tests\Dns\TestCase;
 class ResolverTest extends TestCase
 {
     /** @test */
-    public function resolveShouldQueryARecords()
-    {
+    public function resolveShouldQueryARecords() {
         $executor = $this->createExecutorMock();
         $executor
             ->expects($this->once())
@@ -33,8 +32,7 @@ class ResolverTest extends TestCase
     }
 
     /** @test */
-    public function resolveShouldQueryARecordsAndIgnoreCase()
-    {
+    public function resolveShouldQueryARecordsAndIgnoreCase() {
         $executor = $this->createExecutorMock();
         $executor
             ->expects($this->once())
@@ -54,8 +52,7 @@ class ResolverTest extends TestCase
     }
 
     /** @test */
-    public function resolveShouldFilterByName()
-    {
+    public function resolveShouldFilterByName() {
         $executor = $this->createExecutorMock();
         $executor
             ->expects($this->once())
@@ -77,8 +74,7 @@ class ResolverTest extends TestCase
     }
 
     /** @test */
-    public function resolveWithNoAnswersShouldThrowException()
-    {
+    public function resolveWithNoAnswersShouldThrowException() {
         $executor = $this->createExecutorMock();
         $executor
             ->expects($this->once())
@@ -101,8 +97,7 @@ class ResolverTest extends TestCase
     /**
      * @test
      */
-    public function resolveWithNoAnswersShouldCallErrbackIfGiven()
-    {
+    public function resolveWithNoAnswersShouldCallErrbackIfGiven() {
         $executor = $this->createExecutorMock();
         $executor
             ->expects($this->once())
@@ -122,8 +117,7 @@ class ResolverTest extends TestCase
         $resolver->resolve('igor.io')->then($this->expectCallableNever(), $errback);
     }
 
-    private function createExecutorMock()
-    {
+    private function createExecutorMock() {
         return $this->getMockBuilder('React\Dns\Query\ExecutorInterface')->getMock();
     }
 }

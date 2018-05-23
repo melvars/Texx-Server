@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,20 +30,18 @@ class BuildAssets extends BaseCommand
     /**
      * {@inheritDoc}
      */
-    protected function configure()
-    {
+    protected function configure() {
         $this->setName("build-assets")
-             ->setDescription("Build the assets using node and npm")
-             ->setHelp("The build directory contains the scripts and configuration files required to download Javascript, CSS, and other assets used by UserFrosting. This command will install Gulp, Bower, and several other required npm packages locally. With <info>npm</info> set up with all of its required packages, it can be use it to automatically download and install the assets in the correct directories. For more info, see <comment>https://learn.userfrosting.com/basics/installation</comment>")
-             ->addOption("compile", "c", InputOption::VALUE_NONE, "Compile the assets and asset bundles for production environment")
-             ->addOption("force", "f", InputOption::VALUE_NONE, "Force assets compilation by deleting cached data and installed assets before proceeding");
+            ->setDescription("Build the assets using node and npm")
+            ->setHelp("The build directory contains the scripts and configuration files required to download Javascript, CSS, and other assets used by UserFrosting. This command will install Gulp, Bower, and several other required npm packages locally. With <info>npm</info> set up with all of its required packages, it can be use it to automatically download and install the assets in the correct directories. For more info, see <comment>https://learn.userfrosting.com/basics/installation</comment>")
+            ->addOption("compile", "c", InputOption::VALUE_NONE, "Compile the assets and asset bundles for production environment")
+            ->addOption("force", "f", InputOption::VALUE_NONE, "Force assets compilation by deleting cached data and installed assets before proceeding");
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         // Display header,
         $this->io->title("UserFrosting's Assets Builder");
 
@@ -76,8 +75,7 @@ class BuildAssets extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function npmInstall()
-    {
+    protected function npmInstall() {
         $this->io->section("<info>Installing npm dependencies</info>");
         $this->io->writeln("> <comment>npm install</comment>");
 
@@ -94,8 +92,7 @@ class BuildAssets extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function assetsInstall()
-    {
+    protected function assetsInstall() {
         $this->io->section("Installing assets bundles");
         $this->io->writeln("> <comment>npm run uf-assets-install</comment>");
         passthru("npm run uf-assets-install --prefix " . $this->buildPath);
@@ -107,8 +104,7 @@ class BuildAssets extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function buildAssets()
-    {
+    protected function buildAssets() {
         $this->io->section("Building assets for production");
 
         $this->io->writeln("> <comment>npm run uf-bundle-build</comment>");
@@ -127,15 +123,14 @@ class BuildAssets extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function checkAssets()
-    {
+    protected function checkAssets() {
         $this->io->section("Testing assets installation");
 
         // Get path and vendor files
         $vendorPath = \UserFrosting\SPRINKLES_DIR . "/core/assets/vendor/*";
         $coreVendorFiles = glob($vendorPath);
 
-        if (!$coreVendorFiles){
+        if (!$coreVendorFiles) {
             $this->io->error("Assets installation seems to have failed. Directory `$vendorPath` is empty, but it shouldn't be. Check the above log for any errors.");
             exit(1);
         }
@@ -156,8 +151,7 @@ class BuildAssets extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function clean()
-    {
+    protected function clean() {
         $this->io->section("Cleaning cached data");
         $this->io->writeln("> <comment>npm run uf-clean</comment>");
         passthru("npm run uf-clean --prefix " . $this->buildPath);
@@ -169,8 +163,7 @@ class BuildAssets extends BaseCommand
      * @access protected
      * @return bool
      */
-    protected function isProduction()
-    {
+    protected function isProduction() {
         // N.B.: Need to touch the config service first to load dotenv values
         $config = $this->ci->config;
         $mode = getenv("UF_MODE") ?: '';

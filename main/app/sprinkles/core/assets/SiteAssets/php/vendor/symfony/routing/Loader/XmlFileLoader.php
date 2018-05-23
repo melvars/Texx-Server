@@ -31,7 +31,7 @@ class XmlFileLoader extends FileLoader
     /**
      * Loads an XML file.
      *
-     * @param string      $file An XML file path
+     * @param string $file An XML file path
      * @param string|null $type The resource type
      *
      * @return RouteCollection A RouteCollection instance
@@ -39,8 +39,7 @@ class XmlFileLoader extends FileLoader
      * @throws \InvalidArgumentException when the file cannot be loaded or when the XML cannot be
      *                                   parsed because it does not validate against the scheme
      */
-    public function load($file, $type = null)
-    {
+    public function load($file, $type = NULL) {
         $path = $this->locator->locate($file);
 
         $xml = $this->loadFile($path);
@@ -64,14 +63,13 @@ class XmlFileLoader extends FileLoader
      * Parses a node from a loaded XML file.
      *
      * @param RouteCollection $collection Collection to associate with the node
-     * @param \DOMElement     $node       Element to parse
-     * @param string          $path       Full path of the XML file being processed
-     * @param string          $file       Loaded file name
+     * @param \DOMElement $node Element to parse
+     * @param string $path Full path of the XML file being processed
+     * @param string $file Loaded file name
      *
      * @throws \InvalidArgumentException When the XML is invalid
      */
-    protected function parseNode(RouteCollection $collection, \DOMElement $node, $path, $file)
-    {
+    protected function parseNode(RouteCollection $collection, \DOMElement $node, $path, $file) {
         if (self::NAMESPACE_URI !== $node->namespaceURI) {
             return;
         }
@@ -91,8 +89,7 @@ class XmlFileLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
-    {
+    public function supports($resource, $type = NULL) {
         return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'xml' === $type);
     }
 
@@ -100,13 +97,12 @@ class XmlFileLoader extends FileLoader
      * Parses a route and adds it to the RouteCollection.
      *
      * @param RouteCollection $collection RouteCollection instance
-     * @param \DOMElement     $node       Element to parse that represents a Route
-     * @param string          $path       Full path of the XML file being processed
+     * @param \DOMElement $node Element to parse that represents a Route
+     * @param string $path Full path of the XML file being processed
      *
      * @throws \InvalidArgumentException When the XML is invalid
      */
-    protected function parseRoute(RouteCollection $collection, \DOMElement $node, $path)
-    {
+    protected function parseRoute(RouteCollection $collection, \DOMElement $node, $path) {
         if ('' === ($id = $node->getAttribute('id')) || !$node->hasAttribute('path')) {
             throw new \InvalidArgumentException(sprintf('The <route> element in file "%s" must have an "id" and a "path" attribute.', $path));
         }
@@ -124,29 +120,28 @@ class XmlFileLoader extends FileLoader
      * Parses an import and adds the routes in the resource to the RouteCollection.
      *
      * @param RouteCollection $collection RouteCollection instance
-     * @param \DOMElement     $node       Element to parse that represents a Route
-     * @param string          $path       Full path of the XML file being processed
-     * @param string          $file       Loaded file name
+     * @param \DOMElement $node Element to parse that represents a Route
+     * @param string $path Full path of the XML file being processed
+     * @param string $file Loaded file name
      *
      * @throws \InvalidArgumentException When the XML is invalid
      */
-    protected function parseImport(RouteCollection $collection, \DOMElement $node, $path, $file)
-    {
+    protected function parseImport(RouteCollection $collection, \DOMElement $node, $path, $file) {
         if ('' === $resource = $node->getAttribute('resource')) {
             throw new \InvalidArgumentException(sprintf('The <import> element in file "%s" must have a "resource" attribute.', $path));
         }
 
         $type = $node->getAttribute('type');
         $prefix = $node->getAttribute('prefix');
-        $host = $node->hasAttribute('host') ? $node->getAttribute('host') : null;
-        $schemes = $node->hasAttribute('schemes') ? preg_split('/[\s,\|]++/', $node->getAttribute('schemes'), -1, PREG_SPLIT_NO_EMPTY) : null;
-        $methods = $node->hasAttribute('methods') ? preg_split('/[\s,\|]++/', $node->getAttribute('methods'), -1, PREG_SPLIT_NO_EMPTY) : null;
+        $host = $node->hasAttribute('host') ? $node->getAttribute('host') : NULL;
+        $schemes = $node->hasAttribute('schemes') ? preg_split('/[\s,\|]++/', $node->getAttribute('schemes'), -1, PREG_SPLIT_NO_EMPTY) : NULL;
+        $methods = $node->hasAttribute('methods') ? preg_split('/[\s,\|]++/', $node->getAttribute('methods'), -1, PREG_SPLIT_NO_EMPTY) : NULL;
 
         list($defaults, $requirements, $options, $condition) = $this->parseConfigs($node, $path);
 
         $this->setCurrentDir(dirname($path));
 
-        $imported = $this->import($resource, ('' !== $type ? $type : null), false, $file);
+        $imported = $this->import($resource, ('' !== $type ? $type : NULL), FALSE, $file);
 
         if (!is_array($imported)) {
             $imported = array($imported);
@@ -155,16 +150,16 @@ class XmlFileLoader extends FileLoader
         foreach ($imported as $subCollection) {
             /* @var $subCollection RouteCollection */
             $subCollection->addPrefix($prefix);
-            if (null !== $host) {
+            if (NULL !== $host) {
                 $subCollection->setHost($host);
             }
-            if (null !== $condition) {
+            if (NULL !== $condition) {
                 $subCollection->setCondition($condition);
             }
-            if (null !== $schemes) {
+            if (NULL !== $schemes) {
                 $subCollection->setSchemes($schemes);
             }
-            if (null !== $methods) {
+            if (NULL !== $methods) {
                 $subCollection->setMethods($methods);
             }
             $subCollection->addDefaults($defaults);
@@ -186,27 +181,25 @@ class XmlFileLoader extends FileLoader
      *                                   or when the XML structure is not as expected by the scheme -
      *                                   see validate()
      */
-    protected function loadFile($file)
-    {
-        return XmlUtils::loadFile($file, __DIR__.static::SCHEME_PATH);
+    protected function loadFile($file) {
+        return XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
     }
 
     /**
      * Parses the config elements (default, requirement, option).
      *
      * @param \DOMElement $node Element to parse that contains the configs
-     * @param string      $path Full path of the XML file being processed
+     * @param string $path Full path of the XML file being processed
      *
      * @return array An array with the defaults as first item, requirements as second and options as third
      *
      * @throws \InvalidArgumentException When the XML is invalid
      */
-    private function parseConfigs(\DOMElement $node, $path)
-    {
+    private function parseConfigs(\DOMElement $node, $path) {
         $defaults = array();
         $requirements = array();
         $options = array();
-        $condition = null;
+        $condition = NULL;
 
         foreach ($node->getElementsByTagNameNS(self::NAMESPACE_URI, '*') as $n) {
             if ($node !== $n->parentNode) {
@@ -216,7 +209,7 @@ class XmlFileLoader extends FileLoader
             switch ($n->localName) {
                 case 'default':
                     if ($this->isElementValueNull($n)) {
-                        $defaults[$n->getAttribute('key')] = null;
+                        $defaults[$n->getAttribute('key')] = NULL;
                     } else {
                         $defaults[$n->getAttribute('key')] = $this->parseDefaultsConfig($n, $path);
                     }
@@ -253,12 +246,11 @@ class XmlFileLoader extends FileLoader
      * Parses the "default" elements.
      *
      * @param \DOMElement $element The "default" element to parse
-     * @param string      $path    Full path of the XML file being processed
+     * @param string $path Full path of the XML file being processed
      *
      * @return array|bool|float|int|string|null The parsed value of the "default" element
      */
-    private function parseDefaultsConfig(\DOMElement $element, $path)
-    {
+    private function parseDefaultsConfig(\DOMElement $element, $path) {
         if ($this->isElementValueNull($element)) {
             return;
         }
@@ -288,14 +280,13 @@ class XmlFileLoader extends FileLoader
      * Recursively parses the value of a "default" element.
      *
      * @param \DOMElement $node The node value
-     * @param string      $path Full path of the XML file being processed
+     * @param string $path Full path of the XML file being processed
      *
      * @return array|bool|float|int|string The parsed value
      *
      * @throws \InvalidArgumentException when the XML is invalid
      */
-    private function parseDefaultNode(\DOMElement $node, $path)
-    {
+    private function parseDefaultNode(\DOMElement $node, $path) {
         if ($this->isElementValueNull($node)) {
             return;
         }
@@ -304,9 +295,9 @@ class XmlFileLoader extends FileLoader
             case 'bool':
                 return 'true' === trim($node->nodeValue) || '1' === trim($node->nodeValue);
             case 'int':
-                return (int) trim($node->nodeValue);
+                return (int)trim($node->nodeValue);
             case 'float':
-                return (float) trim($node->nodeValue);
+                return (float)trim($node->nodeValue);
             case 'string':
                 return trim($node->nodeValue);
             case 'list':
@@ -346,12 +337,11 @@ class XmlFileLoader extends FileLoader
         }
     }
 
-    private function isElementValueNull(\DOMElement $element)
-    {
+    private function isElementValueNull(\DOMElement $element) {
         $namespaceUri = 'http://www.w3.org/2001/XMLSchema-instance';
 
         if (!$element->hasAttributeNS($namespaceUri, 'nil')) {
-            return false;
+            return FALSE;
         }
 
         return 'true' === $element->getAttributeNS($namespaceUri, 'nil') || '1' === $element->getAttributeNS($namespaceUri, 'nil');

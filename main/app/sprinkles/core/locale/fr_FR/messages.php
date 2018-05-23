@@ -16,8 +16,8 @@ return [
 
     "ABOUT" => "À propos",
 
-	"CAPTCHA" => [
-	    "@TRANSLATE" => "Captcha",
+    "CAPTCHA" => [
+        "@TRANSLATE" => "Captcha",
         "VERIFY" => "Vérification du captcha",
         "SPECIFY" => "Entrer la valeur du captcha",
         "FAIL" => "La valeur du captcha n'a pas été entrée correctement."
@@ -26,7 +26,7 @@ return [
     "CSRF_MISSING" => "Jeton CSRF manquant. Essayez de rafraîchir la page et de soumettre de nouveau?",
 
     "DB_INVALID" => "Impossible de se connecter à la base de données. Si vous êtes un administrateur, vérifiez votre journal d'erreurs.",
-    "DESCRIPTION"   => "Description",
+    "DESCRIPTION" => "Description",
     "DOWNLOAD" => [
         "@TRANSLATION" => "Télécharger",
         "CSV" => "Télécharger CSV"
@@ -37,7 +37,7 @@ return [
         "YOUR" => "Votre adresse email"
     ],
 
-    "HOME"  => "Accueil",
+    "HOME" => "Accueil",
 
     "LEGAL" => "Politique légale",
 
@@ -45,7 +45,7 @@ return [
         "@TRANSLATION" => "Langue"
     ],
 
-    "NAME"  => "Nom",
+    "NAME" => "Nom",
     "NAVIGATION" => "Menu principal",
     "NO_RESULTS" => "Aucun résultat trouvé.",
 

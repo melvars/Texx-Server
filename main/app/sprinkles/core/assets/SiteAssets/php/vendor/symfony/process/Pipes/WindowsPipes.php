@@ -34,9 +34,8 @@ class WindowsPipes extends AbstractPipes
     );
     private $haveReadSupport;
 
-    public function __construct($input, $haveReadSupport)
-    {
-        $this->haveReadSupport = (bool) $haveReadSupport;
+    public function __construct($input, $haveReadSupport) {
+        $this->haveReadSupport = (bool)$haveReadSupport;
 
         if ($this->haveReadSupport) {
             // Fix for PHP bug #51800: reading from STDOUT pipe hangs forever on Windows if the output is too big.
@@ -47,11 +46,13 @@ class WindowsPipes extends AbstractPipes
                 Process::STDOUT => Process::OUT,
                 Process::STDERR => Process::ERR,
             );
-            $tmpCheck = false;
+            $tmpCheck = FALSE;
             $tmpDir = sys_get_temp_dir();
             $lastError = 'unknown reason';
-            set_error_handler(function ($type, $msg) use (&$lastError) { $lastError = $msg; });
-            for ($i = 0;; ++$i) {
+            set_error_handler(function ($type, $msg) use (&$lastError) {
+                $lastError = $msg;
+            });
+            for ($i = 0; ; ++$i) {
                 foreach ($pipes as $pipe => $name) {
                     $file = sprintf('%s\\sf_proc_%02X.%s', $tmpDir, $i, $name);
                     if (file_exists($file) && !unlink($file)) {
@@ -60,7 +61,7 @@ class WindowsPipes extends AbstractPipes
                     $h = fopen($file, 'xb');
                     if (!$h) {
                         $error = $lastError;
-                        if ($tmpCheck || $tmpCheck = unlink(tempnam(false, 'sf_check_'))) {
+                        if ($tmpCheck || $tmpCheck = unlink(tempnam(FALSE, 'sf_check_'))) {
                             continue;
                         }
                         restore_error_handler();
@@ -82,8 +83,7 @@ class WindowsPipes extends AbstractPipes
         parent::__construct($input);
     }
 
-    public function __destruct()
-    {
+    public function __destruct() {
         $this->close();
         $this->removeFiles();
     }
@@ -91,8 +91,7 @@ class WindowsPipes extends AbstractPipes
     /**
      * {@inheritdoc}
      */
-    public function getDescriptors()
-    {
+    public function getDescriptors() {
         if (!$this->haveReadSupport) {
             $nullstream = fopen('NUL', 'c');
 
@@ -116,16 +115,14 @@ class WindowsPipes extends AbstractPipes
     /**
      * {@inheritdoc}
      */
-    public function getFiles()
-    {
+    public function getFiles() {
         return $this->files;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function readAndWrite($blocking, $close = false)
-    {
+    public function readAndWrite($blocking, $close = FALSE) {
         $this->unblock();
         $w = $this->write();
         $read = $r = $e = array();
@@ -133,7 +130,7 @@ class WindowsPipes extends AbstractPipes
         if ($blocking) {
             if ($w) {
                 @stream_select($r, $w, $e, 0, Process::TIMEOUT_PRECISION * 1E6);
-            } elseif ($this->fileHandles) {
+            } else if ($this->fileHandles) {
                 usleep(Process::TIMEOUT_PRECISION * 1E6);
             }
         }
@@ -156,24 +153,21 @@ class WindowsPipes extends AbstractPipes
     /**
      * {@inheritdoc}
      */
-    public function haveReadSupport()
-    {
+    public function haveReadSupport() {
         return $this->haveReadSupport;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function areOpen()
-    {
+    public function areOpen() {
         return $this->pipes && $this->fileHandles;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function close()
-    {
+    public function close() {
         parent::close();
         foreach ($this->fileHandles as $handle) {
             fclose($handle);
@@ -184,8 +178,7 @@ class WindowsPipes extends AbstractPipes
     /**
      * Removes temporary files.
      */
-    private function removeFiles()
-    {
+    private function removeFiles() {
         foreach ($this->files as $filename) {
             if (file_exists($filename)) {
                 @unlink($filename);

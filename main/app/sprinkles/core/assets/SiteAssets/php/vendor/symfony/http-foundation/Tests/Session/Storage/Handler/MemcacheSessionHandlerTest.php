@@ -31,8 +31,7 @@ class MemcacheSessionHandlerTest extends TestCase
 
     protected $memcache;
 
-    protected function setUp()
-    {
+    protected function setUp() {
         if (defined('HHVM_VERSION')) {
             $this->markTestSkipped('PHPUnit_MockObject cannot mock the Memcache class on HHVM. See https://github.com/sebastianbergmann/phpunit-mock-objects/pull/289');
         }
@@ -45,68 +44,57 @@ class MemcacheSessionHandlerTest extends TestCase
         );
     }
 
-    protected function tearDown()
-    {
-        $this->memcache = null;
-        $this->storage = null;
+    protected function tearDown() {
+        $this->memcache = NULL;
+        $this->storage = NULL;
         parent::tearDown();
     }
 
-    public function testOpenSession()
-    {
+    public function testOpenSession() {
         $this->assertTrue($this->storage->open('', ''));
     }
 
-    public function testCloseSession()
-    {
+    public function testCloseSession() {
         $this->assertTrue($this->storage->close());
     }
 
-    public function testReadSession()
-    {
+    public function testReadSession() {
         $this->memcache
             ->expects($this->once())
             ->method('get')
-            ->with(self::PREFIX.'id')
-        ;
+            ->with(self::PREFIX . 'id');
 
         $this->assertEquals('', $this->storage->read('id'));
     }
 
-    public function testWriteSession()
-    {
+    public function testWriteSession() {
         $this->memcache
             ->expects($this->once())
             ->method('set')
-            ->with(self::PREFIX.'id', 'data', 0, $this->equalTo(time() + self::TTL, 2))
-            ->will($this->returnValue(true))
-        ;
+            ->with(self::PREFIX . 'id', 'data', 0, $this->equalTo(time() + self::TTL, 2))
+            ->will($this->returnValue(TRUE));
 
         $this->assertTrue($this->storage->write('id', 'data'));
     }
 
-    public function testDestroySession()
-    {
+    public function testDestroySession() {
         $this->memcache
             ->expects($this->once())
             ->method('delete')
-            ->with(self::PREFIX.'id')
-            ->will($this->returnValue(true))
-        ;
+            ->with(self::PREFIX . 'id')
+            ->will($this->returnValue(TRUE));
 
         $this->assertTrue($this->storage->destroy('id'));
     }
 
-    public function testGcSession()
-    {
+    public function testGcSession() {
         $this->assertTrue($this->storage->gc(123));
     }
 
     /**
      * @dataProvider getOptionFixtures
      */
-    public function testSupportedOptions($options, $supported)
-    {
+    public function testSupportedOptions($options, $supported) {
         try {
             new MemcacheSessionHandler($this->memcache, $options);
             $this->assertTrue($supported);
@@ -115,20 +103,18 @@ class MemcacheSessionHandlerTest extends TestCase
         }
     }
 
-    public function getOptionFixtures()
-    {
+    public function getOptionFixtures() {
         return array(
-            array(array('prefix' => 'session'), true),
-            array(array('expiretime' => 100), true),
-            array(array('prefix' => 'session', 'expiretime' => 200), true),
-            array(array('expiretime' => 100, 'foo' => 'bar'), false),
+            array(array('prefix' => 'session'), TRUE),
+            array(array('expiretime' => 100), TRUE),
+            array(array('prefix' => 'session', 'expiretime' => 200), TRUE),
+            array(array('expiretime' => 100, 'foo' => 'bar'), FALSE),
         );
     }
 
-    public function testGetConnection()
-    {
+    public function testGetConnection() {
         $method = new \ReflectionMethod($this->storage, 'getMemcache');
-        $method->setAccessible(true);
+        $method->setAccessible(TRUE);
 
         $this->assertInstanceOf('\Memcache', $method->invoke($this->storage));
     }

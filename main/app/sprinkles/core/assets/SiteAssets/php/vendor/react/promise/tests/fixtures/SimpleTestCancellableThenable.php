@@ -4,15 +4,13 @@ namespace React\Promise;
 
 class SimpleTestCancellableThenable
 {
-    public $cancelCalled = false;
+    public $cancelCalled = FALSE;
 
-    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
-    {
+    public function then(callable $onFulfilled = NULL, callable $onRejected = NULL, callable $onProgress = NULL) {
         return new self();
     }
 
-    public function cancel()
-    {
-        $this->cancelCalled = true;
+    public function cancel() {
+        $this->cancelCalled = TRUE;
     }
 }

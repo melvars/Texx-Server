@@ -1,4 +1,3 @@
-
 /*! OpenPGP.js v3.0.9 - 2018-04-30 - this is LGPL licensed code, see LICENSE/our website https://openpgpjs.org/ for more information. */
 !function e(n, r, t) {
     function o(a, f) {

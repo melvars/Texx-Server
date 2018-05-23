@@ -24,42 +24,38 @@ class PackagerFilter implements FilterInterface
 {
     private $packages;
 
-    public function __construct(array $packages = array())
-    {
+    public function __construct(array $packages = array()) {
         $this->packages = $packages;
     }
 
-    public function addPackage($package)
-    {
+    public function addPackage($package) {
         $this->packages[] = $package;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         static $manifest = <<<EOF
 name: Application%s
 sources: [source.js]
 
 EOF;
 
-        $hash = substr(sha1(time().rand(11111, 99999)), 0, 7);
-        $package = FilesystemUtils::getTemporaryDirectory().'/assetic_packager_'.$hash;
+        $hash = substr(sha1(time() . rand(11111, 99999)), 0, 7);
+        $package = FilesystemUtils::getTemporaryDirectory() . '/assetic_packager_' . $hash;
 
         mkdir($package);
-        file_put_contents($package.'/package.yml', sprintf($manifest, $hash));
-        file_put_contents($package.'/source.js', $asset->getContent());
+        file_put_contents($package . '/package.yml', sprintf($manifest, $hash));
+        file_put_contents($package . '/source.js', $asset->getContent());
 
         $packager = new \Packager(array_merge(array($package), $this->packages));
-        $content = $packager->build(array(), array(), array('Application'.$hash));
+        $content = $packager->build(array(), array(), array('Application' . $hash));
 
-        unlink($package.'/package.yml');
-        unlink($package.'/source.js');
+        unlink($package . '/package.yml');
+        unlink($package . '/source.js');
         rmdir($package);
 
         $asset->setContent($content);
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 }

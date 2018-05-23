@@ -1,12 +1,15 @@
 <?php
+
 namespace Ratchet\RFC6455\Handshake;
+
 use Psr\Http\Message\RequestInterface;
 
 /**
  * A standard interface for interacting with the various version of the WebSocket protocol
  * @todo Look in to extension support
  */
-interface NegotiatorInterface {
+interface NegotiatorInterface
+{
     const GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 
     /**

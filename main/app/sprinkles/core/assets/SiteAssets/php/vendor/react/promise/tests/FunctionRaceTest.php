@@ -5,13 +5,12 @@ namespace React\Promise;
 class FunctionRaceTest extends TestCase
 {
     /** @test */
-    public function shouldResolveEmptyInput()
-    {
+    public function shouldResolveEmptyInput() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
             ->method('__invoke')
-            ->with($this->identicalTo(null));
+            ->with($this->identicalTo(NULL));
 
         race(
             []
@@ -19,8 +18,7 @@ class FunctionRaceTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveValuesArray()
-    {
+    public function shouldResolveValuesArray() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -33,8 +31,7 @@ class FunctionRaceTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolvePromisesArray()
-    {
+    public function shouldResolvePromisesArray() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -56,22 +53,20 @@ class FunctionRaceTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveSparseArrayInput()
-    {
+    public function shouldResolveSparseArrayInput() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
             ->method('__invoke')
-            ->with($this->identicalTo(null));
+            ->with($this->identicalTo(NULL));
 
         race(
-            [null, 1, null, 2, 3]
+            [NULL, 1, NULL, 2, 3]
         )->then($mock);
     }
 
     /** @test */
-    public function shouldRejectIfFirstSettledPromiseRejects()
-    {
+    public function shouldRejectIfFirstSettledPromiseRejects() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -93,8 +88,7 @@ class FunctionRaceTest extends TestCase
     }
 
     /** @test */
-    public function shouldAcceptAPromiseForAnArray()
-    {
+    public function shouldAcceptAPromiseForAnArray() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -107,13 +101,12 @@ class FunctionRaceTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveToNullWhenInputPromiseDoesNotResolveToArray()
-    {
+    public function shouldResolveToNullWhenInputPromiseDoesNotResolveToArray() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
             ->method('__invoke')
-            ->with($this->identicalTo(null));
+            ->with($this->identicalTo(NULL));
 
         race(
             resolve(1)
@@ -121,13 +114,12 @@ class FunctionRaceTest extends TestCase
     }
 
     /** @test */
-    public function shouldRejectWhenInputPromiseRejects()
-    {
+    public function shouldRejectWhenInputPromiseRejects() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
             ->method('__invoke')
-            ->with($this->identicalTo(null));
+            ->with($this->identicalTo(NULL));
 
         race(
             reject()
@@ -135,8 +127,7 @@ class FunctionRaceTest extends TestCase
     }
 
     /** @test */
-    public function shouldCancelInputPromise()
-    {
+    public function shouldCancelInputPromise() {
         $mock = $this
             ->getMockBuilder('React\Promise\CancellablePromiseInterface')
             ->getMock();
@@ -148,8 +139,7 @@ class FunctionRaceTest extends TestCase
     }
 
     /** @test */
-    public function shouldCancelInputArrayPromises()
-    {
+    public function shouldCancelInputArrayPromises() {
         $mock1 = $this
             ->getMockBuilder('React\Promise\CancellablePromiseInterface')
             ->getMock();
@@ -168,8 +158,7 @@ class FunctionRaceTest extends TestCase
     }
 
     /** @test */
-    public function shouldNotCancelOtherPendingInputArrayPromisesIfOnePromiseFulfills()
-    {
+    public function shouldNotCancelOtherPendingInputArrayPromisesIfOnePromiseFulfills() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->never())
@@ -189,8 +178,7 @@ class FunctionRaceTest extends TestCase
     }
 
     /** @test */
-    public function shouldNotCancelOtherPendingInputArrayPromisesIfOnePromiseRejects()
-    {
+    public function shouldNotCancelOtherPendingInputArrayPromisesIfOnePromiseRejects() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->never())

@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Psr7;
 
 use Psr\Http\Message\StreamInterface;
@@ -22,8 +23,7 @@ class FnStream implements StreamInterface
     /**
      * @param array $methods Hash of method name to a callable.
      */
-    public function __construct(array $methods)
-    {
+    public function __construct(array $methods) {
         $this->methods = $methods;
 
         // Create the functions on the class
@@ -36,8 +36,7 @@ class FnStream implements StreamInterface
      * Lazily determine which methods are not implemented.
      * @throws \BadMethodCallException
      */
-    public function __get($name)
-    {
+    public function __get($name) {
         throw new \BadMethodCallException(str_replace('_fn_', '', $name)
             . '() is not implemented in the FnStream');
     }
@@ -45,8 +44,7 @@ class FnStream implements StreamInterface
     /**
      * The close method is called on the underlying stream only if possible.
      */
-    public function __destruct()
-    {
+    public function __destruct() {
         if (isset($this->_fn_close)) {
             call_user_func($this->_fn_close);
         }
@@ -56,13 +54,12 @@ class FnStream implements StreamInterface
      * Adds custom functionality to an underlying stream by intercepting
      * specific method calls.
      *
-     * @param StreamInterface $stream  Stream to decorate
-     * @param array           $methods Hash of method name to a closure
+     * @param StreamInterface $stream Stream to decorate
+     * @param array $methods Hash of method name to a closure
      *
      * @return FnStream
      */
-    public static function decorate(StreamInterface $stream, array $methods)
-    {
+    public static function decorate(StreamInterface $stream, array $methods) {
         // If any of the required methods were not provided, then simply
         // proxy to the decorated stream.
         foreach (array_diff(self::$slots, array_keys($methods)) as $diff) {
@@ -72,78 +69,63 @@ class FnStream implements StreamInterface
         return new self($methods);
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return call_user_func($this->_fn___toString);
     }
 
-    public function close()
-    {
+    public function close() {
         return call_user_func($this->_fn_close);
     }
 
-    public function detach()
-    {
+    public function detach() {
         return call_user_func($this->_fn_detach);
     }
 
-    public function getSize()
-    {
+    public function getSize() {
         return call_user_func($this->_fn_getSize);
     }
 
-    public function tell()
-    {
+    public function tell() {
         return call_user_func($this->_fn_tell);
     }
 
-    public function eof()
-    {
+    public function eof() {
         return call_user_func($this->_fn_eof);
     }
 
-    public function isSeekable()
-    {
+    public function isSeekable() {
         return call_user_func($this->_fn_isSeekable);
     }
 
-    public function rewind()
-    {
+    public function rewind() {
         call_user_func($this->_fn_rewind);
     }
 
-    public function seek($offset, $whence = SEEK_SET)
-    {
+    public function seek($offset, $whence = SEEK_SET) {
         call_user_func($this->_fn_seek, $offset, $whence);
     }
 
-    public function isWritable()
-    {
+    public function isWritable() {
         return call_user_func($this->_fn_isWritable);
     }
 
-    public function write($string)
-    {
+    public function write($string) {
         return call_user_func($this->_fn_write, $string);
     }
 
-    public function isReadable()
-    {
+    public function isReadable() {
         return call_user_func($this->_fn_isReadable);
     }
 
-    public function read($length)
-    {
+    public function read($length) {
         return call_user_func($this->_fn_read, $length);
     }
 
-    public function getContents()
-    {
+    public function getContents() {
         return call_user_func($this->_fn_getContents);
     }
 
-    public function getMetadata($key = null)
-    {
+    public function getMetadata($key = NULL) {
         return call_user_func($this->_fn_getMetadata, $key);
     }
 }

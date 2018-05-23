@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Twig;
 
 use Interop\Container\ContainerInterface;
@@ -22,19 +23,16 @@ class AccountExtension extends \Twig_Extension implements \Twig_Extension_Global
     protected $services;
     protected $config;
 
-    public function __construct(ContainerInterface $services)
-    {
+    public function __construct(ContainerInterface $services) {
         $this->services = $services;
         $this->config = $services->config;
     }
 
-    public function getName()
-    {
+    public function getName() {
         return 'userfrosting/account';
     }
 
-    public function getFunctions()
-    {
+    public function getFunctions() {
         return array(
             // Add Twig function for checking permissions during dynamic menu rendering
             new \Twig_SimpleFunction('checkAccess', function ($slug, $params = []) {
@@ -50,16 +48,15 @@ class AccountExtension extends \Twig_Extension implements \Twig_Extension_Global
         );
     }
 
-    public function getGlobals()
-    {
+    public function getGlobals() {
         try {
             $currentUser = $this->services->currentUser;
         } catch (\Exception $e) {
-            $currentUser = null;
+            $currentUser = NULL;
         }
 
         return [
-            'current_user'   => $currentUser
+            'current_user' => $currentUser
         ];
     }
 }

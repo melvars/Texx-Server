@@ -44,7 +44,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @var MimeTypeGuesser
      */
-    private static $instance = null;
+    private static $instance = NULL;
 
     /**
      * All registered MimeTypeGuesserInterface instances.
@@ -58,9 +58,8 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @return self
      */
-    public static function getInstance()
-    {
-        if (null === self::$instance) {
+    public static function getInstance() {
+        if (NULL === self::$instance) {
             self::$instance = new self();
         }
 
@@ -70,16 +69,14 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * Resets the singleton instance.
      */
-    public static function reset()
-    {
-        self::$instance = null;
+    public static function reset() {
+        self::$instance = NULL;
     }
 
     /**
      * Registers all natively provided mime type guessers.
      */
-    private function __construct()
-    {
+    private function __construct() {
         if (FileBinaryMimeTypeGuesser::isSupported()) {
             $this->register(new FileBinaryMimeTypeGuesser());
         }
@@ -94,8 +91,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * When guessing, this guesser is preferred over previously registered ones.
      */
-    public function register(MimeTypeGuesserInterface $guesser)
-    {
+    public function register(MimeTypeGuesserInterface $guesser) {
         array_unshift($this->guessers, $guesser);
     }
 
@@ -115,8 +111,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface
      * @throws FileNotFoundException
      * @throws AccessDeniedException
      */
-    public function guess($path)
-    {
+    public function guess($path) {
         if (!is_file($path)) {
             throw new FileNotFoundException($path);
         }
@@ -134,7 +129,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface
         }
 
         foreach ($this->guessers as $guesser) {
-            if (null !== $mimeType = $guesser->guess($path)) {
+            if (NULL !== $mimeType = $guesser->guess($path)) {
                 return $mimeType;
             }
         }

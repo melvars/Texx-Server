@@ -34,10 +34,9 @@ class UglifyJsFilter extends BaseNodeFilter
 
     /**
      * @param string $uglifyjsBin Absolute path to the uglifyjs executable
-     * @param string $nodeBin     Absolute path to the folder containg node.js executable
+     * @param string $nodeBin Absolute path to the folder containg node.js executable
      */
-    public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
-    {
+    public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = NULL) {
         $this->uglifyjsBin = $uglifyjsBin;
         $this->nodeBin = $nodeBin;
     }
@@ -46,8 +45,7 @@ class UglifyJsFilter extends BaseNodeFilter
      * Removes the first block of comments as well
      * @param bool $noCopyright True to enable
      */
-    public function setNoCopyright($noCopyright)
-    {
+    public function setNoCopyright($noCopyright) {
         $this->noCopyright = $noCopyright;
     }
 
@@ -55,8 +53,7 @@ class UglifyJsFilter extends BaseNodeFilter
      * Output indented code
      * @param bool $beautify True to enable
      */
-    public function setBeautify($beautify)
-    {
+    public function setBeautify($beautify) {
         $this->beautify = $beautify;
     }
 
@@ -64,8 +61,7 @@ class UglifyJsFilter extends BaseNodeFilter
      * Enable additional optimizations that are known to be unsafe in some situations.
      * @param bool $unsafe True to enable
      */
-    public function setUnsafe($unsafe)
-    {
+    public function setUnsafe($unsafe) {
         $this->unsafe = $unsafe;
     }
 
@@ -73,21 +69,18 @@ class UglifyJsFilter extends BaseNodeFilter
      * Safely mangle variable and function names for greater file compress.
      * @param bool $mangle True to enable
      */
-    public function setMangle($mangle)
-    {
+    public function setMangle($mangle) {
         $this->mangle = $mangle;
     }
 
-    public function setDefines(array $defines)
-    {
+    public function setDefines(array $defines) {
         $this->defines = $defines;
     }
 
     /**
      * @see Assetic\Filter\FilterInterface::filterLoad()
      */
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
     /**
@@ -95,12 +88,11 @@ class UglifyJsFilter extends BaseNodeFilter
      *
      * @see Assetic\Filter\FilterInterface::filterDump()
      */
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $pb = $this->createProcessBuilder(
             $this->nodeBin
-            ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin)
+                ? array($this->nodeBin, $this->uglifyjsBin)
+                : array($this->uglifyjsBin)
         );
 
         if ($this->noCopyright) {
@@ -115,7 +107,7 @@ class UglifyJsFilter extends BaseNodeFilter
             $pb->add('--unsafe');
         }
 
-        if (false === $this->mangle) {
+        if (FALSE === $this->mangle) {
             $pb->add('--no-mangle');
         }
 
@@ -126,7 +118,7 @@ class UglifyJsFilter extends BaseNodeFilter
         }
 
         // input and output files
-        $input  = FilesystemUtils::createTemporaryFile('uglifyjs_in');
+        $input = FilesystemUtils::createTemporaryFile('uglifyjs_in');
         $output = FilesystemUtils::createTemporaryFile('uglifyjs_out');
 
         file_put_contents($input, $asset->getContent());

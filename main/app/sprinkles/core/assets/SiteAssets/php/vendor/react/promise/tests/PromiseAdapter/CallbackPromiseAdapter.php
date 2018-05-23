@@ -8,33 +8,27 @@ class CallbackPromiseAdapter implements PromiseAdapterInterface
 {
     private $callbacks;
 
-    public function __construct(array $callbacks)
-    {
+    public function __construct(array $callbacks) {
         $this->callbacks = $callbacks;
     }
 
-    public function promise()
-    {
+    public function promise() {
         return call_user_func_array($this->callbacks['promise'], func_get_args());
     }
 
-    public function resolve()
-    {
+    public function resolve() {
         return call_user_func_array($this->callbacks['resolve'], func_get_args());
     }
 
-    public function reject()
-    {
+    public function reject() {
         return call_user_func_array($this->callbacks['reject'], func_get_args());
     }
 
-    public function notify()
-    {
+    public function notify() {
         return call_user_func_array($this->callbacks['notify'], func_get_args());
     }
 
-    public function settle()
-    {
+    public function settle() {
         return call_user_func_array($this->callbacks['settle'], func_get_args());
     }
 }

@@ -1,30 +1,30 @@
 <?php
 
-    /**
-     * Default development config file for UserFrosting. Sets up UserFrosting for easier development.
-     *
-     */
+/**
+ * Default development config file for UserFrosting. Sets up UserFrosting for easier development.
+ *
+ */
 
-    return [
-        'assets' => [
-            'use_raw' => true
-        ],
-        'cache' => [
-            'twig' => false
-        ],
+return [
+    'assets' => [
+        'use_raw' => TRUE
+    ],
+    'cache' => [
+        'twig' => FALSE
+    ],
+    'debug' => [
+        'twig' => TRUE,
+        'auth' => TRUE,
+        'smtp' => TRUE
+    ],
+    // Slim settings - see http://www.slimframework.com/docs/objects/application.html#slim-default-settings
+    'settings' => [
+        'displayErrorDetails' => TRUE
+    ],
+    'site' => [
         'debug' => [
-            'twig' => true,
-            'auth' => true,
-            'smtp' => true
-        ],
-        // Slim settings - see http://www.slimframework.com/docs/objects/application.html#slim-default-settings
-        'settings' => [
-            'displayErrorDetails' => true
-        ],
-        'site' => [
-            'debug' => [
-                'ajax' => true,
-                'info' => true
-            ]
+            'ajax' => TRUE,
+            'info' => TRUE
         ]
-    ];
+    ]
+];

@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Psr7;
 
 use Psr\Http\Message\StreamInterface;
@@ -21,16 +22,16 @@ class Stream implements StreamInterface
     /** @var array Hash of readable and writable stream types */
     private static $readWriteHash = [
         'read' => [
-            'r' => true, 'w+' => true, 'r+' => true, 'x+' => true, 'c+' => true,
-            'rb' => true, 'w+b' => true, 'r+b' => true, 'x+b' => true,
-            'c+b' => true, 'rt' => true, 'w+t' => true, 'r+t' => true,
-            'x+t' => true, 'c+t' => true, 'a+' => true
+            'r' => TRUE, 'w+' => TRUE, 'r+' => TRUE, 'x+' => TRUE, 'c+' => TRUE,
+            'rb' => TRUE, 'w+b' => TRUE, 'r+b' => TRUE, 'x+b' => TRUE,
+            'c+b' => TRUE, 'rt' => TRUE, 'w+t' => TRUE, 'r+t' => TRUE,
+            'x+t' => TRUE, 'c+t' => TRUE, 'a+' => TRUE
         ],
         'write' => [
-            'w' => true, 'w+' => true, 'rw' => true, 'r+' => true, 'x+' => true,
-            'c+' => true, 'wb' => true, 'w+b' => true, 'r+b' => true,
-            'x+b' => true, 'c+b' => true, 'w+t' => true, 'r+t' => true,
-            'x+t' => true, 'c+t' => true, 'a' => true, 'a+' => true
+            'w' => TRUE, 'w+' => TRUE, 'rw' => TRUE, 'r+' => TRUE, 'x+' => TRUE,
+            'c+' => TRUE, 'wb' => TRUE, 'w+b' => TRUE, 'r+b' => TRUE,
+            'x+b' => TRUE, 'c+b' => TRUE, 'w+t' => TRUE, 'r+t' => TRUE,
+            'x+t' => TRUE, 'c+t' => TRUE, 'a' => TRUE, 'a+' => TRUE
         ]
     ];
 
@@ -43,13 +44,12 @@ class Stream implements StreamInterface
      * - metadata: (array) Any additional metadata to return when the metadata
      *   of the stream is accessed.
      *
-     * @param resource $stream  Stream resource to wrap.
-     * @param array    $options Associative array of options.
+     * @param resource $stream Stream resource to wrap.
+     * @param array $options Associative array of options.
      *
      * @throws \InvalidArgumentException if the stream is not a stream resource
      */
-    public function __construct($stream, $options = [])
-    {
+    public function __construct($stream, $options = []) {
         if (!is_resource($stream)) {
             throw new \InvalidArgumentException('Stream must be a resource');
         }
@@ -70,8 +70,7 @@ class Stream implements StreamInterface
         $this->uri = $this->getMetadata('uri');
     }
 
-    public function __get($name)
-    {
+    public function __get($name) {
         if ($name == 'stream') {
             throw new \RuntimeException('The stream is detached');
         }
@@ -82,34 +81,30 @@ class Stream implements StreamInterface
     /**
      * Closes the stream when the destructed
      */
-    public function __destruct()
-    {
+    public function __destruct() {
         $this->close();
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         try {
             $this->seek(0);
-            return (string) stream_get_contents($this->stream);
+            return (string)stream_get_contents($this->stream);
         } catch (\Exception $e) {
             return '';
         }
     }
 
-    public function getContents()
-    {
+    public function getContents() {
         $contents = stream_get_contents($this->stream);
 
-        if ($contents === false) {
+        if ($contents === FALSE) {
             throw new \RuntimeException('Unable to read stream contents');
         }
 
         return $contents;
     }
 
-    public function close()
-    {
+    public function close() {
         if (isset($this->stream)) {
             if (is_resource($this->stream)) {
                 fclose($this->stream);
@@ -118,33 +113,31 @@ class Stream implements StreamInterface
         }
     }
 
-    public function detach()
-    {
+    public function detach() {
         if (!isset($this->stream)) {
-            return null;
+            return NULL;
         }
 
         $result = $this->stream;
         unset($this->stream);
-        $this->size = $this->uri = null;
-        $this->readable = $this->writable = $this->seekable = false;
+        $this->size = $this->uri = NULL;
+        $this->readable = $this->writable = $this->seekable = FALSE;
 
         return $result;
     }
 
-    public function getSize()
-    {
-        if ($this->size !== null) {
+    public function getSize() {
+        if ($this->size !== NULL) {
             return $this->size;
         }
 
         if (!isset($this->stream)) {
-            return null;
+            return NULL;
         }
 
         // Clear the stat cache if the stream has a URI
         if ($this->uri) {
-            clearstatcache(true, $this->uri);
+            clearstatcache(TRUE, $this->uri);
         }
 
         $stats = fstat($this->stream);
@@ -153,57 +146,49 @@ class Stream implements StreamInterface
             return $this->size;
         }
 
-        return null;
+        return NULL;
     }
 
-    public function isReadable()
-    {
+    public function isReadable() {
         return $this->readable;
     }
 
-    public function isWritable()
-    {
+    public function isWritable() {
         return $this->writable;
     }
 
-    public function isSeekable()
-    {
+    public function isSeekable() {
         return $this->seekable;
     }
 
-    public function eof()
-    {
+    public function eof() {
         return !$this->stream || feof($this->stream);
     }
 
-    public function tell()
-    {
+    public function tell() {
         $result = ftell($this->stream);
 
-        if ($result === false) {
+        if ($result === FALSE) {
             throw new \RuntimeException('Unable to determine stream position');
         }
 
         return $result;
     }
 
-    public function rewind()
-    {
+    public function rewind() {
         $this->seek(0);
     }
 
-    public function seek($offset, $whence = SEEK_SET)
-    {
+    public function seek($offset, $whence = SEEK_SET) {
         if (!$this->seekable) {
             throw new \RuntimeException('Stream is not seekable');
-        } elseif (fseek($this->stream, $offset, $whence) === -1) {
+        } else if (fseek($this->stream, $offset, $whence) === -1) {
             throw new \RuntimeException('Unable to seek to stream position '
-                . $offset . ' with whence ' . var_export($whence, true));
+                . $offset . ' with whence ' . var_export($whence, TRUE));
         }
     }
 
-    public function read($length)
-    {
+    public function read($length) {
         if (!$this->readable) {
             throw new \RuntimeException('Cannot read from non-readable stream');
         }
@@ -216,42 +201,40 @@ class Stream implements StreamInterface
         }
 
         $string = fread($this->stream, $length);
-        if (false === $string) {
+        if (FALSE === $string) {
             throw new \RuntimeException('Unable to read from stream');
         }
 
         return $string;
     }
 
-    public function write($string)
-    {
+    public function write($string) {
         if (!$this->writable) {
             throw new \RuntimeException('Cannot write to a non-writable stream');
         }
 
         // We can't know the size after writing anything
-        $this->size = null;
+        $this->size = NULL;
         $result = fwrite($this->stream, $string);
 
-        if ($result === false) {
+        if ($result === FALSE) {
             throw new \RuntimeException('Unable to write to stream');
         }
 
         return $result;
     }
 
-    public function getMetadata($key = null)
-    {
+    public function getMetadata($key = NULL) {
         if (!isset($this->stream)) {
-            return $key ? null : [];
-        } elseif (!$key) {
+            return $key ? NULL : [];
+        } else if (!$key) {
             return $this->customMetadata + stream_get_meta_data($this->stream);
-        } elseif (isset($this->customMetadata[$key])) {
+        } else if (isset($this->customMetadata[$key])) {
             return $this->customMetadata[$key];
         }
 
         $meta = stream_get_meta_data($this->stream);
 
-        return isset($meta[$key]) ? $meta[$key] : null;
+        return isset($meta[$key]) ? $meta[$key] : NULL;
     }
 }

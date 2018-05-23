@@ -41,12 +41,11 @@ class MemcachedSessionHandler extends AbstractSessionHandler
      *  * expiretime: The time to live in seconds.
      *
      * @param \Memcached $memcached A \Memcached instance
-     * @param array      $options   An associative array of Memcached options
+     * @param array $options An associative array of Memcached options
      *
      * @throws \InvalidArgumentException When unsupported options are passed
      */
-    public function __construct(\Memcached $memcached, array $options = array())
-    {
+    public function __construct(\Memcached $memcached, array $options = array()) {
         $this->memcached = $memcached;
 
         if ($diff = array_diff(array_keys($options), array('prefix', 'expiretime'))) {
@@ -55,50 +54,45 @@ class MemcachedSessionHandler extends AbstractSessionHandler
             ));
         }
 
-        $this->ttl = isset($options['expiretime']) ? (int) $options['expiretime'] : 86400;
+        $this->ttl = isset($options['expiretime']) ? (int)$options['expiretime'] : 86400;
         $this->prefix = isset($options['prefix']) ? $options['prefix'] : 'sf2s';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function close()
-    {
-        return true;
+    public function close() {
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doRead($sessionId)
-    {
-        return $this->memcached->get($this->prefix.$sessionId) ?: '';
+    protected function doRead($sessionId) {
+        return $this->memcached->get($this->prefix . $sessionId) ?: '';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $data)
-    {
-        $this->memcached->touch($this->prefix.$sessionId, time() + $this->ttl);
+    public function updateTimestamp($sessionId, $data) {
+        $this->memcached->touch($this->prefix . $sessionId, time() + $this->ttl);
 
-        return true;
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doWrite($sessionId, $data)
-    {
-        return $this->memcached->set($this->prefix.$sessionId, $data, time() + $this->ttl);
+    protected function doWrite($sessionId, $data) {
+        return $this->memcached->set($this->prefix . $sessionId, $data, time() + $this->ttl);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doDestroy($sessionId)
-    {
-        $result = $this->memcached->delete($this->prefix.$sessionId);
+    protected function doDestroy($sessionId) {
+        $result = $this->memcached->delete($this->prefix . $sessionId);
 
         return $result || \Memcached::RES_NOTFOUND == $this->memcached->getResultCode();
     }
@@ -106,10 +100,9 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime)
-    {
+    public function gc($maxlifetime) {
         // not required here because memcached will auto expire the records anyhow.
-        return true;
+        return TRUE;
     }
 
     /**
@@ -117,8 +110,7 @@ class MemcachedSessionHandler extends AbstractSessionHandler
      *
      * @return \Memcached
      */
-    protected function getMemcached()
-    {
+    protected function getMemcached() {
         return $this->memcached;
     }
 }

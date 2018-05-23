@@ -25,23 +25,19 @@ class JsCompressorFilter extends BaseCompressorFilter
     private $preserveSemi;
     private $disableOptimizations;
 
-    public function setNomunge($nomunge = true)
-    {
+    public function setNomunge($nomunge = TRUE) {
         $this->nomunge = $nomunge;
     }
 
-    public function setPreserveSemi($preserveSemi)
-    {
+    public function setPreserveSemi($preserveSemi) {
         $this->preserveSemi = $preserveSemi;
     }
 
-    public function setDisableOptimizations($disableOptimizations)
-    {
+    public function setDisableOptimizations($disableOptimizations) {
         $this->disableOptimizations = $disableOptimizations;
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $options = array();
 
         if ($this->nomunge) {

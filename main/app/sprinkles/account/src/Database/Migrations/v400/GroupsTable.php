@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
@@ -26,15 +27,14 @@ class GroupsTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function up()
-    {
+    public function up() {
         if (!$this->schema->hasTable('groups')) {
-            $this->schema->create('groups', function(Blueprint $table) {
+            $this->schema->create('groups', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('slug');
                 $table->string('name');
                 $table->text('description')->nullable();
-                $table->string('icon', 100)->nullable(false)->default('fa fa-user')->comment('The icon representing users in this group.');
+                $table->string('icon', 100)->nullable(FALSE)->default('fa fa-user')->comment('The icon representing users in this group.');
                 $table->timestamps();
 
                 $table->engine = 'InnoDB';
@@ -75,8 +75,7 @@ class GroupsTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function down()
-    {
+    public function down() {
         $this->schema->drop('groups');
     }
 }

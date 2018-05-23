@@ -16,8 +16,7 @@ final class FutureTickQueue
 {
     private $queue;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->queue = new SplQueue();
     }
 
@@ -28,16 +27,14 @@ final class FutureTickQueue
      *
      * @param callable $listener The callback to invoke.
      */
-    public function add($listener)
-    {
+    public function add($listener) {
         $this->queue->enqueue($listener);
     }
 
     /**
      * Flush the callback queue.
      */
-    public function tick()
-    {
+    public function tick() {
         // Only invoke as many callbacks as were on the queue when tick() was called.
         $count = $this->queue->count();
 
@@ -53,8 +50,7 @@ final class FutureTickQueue
      *
      * @return boolean
      */
-    public function isEmpty()
-    {
+    public function isEmpty() {
         return $this->queue->isEmpty();
     }
 }

@@ -21,8 +21,7 @@ class ExpressionRequestMatcherTest extends TestCase
     /**
      * @expectedException \LogicException
      */
-    public function testWhenNoExpressionIsSet()
-    {
+    public function testWhenNoExpressionIsSet() {
         $expressionRequestMatcher = new ExpressionRequestMatcher();
         $expressionRequestMatcher->matches(new Request());
     }
@@ -30,8 +29,7 @@ class ExpressionRequestMatcherTest extends TestCase
     /**
      * @dataProvider provideExpressions
      */
-    public function testMatchesWhenParentMatchesIsTrue($expression, $expected)
-    {
+    public function testMatchesWhenParentMatchesIsTrue($expression, $expected) {
         $request = Request::create('/foo');
         $expressionRequestMatcher = new ExpressionRequestMatcher();
 
@@ -42,8 +40,7 @@ class ExpressionRequestMatcherTest extends TestCase
     /**
      * @dataProvider provideExpressions
      */
-    public function testMatchesWhenParentMatchesIsFalse($expression)
-    {
+    public function testMatchesWhenParentMatchesIsFalse($expression) {
         $request = Request::create('/foo');
         $request->attributes->set('foo', 'foo');
         $expressionRequestMatcher = new ExpressionRequestMatcher();
@@ -53,17 +50,16 @@ class ExpressionRequestMatcherTest extends TestCase
         $this->assertFalse($expressionRequestMatcher->matches($request));
     }
 
-    public function provideExpressions()
-    {
+    public function provideExpressions() {
         return array(
-            array('request.getMethod() == method', true),
-            array('request.getPathInfo() == path', true),
-            array('request.getHost() == host', true),
-            array('request.getClientIp() == ip', true),
-            array('request.attributes.all() == attributes', true),
-            array('request.getMethod() == method && request.getPathInfo() == path && request.getHost() == host && request.getClientIp() == ip &&  request.attributes.all() == attributes', true),
-            array('request.getMethod() != method', false),
-            array('request.getMethod() != method && request.getPathInfo() == path && request.getHost() == host && request.getClientIp() == ip &&  request.attributes.all() == attributes', false),
+            array('request.getMethod() == method', TRUE),
+            array('request.getPathInfo() == path', TRUE),
+            array('request.getHost() == host', TRUE),
+            array('request.getClientIp() == ip', TRUE),
+            array('request.attributes.all() == attributes', TRUE),
+            array('request.getMethod() == method && request.getPathInfo() == path && request.getHost() == host && request.getClientIp() == ip &&  request.attributes.all() == attributes', TRUE),
+            array('request.getMethod() != method', FALSE),
+            array('request.getMethod() != method && request.getPathInfo() == path && request.getHost() == host && request.getClientIp() == ip &&  request.attributes.all() == attributes', FALSE),
         );
     }
 }

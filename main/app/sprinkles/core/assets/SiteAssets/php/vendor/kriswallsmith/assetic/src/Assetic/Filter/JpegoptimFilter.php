@@ -32,27 +32,22 @@ class JpegoptimFilter extends BaseProcessFilter
      *
      * @param string $jpegoptimBin Path to the jpegoptim binary
      */
-    public function __construct($jpegoptimBin = '/usr/bin/jpegoptim')
-    {
+    public function __construct($jpegoptimBin = '/usr/bin/jpegoptim') {
         $this->jpegoptimBin = $jpegoptimBin;
     }
 
-    public function setStripAll($stripAll)
-    {
+    public function setStripAll($stripAll) {
         $this->stripAll = $stripAll;
     }
 
-    public function setMax($max)
-    {
+    public function setMax($max) {
         $this->max = $max;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $pb = $this->createProcessBuilder(array($this->jpegoptimBin));
 
         if ($this->stripAll) {
@@ -60,7 +55,7 @@ class JpegoptimFilter extends BaseProcessFilter
         }
 
         if ($this->max) {
-            $pb->add('--max='.$this->max);
+            $pb->add('--max=' . $this->max);
         }
 
         $pb->add($input = FilesystemUtils::createTemporaryFile('jpegoptim'));
@@ -69,7 +64,7 @@ class JpegoptimFilter extends BaseProcessFilter
         $proc = $pb->getProcess();
         $proc->run();
 
-        if (false !== strpos($proc->getOutput(), 'ERROR')) {
+        if (FALSE !== strpos($proc->getOutput(), 'ERROR')) {
             unlink($input);
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }

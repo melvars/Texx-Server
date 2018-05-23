@@ -62,16 +62,14 @@ class ExtEvLoop implements LoopInterface
      */
     private $signalEvents = [];
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->loop = new EvLoop();
         $this->futureTickQueue = new FutureTickQueue();
         $this->timers = new SplObjectStorage();
         $this->signals = new SignalsHandler();
     }
 
-    public function addReadStream($stream, $listener)
-    {
+    public function addReadStream($stream, $listener) {
         $key = (int)$stream;
 
         if (isset($this->readStreams[$key])) {
@@ -89,15 +87,13 @@ class ExtEvLoop implements LoopInterface
      *
      * @return \Closure
      */
-    private function getStreamListenerClosure($stream, $listener)
-    {
+    private function getStreamListenerClosure($stream, $listener) {
         return function () use ($stream, $listener) {
             call_user_func($listener, $stream);
         };
     }
 
-    public function addWriteStream($stream, $listener)
-    {
+    public function addWriteStream($stream, $listener) {
         $key = (int)$stream;
 
         if (isset($this->writeStreams[$key])) {
@@ -109,8 +105,7 @@ class ExtEvLoop implements LoopInterface
         $this->writeStreams[$key] = $event;
     }
 
-    public function removeReadStream($stream)
-    {
+    public function removeReadStream($stream) {
         $key = (int)$stream;
 
         if (!isset($this->readStreams[$key])) {
@@ -121,8 +116,7 @@ class ExtEvLoop implements LoopInterface
         unset($this->readStreams[$key]);
     }
 
-    public function removeWriteStream($stream)
-    {
+    public function removeWriteStream($stream) {
         $key = (int)$stream;
 
         if (!isset($this->writeStreams[$key])) {
@@ -133,9 +127,8 @@ class ExtEvLoop implements LoopInterface
         unset($this->writeStreams[$key]);
     }
 
-    public function addTimer($interval, $callback)
-    {
-        $timer = new Timer($interval, $callback, false);
+    public function addTimer($interval, $callback) {
+        $timer = new Timer($interval, $callback, FALSE);
 
         $that = $this;
         $timers = $this->timers;
@@ -153,9 +146,8 @@ class ExtEvLoop implements LoopInterface
         return $timer;
     }
 
-    public function addPeriodicTimer($interval, $callback)
-    {
-        $timer = new Timer($interval, $callback, true);
+    public function addPeriodicTimer($interval, $callback) {
+        $timer = new Timer($interval, $callback, TRUE);
 
         $callback = function () use ($timer) {
             call_user_func($timer->getCallback(), $timer);
@@ -167,8 +159,7 @@ class ExtEvLoop implements LoopInterface
         return $timer;
     }
 
-    public function cancelTimer(TimerInterface $timer)
-    {
+    public function cancelTimer(TimerInterface $timer) {
         if (!isset($this->timers[$timer])) {
             return;
         }
@@ -178,14 +169,12 @@ class ExtEvLoop implements LoopInterface
         $this->timers->detach($timer);
     }
 
-    public function futureTick($listener)
-    {
+    public function futureTick($listener) {
         $this->futureTickQueue->add($listener);
     }
 
-    public function run()
-    {
-        $this->running = true;
+    public function run() {
+        $this->running = TRUE;
 
         while ($this->running) {
             $this->futureTickQueue->tick();
@@ -200,7 +189,7 @@ class ExtEvLoop implements LoopInterface
             $flags = Ev::RUN_ONCE;
             if ($wasJustStopped || $hasPendingCallbacks) {
                 $flags |= Ev::RUN_NOWAIT;
-            } elseif ($nothingLeftToDo) {
+            } else if ($nothingLeftToDo) {
                 break;
             }
 
@@ -208,13 +197,11 @@ class ExtEvLoop implements LoopInterface
         }
     }
 
-    public function stop()
-    {
-        $this->running = false;
+    public function stop() {
+        $this->running = FALSE;
     }
 
-    public function __destruct()
-    {
+    public function __destruct() {
         /** @var TimerInterface $timer */
         foreach ($this->timers as $timer) {
             $this->cancelTimer($timer);
@@ -229,19 +216,17 @@ class ExtEvLoop implements LoopInterface
         }
     }
 
-    public function addSignal($signal, $listener)
-    {
+    public function addSignal($signal, $listener) {
         $this->signals->add($signal, $listener);
 
         if (!isset($this->signalEvents[$signal])) {
-            $this->signalEvents[$signal] = $this->loop->signal($signal, function() use ($signal) {
+            $this->signalEvents[$signal] = $this->loop->signal($signal, function () use ($signal) {
                 $this->signals->call($signal);
             });
         }
     }
 
-    public function removeSignal($signal, $listener)
-    {
+    public function removeSignal($signal, $listener) {
         $this->signals->remove($signal, $listener);
 
         if (isset($this->signalEvents[$signal])) {

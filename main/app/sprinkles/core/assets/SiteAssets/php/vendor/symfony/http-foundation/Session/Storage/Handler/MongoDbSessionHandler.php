@@ -61,14 +61,13 @@ class MongoDbSessionHandler extends AbstractSessionHandler
      * If you use such an index, you can drop `gc_probability` to 0 since
      * no garbage-collection is required.
      *
-     * @param \MongoDB\Client $mongo   A MongoDB\Client instance
-     * @param array           $options An associative array of field options
+     * @param \MongoDB\Client $mongo A MongoDB\Client instance
+     * @param array $options An associative array of field options
      *
      * @throws \InvalidArgumentException When MongoClient or Mongo instance not provided
      * @throws \InvalidArgumentException When "database" or "collection" not provided
      */
-    public function __construct($mongo, array $options)
-    {
+    public function __construct($mongo, array $options) {
         if ($mongo instanceof \MongoClient || $mongo instanceof \Mongo) {
             @trigger_error(sprintf('Using %s with the legacy mongo extension is deprecated as of 3.4 and will be removed in 4.0. Use it with the mongodb/mongodb package and ext-mongodb instead.', __CLASS__), E_USER_DEPRECATED);
         }
@@ -94,58 +93,54 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function close()
-    {
-        return true;
+    public function close() {
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doDestroy($sessionId)
-    {
+    protected function doDestroy($sessionId) {
         $methodName = $this->mongo instanceof \MongoDB\Client ? 'deleteOne' : 'remove';
 
         $this->getCollection()->$methodName(array(
             $this->options['id_field'] => $sessionId,
         ));
 
-        return true;
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime)
-    {
+    public function gc($maxlifetime) {
         $methodName = $this->mongo instanceof \MongoDB\Client ? 'deleteMany' : 'remove';
 
         $this->getCollection()->$methodName(array(
             $this->options['expiry_field'] => array('$lt' => $this->createDateTime()),
         ));
 
-        return true;
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doWrite($sessionId, $data)
-    {
-        $expiry = $this->createDateTime(time() + (int) ini_get('session.gc_maxlifetime'));
+    protected function doWrite($sessionId, $data) {
+        $expiry = $this->createDateTime(time() + (int)ini_get('session.gc_maxlifetime'));
 
         $fields = array(
             $this->options['time_field'] => $this->createDateTime(),
             $this->options['expiry_field'] => $expiry,
         );
 
-        $options = array('upsert' => true);
+        $options = array('upsert' => TRUE);
 
         if ($this->mongo instanceof \MongoDB\Client) {
             $fields[$this->options['data_field']] = new \MongoDB\BSON\Binary($data, \MongoDB\BSON\Binary::TYPE_OLD_BINARY);
         } else {
             $fields[$this->options['data_field']] = new \MongoBinData($data, \MongoBinData::BYTE_ARRAY);
-            $options['multiple'] = false;
+            $options['multiple'] = FALSE;
         }
 
         $methodName = $this->mongo instanceof \MongoDB\Client ? 'updateOne' : 'update';
@@ -156,22 +151,21 @@ class MongoDbSessionHandler extends AbstractSessionHandler
             $options
         );
 
-        return true;
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $data)
-    {
-        $expiry = $this->createDateTime(time() + (int) ini_get('session.gc_maxlifetime'));
+    public function updateTimestamp($sessionId, $data) {
+        $expiry = $this->createDateTime(time() + (int)ini_get('session.gc_maxlifetime'));
 
         if ($this->mongo instanceof \MongoDB\Client) {
             $methodName = 'updateOne';
             $options = array();
         } else {
             $methodName = 'update';
-            $options = array('multiple' => false);
+            $options = array('multiple' => FALSE);
         }
 
         $this->getCollection()->$methodName(
@@ -183,20 +177,19 @@ class MongoDbSessionHandler extends AbstractSessionHandler
             $options
         );
 
-        return true;
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doRead($sessionId)
-    {
+    protected function doRead($sessionId) {
         $dbData = $this->getCollection()->findOne(array(
             $this->options['id_field'] => $sessionId,
             $this->options['expiry_field'] => array('$gte' => $this->createDateTime()),
         ));
 
-        if (null === $dbData) {
+        if (NULL === $dbData) {
             return '';
         }
 
@@ -212,9 +205,8 @@ class MongoDbSessionHandler extends AbstractSessionHandler
      *
      * @return \MongoCollection
      */
-    private function getCollection()
-    {
-        if (null === $this->collection) {
+    private function getCollection() {
+        if (NULL === $this->collection) {
             $this->collection = $this->mongo->selectCollection($this->options['database'], $this->options['collection']);
         }
 
@@ -226,8 +218,7 @@ class MongoDbSessionHandler extends AbstractSessionHandler
      *
      * @return \Mongo|\MongoClient|\MongoDB\Client
      */
-    protected function getMongo()
-    {
+    protected function getMongo() {
         return $this->mongo;
     }
 
@@ -240,9 +231,8 @@ class MongoDbSessionHandler extends AbstractSessionHandler
      *
      * @return \MongoDate|\MongoDB\BSON\UTCDateTime
      */
-    private function createDateTime($seconds = null)
-    {
-        if (null === $seconds) {
+    private function createDateTime($seconds = NULL) {
+        if (NULL === $seconds) {
             $seconds = time();
         }
 

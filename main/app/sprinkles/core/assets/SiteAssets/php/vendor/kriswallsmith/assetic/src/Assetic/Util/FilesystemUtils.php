@@ -21,8 +21,7 @@ class FilesystemUtils
     /**
      * Recursively removes a directory from the filesystem.
      */
-    public static function removeDirectory($directory)
-    {
+    public static function removeDirectory($directory) {
         $inner = new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS);
         $outer = new \RecursiveIteratorIterator($inner, \RecursiveIteratorIterator::SELF_FIRST);
 
@@ -57,9 +56,8 @@ class FilesystemUtils
      *
      * @return string The directory path
      */
-    public static function createThrowAwayDirectory($prefix)
-    {
-        $directory = self::getTemporaryDirectory().DIRECTORY_SEPARATOR.uniqid('assetic_'.$prefix);
+    public static function createThrowAwayDirectory($prefix) {
+        $directory = self::getTemporaryDirectory() . DIRECTORY_SEPARATOR . uniqid('assetic_' . $prefix);
         mkdir($directory);
 
         return $directory;
@@ -72,13 +70,11 @@ class FilesystemUtils
      *
      * @return string The file path
      */
-    public static function createTemporaryFile($prefix)
-    {
-        return tempnam(self::getTemporaryDirectory(), 'assetic_'.$prefix);
+    public static function createTemporaryFile($prefix) {
+        return tempnam(self::getTemporaryDirectory(), 'assetic_' . $prefix);
     }
 
-    public static function getTemporaryDirectory()
-    {
+    public static function getTemporaryDirectory() {
         return realpath(sys_get_temp_dir());
     }
 }

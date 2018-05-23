@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -46,8 +47,7 @@ class UserSprunje extends Sprunje
     /**
      * {@inheritDoc}
      */
-    protected function baseQuery()
-    {
+    protected function baseQuery() {
         $query = $this->classMapper->createInstance('user');
 
         // Join user's most recent activity
@@ -61,8 +61,7 @@ class UserSprunje extends Sprunje
      * @param mixed $value
      * @return $this
      */
-    protected function filterLastActivity($query, $value)
-    {
+    protected function filterLastActivity($query, $value) {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
         $query->where(function ($query) use ($values) {
@@ -80,15 +79,14 @@ class UserSprunje extends Sprunje
      * @param mixed $value
      * @return $this
      */
-    protected function filterName($query, $value)
-    {
+    protected function filterName($query, $value) {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
         $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
                 $query->orLike('first_name', $value)
-                        ->orLike('last_name', $value)
-                        ->orLike('email', $value);
+                    ->orLike('last_name', $value)
+                    ->orLike('email', $value);
             }
         });
         return $this;
@@ -101,17 +99,16 @@ class UserSprunje extends Sprunje
      * @param mixed $value
      * @return $this
      */
-    protected function filterStatus($query, $value)
-    {
+    protected function filterStatus($query, $value) {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
         $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
                 if ($value == 'disabled') {
                     $query->orWhere('flag_enabled', 0);
-                } elseif ($value == 'unactivated') {
+                } else if ($value == 'unactivated') {
                     $query->orWhere('flag_verified', 0);
-                } elseif ($value == 'active') {
+                } else if ($value == 'active') {
                     $query->orWhere(function ($query) {
                         $query->where('flag_enabled', 1)->where('flag_verified', 1);
                     });
@@ -126,8 +123,7 @@ class UserSprunje extends Sprunje
      *
      * @return array
      */
-    protected function listStatus()
-    {
+    protected function listStatus() {
         return [
             [
                 'value' => 'active',
@@ -151,8 +147,7 @@ class UserSprunje extends Sprunje
      * @param string $direction
      * @return $this
      */
-    protected function sortLastActivity($query, $direction)
-    {
+    protected function sortLastActivity($query, $direction) {
         $query->orderBy('activities.occurred_at', $direction);
         return $this;
     }
@@ -164,8 +159,7 @@ class UserSprunje extends Sprunje
      * @param string $direction
      * @return $this
      */
-    protected function sortName($query, $direction)
-    {
+    protected function sortName($query, $direction) {
         $query->orderBy('last_name', $direction);
         return $this;
     }
@@ -177,8 +171,7 @@ class UserSprunje extends Sprunje
      * @param string $direction
      * @return $this
      */
-    protected function sortStatus($query, $direction)
-    {
+    protected function sortStatus($query, $direction) {
         $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
         return $this;
     }

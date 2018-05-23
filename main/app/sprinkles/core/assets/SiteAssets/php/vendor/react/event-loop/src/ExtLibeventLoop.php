@@ -51,8 +51,7 @@ final class ExtLibeventLoop implements LoopInterface
     private $signals;
     private $signalEvents = array();
 
-    public function __construct()
-    {
+    public function __construct() {
         if (!function_exists('event_base_new')) {
             throw new BadMethodCallException('Cannot create ExtLibeventLoop, ext-libevent extension missing');
         }
@@ -66,9 +65,8 @@ final class ExtLibeventLoop implements LoopInterface
         $this->createStreamCallback();
     }
 
-    public function addReadStream($stream, $listener)
-    {
-        $key = (int) $stream;
+    public function addReadStream($stream, $listener) {
+        $key = (int)$stream;
         if (isset($this->readListeners[$key])) {
             return;
         }
@@ -82,9 +80,8 @@ final class ExtLibeventLoop implements LoopInterface
         $this->readListeners[$key] = $listener;
     }
 
-    public function addWriteStream($stream, $listener)
-    {
-        $key = (int) $stream;
+    public function addWriteStream($stream, $listener) {
+        $key = (int)$stream;
         if (isset($this->writeListeners[$key])) {
             return;
         }
@@ -98,9 +95,8 @@ final class ExtLibeventLoop implements LoopInterface
         $this->writeListeners[$key] = $listener;
     }
 
-    public function removeReadStream($stream)
-    {
-        $key = (int) $stream;
+    public function removeReadStream($stream) {
+        $key = (int)$stream;
 
         if (isset($this->readListeners[$key])) {
             $event = $this->readEvents[$key];
@@ -114,9 +110,8 @@ final class ExtLibeventLoop implements LoopInterface
         }
     }
 
-    public function removeWriteStream($stream)
-    {
-        $key = (int) $stream;
+    public function removeWriteStream($stream) {
+        $key = (int)$stream;
 
         if (isset($this->writeListeners[$key])) {
             $event = $this->writeEvents[$key];
@@ -130,26 +125,23 @@ final class ExtLibeventLoop implements LoopInterface
         }
     }
 
-    public function addTimer($interval, $callback)
-    {
-        $timer = new Timer($interval, $callback, false);
+    public function addTimer($interval, $callback) {
+        $timer = new Timer($interval, $callback, FALSE);
 
         $this->scheduleTimer($timer);
 
         return $timer;
     }
 
-    public function addPeriodicTimer($interval, $callback)
-    {
-        $timer = new Timer($interval, $callback, true);
+    public function addPeriodicTimer($interval, $callback) {
+        $timer = new Timer($interval, $callback, TRUE);
 
         $this->scheduleTimer($timer);
 
         return $timer;
     }
 
-    public function cancelTimer(TimerInterface $timer)
-    {
+    public function cancelTimer(TimerInterface $timer) {
         if ($this->timerEvents->contains($timer)) {
             $event = $this->timerEvents[$timer];
             event_del($event);
@@ -159,13 +151,11 @@ final class ExtLibeventLoop implements LoopInterface
         }
     }
 
-    public function futureTick($listener)
-    {
+    public function futureTick($listener) {
         $this->futureTickQueue->add($listener);
     }
 
-    public function addSignal($signal, $listener)
-    {
+    public function addSignal($signal, $listener) {
         $this->signals->add($signal, $listener);
 
         if (!isset($this->signalEvents[$signal])) {
@@ -176,8 +166,7 @@ final class ExtLibeventLoop implements LoopInterface
         }
     }
 
-    public function removeSignal($signal, $listener)
-    {
+    public function removeSignal($signal, $listener) {
         $this->signals->remove($signal, $listener);
 
         if (isset($this->signalEvents[$signal]) && $this->signals->count($signal) === 0) {
@@ -187,9 +176,8 @@ final class ExtLibeventLoop implements LoopInterface
         }
     }
 
-    public function run()
-    {
-        $this->running = true;
+    public function run() {
+        $this->running = TRUE;
 
         while ($this->running) {
             $this->futureTickQueue->tick();
@@ -197,7 +185,7 @@ final class ExtLibeventLoop implements LoopInterface
             $flags = EVLOOP_ONCE;
             if (!$this->running || !$this->futureTickQueue->isEmpty()) {
                 $flags |= EVLOOP_NONBLOCK;
-            } elseif (!$this->readEvents && !$this->writeEvents && !$this->timerEvents->count() && $this->signals->isEmpty()) {
+            } else if (!$this->readEvents && !$this->writeEvents && !$this->timerEvents->count() && $this->signals->isEmpty()) {
                 break;
             }
 
@@ -205,9 +193,8 @@ final class ExtLibeventLoop implements LoopInterface
         }
     }
 
-    public function stop()
-    {
-        $this->running = false;
+    public function stop() {
+        $this->running = FALSE;
     }
 
     /**
@@ -215,8 +202,7 @@ final class ExtLibeventLoop implements LoopInterface
      *
      * @param TimerInterface $timer
      */
-    private function scheduleTimer(TimerInterface $timer)
-    {
+    private function scheduleTimer(TimerInterface $timer) {
         $this->timerEvents[$timer] = $event = event_timer_new();
 
         event_timer_set($event, $this->timerCallback, $timer);
@@ -231,8 +217,7 @@ final class ExtLibeventLoop implements LoopInterface
      * to prevent "Cannot destroy active lambda function" fatal error from
      * the event extension.
      */
-    private function createTimerCallback()
-    {
+    private function createTimerCallback() {
         $that = $this;
         $timers = $this->timerEvents;
         $this->timerCallback = function ($_, $__, $timer) use ($timers, $that) {
@@ -250,7 +235,7 @@ final class ExtLibeventLoop implements LoopInterface
                     $timer->getInterval() * ExtLibeventLoop::MICROSECONDS_PER_SECOND
                 );
 
-            // Clean-up one shot timers ...
+                // Clean-up one shot timers ...
             } else {
                 $that->cancelTimer($timer);
             }
@@ -264,12 +249,11 @@ final class ExtLibeventLoop implements LoopInterface
      * to prevent "Cannot destroy active lambda function" fatal error from
      * the event extension.
      */
-    private function createStreamCallback()
-    {
+    private function createStreamCallback() {
         $read =& $this->readListeners;
         $write =& $this->writeListeners;
         $this->streamCallback = function ($stream, $flags) use (&$read, &$write) {
-            $key = (int) $stream;
+            $key = (int)$stream;
 
             if (EV_READ === (EV_READ & $flags) && isset($read[$key])) {
                 call_user_func($read[$key], $stream);

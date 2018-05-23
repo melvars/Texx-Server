@@ -1,4 +1,5 @@
 <?php
+
 use GuzzleHttp\Psr7\Uri;
 use React\Promise\Deferred;
 use Ratchet\RFC6455\Messaging\Frame;
@@ -16,8 +17,7 @@ $dnsResolver = $dnsResolverFactory->createCached('8.8.8.8', $loop);
 
 $factory = new \React\SocketClient\Connector($loop, $dnsResolver);
 
-function echoStreamerFactory($conn)
-{
+function echoStreamerFactory($conn) {
     return new \Ratchet\RFC6455\Messaging\MessageBuffer(
         new \Ratchet\RFC6455\Messaging\CloseFrameChecker,
         function (\Ratchet\RFC6455\Messaging\MessageInterface $msg) use ($conn) {
@@ -30,14 +30,14 @@ function echoStreamerFactory($conn)
         function (\Ratchet\RFC6455\Messaging\FrameInterface $frame) use ($conn) {
             switch ($frame->getOpcode()) {
                 case Frame::OP_PING:
-                    return $conn->write((new Frame($frame->getPayload(), true, Frame::OP_PONG))->maskPayload()->getContents());
+                    return $conn->write((new Frame($frame->getPayload(), TRUE, Frame::OP_PONG))->maskPayload()->getContents());
                     break;
                 case Frame::OP_CLOSE:
-                    return $conn->end((new Frame($frame->getPayload(), true, Frame::OP_CLOSE))->maskPayload()->getContents());
+                    return $conn->end((new Frame($frame->getPayload(), TRUE, Frame::OP_CLOSE))->maskPayload()->getContents());
                     break;
             }
         },
-        false
+        FALSE
     );
 }
 
@@ -52,13 +52,13 @@ function getTestCases() {
         $cnRequest = $cn->generateRequest(new Uri('ws://127.0.0.1:9001/getCaseCount'));
 
         $rawResponse = "";
-        $response = null;
+        $response = NULL;
 
         /** @var \Ratchet\RFC6455\Messaging\Streaming\MessageBuffer $ms */
-        $ms = null;
+        $ms = NULL;
 
         $stream->on('data', function ($data) use ($stream, &$rawResponse, &$response, &$ms, $cn, $deferred, &$context, $cnRequest) {
-            if ($response === null) {
+            if ($response === NULL) {
                 $rawResponse .= $data;
                 $pos = strpos($rawResponse, "\r\n\r\n");
                 if ($pos) {
@@ -76,8 +76,8 @@ function getTestCases() {
                                 $deferred->resolve($msg->getPayload());
                                 $stream->close();
                             },
-                            null,
-                            false
+                            NULL,
+                            FALSE
                         );
                     }
                 }
@@ -95,8 +95,7 @@ function getTestCases() {
     return $deferred->promise();
 }
 
-function runTest($case)
-{
+function runTest($case) {
     global $factory;
     global $testServer;
 
@@ -109,12 +108,12 @@ function runTest($case)
         $cnRequest = $cn->generateRequest(new Uri('ws://127.0.0.1:9001' . $casePath));
 
         $rawResponse = "";
-        $response = null;
+        $response = NULL;
 
-        $ms = null;
+        $ms = NULL;
 
         $stream->on('data', function ($data) use ($stream, &$rawResponse, &$response, &$ms, $cn, $deferred, &$context, $cnRequest) {
-            if ($response === null) {
+            if ($response === NULL) {
                 $rawResponse .= $data;
                 $pos = strpos($rawResponse, "\r\n\r\n");
                 if ($pos) {
@@ -159,13 +158,13 @@ function createReport() {
         $cnRequest = $cn->generateRequest(new Uri('ws://127.0.0.1:9001' . $reportPath));
 
         $rawResponse = "";
-        $response = null;
+        $response = NULL;
 
         /** @var \Ratchet\RFC6455\Messaging\MessageBuffer $ms */
-        $ms = null;
+        $ms = NULL;
 
         $stream->on('data', function ($data) use ($stream, &$rawResponse, &$response, &$ms, $cn, $deferred, &$context, $cnRequest) {
-            if ($response === null) {
+            if ($response === NULL) {
                 $rawResponse .= $data;
                 $pos = strpos($rawResponse, "\r\n\r\n");
                 if ($pos) {
@@ -183,8 +182,8 @@ function createReport() {
                                 $deferred->resolve($msg->getPayload());
                                 $stream->close();
                             },
-                            null,
-                            false
+                            NULL,
+                            FALSE
                         );
                     }
                 }

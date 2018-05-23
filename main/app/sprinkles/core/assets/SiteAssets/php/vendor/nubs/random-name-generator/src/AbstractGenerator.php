@@ -1,4 +1,5 @@
 <?php
+
 namespace Nubs\RandomNameGenerator;
 
 abstract class AbstractGenerator implements Generator
@@ -12,8 +13,7 @@ abstract class AbstractGenerator implements Generator
      * @api
      * @return string A random name.
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getName();
     }
 }

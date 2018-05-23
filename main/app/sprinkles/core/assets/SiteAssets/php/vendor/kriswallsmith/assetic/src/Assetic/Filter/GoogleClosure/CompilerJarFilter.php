@@ -28,19 +28,16 @@ class CompilerJarFilter extends BaseCompilerFilter
     private $javaPath;
     private $flagFile;
 
-    public function __construct($jarPath, $javaPath = '/usr/bin/java')
-    {
+    public function __construct($jarPath, $javaPath = '/usr/bin/java') {
         $this->jarPath = $jarPath;
         $this->javaPath = $javaPath;
     }
 
-    public function setFlagFile($flagFile)
-    {
+    public function setFlagFile($flagFile) {
         $this->flagFile = $flagFile;
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $is64bit = PHP_INT_SIZE === 8;
         $cleanup = array();
 
@@ -52,47 +49,47 @@ class CompilerJarFilter extends BaseCompilerFilter
             array('-jar', $this->jarPath)
         ));
 
-        if (null !== $this->timeout) {
+        if (NULL !== $this->timeout) {
             $pb->setTimeout($this->timeout);
         }
 
-        if (null !== $this->compilationLevel) {
+        if (NULL !== $this->compilationLevel) {
             $pb->add('--compilation_level')->add($this->compilationLevel);
         }
 
-        if (null !== $this->jsExterns) {
+        if (NULL !== $this->jsExterns) {
             $cleanup[] = $externs = FilesystemUtils::createTemporaryFile('google_closure');
             file_put_contents($externs, $this->jsExterns);
             $pb->add('--externs')->add($externs);
         }
 
-        if (null !== $this->externsUrl) {
+        if (NULL !== $this->externsUrl) {
             $cleanup[] = $externs = FilesystemUtils::createTemporaryFile('google_closure');
             file_put_contents($externs, file_get_contents($this->externsUrl));
             $pb->add('--externs')->add($externs);
         }
 
-        if (null !== $this->excludeDefaultExterns) {
+        if (NULL !== $this->excludeDefaultExterns) {
             $pb->add('--use_only_custom_externs');
         }
 
-        if (null !== $this->formatting) {
+        if (NULL !== $this->formatting) {
             $pb->add('--formatting')->add($this->formatting);
         }
 
-        if (null !== $this->useClosureLibrary) {
+        if (NULL !== $this->useClosureLibrary) {
             $pb->add('--manage_closure_dependencies');
         }
 
-        if (null !== $this->warningLevel) {
+        if (NULL !== $this->warningLevel) {
             $pb->add('--warning_level')->add($this->warningLevel);
         }
 
-        if (null !== $this->language) {
+        if (NULL !== $this->language) {
             $pb->add('--language_in')->add($this->language);
         }
 
-        if (null !== $this->flagFile) {
+        if (NULL !== $this->flagFile) {
             $pb->add('--flagfile')->add($this->flagFile);
         }
 

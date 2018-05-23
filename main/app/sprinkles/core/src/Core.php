@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core;
 
 use RocketTheme\Toolbox\Event\Event;
@@ -23,8 +24,7 @@ class Core extends Sprinkle
     /**
      * Defines which events in the UF lifecycle our Sprinkle should hook into.
      */
-    public static function getSubscribedEvents()
-    {
+    public static function getSubscribedEvents() {
         return [
             'onSprinklesInitialized' => ['onSprinklesInitialized', 0],
             'onSprinklesRegisterServices' => ['onSprinklesRegisterServices', 0],
@@ -35,8 +35,7 @@ class Core extends Sprinkle
     /**
      * Set static references to DI container in necessary classes.
      */
-    public function onSprinklesInitialized()
-    {
+    public function onSprinklesInitialized() {
         // Set container for data model
         Model::$ci = $this->ci;
 
@@ -47,8 +46,7 @@ class Core extends Sprinkle
     /**
      * Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
      */
-    public function onSprinklesRegisterServices()
-    {
+    public function onSprinklesRegisterServices() {
         // Set up any global PHP settings from the config service.
         $config = $this->ci->config;
 
@@ -73,14 +71,14 @@ class Core extends Sprinkle
         }
 
         // Determine if error display is enabled in the shutdown handler.
-        $displayErrors = false;
+        $displayErrors = FALSE;
         if (in_array(strtolower($config['php.display_errors']), [
             '1',
             'on',
             'true',
             'yes'
         ])) {
-            $displayErrors = true;
+            $displayErrors = TRUE;
         }
 
         $sh = new ShutdownHandler($this->ci, $displayErrors);
@@ -90,8 +88,7 @@ class Core extends Sprinkle
     /**
      * Add CSRF middleware.
      */
-    public function onAddGlobalMiddleware(Event $event)
-    {
+    public function onAddGlobalMiddleware(Event $event) {
         $request = $this->ci->request;
         $path = $request->getUri()->getPath();
         $method = $request->getMethod();
@@ -102,13 +99,13 @@ class Core extends Sprinkle
         $method = strtoupper($method);
 
         $csrfBlacklist = $this->ci->config['csrf.blacklist'];
-        $isBlacklisted = false;
+        $isBlacklisted = FALSE;
 
         // Go through the blacklist and determine if the path and method match any of the blacklist entries.
         foreach ($csrfBlacklist as $pattern => $methods) {
-            $methods = array_map('strtoupper', (array) $methods);
+            $methods = array_map('strtoupper', (array)$methods);
             if (in_array($method, $methods) && $pattern != '' && preg_match('~' . $pattern . '~', $path)) {
-                $isBlacklisted = true;
+                $isBlacklisted = TRUE;
                 break;
             }
         }

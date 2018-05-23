@@ -11,7 +11,7 @@
 
 namespace Symfony\Component\HttpFoundation\Session\Storage\Proxy;
 
-@trigger_error('The '.__NAMESPACE__.'\NativeProxy class is deprecated since Symfony 3.4 and will be removed in 4.0. Use your session handler implementation directly.', E_USER_DEPRECATED);
+@trigger_error('The ' . __NAMESPACE__ . '\NativeProxy class is deprecated since Symfony 3.4 and will be removed in 4.0. Use your session handler implementation directly.', E_USER_DEPRECATED);
 
 /**
  * This proxy is built-in session handlers in PHP 5.3.x.
@@ -22,8 +22,7 @@ namespace Symfony\Component\HttpFoundation\Session\Storage\Proxy;
  */
 class NativeProxy extends AbstractProxy
 {
-    public function __construct()
-    {
+    public function __construct() {
         // this makes an educated guess as to what the handler is since it should already be set.
         $this->saveHandlerName = ini_get('session.save_handler');
     }
@@ -33,8 +32,7 @@ class NativeProxy extends AbstractProxy
      *
      * @return bool False
      */
-    public function isWrapper()
-    {
-        return false;
+    public function isWrapper() {
+        return FALSE;
     }
 }

@@ -24,8 +24,7 @@ class SprunjeTests extends TestCase
      *
      * @return void
      */
-    public function setUp()
-    {
+    public function setUp() {
         parent::setUp();
 
         $this->classMapper = new ClassMapper();
@@ -34,8 +33,7 @@ class SprunjeTests extends TestCase
     /**
      * Tests...
      */
-    public function testUserPermissionSprunje()
-    {
+    public function testUserPermissionSprunje() {
         $fm = $this->ci->factory;
 
         // Generate some test models

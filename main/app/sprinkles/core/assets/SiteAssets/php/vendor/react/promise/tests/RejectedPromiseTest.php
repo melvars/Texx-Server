@@ -9,9 +9,8 @@ class RejectedPromiseTest extends TestCase
     use PromiseTest\PromiseSettledTestTrait,
         PromiseTest\PromiseRejectedTestTrait;
 
-    public function getPromiseTestAdapter(callable $canceller = null)
-    {
-        $promise = null;
+    public function getPromiseTestAdapter(callable $canceller = NULL) {
+        $promise = NULL;
 
         return new CallbackPromiseAdapter([
             'promise' => function () use (&$promise) {
@@ -24,7 +23,7 @@ class RejectedPromiseTest extends TestCase
             'resolve' => function () {
                 throw new \LogicException('You cannot call resolve() for React\Promise\RejectedPromise');
             },
-            'reject' => function ($reason = null) use (&$promise) {
+            'reject' => function ($reason = NULL) use (&$promise) {
                 if (!$promise) {
                     $promise = new RejectedPromise($reason);
                 }
@@ -32,7 +31,7 @@ class RejectedPromiseTest extends TestCase
             'notify' => function () {
                 // no-op
             },
-            'settle' => function ($reason = null) use (&$promise) {
+            'settle' => function ($reason = NULL) use (&$promise) {
                 if (!$promise) {
                     $promise = new RejectedPromise($reason);
                 }
@@ -41,8 +40,7 @@ class RejectedPromiseTest extends TestCase
     }
 
     /** @test */
-    public function shouldThrowExceptionIfConstructedWithAPromise()
-    {
+    public function shouldThrowExceptionIfConstructedWithAPromise() {
         $this->setExpectedException('\InvalidArgumentException');
 
         return new RejectedPromise(new RejectedPromise());

@@ -11,53 +11,43 @@ class ConnectionStub extends EventEmitter implements ConnectionInterface
 {
     private $data = '';
 
-    public function isReadable()
-    {
-        return true;
+    public function isReadable() {
+        return TRUE;
     }
 
-    public function isWritable()
-    {
-        return true;
+    public function isWritable() {
+        return TRUE;
     }
 
-    public function pause()
-    {
+    public function pause() {
     }
 
-    public function resume()
-    {
+    public function resume() {
     }
 
-    public function pipe(WritableStreamInterface $dest, array $options = array())
-    {
+    public function pipe(WritableStreamInterface $dest, array $options = array()) {
         Util::pipe($this, $dest, $options);
 
         return $dest;
     }
 
-    public function write($data)
-    {
+    public function write($data) {
         $this->data .= $data;
 
-        return true;
+        return TRUE;
     }
 
-    public function end($data = null)
-    {
+    public function end($data = NULL) {
     }
 
-    public function close()
-    {
+    public function close() {
     }
 
-    public function getData()
-    {
+    public function getData() {
         return $this->data;
     }
 
-    public function getRemoteAddress()
-    {
+    public function getRemoteAddress() {
         return '127.0.0.1';
     }
 }

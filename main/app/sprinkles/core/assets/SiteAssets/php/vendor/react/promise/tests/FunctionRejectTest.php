@@ -5,8 +5,7 @@ namespace React\Promise;
 class FunctionRejectTest extends TestCase
 {
     /** @test */
-    public function shouldRejectAnImmediateValue()
-    {
+    public function shouldRejectAnImmediateValue() {
         $expected = 123;
 
         $mock = $this->createCallableMock();
@@ -23,8 +22,7 @@ class FunctionRejectTest extends TestCase
     }
 
     /** @test */
-    public function shouldRejectAFulfilledPromise()
-    {
+    public function shouldRejectAFulfilledPromise() {
         $expected = 123;
 
         $resolved = new FulfilledPromise($expected);
@@ -43,8 +41,7 @@ class FunctionRejectTest extends TestCase
     }
 
     /** @test */
-    public function shouldRejectARejectedPromise()
-    {
+    public function shouldRejectARejectedPromise() {
         $expected = 123;
 
         $resolved = new RejectedPromise($expected);

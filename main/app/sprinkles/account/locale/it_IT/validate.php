@@ -14,7 +14,7 @@
  */
 
 return [
-	"VALIDATE" => [
+    "VALIDATE" => [
         "PASSWORD_MISMATCH" => "I due campi devono combaciare",
         "USERNAME" => "L'username può essere composto da caratteri alfanumerici, '.', '-', e '_'."
     ]

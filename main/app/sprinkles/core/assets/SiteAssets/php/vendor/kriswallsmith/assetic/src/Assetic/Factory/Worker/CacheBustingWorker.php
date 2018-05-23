@@ -24,13 +24,11 @@ class CacheBustingWorker implements WorkerInterface
 {
     private $separator;
 
-    public function __construct($separator = '-')
-    {
+    public function __construct($separator = '-') {
         $this->separator = $separator;
     }
 
-    public function process(AssetInterface $asset, AssetFactory $factory)
-    {
+    public function process(AssetInterface $asset, AssetFactory $factory) {
         if (!$path = $asset->getTargetPath()) {
             // no path to work with
             return;
@@ -41,19 +39,18 @@ class CacheBustingWorker implements WorkerInterface
             return;
         }
 
-        $replace = $this->separator.$this->getHash($asset, $factory).'.'.$search;
-        if (preg_match('/'.preg_quote($replace, '/').'$/', $path)) {
+        $replace = $this->separator . $this->getHash($asset, $factory) . '.' . $search;
+        if (preg_match('/' . preg_quote($replace, '/') . '$/', $path)) {
             // already replaced
             return;
         }
 
         $asset->setTargetPath(
-            preg_replace('/\.'.preg_quote($search, '/').'$/', $replace, $path)
+            preg_replace('/\.' . preg_quote($search, '/') . '$/', $replace, $path)
         );
     }
 
-    protected function getHash(AssetInterface $asset, AssetFactory $factory)
-    {
+    protected function getHash(AssetInterface $asset, AssetFactory $factory) {
         $hash = hash_init('sha1');
 
         hash_update($hash, $factory->getLastModified($asset));

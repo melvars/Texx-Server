@@ -5,8 +5,7 @@ namespace React\Promise;
 class CancellationQueueTest extends TestCase
 {
     /** @test */
-    public function acceptsSimpleCancellableThenable()
-    {
+    public function acceptsSimpleCancellableThenable() {
         $p = new SimpleTestCancellableThenable();
 
         $cancellationQueue = new CancellationQueue();
@@ -18,8 +17,7 @@ class CancellationQueueTest extends TestCase
     }
 
     /** @test */
-    public function ignoresSimpleCancellable()
-    {
+    public function ignoresSimpleCancellable() {
         $p = new SimpleTestCancellable();
 
         $cancellationQueue = new CancellationQueue();
@@ -31,8 +29,7 @@ class CancellationQueueTest extends TestCase
     }
 
     /** @test */
-    public function callsCancelOnPromisesEnqueuedBeforeStart()
-    {
+    public function callsCancelOnPromisesEnqueuedBeforeStart() {
         $d1 = $this->getCancellableDeferred();
         $d2 = $this->getCancellableDeferred();
 
@@ -44,8 +41,7 @@ class CancellationQueueTest extends TestCase
     }
 
     /** @test */
-    public function callsCancelOnPromisesEnqueuedAfterStart()
-    {
+    public function callsCancelOnPromisesEnqueuedAfterStart() {
         $d1 = $this->getCancellableDeferred();
         $d2 = $this->getCancellableDeferred();
 
@@ -58,8 +54,7 @@ class CancellationQueueTest extends TestCase
     }
 
     /** @test */
-    public function doesNotCallCancelTwiceWhenStartedTwice()
-    {
+    public function doesNotCallCancelTwiceWhenStartedTwice() {
         $d = $this->getCancellableDeferred();
 
         $cancellationQueue = new CancellationQueue();
@@ -70,8 +65,7 @@ class CancellationQueueTest extends TestCase
     }
 
     /** @test */
-    public function rethrowsExceptionsThrownFromCancel()
-    {
+    public function rethrowsExceptionsThrownFromCancel() {
         $this->setExpectedException('\Exception', 'test');
 
         $mock = $this
@@ -88,8 +82,7 @@ class CancellationQueueTest extends TestCase
         $cancellationQueue();
     }
 
-    private function getCancellableDeferred()
-    {
+    private function getCancellableDeferred() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())

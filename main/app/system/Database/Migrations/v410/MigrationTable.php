@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Database\Migrations\v410;
 
 use Illuminate\Database\Schema\Blueprint;
@@ -29,8 +30,7 @@ class MigrationTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function up()
-    {
+    public function up() {
         $this->schema->create('migrations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('sprinkle');
@@ -52,8 +52,7 @@ class MigrationTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function down()
-    {
+    public function down() {
         $this->schema->drop('migrations');
     }
 }

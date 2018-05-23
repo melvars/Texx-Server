@@ -40,12 +40,11 @@ class MemcacheSessionHandler implements \SessionHandlerInterface
      *  * expiretime: The time to live in seconds
      *
      * @param \Memcache $memcache A \Memcache instance
-     * @param array     $options  An associative array of Memcache options
+     * @param array $options An associative array of Memcache options
      *
      * @throws \InvalidArgumentException When unsupported options are passed
      */
-    public function __construct(\Memcache $memcache, array $options = array())
-    {
+    public function __construct(\Memcache $memcache, array $options = array()) {
         if ($diff = array_diff(array_keys($options), array('prefix', 'expiretime'))) {
             throw new \InvalidArgumentException(sprintf(
                 'The following options are not supported "%s"', implode(', ', $diff)
@@ -53,59 +52,53 @@ class MemcacheSessionHandler implements \SessionHandlerInterface
         }
 
         $this->memcache = $memcache;
-        $this->ttl = isset($options['expiretime']) ? (int) $options['expiretime'] : 86400;
+        $this->ttl = isset($options['expiretime']) ? (int)$options['expiretime'] : 86400;
         $this->prefix = isset($options['prefix']) ? $options['prefix'] : 'sf2s';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function open($savePath, $sessionName)
-    {
-        return true;
+    public function open($savePath, $sessionName) {
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function close()
-    {
-        return true;
+    public function close() {
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function read($sessionId)
-    {
-        return $this->memcache->get($this->prefix.$sessionId) ?: '';
+    public function read($sessionId) {
+        return $this->memcache->get($this->prefix . $sessionId) ?: '';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function write($sessionId, $data)
-    {
-        return $this->memcache->set($this->prefix.$sessionId, $data, 0, time() + $this->ttl);
+    public function write($sessionId, $data) {
+        return $this->memcache->set($this->prefix . $sessionId, $data, 0, time() + $this->ttl);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function destroy($sessionId)
-    {
-        $this->memcache->delete($this->prefix.$sessionId);
+    public function destroy($sessionId) {
+        $this->memcache->delete($this->prefix . $sessionId);
 
-        return true;
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime)
-    {
+    public function gc($maxlifetime) {
         // not required here because memcache will auto expire the records anyhow.
-        return true;
+        return TRUE;
     }
 
     /**
@@ -113,8 +106,7 @@ class MemcacheSessionHandler implements \SessionHandlerInterface
      *
      * @return \Memcache
      */
-    protected function getMemcache()
-    {
+    protected function getMemcache() {
         return $this->memcache;
     }
 }

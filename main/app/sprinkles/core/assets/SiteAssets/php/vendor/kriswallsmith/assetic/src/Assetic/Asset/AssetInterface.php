@@ -46,7 +46,7 @@ interface AssetInterface
      *
      * @param FilterInterface $additionalFilter An additional filter
      */
-    public function load(FilterInterface $additionalFilter = null);
+    public function load(FilterInterface $additionalFilter = NULL);
 
     /**
      * Applies dump filters and returns the asset as a string.
@@ -62,7 +62,7 @@ interface AssetInterface
      *
      * @return string The filtered content of the current asset
      */
-    public function dump(FilterInterface $additionalFilter = null);
+    public function dump(FilterInterface $additionalFilter = NULL);
 
     /**
      * Returns the loaded content of the current asset.

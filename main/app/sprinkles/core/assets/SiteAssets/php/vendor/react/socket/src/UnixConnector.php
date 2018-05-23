@@ -17,16 +17,14 @@ final class UnixConnector implements ConnectorInterface
 {
     private $loop;
 
-    public function __construct(LoopInterface $loop)
-    {
+    public function __construct(LoopInterface $loop) {
         $this->loop = $loop;
     }
 
-    public function connect($path)
-    {
-        if (strpos($path, '://') === false) {
+    public function connect($path) {
+        if (strpos($path, '://') === FALSE) {
             $path = 'unix://' . $path;
-        } elseif (substr($path, 0, 7) !== 'unix://') {
+        } else if (substr($path, 0, 7) !== 'unix://') {
             return Promise\reject(new InvalidArgumentException('Given URI "' . $path . '" is invalid'));
         }
 
@@ -37,7 +35,7 @@ final class UnixConnector implements ConnectorInterface
         }
 
         $connection = new Connection($resource, $this->loop);
-        $connection->unix = true;
+        $connection->unix = TRUE;
 
         return Promise\resolve($connection);
     }

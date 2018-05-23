@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -35,14 +36,13 @@ class Role extends Model
     /**
      * @var bool Enable timestamps for this class.
      */
-    public $timestamps = true;
+    public $timestamps = TRUE;
 
     /**
      * Delete this role from the database, removing associations with permissions and users.
      *
      */
-    public function delete()
-    {
+    public function delete() {
         // Remove all permission associations
         $this->permissions()->detach();
 
@@ -58,19 +58,17 @@ class Role extends Model
     /**
      * Get a list of default roles.
      */
-    public static function getDefaultSlugs()
-    {
+    public static function getDefaultSlugs() {
         /** @var UserFrosting\Config $config */
         $config = static::$ci->config;
 
-        return array_map('trim', array_keys($config['site.registration.user_defaults.roles'], true));
+        return array_map('trim', array_keys($config['site.registration.user_defaults.roles'], TRUE));
     }
 
     /**
      * Get a list of permissions assigned to this role.
      */
-    public function permissions()
-    {
+    public function permissions() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
@@ -84,19 +82,17 @@ class Role extends Model
      * @param int $userId
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeForUser($query, $userId)
-    {
+    public function scopeForUser($query, $userId) {
         return $query->join('role_users', function ($join) use ($userId) {
             $join->on('role_users.role_id', 'roles.id')
-                 ->where('user_id', $userId);
+                ->where('user_id', $userId);
         });
     }
 
     /**
      * Get a list of users who have this role.
      */
-    public function users()
-    {
+    public function users() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 

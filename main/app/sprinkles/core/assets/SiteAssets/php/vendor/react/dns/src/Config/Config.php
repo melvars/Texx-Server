@@ -26,8 +26,7 @@ class Config
      * @return self
      * @codeCoverageIgnore
      */
-    public static function loadSystemConfigBlocking()
-    {
+    public static function loadSystemConfigBlocking() {
         // Use WMIC output on Windows
         if (DIRECTORY_SEPARATOR === '\\') {
             return self::loadWmicBlocking();
@@ -71,14 +70,13 @@ class Config
      * @return self
      * @throws RuntimeException if the path can not be loaded (does not exist)
      */
-    public static function loadResolvConfBlocking($path = null)
-    {
-        if ($path === null) {
+    public static function loadResolvConfBlocking($path = NULL) {
+        if ($path === NULL) {
             $path = '/etc/resolv.conf';
         }
 
         $contents = @file_get_contents($path);
-        if ($contents === false) {
+        if ($contents === FALSE) {
             throw new RuntimeException('Unable to load resolv.conf file "' . $path . '"');
         }
 
@@ -112,9 +110,8 @@ class Config
      * @return self
      * @link https://ss64.com/nt/wmic.html
      */
-    public static function loadWmicBlocking($command = null)
-    {
-        $contents = shell_exec($command === null ? 'wmic NICCONFIG get "DNSServerSearchOrder" /format:CSV' : $command);
+    public static function loadWmicBlocking($command = NULL) {
+        $contents = shell_exec($command === NULL ? 'wmic NICCONFIG get "DNSServerSearchOrder" /format:CSV' : $command);
         preg_match_all('/(?<=[{;,"])([\da-f.:]{4,})(?=[};,"])/i', $contents, $matches);
 
         $config = new self();

@@ -18,16 +18,14 @@ use React\EventLoop\LoopInterface;
 
 class Factory
 {
-    public function create($nameserver, LoopInterface $loop)
-    {
+    public function create($nameserver, LoopInterface $loop) {
         $nameserver = $this->addPortToServerIfMissing($nameserver);
         $executor = $this->decorateHostsFileExecutor($this->createRetryExecutor($loop));
 
         return new Resolver($nameserver, $executor);
     }
 
-    public function createCached($nameserver, LoopInterface $loop, CacheInterface $cache = null)
-    {
+    public function createCached($nameserver, LoopInterface $loop, CacheInterface $cache = NULL) {
         if (!($cache instanceof CacheInterface)) {
             $cache = new ArrayCache();
         }
@@ -45,8 +43,7 @@ class Factory
      * @return ExecutorInterface
      * @codeCoverageIgnore
      */
-    private function decorateHostsFileExecutor(ExecutorInterface $executor)
-    {
+    private function decorateHostsFileExecutor(ExecutorInterface $executor) {
         try {
             $executor = new HostsFileExecutor(
                 HostsFile::loadFromPathBlocking(),
@@ -68,33 +65,29 @@ class Factory
         return $executor;
     }
 
-    protected function createExecutor(LoopInterface $loop)
-    {
+    protected function createExecutor(LoopInterface $loop) {
         return new TimeoutExecutor(
-            new Executor($loop, new Parser(), new BinaryDumper(), null),
+            new Executor($loop, new Parser(), new BinaryDumper(), NULL),
             5.0,
             $loop
         );
     }
 
-    protected function createRetryExecutor(LoopInterface $loop)
-    {
+    protected function createRetryExecutor(LoopInterface $loop) {
         return new RetryExecutor($this->createExecutor($loop));
     }
 
-    protected function createCachedExecutor(LoopInterface $loop, CacheInterface $cache)
-    {
+    protected function createCachedExecutor(LoopInterface $loop, CacheInterface $cache) {
         return new CachedExecutor($this->createRetryExecutor($loop), new RecordCache($cache));
     }
 
-    protected function addPortToServerIfMissing($nameserver)
-    {
-        if (strpos($nameserver, '[') === false && substr_count($nameserver, ':') >= 2) {
+    protected function addPortToServerIfMissing($nameserver) {
+        if (strpos($nameserver, '[') === FALSE && substr_count($nameserver, ':') >= 2) {
             // several colons, but not enclosed in square brackets => enclose IPv6 address in square brackets
             $nameserver = '[' . $nameserver . ']';
         }
         // assume a dummy scheme when checking for the port, otherwise parse_url() fails
-        if (parse_url('dummy://' . $nameserver, PHP_URL_PORT) === null) {
+        if (parse_url('dummy://' . $nameserver, PHP_URL_PORT) === NULL) {
             $nameserver .= ':53';
         }
 

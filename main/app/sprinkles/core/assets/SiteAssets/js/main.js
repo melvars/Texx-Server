@@ -20,14 +20,20 @@ var ExploreData = $("#ExploreData");
 /**
  * POPUPS
  */
-function triggerErrorPopup() {
+function triggerErrorPopup(ErrorCode) {
+    var ErrorMessage = "Unknown Error occurred!", ErrorInformationSite = "", AlsoLogInConsole = true; // WILL BE REWRITTEN (EXCEPT SOMETHING CRAZY HAPPENS)
+    switch (ErrorCode) {
+        case "ChatNotAllowed":
+            AlsoLogInConsole = false;
+            ErrorMessage = "Sorry, it seems like your account is not allowed to use our chat feature.";
+            break;
+    }
+    if (AlsoLogInConsole) console.error("Error: " + ErrorMessage);
     swal({
         title: 'Error!',
-        text: 'Do you want to continue?',
-        footer: '<a>Why do I have this problem?</a>',
-        type: 'error',
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No'
+        text: ErrorMessage,
+        footer: '<a href="' + ErrorInformationSite + '">Why do I have this problem?</a>',
+        type: 'error'
     });
 }
 

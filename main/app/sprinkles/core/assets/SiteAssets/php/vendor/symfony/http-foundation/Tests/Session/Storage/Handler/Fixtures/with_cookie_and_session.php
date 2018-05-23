@@ -1,10 +1,10 @@
 <?php
 
-require __DIR__.'/common.inc';
+require __DIR__ . '/common.inc';
 
 setcookie('abc', 'def');
 
-session_set_save_handler(new TestSessionHandler('abc|i:123;'), false);
+session_set_save_handler(new TestSessionHandler('abc|i:123;'), FALSE);
 session_start();
 session_write_close();
 session_start();

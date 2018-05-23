@@ -1,4 +1,5 @@
 <?php
+
 namespace UserFrosting\Sprinkle\ExtendUser\Controller;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -19,8 +20,7 @@ class MemberController extends UserController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageInfo($request, $response, $args)
-    {
+    public function pageInfo($request, $response, $args) {
         $user = $this->getUserFromParams($args);
 
         // If the user no longer exists, forward to main user listing page

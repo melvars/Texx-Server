@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
@@ -23,8 +24,7 @@ class ThrottlesTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function up()
-    {
+    public function up() {
         if (!$this->schema->hasTable('throttles')) {
             $this->schema->create('throttles', function (Blueprint $table) {
                 $table->increments('id');
@@ -45,8 +45,7 @@ class ThrottlesTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function down()
-    {
+    public function down() {
         $this->schema->drop('throttles');
     }
 }

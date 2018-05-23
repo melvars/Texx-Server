@@ -1,7 +1,9 @@
 <?php
+
 namespace Ratchet\Session\Serialize;
 
-class PhpHandler implements HandlerInterface {
+class PhpHandler implements HandlerInterface
+{
     /**
      * Simply reverse behaviour of unserialize method.
      * {@inheritdoc}
@@ -27,18 +29,18 @@ class PhpHandler implements HandlerInterface {
      */
     public function unserialize($raw) {
         $returnData = array();
-        $offset     = 0;
+        $offset = 0;
 
         while ($offset < strlen($raw)) {
             if (!strstr(substr($raw, $offset), "|")) {
                 throw new \UnexpectedValueException("invalid data, remaining: " . substr($raw, $offset));
             }
 
-            $pos     = strpos($raw, "|", $offset);
-            $num     = $pos - $offset;
+            $pos = strpos($raw, "|", $offset);
+            $num = $pos - $offset;
             $varname = substr($raw, $offset, $num);
             $offset += $num + 1;
-            $data    = unserialize(substr($raw, $offset));
+            $data = unserialize(substr($raw, $offset));
 
             $returnData[$varname] = $data;
             $offset += strlen(serialize($data));

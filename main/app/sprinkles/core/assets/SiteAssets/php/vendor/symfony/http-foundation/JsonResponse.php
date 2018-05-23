@@ -34,16 +34,15 @@ class JsonResponse extends Response
     protected $encodingOptions = self::DEFAULT_ENCODING_OPTIONS;
 
     /**
-     * @param mixed $data    The response data
-     * @param int   $status  The response status code
+     * @param mixed $data The response data
+     * @param int $status The response status code
      * @param array $headers An array of response headers
-     * @param bool  $json    If the data is already a JSON string
+     * @param bool $json If the data is already a JSON string
      */
-    public function __construct($data = null, $status = 200, $headers = array(), $json = false)
-    {
+    public function __construct($data = NULL, $status = 200, $headers = array(), $json = FALSE) {
         parent::__construct('', $status, $headers);
 
-        if (null === $data) {
+        if (NULL === $data) {
             $data = new \ArrayObject();
         }
 
@@ -58,23 +57,21 @@ class JsonResponse extends Response
      *     return JsonResponse::create($data, 200)
      *         ->setSharedMaxAge(300);
      *
-     * @param mixed $data    The json response data
-     * @param int   $status  The response status code
+     * @param mixed $data The json response data
+     * @param int $status The response status code
      * @param array $headers An array of response headers
      *
      * @return static
      */
-    public static function create($data = null, $status = 200, $headers = array())
-    {
+    public static function create($data = NULL, $status = 200, $headers = array()) {
         return new static($data, $status, $headers);
     }
 
     /**
      * Make easier the creation of JsonResponse from raw json.
      */
-    public static function fromJsonString($data = null, $status = 200, $headers = array())
-    {
-        return new static($data, $status, $headers, true);
+    public static function fromJsonString($data = NULL, $status = 200, $headers = array()) {
+        return new static($data, $status, $headers, TRUE);
     }
 
     /**
@@ -86,9 +83,8 @@ class JsonResponse extends Response
      *
      * @throws \InvalidArgumentException When the callback name is not valid
      */
-    public function setCallback($callback = null)
-    {
-        if (null !== $callback) {
+    public function setCallback($callback = NULL) {
+        if (NULL !== $callback) {
             // partially taken from http://www.geekality.net/2011/08/03/valid-javascript-identifier/
             // partially taken from https://github.com/willdurand/JsonpCallbackValidator
             //      JsonpCallbackValidator is released under the MIT License. See https://github.com/willdurand/JsonpCallbackValidator/blob/v1.1.0/LICENSE for details.
@@ -96,12 +92,12 @@ class JsonResponse extends Response
             $pattern = '/^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\x{200C}\x{200D}]*(?:\[(?:"(?:\\\.|[^"\\\])*"|\'(?:\\\.|[^\'\\\])*\'|\d+)\])*?$/u';
             $reserved = array(
                 'break', 'do', 'instanceof', 'typeof', 'case', 'else', 'new', 'var', 'catch', 'finally', 'return', 'void', 'continue', 'for', 'switch', 'while',
-                'debugger', 'function', 'this', 'with', 'default', 'if', 'throw', 'delete', 'in', 'try', 'class', 'enum', 'extends', 'super',  'const', 'export',
+                'debugger', 'function', 'this', 'with', 'default', 'if', 'throw', 'delete', 'in', 'try', 'class', 'enum', 'extends', 'super', 'const', 'export',
                 'import', 'implements', 'let', 'private', 'public', 'yield', 'interface', 'package', 'protected', 'static', 'null', 'true', 'false',
             );
             $parts = explode('.', $callback);
             foreach ($parts as $part) {
-                if (!preg_match($pattern, $part) || in_array($part, $reserved, true)) {
+                if (!preg_match($pattern, $part) || in_array($part, $reserved, TRUE)) {
                     throw new \InvalidArgumentException('The callback name is not valid.');
                 }
             }
@@ -121,8 +117,7 @@ class JsonResponse extends Response
      *
      * @throws \InvalidArgumentException
      */
-    public function setJson($json)
-    {
+    public function setJson($json) {
         $this->data = $json;
 
         return $this->update();
@@ -137,16 +132,17 @@ class JsonResponse extends Response
      *
      * @throws \InvalidArgumentException
      */
-    public function setData($data = array())
-    {
+    public function setData($data = array()) {
         if (defined('HHVM_VERSION')) {
             // HHVM does not trigger any warnings and let exceptions
             // thrown from a JsonSerializable object pass through.
             // If only PHP did the same...
             $data = json_encode($data, $this->encodingOptions);
         } else {
-            if (!interface_exists('JsonSerializable', false)) {
-                set_error_handler(function () { return false; });
+            if (!interface_exists('JsonSerializable', FALSE)) {
+                set_error_handler(function () {
+                    return FALSE;
+                });
                 try {
                     $data = @json_encode($data, $this->encodingOptions);
                 } finally {
@@ -176,8 +172,7 @@ class JsonResponse extends Response
      *
      * @return int
      */
-    public function getEncodingOptions()
-    {
+    public function getEncodingOptions() {
         return $this->encodingOptions;
     }
 
@@ -188,9 +183,8 @@ class JsonResponse extends Response
      *
      * @return $this
      */
-    public function setEncodingOptions($encodingOptions)
-    {
-        $this->encodingOptions = (int) $encodingOptions;
+    public function setEncodingOptions($encodingOptions) {
+        $this->encodingOptions = (int)$encodingOptions;
 
         return $this->setData(json_decode($this->data));
     }
@@ -200,9 +194,8 @@ class JsonResponse extends Response
      *
      * @return $this
      */
-    protected function update()
-    {
-        if (null !== $this->callback) {
+    protected function update() {
+        if (NULL !== $this->callback) {
             // Not using application/javascript for compatibility reasons with older browsers.
             $this->headers->set('Content-Type', 'text/javascript');
 

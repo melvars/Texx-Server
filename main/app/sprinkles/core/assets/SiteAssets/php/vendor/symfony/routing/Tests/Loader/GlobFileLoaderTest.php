@@ -19,27 +19,24 @@ use Symfony\Component\Routing\RouteCollection;
 
 class GlobFileLoaderTest extends TestCase
 {
-    public function testSupports()
-    {
+    public function testSupports() {
         $loader = new GlobFileLoader(new FileLocator());
 
         $this->assertTrue($loader->supports('any-path', 'glob'), '->supports() returns true if the resource has the glob type');
         $this->assertFalse($loader->supports('any-path'), '->supports() returns false if the resource is not of glob type');
     }
 
-    public function testLoadAddsTheGlobResourceToTheContainer()
-    {
+    public function testLoadAddsTheGlobResourceToTheContainer() {
         $loader = new GlobFileLoaderWithoutImport(new FileLocator());
-        $collection = $loader->load(__DIR__.'/../Fixtures/directory/*.yml');
+        $collection = $loader->load(__DIR__ . '/../Fixtures/directory/*.yml');
 
-        $this->assertEquals(new GlobResource(__DIR__.'/../Fixtures/directory', '/*.yml', false), $collection->getResources()[0]);
+        $this->assertEquals(new GlobResource(__DIR__ . '/../Fixtures/directory', '/*.yml', FALSE), $collection->getResources()[0]);
     }
 }
 
 class GlobFileLoaderWithoutImport extends GlobFileLoader
 {
-    public function import($resource, $type = null, $ignoreErrors = false, $sourceResource = null)
-    {
+    public function import($resource, $type = NULL, $ignoreErrors = FALSE, $sourceResource = NULL) {
         return new RouteCollection();
     }
 }

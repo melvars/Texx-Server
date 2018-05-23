@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
  */
 class UploadedFile extends File
 {
-    private $test = false;
+    private $test = FALSE;
     private $originalName;
     private $mimeType;
     private $size;
@@ -44,24 +44,23 @@ class UploadedFile extends File
      *
      * Calling any other method on an non-valid instance will cause an unpredictable result.
      *
-     * @param string      $path         The full temporary path to the file
-     * @param string      $originalName The original file name of the uploaded file
-     * @param string|null $mimeType     The type of the file as provided by PHP; null defaults to application/octet-stream
-     * @param int|null    $size         The file size provided by the uploader
-     * @param int|null    $error        The error constant of the upload (one of PHP's UPLOAD_ERR_XXX constants); null defaults to UPLOAD_ERR_OK
-     * @param bool        $test         Whether the test mode is active
+     * @param string $path The full temporary path to the file
+     * @param string $originalName The original file name of the uploaded file
+     * @param string|null $mimeType The type of the file as provided by PHP; null defaults to application/octet-stream
+     * @param int|null $size The file size provided by the uploader
+     * @param int|null $error The error constant of the upload (one of PHP's UPLOAD_ERR_XXX constants); null defaults to UPLOAD_ERR_OK
+     * @param bool $test Whether the test mode is active
      *                                  Local files are used in test mode hence the code should not enforce HTTP uploads
      *
      * @throws FileException         If file_uploads is disabled
      * @throws FileNotFoundException If the file does not exist
      */
-    public function __construct($path, $originalName, $mimeType = null, $size = null, $error = null, $test = false)
-    {
+    public function __construct($path, $originalName, $mimeType = NULL, $size = NULL, $error = NULL, $test = FALSE) {
         $this->originalName = $this->getName($originalName);
         $this->mimeType = $mimeType ?: 'application/octet-stream';
         $this->size = $size;
         $this->error = $error ?: UPLOAD_ERR_OK;
-        $this->test = (bool) $test;
+        $this->test = (bool)$test;
 
         parent::__construct($path, UPLOAD_ERR_OK === $this->error);
     }
@@ -74,8 +73,7 @@ class UploadedFile extends File
      *
      * @return string|null The original name
      */
-    public function getClientOriginalName()
-    {
+    public function getClientOriginalName() {
         return $this->originalName;
     }
 
@@ -87,8 +85,7 @@ class UploadedFile extends File
      *
      * @return string The extension
      */
-    public function getClientOriginalExtension()
-    {
+    public function getClientOriginalExtension() {
         return pathinfo($this->originalName, PATHINFO_EXTENSION);
     }
 
@@ -105,8 +102,7 @@ class UploadedFile extends File
      *
      * @see getMimeType()
      */
-    public function getClientMimeType()
-    {
+    public function getClientMimeType() {
         return $this->mimeType;
     }
 
@@ -127,8 +123,7 @@ class UploadedFile extends File
      * @see guessExtension()
      * @see getClientMimeType()
      */
-    public function guessClientExtension()
-    {
+    public function guessClientExtension() {
         $type = $this->getClientMimeType();
         $guesser = ExtensionGuesser::getInstance();
 
@@ -143,8 +138,7 @@ class UploadedFile extends File
      *
      * @return int|null The file size
      */
-    public function getClientSize()
-    {
+    public function getClientSize() {
         return $this->size;
     }
 
@@ -156,8 +150,7 @@ class UploadedFile extends File
      *
      * @return int The upload error
      */
-    public function getError()
-    {
+    public function getError() {
         return $this->error;
     }
 
@@ -166,8 +159,7 @@ class UploadedFile extends File
      *
      * @return bool True if the file has been uploaded with HTTP and no error occurred
      */
-    public function isValid()
-    {
+    public function isValid() {
         $isOk = UPLOAD_ERR_OK === $this->error;
 
         return $this->test ? $isOk : $isOk && is_uploaded_file($this->getPathname());
@@ -177,14 +169,13 @@ class UploadedFile extends File
      * Moves the file to a new location.
      *
      * @param string $directory The destination folder
-     * @param string $name      The new file name
+     * @param string $name The new file name
      *
      * @return File A File object representing the new file
      *
      * @throws FileException if, for any reason, the file could not have been moved
      */
-    public function move($directory, $name = null)
-    {
+    public function move($directory, $name = NULL) {
         if ($this->isValid()) {
             if ($this->test) {
                 return parent::move($directory, $name);
@@ -210,8 +201,7 @@ class UploadedFile extends File
      *
      * @return int The maximum size of an uploaded file in bytes
      */
-    public static function getMaxFilesize()
-    {
+    public static function getMaxFilesize() {
         $iniMax = strtolower(ini_get('upload_max_filesize'));
 
         if ('' === $iniMax) {
@@ -221,20 +211,24 @@ class UploadedFile extends File
         $max = ltrim($iniMax, '+');
         if (0 === strpos($max, '0x')) {
             $max = intval($max, 16);
-        } elseif (0 === strpos($max, '0')) {
+        } else if (0 === strpos($max, '0')) {
             $max = intval($max, 8);
         } else {
-            $max = (int) $max;
+            $max = (int)$max;
         }
 
         switch (substr($iniMax, -1)) {
-            case 't': $max *= 1024;
+            case 't':
+                $max *= 1024;
             // no break
-            case 'g': $max *= 1024;
+            case 'g':
+                $max *= 1024;
             // no break
-            case 'm': $max *= 1024;
+            case 'm':
+                $max *= 1024;
             // no break
-            case 'k': $max *= 1024;
+            case 'k':
+                $max *= 1024;
         }
 
         return $max;
@@ -245,8 +239,7 @@ class UploadedFile extends File
      *
      * @return string The error message regarding the specified error code
      */
-    public function getErrorMessage()
-    {
+    public function getErrorMessage() {
         static $errors = array(
             UPLOAD_ERR_INI_SIZE => 'The file "%s" exceeds your upload_max_filesize ini directive (limit is %d KiB).',
             UPLOAD_ERR_FORM_SIZE => 'The file "%s" exceeds the upload limit defined in your form.',

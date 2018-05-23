@@ -2,10 +2,10 @@
 {% extends "@core/navigation/main-nav.html.twig" %}
 
 {% block secondary_nav %}
-    {{parent()}}
+    {{ parent() }}
     {% if not checkAuthenticated() %}
         <li>
-            <a href="{{site.uri.public}}/account/sign-in" class="nav-highlight">{{translate("SIGNIN")}}</a>
+            <a href="{{ site.uri.public }}/account/sign-in" class="nav-highlight">{{ translate("SIGNIN") }}</a>
         </li>
     {% else %}
         {% include "navigation/user-card.html.twig" %}

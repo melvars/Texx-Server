@@ -22,18 +22,17 @@ abstract class VarUtils
      * Resolves variable placeholders.
      *
      * @param string $template A template string
-     * @param array  $vars     Variable names
-     * @param array  $values   Variable values
+     * @param array $vars Variable names
+     * @param array $values Variable values
      *
      * @return string The resolved string
      *
      * @throws \InvalidArgumentException If there is a variable with no value
      */
-    public static function resolve($template, array $vars, array $values)
-    {
+    public static function resolve($template, array $vars, array $values) {
         $map = array();
         foreach ($vars as $var) {
-            if (false === strpos($template, '{'.$var.'}')) {
+            if (FALSE === strpos($template, '{' . $var . '}')) {
                 continue;
             }
 
@@ -41,14 +40,13 @@ abstract class VarUtils
                 throw new \InvalidArgumentException(sprintf('The template "%s" contains the variable "%s", but was not given any value for it.', $template, $var));
             }
 
-            $map['{'.$var.'}'] = $values[$var];
+            $map['{' . $var . '}'] = $values[$var];
         }
 
         return strtr($template, $map);
     }
 
-    public static function getCombinations(array $vars, array $values)
-    {
+    public static function getCombinations(array $vars, array $values) {
         if (!$vars) {
             return array(array());
         }
@@ -56,7 +54,7 @@ abstract class VarUtils
         $combinations = array();
         $nbValues = array();
         foreach ($values as $var => $vals) {
-            if (!in_array($var, $vars, true)) {
+            if (!in_array($var, $vars, TRUE)) {
                 continue;
             }
 
@@ -78,7 +76,6 @@ abstract class VarUtils
         return $combinations;
     }
 
-    final private function __construct()
-    {
+    final private function __construct() {
     }
 }

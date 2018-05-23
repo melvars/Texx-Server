@@ -25,23 +25,19 @@ class FileResource implements ResourceInterface
      *
      * @param string $path The path to a file
      */
-    public function __construct($path)
-    {
+    public function __construct($path) {
         $this->path = $path;
     }
 
-    public function isFresh($timestamp)
-    {
+    public function isFresh($timestamp) {
         return file_exists($this->path) && filemtime($this->path) <= $timestamp;
     }
 
-    public function getContent()
-    {
+    public function getContent() {
         return file_exists($this->path) ? file_get_contents($this->path) : '';
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->path;
     }
 }

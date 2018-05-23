@@ -26,11 +26,10 @@ class DumperRoute
     private $route;
 
     /**
-     * @param string $name  The route name
-     * @param Route  $route The route
+     * @param string $name The route name
+     * @param Route $route The route
      */
-    public function __construct($name, Route $route)
-    {
+    public function __construct($name, Route $route) {
         $this->name = $name;
         $this->route = $route;
     }
@@ -40,8 +39,7 @@ class DumperRoute
      *
      * @return string The route name
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -50,8 +48,7 @@ class DumperRoute
      *
      * @return Route The route
      */
-    public function getRoute()
-    {
+    public function getRoute() {
         return $this->route;
     }
 }

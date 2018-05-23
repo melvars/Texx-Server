@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Monolog\Logger;
@@ -69,15 +70,14 @@ class AccessConditionExpression
      * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.
      * @param bool $debug Set to true if you want debugging information printed to the auth log.
      */
-    public function __construct(ParserNodeFunctionEvaluator $nodeVisitor, User $user, Logger $logger, $debug = false)
-    {
-        $this->nodeVisitor   = $nodeVisitor;
-        $this->user          = $user;
-        $this->parser        = new Parser(new EmulativeLexer);
-        $this->traverser     = new NodeTraverser;
+    public function __construct(ParserNodeFunctionEvaluator $nodeVisitor, User $user, Logger $logger, $debug = FALSE) {
+        $this->nodeVisitor = $nodeVisitor;
+        $this->user = $user;
+        $this->parser = new Parser(new EmulativeLexer);
+        $this->traverser = new NodeTraverser;
         $this->traverser->addVisitor($nodeVisitor);
         $this->prettyPrinter = new StandardPrettyPrinter;
-        $this->logger        = $logger;
+        $this->logger = $logger;
         $this->debug = $debug;
     }
 
@@ -90,8 +90,7 @@ class AccessConditionExpression
      * @param array[mixed] $params the parameters to be used when evaluating the expression.
      * @return bool true if the condition is passed for the given parameters, otherwise returns false.
      */
-    public function evaluateCondition($condition, $params)
-    {
+    public function evaluateCondition($condition, $params) {
         // Set the reserved `self` parameters.
         // This replaces any values of `self` specified in the arguments, thus preventing them from being overridden in malicious user input.
         // (For example, from an unfiltered request body).
@@ -120,7 +119,7 @@ class AccessConditionExpression
             $result = eval($expr_eval);
 
             if ($this->debug) {
-                $this->logger->debug("Expression '$expr' evaluates to " . ($result == true ? "true" : "false"));
+                $this->logger->debug("Expression '$expr' evaluates to " . ($result == TRUE ? "true" : "false"));
             }
 
             return $result;
@@ -128,12 +127,12 @@ class AccessConditionExpression
             if ($this->debug) {
                 $this->logger->debug("Error parsing access condition '$condition':" . $e->getMessage());
             }
-            return false;   // Access fails if the access condition can't be parsed.
+            return FALSE;   // Access fails if the access condition can't be parsed.
         } catch (AuthorizationException $e) {
             if ($this->debug) {
                 $this->logger->debug("Error parsing access condition '$condition':" . $e->getMessage());
             }
-            return false;
+            return FALSE;
         }
     }
 }

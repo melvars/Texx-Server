@@ -6,22 +6,19 @@ use React\Promise\Timer;
 
 class FunctionResolveTest extends TestCase
 {
-    public function testPromiseIsPendingWithoutRunningLoop()
-    {
+    public function testPromiseIsPendingWithoutRunningLoop() {
         $promise = Timer\resolve(0.01, $this->loop);
 
         $this->expectPromisePending($promise);
     }
 
-    public function testPromiseExpiredIsPendingWithoutRunningLoop()
-    {
+    public function testPromiseExpiredIsPendingWithoutRunningLoop() {
         $promise = Timer\resolve(-1, $this->loop);
 
         $this->expectPromisePending($promise);
     }
 
-    public function testPromiseWillBeResolvedOnTimeout()
-    {
+    public function testPromiseWillBeResolvedOnTimeout() {
         $promise = Timer\resolve(0.01, $this->loop);
 
         $this->loop->run();
@@ -29,8 +26,7 @@ class FunctionResolveTest extends TestCase
         $this->expectPromiseResolved($promise);
     }
 
-    public function testPromiseExpiredWillBeResolvedOnTimeout()
-    {
+    public function testPromiseExpiredWillBeResolvedOnTimeout() {
         $promise = Timer\resolve(-1, $this->loop);
 
         $this->loop->run();
@@ -38,16 +34,14 @@ class FunctionResolveTest extends TestCase
         $this->expectPromiseResolved($promise);
     }
 
-    public function testWillStartLoopTimer()
-    {
+    public function testWillStartLoopTimer() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('addTimer')->with($this->equalTo(0.01));
 
         Timer\resolve(0.01, $loop);
     }
 
-    public function testCancellingPromiseWillCancelLoopTimer()
-    {
+    public function testCancellingPromiseWillCancelLoopTimer() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
 
         $timer = $this->getMockBuilder(interface_exists('React\EventLoop\TimerInterface') ? 'React\EventLoop\TimerInterface' : 'React\EventLoop\Timer\TimerInterface')->getMock();
@@ -60,8 +54,7 @@ class FunctionResolveTest extends TestCase
         $promise->cancel();
     }
 
-    public function testCancelingPromiseWillRejectTimer()
-    {
+    public function testCancelingPromiseWillRejectTimer() {
         $promise = Timer\resolve(0.01, $this->loop);
 
         $promise->cancel();

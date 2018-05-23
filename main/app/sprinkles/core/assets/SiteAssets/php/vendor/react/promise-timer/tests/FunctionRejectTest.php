@@ -6,22 +6,19 @@ use React\Promise\Timer;
 
 class FunctionRejectTest extends TestCase
 {
-    public function testPromiseIsPendingWithoutRunningLoop()
-    {
+    public function testPromiseIsPendingWithoutRunningLoop() {
         $promise = Timer\reject(0.01, $this->loop);
 
         $this->expectPromisePending($promise);
     }
 
-    public function testPromiseExpiredIsPendingWithoutRunningLoop()
-    {
+    public function testPromiseExpiredIsPendingWithoutRunningLoop() {
         $promise = Timer\reject(-1, $this->loop);
 
         $this->expectPromisePending($promise);
     }
 
-    public function testPromiseWillBeRejectedOnTimeout()
-    {
+    public function testPromiseWillBeRejectedOnTimeout() {
         $promise = Timer\reject(0.01, $this->loop);
 
         $this->loop->run();
@@ -29,8 +26,7 @@ class FunctionRejectTest extends TestCase
         $this->expectPromiseRejected($promise);
     }
 
-    public function testPromiseExpiredWillBeRejectedOnTimeout()
-    {
+    public function testPromiseExpiredWillBeRejectedOnTimeout() {
         $promise = Timer\reject(-1, $this->loop);
 
         $this->loop->run();
@@ -38,8 +34,7 @@ class FunctionRejectTest extends TestCase
         $this->expectPromiseRejected($promise);
     }
 
-    public function testCancelingPromiseWillRejectTimer()
-    {
+    public function testCancelingPromiseWillRejectTimer() {
         $promise = Timer\reject(0.01, $this->loop);
 
         $promise->cancel();

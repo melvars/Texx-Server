@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Util;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -28,8 +29,7 @@ class EnvironmentInfo
      *
      * @return string[] the properties of this database.
      */
-    public static function database()
-    {
+    public static function database() {
         static::$ci['db'];
 
         $pdo = Capsule::connection()->getPdo();
@@ -55,14 +55,13 @@ class EnvironmentInfo
      *
      * @return bool true if the connection can be established, false otherwise.
      */
-    public static function canConnectToDatabase()
-    {
+    public static function canConnectToDatabase() {
         try {
             Capsule::connection()->getPdo();
         } catch (\PDOException $e) {
-            return false;
+            return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 }

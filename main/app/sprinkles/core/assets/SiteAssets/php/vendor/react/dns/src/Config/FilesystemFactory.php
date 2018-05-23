@@ -16,13 +16,11 @@ class FilesystemFactory
 {
     private $loop;
 
-    public function __construct(LoopInterface $loop)
-    {
+    public function __construct(LoopInterface $loop) {
         $this->loop = $loop;
     }
 
-    public function create($filename)
-    {
+    public function create($filename) {
         return $this
             ->loadEtcResolvConf($filename)
             ->then(array($this, 'parseEtcResolvConf'));
@@ -33,15 +31,13 @@ class FilesystemFactory
      * @return Promise
      * @deprecated see Config instead
      */
-    public function parseEtcResolvConf($contents)
-    {
+    public function parseEtcResolvConf($contents) {
         return Promise\resolve(Config::loadResolvConfBlocking(
             'data://text/plain;base64,' . base64_encode($contents)
         ));
     }
 
-    public function loadEtcResolvConf($filename)
-    {
+    public function loadEtcResolvConf($filename) {
         if (!file_exists($filename)) {
             return Promise\reject(new \InvalidArgumentException("The filename for /etc/resolv.conf given does not exist: $filename"));
         }

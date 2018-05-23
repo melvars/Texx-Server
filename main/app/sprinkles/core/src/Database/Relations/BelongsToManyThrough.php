@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Relations;
 
 use Illuminate\Database\Eloquent\Model;
@@ -34,17 +35,16 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Create a new belongs to many relationship instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \Illuminate\Database\Eloquent\Model  $parent
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Model $parent
      * @param  \Illuminate\Database\Eloquent\Relations\Relation $intermediateRelation
-     * @param  string  $table
-     * @param  string  $foreignKey
-     * @param  string  $relatedKey
-     * @param  string  $relationName
+     * @param  string $table
+     * @param  string $foreignKey
+     * @param  string $relatedKey
+     * @param  string $relationName
      * @return void
      */
-    public function __construct(Builder $query, Model $parent, Relation $intermediateRelation, $table, $foreignKey, $relatedKey, $relationName = null)
-    {
+    public function __construct(Builder $query, Model $parent, Relation $intermediateRelation, $table, $foreignKey, $relatedKey, $relationName = NULL) {
         $this->intermediateRelation = $intermediateRelation;
 
         parent::__construct($query, $parent, $table, $foreignKey, $relatedKey, $relationName);
@@ -57,8 +57,7 @@ class BelongsToManyThrough extends BelongsToMany
      * It would be better if BelongsToMany had a simple accessor for its foreign key.
      * @return string
      */
-    public function getParentKeyName()
-    {
+    public function getParentKeyName() {
         return $this->intermediateRelation->newExistingPivot()->getForeignKey();
     }
 
@@ -68,20 +67,18 @@ class BelongsToManyThrough extends BelongsToMany
      * @see \Illuminate\Database\Eloquent\Relations\BelongsToMany
      * @return string
      */
-    public function getExistenceCompareKey()
-    {
+    public function getExistenceCompareKey() {
         return $this->intermediateRelation->getQualifiedForeignKeyName();
     }
 
     /**
      * Add a "via" query to load the intermediate models through which the child models are related.
      *
-     * @param string   $viaRelationName
+     * @param string $viaRelationName
      * @param callable $viaCallback
      * @return $this
      */
-    public function withVia($viaRelationName = null, $viaCallback = null)
-    {
+    public function withVia($viaRelationName = NULL, $viaCallback = NULL) {
         $this->tertiaryRelated = $this->intermediateRelation->getRelated();
 
         // Set tertiary key and related model
@@ -90,10 +87,10 @@ class BelongsToManyThrough extends BelongsToMany
         $this->tertiaryRelationName = is_null($viaRelationName) ? $this->intermediateRelation->getRelationName() . '_via' : $viaRelationName;
 
         $this->tertiaryCallback = is_null($viaCallback)
-                            ? function () {
-                                //
-                            }
-                            : $viaCallback;
+            ? function () {
+                //
+            }
+            : $viaCallback;
 
         return $this;
     }
@@ -101,11 +98,10 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Set the constraints for an eager load of the relation.
      *
-     * @param  array  $models
+     * @param  array $models
      * @return void
      */
-    public function addEagerConstraints(array $models)
-    {
+    public function addEagerConstraints(array $models) {
         // Constraint to only load models where the intermediate relation's foreign key matches the parent model
         $intermediateForeignKeyName = $this->intermediateRelation->getQualifiedForeignKeyName();
 
@@ -117,8 +113,7 @@ class BelongsToManyThrough extends BelongsToMany
      *
      * @return $this
      */
-    protected function addWhereConstraints()
-    {
+    protected function addWhereConstraints() {
         $parentKeyName = $this->getParentKeyName();
 
         $this->query->where(
@@ -131,13 +126,12 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Match the eagerly loaded results to their parents
      *
-     * @param  array   $models
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @param  string  $relation
+     * @param  array $models
+     * @param  \Illuminate\Database\Eloquent\Collection $results
+     * @param  string $relation
      * @return array
      */
-    public function match(array $models, Collection $results, $relation)
-    {
+    public function match(array $models, Collection $results, $relation) {
         // Build dictionary of parent (e.g. user) to related (e.g. permission) models
         list($dictionary, $nestedViaDictionary) = $this->buildDictionary($results, $this->getParentKeyName());
 
@@ -177,8 +171,7 @@ class BelongsToManyThrough extends BelongsToMany
      * @param  \Illuminate\Database\Eloquent\Collection $models
      * @return void
      */
-    protected function unsetTertiaryPivots(Collection $models)
-    {
+    protected function unsetTertiaryPivots(Collection $models) {
         foreach ($models as $model) {
             unset($model->pivot->{$this->foreignKey});
         }
@@ -187,11 +180,10 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Set the join clause for the relation query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder|null  $query
+     * @param  \Illuminate\Database\Eloquent\Builder|null $query
      * @return $this
      */
-    protected function performJoin($query = null)
-    {
+    protected function performJoin($query = NULL) {
         $query = $query ?: $this->query;
 
         parent::performJoin($query);
@@ -215,11 +207,10 @@ class BelongsToManyThrough extends BelongsToMany
      *
      * @return array
      */
-    protected function aliasedPivotColumns()
-    {
+    protected function aliasedPivotColumns() {
         $defaults = [$this->foreignKey, $this->relatedKey];
         $aliasedPivotColumns = collect(array_merge($defaults, $this->pivotColumns))->map(function ($column) {
-            return $this->table.'.'.$column.' as pivot_'.$column;
+            return $this->table . '.' . $column . ' as pivot_' . $column;
         });
 
         $parentKeyName = $this->getParentKeyName();

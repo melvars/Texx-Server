@@ -16,8 +16,7 @@
  *
  * @example `php NonStopableProcess.php 42` will run the script for 42 seconds
  */
-function handleSignal($signal)
-{
+function handleSignal($signal) {
     switch ($signal) {
         case SIGTERM:
             $name = 'SIGTERM';
@@ -26,7 +25,7 @@ function handleSignal($signal)
             $name = 'SIGINT';
             break;
         default:
-            $name = $signal.' (unknown)';
+            $name = $signal . ' (unknown)';
             break;
     }
 
@@ -38,10 +37,10 @@ pcntl_signal(SIGINT, 'handleSignal');
 
 echo 'received ';
 
-$duration = isset($argv[1]) ? (int) $argv[1] : 3;
-$start = microtime(true);
+$duration = isset($argv[1]) ? (int)$argv[1] : 3;
+$start = microtime(TRUE);
 
-while ($duration > (microtime(true) - $start)) {
+while ($duration > (microtime(TRUE) - $start)) {
     usleep(10000);
     pcntl_signal_dispatch();
 }

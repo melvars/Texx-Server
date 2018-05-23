@@ -40,11 +40,11 @@ interface PipesInterface
      * Reads data in file handles and pipes.
      *
      * @param bool $blocking Whether to use blocking calls or not
-     * @param bool $close    Whether to close pipes if they've reached EOF
+     * @param bool $close Whether to close pipes if they've reached EOF
      *
      * @return string[] An array of read data indexed by their fd
      */
-    public function readAndWrite($blocking, $close = false);
+    public function readAndWrite($blocking, $close = FALSE);
 
     /**
      * Returns if the current state has open file handles or pipes.

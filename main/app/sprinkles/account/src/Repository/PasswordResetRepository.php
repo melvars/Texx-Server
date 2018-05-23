@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Repository;
 
 use UserFrosting\Sprinkle\Account\Facades\Password;
@@ -25,8 +26,7 @@ class PasswordResetRepository extends TokenRepository
     /**
      * {@inheritDoc}
      */
-    protected function updateUser($user, $args)
-    {
+    protected function updateUser($user, $args) {
         $user->password = Password::hash($args['password']);
         // TODO: generate user activity? or do this in controller?
         $user->save();

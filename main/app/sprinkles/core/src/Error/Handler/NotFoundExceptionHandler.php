@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
 use UserFrosting\Sprinkle\Core\Error\Handler\HttpExceptionHandler;
@@ -23,8 +24,7 @@ class NotFoundExceptionHandler extends HttpExceptionHandler
      *
      * @return Response
      */
-    public function handle()
-    {
+    public function handle() {
         // Render generic error page
         $response = $this->renderGenericResponse();
 

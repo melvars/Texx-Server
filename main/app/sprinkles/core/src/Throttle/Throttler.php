@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Throttle;
 
 use Carbon\Carbon;
@@ -32,8 +33,7 @@ class Throttler
      *
      * @param ClassMapper $classMapper Maps generic class identifiers to specific class names.
      */
-    public function __construct(ClassMapper $classMapper)
-    {
+    public function __construct(ClassMapper $classMapper) {
         $this->classMapper = $classMapper;
         $this->throttleRules = [];
     }
@@ -44,9 +44,8 @@ class Throttler
      * @param string $type The type of throttle event to check against.
      * @param ThrottleRule $rule The rule to use when throttling this type of event.
      */
-    public function addThrottleRule($type, $rule)
-    {
-        if (!($rule instanceof ThrottleRule || ($rule === null))) {
+    public function addThrottleRule($type, $rule) {
+        if (!($rule instanceof ThrottleRule || ($rule === NULL))) {
             throw new ThrottlerException('$rule must be of type ThrottleRule (or null).');
         }
 
@@ -62,8 +61,7 @@ class Throttler
      * @param mixed[] $requestData Any additional request parameters to use in checking the throttle.
      * @return bool
      */
-    public function getDelay($type, $requestData = [])
-    {
+    public function getDelay($type, $requestData = []) {
         $throttleRule = $this->getRule($type);
 
         if (is_null($throttleRule)) {
@@ -93,11 +91,11 @@ class Throttler
                 // then filter out this event from the collection.
                 foreach ($requestData as $name => $value) {
                     if (!isset($data->$name) || ($data->$name != $value)) {
-                        return false;
+                        return FALSE;
                     }
                 }
 
-                return true;
+                return TRUE;
             });
         }
 
@@ -112,8 +110,7 @@ class Throttler
      * @throws ThrottlerException
      * @return ThrottleRule[]
      */
-    public function getRule($type)
-    {
+    public function getRule($type) {
         if (!array_key_exists($type, $this->throttleRules)) {
             throw new ThrottlerException("The throttling rule for '$type' could not be found.");
         }
@@ -126,8 +123,7 @@ class Throttler
      *
      * @return ThrottleRule[]
      */
-    public function getThrottleRules()
-    {
+    public function getThrottleRules() {
         return $this->throttleRules;
     }
 
@@ -137,8 +133,7 @@ class Throttler
      * @param string $type the type of event
      * @param string[] $requestData an array of field names => values that are relevant to throttling for this event (e.g. username, email, etc).
      */
-    public function logEvent($type, $requestData = [])
-    {
+    public function logEvent($type, $requestData = []) {
         // Just a check to make sure the rule exists
         $throttleRule = $this->getRule($type);
 
@@ -164,8 +159,7 @@ class Throttler
      * @param  ThrottleRule $throttleRule a rule representing the strategy to use for throttling a particular type of event.
      * @return int seconds remaining until a particular event is permitted to be attempted again.
      */
-    protected function computeDelay($events, $throttleRule)
-    {
+    protected function computeDelay($events, $throttleRule) {
         // If no matching events found, then there is no delay
         if (!$events->count()) {
             return 0;

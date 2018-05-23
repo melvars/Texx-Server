@@ -26,27 +26,23 @@ class HandlebarsFilter extends BaseNodeFilter
     private $handlebarsBin;
     private $nodeBin;
 
-    private $minimize = false;
-    private $simple = false;
+    private $minimize = FALSE;
+    private $simple = FALSE;
 
-    public function __construct($handlebarsBin = '/usr/bin/handlebars', $nodeBin = null)
-    {
+    public function __construct($handlebarsBin = '/usr/bin/handlebars', $nodeBin = NULL) {
         $this->handlebarsBin = $handlebarsBin;
         $this->nodeBin = $nodeBin;
     }
 
-    public function setMinimize($minimize)
-    {
+    public function setMinimize($minimize) {
         $this->minimize = $minimize;
     }
 
-    public function setSimple($simple)
-    {
+    public function setSimple($simple) {
         $this->simple = $simple;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $pb = $this->createProcessBuilder($this->nodeBin
             ? array($this->nodeBin, $this->handlebarsBin)
             : array($this->handlebarsBin));
@@ -58,7 +54,7 @@ class HandlebarsFilter extends BaseNodeFilter
         }
 
         $inputDirPath = FilesystemUtils::createThrowAwayDirectory('handlebars_in');
-        $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName;
+        $inputPath = $inputDirPath . DIRECTORY_SEPARATOR . $templateName;
         $outputPath = FilesystemUtils::createTemporaryFile('handlebars_out');
 
         file_put_contents($inputPath, $asset->getContent());
@@ -100,7 +96,6 @@ class HandlebarsFilter extends BaseNodeFilter
         $asset->setContent($compiledJs);
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 }

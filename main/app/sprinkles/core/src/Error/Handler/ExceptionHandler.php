@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
 use Interop\Container\ContainerInterface;
@@ -50,7 +51,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
     /**
      * @var ErrorRendererInterface
      */
-    protected $renderer = null;
+    protected $renderer = NULL;
 
     /**
      * @var string
@@ -73,18 +74,18 @@ class ExceptionHandler implements ExceptionHandlerInterface
     /**
      * Create a new ExceptionHandler object.
      *
-     * @param ContainerInterface     $ci
-     * @param ServerRequestInterface $request   The most recent Request object
-     * @param ResponseInterface      $response  The most recent Response object
-     * @param Throwable              $exception The caught Exception object
-     * @param bool                   $displayErrorDetails
+     * @param ContainerInterface $ci
+     * @param ServerRequestInterface $request The most recent Request object
+     * @param ResponseInterface $response The most recent Response object
+     * @param Throwable $exception The caught Exception object
+     * @param bool $displayErrorDetails
      */
     public function __construct(
         ContainerInterface $ci,
         ServerRequestInterface $request,
         ResponseInterface $response,
         $exception,
-        $displayErrorDetails = false
+        $displayErrorDetails = FALSE
     ) {
         $this->ci = $ci;
         $this->request = $request;
@@ -102,8 +103,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
      *
      * @return ResponseInterface
      */
-    public function handle()
-    {
+    public function handle() {
         // If displayErrorDetails is set to true, we'll halt and immediately respond with a detailed debugging page.
         // We do not log errors in this case.
         if ($this->displayErrorDetails) {
@@ -129,8 +129,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
      *
      * @return ResponseInterface
      */
-    public function renderDebugResponse()
-    {
+    public function renderDebugResponse() {
         $body = $this->renderer->renderWithBody();
 
         return $this->response
@@ -144,8 +143,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
      *
      * @return ResponseInterface
      */
-    public function renderGenericResponse()
-    {
+    public function renderGenericResponse() {
         $messages = $this->determineUserMessages();
         $httpCode = $this->statusCode;
 
@@ -168,9 +166,8 @@ class ExceptionHandler implements ExceptionHandlerInterface
      *
      * @return void
      */
-    public function writeToErrorLog()
-    {
-        $renderer = new PlainTextRenderer($this->request, $this->response, $this->exception, true);
+    public function writeToErrorLog() {
+        $renderer = new PlainTextRenderer($this->request, $this->response, $this->exception, TRUE);
         $error = $renderer->render();
         $error .= PHP_EOL . 'View in rendered output by enabling the "displayErrorDetails" setting.' . PHP_EOL;
         $this->logError($error);
@@ -181,8 +178,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
      *
      * @return void
      */
-    public function writeAlerts()
-    {
+    public function writeAlerts() {
         $messages = $this->determineUserMessages();
 
         foreach ($messages as $message) {
@@ -198,8 +194,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
      *
      * @throws \RuntimeException
      */
-    protected function determineRenderer()
-    {
+    protected function determineRenderer() {
         $renderer = $this->renderer;
 
         if ((!is_null($renderer) && !class_exists($renderer))
@@ -242,8 +237,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
      *
      * @return int
      */
-    protected function determineStatusCode()
-    {
+    protected function determineStatusCode() {
         if ($this->request->getMethod() === 'OPTIONS') {
             return 200;
         }
@@ -255,8 +249,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
      *
      * @return array
      */
-    protected function determineUserMessages()
-    {
+    protected function determineUserMessages() {
         return [
             new UserMessage("ERROR.SERVER")
         ];
@@ -268,8 +261,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
      * @param $message
      * @return void
      */
-    protected function logError($message)
-    {
+    protected function logError($message) {
         $this->ci->errorLogger->error($message);
     }
 }

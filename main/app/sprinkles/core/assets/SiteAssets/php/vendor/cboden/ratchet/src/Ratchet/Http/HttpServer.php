@@ -1,9 +1,12 @@
 <?php
+
 namespace Ratchet\Http;
+
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-class HttpServer implements MessageComponentInterface {
+class HttpServer implements MessageComponentInterface
+{
     use CloseResponseTrait;
 
     /**
@@ -23,30 +26,30 @@ class HttpServer implements MessageComponentInterface {
      */
     public function __construct(HttpServerInterface $component) {
         $this->_httpServer = $component;
-        $this->_reqParser  = new HttpRequestParser;
+        $this->_reqParser = new HttpRequestParser;
     }
 
     /**
      * {@inheritdoc}
      */
     public function onOpen(ConnectionInterface $conn) {
-        $conn->httpHeadersReceived = false;
+        $conn->httpHeadersReceived = FALSE;
     }
 
     /**
      * {@inheritdoc}
      */
     public function onMessage(ConnectionInterface $from, $msg) {
-        if (true !== $from->httpHeadersReceived) {
+        if (TRUE !== $from->httpHeadersReceived) {
             try {
-                if (null === ($request = $this->_reqParser->onMessage($from, $msg))) {
+                if (NULL === ($request = $this->_reqParser->onMessage($from, $msg))) {
                     return;
                 }
             } catch (\OverflowException $oe) {
                 return $this->close($from, 413);
             }
 
-            $from->httpHeadersReceived = true;
+            $from->httpHeadersReceived = TRUE;
 
             return $this->_httpServer->onOpen($from, $request);
         }

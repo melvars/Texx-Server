@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System;
 
 use RocketTheme\Toolbox\Event\EventDispatcher;
@@ -29,8 +30,7 @@ class UserFrosting
     /**
      * Create the UserFrosting application instance.
      */
-    public function __construct()
-    {
+    public function __construct() {
         // First, we create our DI container
         $this->ci = new Container;
 
@@ -42,12 +42,11 @@ class UserFrosting
      * Fires an event with optional parameters.
      *
      * @param  string $eventName
-     * @param  Event  $event
+     * @param  Event $event
      *
      * @return Event
      */
-    public function fireEvent($eventName, Event $event = null)
-    {
+    public function fireEvent($eventName, Event $event = NULL) {
         /** @var EventDispatcher $events */
         $eventDispatcher = $this->ci->eventDispatcher;
 
@@ -59,8 +58,7 @@ class UserFrosting
      *
      * @return Slim\App
      */
-    public function getApp()
-    {
+    public function getApp() {
         return $this->app;
     }
 
@@ -69,8 +67,7 @@ class UserFrosting
      *
      * @return Slim\Container
      */
-    public function getContainer()
-    {
+    public function getContainer() {
         return $this->ci;
     }
 
@@ -79,13 +76,12 @@ class UserFrosting
      *
      * Include them in reverse order to allow higher priority routes to override lower priority.
      */
-    public function loadRoutes()
-    {
+    public function loadRoutes() {
         // Since routes aren't encapsulated in a class yet, we need this workaround :(
         global $app;
         $app = $this->app;
 
-        $routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
+        $routePaths = array_reverse($this->ci->locator->findResources('routes://', TRUE, TRUE));
         foreach ($routePaths as $path) {
             $routeFiles = glob($path . '/*.php');
             foreach ($routeFiles as $routeFile) {
@@ -97,8 +93,7 @@ class UserFrosting
     /**
      * Initialize the application.  Set up Sprinkles and the Slim app, define routes, register global middleware, and run Slim.
      */
-    public function run()
-    {
+    public function run() {
         $this->setupSprinkles();
 
         // Set the configuration settings for Slim in the 'settings' service
@@ -125,8 +120,7 @@ class UserFrosting
      *
      * @param bool $isWeb Set to true if setting up in an HTTP/web environment, false if setting up for CLI scripts.
      */
-    public function setupSprinkles($isWeb = true)
-    {
+    public function setupSprinkles($isWeb = TRUE) {
         // Register system services
         $serviceProvider = new ServicesProvider();
         $serviceProvider->register($this->ci);
@@ -158,12 +152,11 @@ class UserFrosting
     /**
      * Render a basic error page for problems with loading Sprinkles.
      */
-    protected function renderSprinkleErrorPage($errorMessage = "")
-    {
+    protected function renderSprinkleErrorPage($errorMessage = "") {
         ob_clean();
         $title = "UserFrosting Application Error";
         $errorMessage = "Unable to start site. Contact owner.<br/><br/>" .
-            "Version: UserFrosting ".\UserFrosting\VERSION."<br/>" .
+            "Version: UserFrosting " . \UserFrosting\VERSION . "<br/>" .
             $errorMessage;
         $output = sprintf(
             "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
@@ -180,8 +173,7 @@ class UserFrosting
     /**
      * Render a CLI error message for problems with loading Sprinkles.
      */
-    protected function renderSprinkleErrorCli($errorMessage = "")
-    {
+    protected function renderSprinkleErrorCli($errorMessage = "") {
         exit($errorMessage . PHP_EOL);
     }
 }

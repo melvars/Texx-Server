@@ -16,8 +16,7 @@ class IntegrationTest extends TestCase
     const TIMEOUT = 5.0;
 
     /** @test */
-    public function gettingStuffFromGoogleShouldWork()
-    {
+    public function gettingStuffFromGoogleShouldWork() {
         $loop = Factory::create();
         $connector = new Connector($loop);
 
@@ -34,8 +33,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function gettingEncryptedStuffFromGoogleShouldWork()
-    {
+    public function gettingEncryptedStuffFromGoogleShouldWork() {
         if (!function_exists('stream_socket_enable_crypto')) {
             $this->markTestSkipped('Not supported on your platform (outdated HHVM?)');
         }
@@ -53,8 +51,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function gettingEncryptedStuffFromGoogleShouldWorkIfHostIsResolvedFirst()
-    {
+    public function gettingEncryptedStuffFromGoogleShouldWorkIfHostIsResolvedFirst() {
         if (!function_exists('stream_socket_enable_crypto')) {
             $this->markTestSkipped('Not supported on your platform (outdated HHVM?)');
         }
@@ -82,8 +79,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function gettingPlaintextStuffFromEncryptedGoogleShouldNotWork()
-    {
+    public function gettingPlaintextStuffFromEncryptedGoogleShouldNotWork() {
         $loop = Factory::create();
         $connector = new Connector($loop);
 
@@ -99,8 +95,7 @@ class IntegrationTest extends TestCase
         $this->assertNotRegExp('#^HTTP/1\.0#', $response);
     }
 
-    public function testConnectingFailsIfDnsUsesInvalidResolver()
-    {
+    public function testConnectingFailsIfDnsUsesInvalidResolver() {
         $loop = Factory::create();
 
         $factory = new ResolverFactory();
@@ -114,8 +109,7 @@ class IntegrationTest extends TestCase
         Block\await($connector->connect('google.com:80'), $loop, self::TIMEOUT);
     }
 
-    public function testConnectingFailsIfTimeoutIsTooSmall()
-    {
+    public function testConnectingFailsIfTimeoutIsTooSmall() {
         if (!function_exists('stream_socket_enable_crypto')) {
             $this->markTestSkipped('Not supported on your platform (outdated HHVM?)');
         }
@@ -130,8 +124,7 @@ class IntegrationTest extends TestCase
         Block\await($connector->connect('google.com:80'), $loop, self::TIMEOUT);
     }
 
-    public function testSelfSignedRejectsIfVerificationIsEnabled()
-    {
+    public function testSelfSignedRejectsIfVerificationIsEnabled() {
         if (!function_exists('stream_socket_enable_crypto')) {
             $this->markTestSkipped('Not supported on your platform (outdated HHVM?)');
         }
@@ -140,7 +133,7 @@ class IntegrationTest extends TestCase
 
         $connector = new Connector($loop, array(
             'tls' => array(
-                'verify_peer' => true
+                'verify_peer' => TRUE
             )
         ));
 
@@ -148,8 +141,7 @@ class IntegrationTest extends TestCase
         Block\await($connector->connect('tls://self-signed.badssl.com:443'), $loop, self::TIMEOUT);
     }
 
-    public function testSelfSignedResolvesIfVerificationIsDisabled()
-    {
+    public function testSelfSignedResolvesIfVerificationIsDisabled() {
         if (!function_exists('stream_socket_enable_crypto')) {
             $this->markTestSkipped('Not supported on your platform (outdated HHVM?)');
         }
@@ -158,7 +150,7 @@ class IntegrationTest extends TestCase
 
         $connector = new Connector($loop, array(
             'tls' => array(
-                'verify_peer' => false
+                'verify_peer' => FALSE
             )
         ));
 
@@ -166,6 +158,6 @@ class IntegrationTest extends TestCase
         $conn->close();
 
         // if we reach this, then everything is good
-        $this->assertNull(null);
+        $this->assertNull(NULL);
     }
 }

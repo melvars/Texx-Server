@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -35,8 +36,7 @@ class GroupSprunje extends Sprunje
     /**
      * {@inheritDoc}
      */
-    protected function baseQuery()
-    {
+    protected function baseQuery() {
         return $this->classMapper->createInstance('group')->newQuery();
     }
 }

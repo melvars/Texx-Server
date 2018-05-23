@@ -1005,8 +1005,8 @@ class UserController extends SimpleController
         }
 
         if ((Capsule::table('public_keys')
-                ->where('user_id', "=", $requestedUser->id)
-                ->exists())) {
+            ->where('user_id', "=", $requestedUser->id)
+            ->exists())) {
 
             $RawPublicKey = Capsule::table('public_keys')
                 ->where('user_id', "=", $requestedUser->id)

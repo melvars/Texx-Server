@@ -113,15 +113,15 @@ class ChatProcessor implements MessageComponentInterface
                     break;
                 case "ChatMessage": // MESSAGE RECEIVED
                     $ReceiversId = $this->ReceiversId[$conn->resourceId];
-                    if (isset($this->ResourceId[$ReceiversId])) {
-                        $ReceiversResourceId = $this->ResourceId[$ReceiversId];
-                        $MessageObject = new \stdClass();
-                        $MessageObject->ServerMessage = FALSE;
-                        $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
-                        $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
-                        $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
-                        $MessageObject->Message = htmlspecialchars($data->Message);
+                    $MessageObject = new \stdClass();
+                    $MessageObject->ServerMessage = FALSE;
+                    $MessageObject->Username = $this->userInfo[$conn->resourceId]->user_name;
+                    $MessageObject->Fullname = $this->userInfo[$conn->resourceId]->full_name;
+                    $MessageObject->Avatar = $this->userInfo[$conn->resourceId]->avatar;
+                    $MessageObject->Message = htmlspecialchars($data->Message);
 
+                    if (isset($this->ResourceId[$ReceiversId])) { // USER IS ONLINE
+                        $ReceiversResourceId = $this->ResourceId[$ReceiversId];
                         if ($data->EncryptedWithKeyOfUsername === $this->userInfo[$ReceiversResourceId]->user_name) {
                             $MessageObject->WasHimself = FALSE;
                             $MessageJson = json_encode($MessageObject, TRUE);
@@ -147,7 +147,8 @@ class ChatProcessor implements MessageComponentInterface
                             $MessageJson = json_encode($MessageObject, TRUE);
                             $this->users[$conn->resourceId]->send($MessageJson); // SEND TO SENDER (FOR VERIFICATION)
                         }
-                    } else { // USER ISN'T ONLINE -> ONLY STORE IN DATABASE
+                    } else { // USER ISN'T ONLINE -> ONLY STORE IN DATABASE AND SEND TO SENDER
+                        // STORE IN DB
                         $url = "https://beam-messenger.de/wormhole/" . file("/AccessToken.txt", FILE_IGNORE_NEW_LINES)["0"] . "/new/message/" . $this->userInfo[$conn->resourceId]->id . "/" . $this->ReceiversId[$conn->resourceId] . "/";
                         $data = array('message' => $data->Message);
                         $options = array(
@@ -161,6 +162,11 @@ class ChatProcessor implements MessageComponentInterface
                         $result = file_get_contents($url, FALSE, $context);
                         if ($result === FALSE) { /* Handle error */
                         }
+
+                        // SEND BACK FOR VERIFICATION
+                        $MessageObject->WasHimself = TRUE;
+                        $MessageJson = json_encode($MessageObject, TRUE);
+                        $this->users[$conn->resourceId]->send($MessageJson); // SEND TO SENDER (FOR VERIFICATION)
                     }
                     break;
                 case "GroupMessage": // GROUP MESSAGE RECEIVED -- RESERVED FOR LATER USE (CHANNEL BASED RIGHT NOW)
@@ -227,7 +233,10 @@ class ChatProcessor implements MessageComponentInterface
         unset($this->verifiedUsers[$conn->resourceId]);
         unset($this->users[$conn->resourceId]);
         unset($this->channels[$conn->resourceId]);
+        unset($this->ResourceId[$conn->resourceId]);
         unset($this->userInfo[$conn->resourceId]);
+        unset($this->userID[$conn->resourceId]);
+        unset($this->ReceiversId[$conn->resourceId]);
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e) {

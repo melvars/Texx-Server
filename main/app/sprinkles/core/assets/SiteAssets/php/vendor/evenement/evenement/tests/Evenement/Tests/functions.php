@@ -11,7 +11,6 @@
 
 namespace Evenement\Tests;
 
-function setGlobalTestData($data)
-{
+function setGlobalTestData($data) {
     $GLOBALS['evenement-evenement-test-data'] = $data;
 }

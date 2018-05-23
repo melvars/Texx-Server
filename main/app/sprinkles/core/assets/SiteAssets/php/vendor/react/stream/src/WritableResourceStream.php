@@ -12,13 +12,12 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
     private $softLimit;
     private $writeChunkSize;
 
-    private $listening = false;
-    private $writable = true;
-    private $closed = false;
+    private $listening = FALSE;
+    private $writable = TRUE;
+    private $closed = FALSE;
     private $data = '';
 
-    public function __construct($stream, LoopInterface $loop, $writeBufferSoftLimit = null, $writeChunkSize = null)
-    {
+    public function __construct($stream, LoopInterface $loop, $writeBufferSoftLimit = NULL, $writeChunkSize = NULL) {
         if (!is_resource($stream) || get_resource_type($stream) !== "stream") {
             throw new \InvalidArgumentException('First parameter must be a valid stream resource');
         }
@@ -31,31 +30,29 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
 
         // this class relies on non-blocking I/O in order to not interrupt the event loop
         // e.g. pipes on Windows do not support this: https://bugs.php.net/bug.php?id=47918
-        if (stream_set_blocking($stream, 0) !== true) {
+        if (stream_set_blocking($stream, 0) !== TRUE) {
             throw new \RuntimeException('Unable to set stream resource to non-blocking mode');
         }
 
         $this->stream = $stream;
         $this->loop = $loop;
-        $this->softLimit = ($writeBufferSoftLimit === null) ? 65536 : (int)$writeBufferSoftLimit;
-        $this->writeChunkSize = ($writeChunkSize === null) ? -1 : (int)$writeChunkSize;
+        $this->softLimit = ($writeBufferSoftLimit === NULL) ? 65536 : (int)$writeBufferSoftLimit;
+        $this->writeChunkSize = ($writeChunkSize === NULL) ? -1 : (int)$writeChunkSize;
     }
 
-    public function isWritable()
-    {
+    public function isWritable() {
         return $this->writable;
     }
 
-    public function write($data)
-    {
+    public function write($data) {
         if (!$this->writable) {
-            return false;
+            return FALSE;
         }
 
         $this->data .= $data;
 
         if (!$this->listening && $this->data !== '') {
-            $this->listening = true;
+            $this->listening = TRUE;
 
             $this->loop->addWriteStream($this->stream, array($this, 'handleWrite'));
         }
@@ -63,13 +60,12 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
         return !isset($this->data[$this->softLimit - 1]);
     }
 
-    public function end($data = null)
-    {
-        if (null !== $data) {
+    public function end($data = NULL) {
+        if (NULL !== $data) {
             $this->write($data);
         }
 
-        $this->writable = false;
+        $this->writable = FALSE;
 
         // close immediately if buffer is already empty
         // otherwise wait for buffer to flush first
@@ -78,19 +74,18 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
         }
     }
 
-    public function close()
-    {
+    public function close() {
         if ($this->closed) {
             return;
         }
 
         if ($this->listening) {
-            $this->listening = false;
+            $this->listening = FALSE;
             $this->loop->removeWriteStream($this->stream);
         }
 
-        $this->closed = true;
-        $this->writable = false;
+        $this->closed = TRUE;
+        $this->writable = FALSE;
         $this->data = '';
 
         $this->emit('close');
@@ -102,9 +97,8 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
     }
 
     /** @internal */
-    public function handleWrite()
-    {
-        $error = null;
+    public function handleWrite() {
+        $error = NULL;
         set_error_handler(function ($errno, $errstr, $errfile, $errline) use (&$error) {
             $error = array(
                 'message' => $errstr,
@@ -129,8 +123,8 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
         // to keep the stream open for further tries to write.
         // Should this turn out to be a permanent error later, it will eventually
         // send *nothing* and we can detect this.
-        if ($sent === 0 || $sent === false) {
-            if ($error !== null) {
+        if ($sent === 0 || $sent === FALSE) {
+            if ($error !== NULL) {
                 $error = new \ErrorException(
                     $error['message'],
                     0,
@@ -140,14 +134,14 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
                 );
             }
 
-            $this->emit('error', array(new \RuntimeException('Unable to write to stream: ' . ($error !== null ? $error->getMessage() : 'Unknown error'), 0, $error)));
+            $this->emit('error', array(new \RuntimeException('Unable to write to stream: ' . ($error !== NULL ? $error->getMessage() : 'Unknown error'), 0, $error)));
             $this->close();
 
             return;
         }
 
         $exceeded = isset($this->data[$this->softLimit - 1]);
-        $this->data = (string) substr($this->data, $sent);
+        $this->data = (string)substr($this->data, $sent);
 
         // buffer has been above limit and is now below limit
         if ($exceeded && !isset($this->data[$this->softLimit - 1])) {
@@ -159,7 +153,7 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
             // stop waiting for resource to be writable
             if ($this->listening) {
                 $this->loop->removeWriteStream($this->stream);
-                $this->listening = false;
+                $this->listening = FALSE;
             }
 
             // buffer is end()ing and now completely empty => close buffer

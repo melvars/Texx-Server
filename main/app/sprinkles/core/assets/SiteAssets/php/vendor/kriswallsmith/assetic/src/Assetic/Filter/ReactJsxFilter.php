@@ -17,22 +17,20 @@ class ReactJsxFilter extends BaseNodeFilter
     private $jsxBin;
     private $nodeBin;
 
-    public function __construct($jsxBin = '/usr/bin/jsx', $nodeBin = null)
-    {
+    public function __construct($jsxBin = '/usr/bin/jsx', $nodeBin = NULL) {
         $this->jsxBin = $jsxBin;
         $this->nodeBin = $nodeBin;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $builder = $this->createProcessBuilder($this->nodeBin
             ? array($this->nodeBin, $this->jsxBin)
             : array($this->jsxBin));
 
         $inputDir = FilesystemUtils::createThrowAwayDirectory('jsx_in');
-        $inputFile = $inputDir.DIRECTORY_SEPARATOR.'asset.js';
+        $inputFile = $inputDir . DIRECTORY_SEPARATOR . 'asset.js';
         $outputDir = FilesystemUtils::createThrowAwayDirectory('jsx_out');
-        $outputFile = $outputDir.DIRECTORY_SEPARATOR.'asset.js';
+        $outputFile = $outputDir . DIRECTORY_SEPARATOR . 'asset.js';
 
         // create the asset file
         file_put_contents($inputFile, $asset->getContent());
@@ -40,8 +38,7 @@ class ReactJsxFilter extends BaseNodeFilter
         $builder
             ->add($inputDir)
             ->add($outputDir)
-            ->add('--no-cache-dir')
-        ;
+            ->add('--no-cache-dir');
 
         $proc = $builder->getProcess();
         $code = $proc->run();
@@ -69,7 +66,6 @@ class ReactJsxFilter extends BaseNodeFilter
         rmdir($outputDir);
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 }

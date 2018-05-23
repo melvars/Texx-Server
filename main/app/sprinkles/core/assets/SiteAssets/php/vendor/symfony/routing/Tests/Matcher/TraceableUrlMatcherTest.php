@@ -20,8 +20,7 @@ use Symfony\Component\Routing\Matcher\TraceableUrlMatcher;
 
 class TraceableUrlMatcherTest extends TestCase
 {
-    public function test()
-    {
+    public function test() {
         $coll = new RouteCollection();
         $coll->add('foo', new Route('/foo', array(), array(), array(), '', array(), array('POST')));
         $coll->add('bar', new Route('/bar/{id}', array(), array('id' => '\d+')));
@@ -60,8 +59,7 @@ class TraceableUrlMatcherTest extends TestCase
         $this->assertSame(array(0, 0, 0, 0, 0, 1), $this->getLevels($traces));
     }
 
-    public function testMatchRouteOnMultipleHosts()
-    {
+    public function testMatchRouteOnMultipleHosts() {
         $routes = new RouteCollection();
         $routes->add('first', new Route(
             '/mypath/',
@@ -91,8 +89,7 @@ class TraceableUrlMatcherTest extends TestCase
         );
     }
 
-    public function getLevels($traces)
-    {
+    public function getLevels($traces) {
         $levels = array();
         foreach ($traces as $trace) {
             $levels[] = $trace['level'];
@@ -101,8 +98,7 @@ class TraceableUrlMatcherTest extends TestCase
         return $levels;
     }
 
-    public function testRoutesWithConditions()
-    {
+    public function testRoutesWithConditions() {
         $routes = new RouteCollection();
         $routes->add('foo', new Route('/foo', array(), array(), array(), 'baz', array(), array(), "request.headers.get('User-Agent') matches '/firefox/i'"));
 

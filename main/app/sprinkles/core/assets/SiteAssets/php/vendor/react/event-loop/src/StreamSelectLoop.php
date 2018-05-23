@@ -61,20 +61,18 @@ final class StreamSelectLoop implements LoopInterface
     private $writeStreams = array();
     private $writeListeners = array();
     private $running;
-    private $pcntl = false;
+    private $pcntl = FALSE;
     private $signals;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->futureTickQueue = new FutureTickQueue();
         $this->timers = new Timers();
         $this->pcntl = extension_loaded('pcntl');
         $this->signals = new SignalsHandler();
     }
 
-    public function addReadStream($stream, $listener)
-    {
-        $key = (int) $stream;
+    public function addReadStream($stream, $listener) {
+        $key = (int)$stream;
 
         if (!isset($this->readStreams[$key])) {
             $this->readStreams[$key] = $stream;
@@ -82,9 +80,8 @@ final class StreamSelectLoop implements LoopInterface
         }
     }
 
-    public function addWriteStream($stream, $listener)
-    {
-        $key = (int) $stream;
+    public function addWriteStream($stream, $listener) {
+        $key = (int)$stream;
 
         if (!isset($this->writeStreams[$key])) {
             $this->writeStreams[$key] = $stream;
@@ -92,9 +89,8 @@ final class StreamSelectLoop implements LoopInterface
         }
     }
 
-    public function removeReadStream($stream)
-    {
-        $key = (int) $stream;
+    public function removeReadStream($stream) {
+        $key = (int)$stream;
 
         unset(
             $this->readStreams[$key],
@@ -102,9 +98,8 @@ final class StreamSelectLoop implements LoopInterface
         );
     }
 
-    public function removeWriteStream($stream)
-    {
-        $key = (int) $stream;
+    public function removeWriteStream($stream) {
+        $key = (int)$stream;
 
         unset(
             $this->writeStreams[$key],
@@ -112,37 +107,32 @@ final class StreamSelectLoop implements LoopInterface
         );
     }
 
-    public function addTimer($interval, $callback)
-    {
-        $timer = new Timer($interval, $callback, false);
+    public function addTimer($interval, $callback) {
+        $timer = new Timer($interval, $callback, FALSE);
 
         $this->timers->add($timer);
 
         return $timer;
     }
 
-    public function addPeriodicTimer($interval, $callback)
-    {
-        $timer = new Timer($interval, $callback, true);
+    public function addPeriodicTimer($interval, $callback) {
+        $timer = new Timer($interval, $callback, TRUE);
 
         $this->timers->add($timer);
 
         return $timer;
     }
 
-    public function cancelTimer(TimerInterface $timer)
-    {
+    public function cancelTimer(TimerInterface $timer) {
         $this->timers->cancel($timer);
     }
 
-    public function futureTick($listener)
-    {
+    public function futureTick($listener) {
         $this->futureTickQueue->add($listener);
     }
 
-    public function addSignal($signal, $listener)
-    {
-        if ($this->pcntl === false) {
+    public function addSignal($signal, $listener) {
+        if ($this->pcntl === FALSE) {
             throw new \BadMethodCallException('Event loop feature "signals" isn\'t supported by the "StreamSelectLoop"');
         }
 
@@ -154,8 +144,7 @@ final class StreamSelectLoop implements LoopInterface
         }
     }
 
-    public function removeSignal($signal, $listener)
-    {
+    public function removeSignal($signal, $listener) {
         if (!$this->signals->count($signal)) {
             return;
         }
@@ -167,9 +156,8 @@ final class StreamSelectLoop implements LoopInterface
         }
     }
 
-    public function run()
-    {
-        $this->running = true;
+    public function run() {
+        $this->running = TRUE;
 
         while ($this->running) {
             $this->futureTickQueue->tick();
@@ -180,8 +168,8 @@ final class StreamSelectLoop implements LoopInterface
             if (!$this->running || !$this->futureTickQueue->isEmpty()) {
                 $timeout = 0;
 
-            // There is a pending timer, only block until it is due ...
-            } elseif ($scheduledAt = $this->timers->getFirst()) {
+                // There is a pending timer, only block until it is due ...
+            } else if ($scheduledAt = $this->timers->getFirst()) {
                 $timeout = $scheduledAt - $this->timers->getTime();
                 if ($timeout < 0) {
                     $timeout = 0;
@@ -193,11 +181,11 @@ final class StreamSelectLoop implements LoopInterface
                     $timeout = $timeout > PHP_INT_MAX ? PHP_INT_MAX : (int)$timeout;
                 }
 
-            // The only possible event is stream or signal activity, so wait forever ...
-            } elseif ($this->readStreams || $this->writeStreams || !$this->signals->isEmpty()) {
-                $timeout = null;
+                // The only possible event is stream or signal activity, so wait forever ...
+            } else if ($this->readStreams || $this->writeStreams || !$this->signals->isEmpty()) {
+                $timeout = NULL;
 
-            // There's nothing left to do ...
+                // There's nothing left to do ...
             } else {
                 break;
             }
@@ -206,9 +194,8 @@ final class StreamSelectLoop implements LoopInterface
         }
     }
 
-    public function stop()
-    {
-        $this->running = false;
+    public function stop() {
+        $this->running = FALSE;
     }
 
     /**
@@ -216,23 +203,22 @@ final class StreamSelectLoop implements LoopInterface
      *
      * @param integer|null $timeout Activity timeout in microseconds, or null to wait forever.
      */
-    private function waitForStreamActivity($timeout)
-    {
-        $read  = $this->readStreams;
+    private function waitForStreamActivity($timeout) {
+        $read = $this->readStreams;
         $write = $this->writeStreams;
 
         $available = $this->streamSelect($read, $write, $timeout);
         if ($this->pcntl) {
             \pcntl_signal_dispatch();
         }
-        if (false === $available) {
+        if (FALSE === $available) {
             // if a system call has been interrupted,
             // we cannot rely on it's outcome
             return;
         }
 
         foreach ($read as $stream) {
-            $key = (int) $stream;
+            $key = (int)$stream;
 
             if (isset($this->readListeners[$key])) {
                 call_user_func($this->readListeners[$key], $stream);
@@ -240,7 +226,7 @@ final class StreamSelectLoop implements LoopInterface
         }
 
         foreach ($write as $stream) {
-            $key = (int) $stream;
+            $key = (int)$stream;
 
             if (isset($this->writeListeners[$key])) {
                 call_user_func($this->writeListeners[$key], $stream);
@@ -252,20 +238,19 @@ final class StreamSelectLoop implements LoopInterface
      * Emulate a stream_select() implementation that does not break when passed
      * empty stream arrays.
      *
-     * @param array        &$read   An array of read streams to select upon.
-     * @param array        &$write  An array of write streams to select upon.
+     * @param array &$read An array of read streams to select upon.
+     * @param array &$write An array of write streams to select upon.
      * @param integer|null $timeout Activity timeout in microseconds, or null to wait forever.
      *
      * @return integer|false The total number of streams that are ready for read/write.
      * Can return false if stream_select() is interrupted by a signal.
      */
-    private function streamSelect(array &$read, array &$write, $timeout)
-    {
+    private function streamSelect(array &$read, array &$write, $timeout) {
         if ($read || $write) {
-            $except = null;
+            $except = NULL;
 
             // suppress warnings that occur, when stream_select is interrupted by a signal
-            return @stream_select($read, $write, $except, $timeout === null ? null : 0, $timeout);
+            return @stream_select($read, $write, $except, $timeout === NULL ? NULL : 0, $timeout);
         }
 
         $timeout && usleep($timeout);

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -44,7 +45,7 @@ class Migrator
      */
     protected $schema;
 
-     /**
+    /**
      * @var String table The name of the migration table
      */
     protected $table = "migrations";
@@ -91,8 +92,7 @@ class Migrator
      * @param ContainerInterface $ci
      * @return void
      */
-    public function __construct(SymfonyStyle $io, ContainerInterface $ci)
-    {
+    public function __construct(SymfonyStyle $io, ContainerInterface $ci) {
         $this->io = $io;
         $this->ci = $ci;
 
@@ -120,8 +120,7 @@ class Migrator
      * @param bool $pretend (default: false)
      * @return void
      */
-    public function runUp($pretend = false)
-    {
+    public function runUp($pretend = FALSE) {
         // Get installed migrations and pluck by class name. We only need this for now
         $migrations = Migrations::get();
         $this->installed = $migrations->pluck('migration');
@@ -192,8 +191,7 @@ class Migrator
      * @param bool $pretend (default: false)
      * @return void
      */
-    public function runDown($step = 1, $sprinkle = "", $pretend = false)
-    {
+    public function runDown($step = 1, $sprinkle = "", $pretend = FALSE) {
         // Can't go furhter down than 1 step
         if ($step <= 0 && $step != -1) {
             throw new \InvalidArgumentException("Step can't be 0 or less");
@@ -234,7 +232,7 @@ class Migrator
         $this->io->listing($migrations->pluck('migration')->toArray());
 
         // Ask confirmation to continue.
-        if (!$pretend && !$this->io->confirm("Continue?", false)) {
+        if (!$pretend && !$this->io->confirm("Continue?", FALSE)) {
             exit(1);
         }
 
@@ -278,8 +276,7 @@ class Migrator
      * @param mixed $migration
      * @param string $method up/down
      */
-    protected function pretendToRun($migration, $method)
-    {
+    protected function pretendToRun($migration, $method) {
         foreach ($this->getQueries($migration, $method) as $query) {
             $this->io->writeln($query['query'], OutputInterface::VERBOSITY_VERBOSE);
         }
@@ -293,8 +290,7 @@ class Migrator
      * @param string $method up/down
      * @return void
      */
-    protected function getQueries($migration, $method)
-    {
+    protected function getQueries($migration, $method) {
         $db = $this->schema->getConnection();
 
         return $db->pretend(function () use ($migration, $method) {
@@ -311,8 +307,7 @@ class Migrator
      * @access protected
      * @return void
      */
-    protected function getPendingMigrations()
-    {
+    protected function getPendingMigrations() {
         $pending = collect([]);
 
         // Get the sprinkle list
@@ -337,7 +332,7 @@ class Migrator
 
                 // Make sure the class exist
                 if (!class_exists($migrationClass)) {
-                    throw new BadClassNameException("Unable to find the migration class '$migrationClass'." );
+                    throw new BadClassNameException("Unable to find the migration class '$migrationClass'.");
                 }
 
                 // Load the migration class
@@ -371,8 +366,7 @@ class Migrator
      * @param string $sprinkleName
      * @return void
      */
-    public function getMigrations($sprinkle)
-    {
+    public function getMigrations($sprinkle) {
         // Find all the migration files
         $path = $this->migrationDirectoryPath($sprinkle);
         $files = glob($path . "*/*.php");
@@ -389,7 +383,7 @@ class Migrator
             $version = str_replace("/$className.php", "", $migration);
 
             // Reconstruct the classname
-            $className = "\\UserFrosting\\Sprinkle\\".$sprinkleName."\\Database\\Migrations\\".$version."\\".$className;
+            $className = "\\UserFrosting\\Sprinkle\\" . $sprinkleName . "\\Database\\Migrations\\" . $version . "\\" . $className;
 
             return $className;
         });
@@ -404,8 +398,7 @@ class Migrator
      * @access protected
      * @return void
      */
-    protected function resolveDependencies()
-    {
+    protected function resolveDependencies() {
         $this->io->writeln("\n<info>Resolving migrations dependencies...</info>", OutputInterface::VERBOSITY_VERBOSE);
 
         // Reset fulfillable/unfulfillable lists
@@ -435,20 +428,19 @@ class Migrator
      * @param $migration
      * @return bool true/false if all conditions are met
      */
-    protected function validateClassDependencies($migration)
-    {
+    protected function validateClassDependencies($migration) {
         $this->io->writeln("> Checking dependencies for {$migration->className}", OutputInterface::VERBOSITY_VERBOSE);
 
         // If it's already marked as fulfillable, it's fulfillable
         // Return true directly (it's already marked)
         if ($this->fulfillable->contains($migration)) {
-            return true;
+            return TRUE;
         }
 
         // If it's already marked as unfulfillable, it's unfulfillable
         // Return false directly (it's already marked)
         if ($this->unfulfillable->contains($migration)) {
-            return false;
+            return FALSE;
         }
 
         // If it's already run, it's fulfillable
@@ -487,10 +479,9 @@ class Migrator
      * @param $migration
      * @return true
      */
-    protected function markAsFulfillable($migration)
-    {
+    protected function markAsFulfillable($migration) {
         $this->fulfillable->push($migration);
-        return true;
+        return TRUE;
     }
 
     /**
@@ -501,10 +492,9 @@ class Migrator
      * @param $migration
      * @return false
      */
-    protected function markAsUnfulfillable($migration)
-    {
+    protected function markAsUnfulfillable($migration) {
         $this->unfulfillable->push($migration);
-        return false;
+        return FALSE;
     }
 
     /**
@@ -514,8 +504,7 @@ class Migrator
      * @param mixed $migration
      * @return void
      */
-    protected function log($migration)
-    {
+    protected function log($migration) {
         // Get the next batch number if not defined
         if (!$this->batch) {
             $this->batch = $this->getNextBatchNumber();
@@ -536,8 +525,7 @@ class Migrator
      * @access public
      * @return int the next batch number
      */
-    public function getNextBatchNumber()
-    {
+    public function getNextBatchNumber() {
         $batch = Migrations::max('batch');
         return ($batch) ? $batch + 1 : 1;
     }
@@ -550,8 +538,7 @@ class Migrator
      * @access public
      * @return void
      */
-    protected function setupVersionTable()
-    {
+    protected function setupVersionTable() {
         // Check if the `migrations` table exist. Create it manually otherwise
         if (!$this->schema->hasColumn($this->table, 'id')) {
             $this->io->section("Creating the `{$this->table}` table");
@@ -570,14 +557,13 @@ class Migrator
      * @param mixed $sprinkleName
      * @return void
      */
-    protected function migrationDirectoryPath($sprinkleName)
-    {
+    protected function migrationDirectoryPath($sprinkleName) {
         $path = \UserFrosting\SPRINKLES_DIR .
-                \UserFrosting\DS .
-                $sprinkleName .
-                \UserFrosting\DS .
-                \UserFrosting\SRC_DIR_NAME .
-                "/Database/Migrations/";
+            \UserFrosting\DS .
+            $sprinkleName .
+            \UserFrosting\DS .
+            \UserFrosting\SRC_DIR_NAME .
+            "/Database/Migrations/";
 
         return $path;
     }

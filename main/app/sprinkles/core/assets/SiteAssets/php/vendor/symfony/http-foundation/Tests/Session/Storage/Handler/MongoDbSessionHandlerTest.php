@@ -28,15 +28,14 @@ class MongoDbSessionHandlerTest extends TestCase
     private $storage;
     public $options;
 
-    protected function setUp()
-    {
+    protected function setUp() {
         parent::setUp();
 
         if (extension_loaded('mongodb')) {
             if (!class_exists('MongoDB\Client')) {
                 $this->markTestSkipped('The mongodb/mongodb package is required.');
             }
-        } elseif (!extension_loaded('mongo')) {
+        } else if (!extension_loaded('mongo')) {
             $this->markTestSkipped('The Mongo or MongoDB extension is required.');
         }
 
@@ -65,31 +64,26 @@ class MongoDbSessionHandlerTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testConstructorShouldThrowExceptionForInvalidMongo()
-    {
+    public function testConstructorShouldThrowExceptionForInvalidMongo() {
         new MongoDbSessionHandler(new \stdClass(), $this->options);
     }
 
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testConstructorShouldThrowExceptionForMissingOptions()
-    {
+    public function testConstructorShouldThrowExceptionForMissingOptions() {
         new MongoDbSessionHandler($this->mongo, array());
     }
 
-    public function testOpenMethodAlwaysReturnTrue()
-    {
+    public function testOpenMethodAlwaysReturnTrue() {
         $this->assertTrue($this->storage->open('test', 'test'), 'The "open" method should always return true');
     }
 
-    public function testCloseMethodAlwaysReturnTrue()
-    {
+    public function testCloseMethodAlwaysReturnTrue() {
         $this->assertTrue($this->storage->close(), 'The "close" method should always return true');
     }
 
-    public function testRead()
-    {
+    public function testRead() {
         $collection = $this->createMongoCollectionMock();
 
         $this->mongo->expects($this->once())
@@ -112,7 +106,7 @@ class MongoDbSessionHandlerTest extends TestCase
 
                 if (phpversion('mongodb')) {
                     $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $criteria[$this->options['expiry_field']]['$gte']);
-                    $this->assertGreaterThanOrEqual(round((string) $criteria[$this->options['expiry_field']]['$gte'] / 1000), $testTimeout);
+                    $this->assertGreaterThanOrEqual(round((string)$criteria[$this->options['expiry_field']]['$gte'] / 1000), $testTimeout);
                 } else {
                     $this->assertInstanceOf('MongoDate', $criteria[$this->options['expiry_field']]['$gte']);
                     $this->assertGreaterThanOrEqual($criteria[$this->options['expiry_field']]['$gte']->sec, $testTimeout);
@@ -136,8 +130,7 @@ class MongoDbSessionHandlerTest extends TestCase
         $this->assertEquals('bar', $this->storage->read('foo'));
     }
 
-    public function testWrite()
-    {
+    public function testWrite() {
         $collection = $this->createMongoCollectionMock();
 
         $this->mongo->expects($this->once())
@@ -155,22 +148,22 @@ class MongoDbSessionHandlerTest extends TestCase
                 $this->assertEquals(array($this->options['id_field'] => 'foo'), $criteria);
 
                 if (phpversion('mongodb')) {
-                    $this->assertEquals(array('upsert' => true), $options);
+                    $this->assertEquals(array('upsert' => TRUE), $options);
                 } else {
-                    $this->assertEquals(array('upsert' => true, 'multiple' => false), $options);
+                    $this->assertEquals(array('upsert' => TRUE, 'multiple' => FALSE), $options);
                 }
 
                 $data = $updateData['$set'];
             }));
 
-        $expectedExpiry = time() + (int) ini_get('session.gc_maxlifetime');
+        $expectedExpiry = time() + (int)ini_get('session.gc_maxlifetime');
         $this->assertTrue($this->storage->write('foo', 'bar'));
 
         if (phpversion('mongodb')) {
             $this->assertEquals('bar', $data[$this->options['data_field']]->getData());
             $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $data[$this->options['time_field']]);
             $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $data[$this->options['expiry_field']]);
-            $this->assertGreaterThanOrEqual($expectedExpiry, round((string) $data[$this->options['expiry_field']] / 1000));
+            $this->assertGreaterThanOrEqual($expectedExpiry, round((string)$data[$this->options['expiry_field']] / 1000));
         } else {
             $this->assertEquals('bar', $data[$this->options['data_field']]->bin);
             $this->assertInstanceOf('MongoDate', $data[$this->options['time_field']]);
@@ -179,8 +172,7 @@ class MongoDbSessionHandlerTest extends TestCase
         }
     }
 
-    public function testWriteWhenUsingExpiresField()
-    {
+    public function testWriteWhenUsingExpiresField() {
         $this->options = array(
             'id_field' => '_id',
             'data_field' => 'data',
@@ -209,9 +201,9 @@ class MongoDbSessionHandlerTest extends TestCase
                 $this->assertEquals(array($this->options['id_field'] => 'foo'), $criteria);
 
                 if (phpversion('mongodb')) {
-                    $this->assertEquals(array('upsert' => true), $options);
+                    $this->assertEquals(array('upsert' => TRUE), $options);
                 } else {
-                    $this->assertEquals(array('upsert' => true, 'multiple' => false), $options);
+                    $this->assertEquals(array('upsert' => TRUE, 'multiple' => FALSE), $options);
                 }
 
                 $data = $updateData['$set'];
@@ -230,8 +222,7 @@ class MongoDbSessionHandlerTest extends TestCase
         }
     }
 
-    public function testReplaceSessionData()
-    {
+    public function testReplaceSessionData() {
         $collection = $this->createMongoCollectionMock();
 
         $this->mongo->expects($this->once())
@@ -259,8 +250,7 @@ class MongoDbSessionHandlerTest extends TestCase
         }
     }
 
-    public function testDestroy()
-    {
+    public function testDestroy() {
         $collection = $this->createMongoCollectionMock();
 
         $this->mongo->expects($this->once())
@@ -277,8 +267,7 @@ class MongoDbSessionHandlerTest extends TestCase
         $this->assertTrue($this->storage->destroy('foo'));
     }
 
-    public function testGc()
-    {
+    public function testGc() {
         $collection = $this->createMongoCollectionMock();
 
         $this->mongo->expects($this->once())
@@ -293,7 +282,7 @@ class MongoDbSessionHandlerTest extends TestCase
             ->will($this->returnCallback(function ($criteria) {
                 if (phpversion('mongodb')) {
                     $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $criteria[$this->options['expiry_field']]['$lt']);
-                    $this->assertGreaterThanOrEqual(time() - 1, round((string) $criteria[$this->options['expiry_field']]['$lt'] / 1000));
+                    $this->assertGreaterThanOrEqual(time() - 1, round((string)$criteria[$this->options['expiry_field']]['$lt'] / 1000));
                 } else {
                     $this->assertInstanceOf('MongoDate', $criteria[$this->options['expiry_field']]['$lt']);
                     $this->assertGreaterThanOrEqual(time() - 1, $criteria[$this->options['expiry_field']]['$lt']->sec);
@@ -303,10 +292,9 @@ class MongoDbSessionHandlerTest extends TestCase
         $this->assertTrue($this->storage->gc(1));
     }
 
-    public function testGetConnection()
-    {
+    public function testGetConnection() {
         $method = new \ReflectionMethod($this->storage, 'getMongo');
-        $method->setAccessible(true);
+        $method->setAccessible(TRUE);
 
         if (phpversion('mongodb')) {
             $mongoClass = 'MongoDB\Client';
@@ -317,8 +305,7 @@ class MongoDbSessionHandlerTest extends TestCase
         $this->assertInstanceOf($mongoClass, $method->invoke($this->storage));
     }
 
-    private function createMongoCollectionMock()
-    {
+    private function createMongoCollectionMock() {
         $collectionClass = 'MongoCollection';
         if (phpversion('mongodb')) {
             $collectionClass = 'MongoDB\Collection';

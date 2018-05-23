@@ -1,7 +1,9 @@
 <?php
+
 namespace Ratchet\Session\Serialize;
 
-interface HandlerInterface {
+interface HandlerInterface
+{
     /**
      * @param array
      * @return string

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,17 +25,15 @@ class ClearCache extends BaseCommand
     /**
      * {@inheritDoc}
      */
-    protected function configure()
-    {
+    protected function configure() {
         $this->setName("clear-cache")
-             ->setDescription("Clears the application cache. Includes cache service, Twig and Router cached data");
+            ->setDescription("Clears the application cache. Includes cache service, Twig and Router cached data");
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         $this->io->title("Clearing cache");
 
         // Clear normal cache
@@ -65,8 +64,7 @@ class ClearCache extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function clearIlluminateCache()
-    {
+    protected function clearIlluminateCache() {
         $this->ci->cache->flush();
     }
 
@@ -76,8 +74,7 @@ class ClearCache extends BaseCommand
      * @access protected
      * @return bool true/false if operation is successfull
      */
-    protected function clearTwigCache()
-    {
+    protected function clearTwigCache() {
         $cacheHelper = new CacheHelper($this->ci);
         return $cacheHelper->clearCache();
     }
@@ -88,8 +85,7 @@ class ClearCache extends BaseCommand
      * @access protected
      * @return bool true/false if operation is successfull
      */
-    protected function clearRouterCache()
-    {
+    protected function clearRouterCache() {
         return $this->ci->router->clearCache();
     }
 }

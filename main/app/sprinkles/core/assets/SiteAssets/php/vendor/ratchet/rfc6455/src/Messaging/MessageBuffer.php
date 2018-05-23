@@ -1,7 +1,9 @@
 <?php
+
 namespace Ratchet\RFC6455\Messaging;
 
-class MessageBuffer {
+class MessageBuffer
+{
     /**
      * @var \Ratchet\RFC6455\Messaging\CloseFrameChecker
      */
@@ -40,19 +42,20 @@ class MessageBuffer {
     function __construct(
         CloseFrameChecker $frameChecker,
         callable $onMessage,
-        callable $onControl = null,
-        $expectMask = true,
-        $exceptionFactory = null
+        callable $onControl = NULL,
+        $expectMask = TRUE,
+        $exceptionFactory = NULL
     ) {
         $this->closeFrameChecker = $frameChecker;
         $this->checkForMask = (bool)$expectMask;
 
-        $this->exceptionFactory ?: $this->exceptionFactory = function($msg) {
+        $this->exceptionFactory ?: $this->exceptionFactory = function ($msg) {
             return new \UnderflowException($msg);
         };
 
         $this->onMessage = $onMessage;
-        $this->onControl = $onControl ?: function() {};
+        $this->onControl = $onControl ?: function () {
+        };
     }
 
     public function onData($data) {
@@ -67,7 +70,7 @@ class MessageBuffer {
      */
     private function processData($data) {
         $this->messageBuffer ?: $this->messageBuffer = $this->newMessage();
-        $this->frameBuffer   ?: $this->frameBuffer   = $this->newFrame();
+        $this->frameBuffer ?: $this->frameBuffer = $this->newFrame();
 
         $this->frameBuffer->addBuffer($data);
         if (!$this->frameBuffer->isCoalesced()) {
@@ -94,17 +97,17 @@ class MessageBuffer {
             $this->messageBuffer->addFrame($this->frameBuffer);
         }
 
-        $this->frameBuffer = null;
+        $this->frameBuffer = NULL;
 
         if ($this->messageBuffer->isCoalesced()) {
             $msgCheck = $this->checkMessage($this->messageBuffer);
-            if (true !== $msgCheck) {
+            if (TRUE !== $msgCheck) {
                 $onControl($this->newCloseFrame($msgCheck, 'Ratchet detected an invalid UTF-8 payload'));
             } else {
                 $onMessage($this->messageBuffer);
             }
 
-            $this->messageBuffer = null;
+            $this->messageBuffer = NULL;
         }
 
         return $overflow;
@@ -116,9 +119,9 @@ class MessageBuffer {
      * @return \Ratchet\RFC6455\Messaging\FrameInterface|FrameInterface
      */
     public function frameCheck(FrameInterface $frame) {
-        if (false !== $frame->getRsv1() ||
-            false !== $frame->getRsv2() ||
-            false !== $frame->getRsv3()
+        if (FALSE !== $frame->getRsv1() ||
+            FALSE !== $frame->getRsv2() ||
+            FALSE !== $frame->getRsv3()
         ) {
             return $this->newCloseFrame(Frame::CLOSE_PROTOCOL, 'Ratchet detected an invalid reserve code');
         }
@@ -197,7 +200,7 @@ class MessageBuffer {
             }
         }
 
-        return true;
+        return TRUE;
     }
 
     private function checkUtf8($string) {
@@ -217,15 +220,15 @@ class MessageBuffer {
 
     /**
      * @param string|null $payload
-     * @param bool|null   $final
-     * @param int|null    $opcode
+     * @param bool|null $final
+     * @param int|null $opcode
      * @return \Ratchet\RFC6455\Messaging\FrameInterface
      */
-    public function newFrame($payload = null, $final = null, $opcode = null) {
+    public function newFrame($payload = NULL, $final = NULL, $opcode = NULL) {
         return new Frame($payload, $final, $opcode, $this->exceptionFactory);
     }
 
     public function newCloseFrame($code, $reason = '') {
-        return $this->newFrame(pack('n', $code) . $reason, true, Frame::OP_CLOSE);
+        return $this->newFrame(pack('n', $code) . $reason, TRUE, Frame::OP_CLOSE);
     }
 }

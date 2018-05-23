@@ -22,8 +22,7 @@ class SecureIntegrationTest extends TestCase
     private $connector;
     private $address;
 
-    public function setUp()
-    {
+    public function setUp() {
         if (!function_exists('stream_socket_enable_crypto')) {
             $this->markTestSkipped('Not supported on your platform (outdated HHVM?)');
         }
@@ -34,30 +33,27 @@ class SecureIntegrationTest extends TestCase
             'local_cert' => __DIR__ . '/../examples/localhost.pem'
         ));
         $this->address = $this->server->getAddress();
-        $this->connector = new SecureConnector(new TcpConnector($this->loop), $this->loop, array('verify_peer' => false));
+        $this->connector = new SecureConnector(new TcpConnector($this->loop), $this->loop, array('verify_peer' => FALSE));
     }
 
-    public function tearDown()
-    {
-        if ($this->server !== null) {
+    public function tearDown() {
+        if ($this->server !== NULL) {
             $this->server->close();
-            $this->server = null;
+            $this->server = NULL;
         }
     }
 
-    public function testConnectToServer()
-    {
+    public function testConnectToServer() {
         $client = Block\await($this->connector->connect($this->address), $this->loop, self::TIMEOUT);
         /* @var $client ConnectionInterface */
 
         $client->close();
 
         // if we reach this, then everything is good
-        $this->assertNull(null);
+        $this->assertNull(NULL);
     }
 
-    public function testConnectToServerEmitsConnection()
-    {
+    public function testConnectToServerEmitsConnection() {
         $promiseServer = $this->createPromiseForEvent($this->server, 'connection', $this->expectCallableOnce());
 
         $promiseClient = $this->connector->connect($this->address);
@@ -68,8 +64,7 @@ class SecureIntegrationTest extends TestCase
         $client->close();
     }
 
-    public function testSendSmallDataToServerReceivesOneChunk()
-    {
+    public function testSendSmallDataToServerReceivesOneChunk() {
         // server expects one connection which emits one data event
         $received = new Deferred();
         $this->server->on('connection', function (ConnectionInterface $peer) use ($received) {
@@ -91,8 +86,7 @@ class SecureIntegrationTest extends TestCase
         $this->assertEquals('hello', $data);
     }
 
-    public function testSendDataWithEndToServerReceivesAllData()
-    {
+    public function testSendDataWithEndToServerReceivesAllData() {
         $disconnected = new Deferred();
         $this->server->on('connection', function (ConnectionInterface $peer) use ($disconnected) {
             $received = '';
@@ -116,8 +110,7 @@ class SecureIntegrationTest extends TestCase
         $this->assertEquals($data, $received);
     }
 
-    public function testSendDataWithoutEndingToServerReceivesAllData()
-    {
+    public function testSendDataWithoutEndingToServerReceivesAllData() {
         $received = '';
         $this->server->on('connection', function (ConnectionInterface $peer) use (&$received) {
             $peer->on('data', function ($chunk) use (&$received) {
@@ -139,8 +132,7 @@ class SecureIntegrationTest extends TestCase
         $this->assertEquals($data, $received);
     }
 
-    public function testConnectToServerWhichSendsSmallDataReceivesOneChunk()
-    {
+    public function testConnectToServerWhichSendsSmallDataReceivesOneChunk() {
         $this->server->on('connection', function (ConnectionInterface $peer) {
             $peer->write('hello');
         });
@@ -155,8 +147,7 @@ class SecureIntegrationTest extends TestCase
         $client->close();
     }
 
-    public function testConnectToServerWhichSendsDataWithEndReceivesAllData()
-    {
+    public function testConnectToServerWhichSendsDataWithEndReceivesAllData() {
         $data = str_repeat('b', 100000);
         $this->server->on('connection', function (ConnectionInterface $peer) use ($data) {
             $peer->end($data);
@@ -171,8 +162,7 @@ class SecureIntegrationTest extends TestCase
         $this->assertEquals($data, $received);
     }
 
-    public function testConnectToServerWhichSendsDataWithoutEndingReceivesAllData()
-    {
+    public function testConnectToServerWhichSendsDataWithoutEndingReceivesAllData() {
         $data = str_repeat('c', 100000);
         $this->server->on('connection', function (ConnectionInterface $peer) use ($data) {
             $peer->write($data);
@@ -193,8 +183,7 @@ class SecureIntegrationTest extends TestCase
         $this->assertEquals($data, $received);
     }
 
-    private function createPromiseForEvent(EventEmitterInterface $emitter, $event, $fn)
-    {
+    private function createPromiseForEvent(EventEmitterInterface $emitter, $event, $fn) {
         return new Promise(function ($resolve) use ($emitter, $event, $fn) {
             $emitter->on($event, function () use ($resolve, $fn) {
                 $resolve(call_user_func_array($fn, func_get_args()));

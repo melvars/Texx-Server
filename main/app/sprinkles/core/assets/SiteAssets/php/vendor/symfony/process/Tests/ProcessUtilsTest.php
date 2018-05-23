@@ -22,13 +22,11 @@ class ProcessUtilsTest extends TestCase
     /**
      * @dataProvider dataArguments
      */
-    public function testEscapeArgument($result, $argument)
-    {
+    public function testEscapeArgument($result, $argument) {
         $this->assertSame($result, ProcessUtils::escapeArgument($argument));
     }
 
-    public function dataArguments()
-    {
+    public function dataArguments() {
         if ('\\' === DIRECTORY_SEPARATOR) {
             return array(
                 array('"\"php\" \"-v\""', '"php" "-v"'),

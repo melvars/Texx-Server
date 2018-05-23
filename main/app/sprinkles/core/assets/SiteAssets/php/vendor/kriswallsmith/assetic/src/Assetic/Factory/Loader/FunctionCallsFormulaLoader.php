@@ -18,17 +18,15 @@ namespace Assetic\Factory\Loader;
  */
 class FunctionCallsFormulaLoader extends BasePhpFormulaLoader
 {
-    protected function registerPrototypes()
-    {
+    protected function registerPrototypes() {
         return array(
             'assetic_javascripts(*)' => array('output' => 'js/*.js'),
             'assetic_stylesheets(*)' => array('output' => 'css/*.css'),
-            'assetic_image(*)'       => array('output' => 'images/*'),
+            'assetic_image(*)' => array('output' => 'images/*'),
         );
     }
 
-    protected function registerSetupCode()
-    {
+    protected function registerSetupCode() {
         return <<<'EOF'
 function assetic_javascripts()
 {

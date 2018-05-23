@@ -30,26 +30,25 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
     private $bufferSize;
     private $buffer;
 
-    private $readable = true;
-    private $writable = true;
-    private $closing = false;
-    private $listening = false;
+    private $readable = TRUE;
+    private $writable = TRUE;
+    private $closing = FALSE;
+    private $listening = FALSE;
 
-    public function __construct($stream, LoopInterface $loop, $readChunkSize = null, WritableStreamInterface $buffer = null)
-    {
+    public function __construct($stream, LoopInterface $loop, $readChunkSize = NULL, WritableStreamInterface $buffer = NULL) {
         if (!is_resource($stream) || get_resource_type($stream) !== "stream") {
-             throw new InvalidArgumentException('First parameter must be a valid stream resource');
+            throw new InvalidArgumentException('First parameter must be a valid stream resource');
         }
 
         // ensure resource is opened for reading and wrting (fopen mode must contain "+")
         $meta = stream_get_meta_data($stream);
-        if (isset($meta['mode']) && $meta['mode'] !== '' && strpos($meta['mode'], '+') === false) {
+        if (isset($meta['mode']) && $meta['mode'] !== '' && strpos($meta['mode'], '+') === FALSE) {
             throw new InvalidArgumentException('Given stream resource is not opened in read and write mode');
         }
 
         // this class relies on non-blocking I/O in order to not interrupt the event loop
         // e.g. pipes on Windows do not support this: https://bugs.php.net/bug.php?id=47918
-        if (stream_set_blocking($stream, 0) !== true) {
+        if (stream_set_blocking($stream, 0) !== TRUE) {
             throw new \RuntimeException('Unable to set stream resource to non-blocking mode');
         }
 
@@ -65,13 +64,13 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
             stream_set_read_buffer($stream, 0);
         }
 
-        if ($buffer === null) {
+        if ($buffer === NULL) {
             $buffer = new WritableResourceStream($stream, $loop);
         }
 
         $this->stream = $stream;
         $this->loop = $loop;
-        $this->bufferSize = ($readChunkSize === null) ? 65536 : (int)$readChunkSize;
+        $this->bufferSize = ($readChunkSize === NULL) ? 65536 : (int)$readChunkSize;
         $this->buffer = $buffer;
 
         $that = $this;
@@ -89,51 +88,45 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
         $this->resume();
     }
 
-    public function isReadable()
-    {
+    public function isReadable() {
         return $this->readable;
     }
 
-    public function isWritable()
-    {
+    public function isWritable() {
         return $this->writable;
     }
 
-    public function pause()
-    {
+    public function pause() {
         if ($this->listening) {
             $this->loop->removeReadStream($this->stream);
-            $this->listening = false;
+            $this->listening = FALSE;
         }
     }
 
-    public function resume()
-    {
+    public function resume() {
         if (!$this->listening && $this->readable) {
             $this->loop->addReadStream($this->stream, array($this, 'handleData'));
-            $this->listening = true;
+            $this->listening = TRUE;
         }
     }
 
-    public function write($data)
-    {
+    public function write($data) {
         if (!$this->writable) {
-            return false;
+            return FALSE;
         }
 
         return $this->buffer->write($data);
     }
 
-    public function close()
-    {
+    public function close() {
         if (!$this->writable && !$this->closing) {
             return;
         }
 
-        $this->closing = false;
+        $this->closing = FALSE;
 
-        $this->readable = false;
-        $this->writable = false;
+        $this->readable = FALSE;
+        $this->writable = FALSE;
 
         $this->emit('close');
         $this->pause();
@@ -145,30 +138,27 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
         }
     }
 
-    public function end($data = null)
-    {
+    public function end($data = NULL) {
         if (!$this->writable) {
             return;
         }
 
-        $this->closing = true;
+        $this->closing = TRUE;
 
-        $this->readable = false;
-        $this->writable = false;
+        $this->readable = FALSE;
+        $this->writable = FALSE;
         $this->pause();
 
         $this->buffer->end($data);
     }
 
-    public function pipe(WritableStreamInterface $dest, array $options = array())
-    {
+    public function pipe(WritableStreamInterface $dest, array $options = array()) {
         return Util::pipe($this, $dest, $options);
     }
 
     /** @internal */
-    public function handleData($stream)
-    {
-        $error = null;
+    public function handleData($stream) {
+        $error = NULL;
         set_error_handler(function ($errno, $errstr, $errfile, $errline) use (&$error) {
             $error = new \ErrorException(
                 $errstr,
@@ -183,7 +173,7 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
 
         restore_error_handler();
 
-        if ($error !== null) {
+        if ($error !== NULL) {
             $this->emit('error', array(new \RuntimeException('Unable to read from stream: ' . $error->getMessage(), 0, $error)));
             $this->close();
             return;
@@ -191,7 +181,7 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
 
         if ($data !== '') {
             $this->emit('data', array($data));
-        } else{
+        } else {
             // no data read => we reached the end and close the stream
             $this->emit('end');
             $this->close();
@@ -210,15 +200,14 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
      *
      * @codeCoverageIgnore
      */
-    private function isLegacyPipe($resource)
-    {
+    private function isLegacyPipe($resource) {
         if (PHP_VERSION_ID < 50428 || (PHP_VERSION_ID >= 50500 && PHP_VERSION_ID < 50512)) {
             $meta = stream_get_meta_data($resource);
 
             if (isset($meta['stream_type']) && $meta['stream_type'] === 'STDIO') {
-                return true;
+                return TRUE;
             }
         }
-        return false;
+        return FALSE;
     }
 }

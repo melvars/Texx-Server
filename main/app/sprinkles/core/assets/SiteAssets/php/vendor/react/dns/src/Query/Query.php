@@ -9,8 +9,7 @@ class Query
     public $class;
     public $currentTime;
 
-    public function __construct($name, $type, $class, $currentTime)
-    {
+    public function __construct($name, $type, $class, $currentTime) {
         $this->name = $name;
         $this->type = $type;
         $this->class = $class;

@@ -5,8 +5,8 @@
  * Target page: /dashboard
  */
 
-$(document).ready(function() {
-    $('.js-clear-cache').click(function() {
+$(document).ready(function () {
+    $('.js-clear-cache').click(function () {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/dashboard/clear-cache",
             ajaxParams: {
@@ -20,10 +20,10 @@ $(document).ready(function() {
             var form = modal.find('.js-form');
 
             form.ufForm()
-            .on("submitSuccess.ufForm", function() {
-                // Reload page on success
-                window.location.reload();
-            });
+                .on("submitSuccess.ufForm", function () {
+                    // Reload page on success
+                    window.location.reload();
+                });
         });
     });
 

@@ -6,7 +6,7 @@
  *
  * Target page: account/sign-in
  */
-$(document).ready(function() {
+$(document).ready(function () {
     /**
      * If there is a redirect parameter in the query string, redirect to that page.
      * Otherwise, if there is a UF-Redirect header, redirect to that page.
@@ -33,7 +33,7 @@ $(document).ready(function() {
     $("#sign-in").ufForm({
         validators: page.validators.login,
         msgTarget: $("#alerts-page")
-    }).on("submitSuccess.ufForm", function(event, data, textStatus, jqXHR) {
+    }).on("submitSuccess.ufForm", function (event, data, textStatus, jqXHR) {
         if (localStorage.getItem("PrivateKey") === null && localStorage.getItem("🔒") === null) {
             // GENERATE KEYS
             var openpgp = window.openpgp;
@@ -59,7 +59,7 @@ $(document).ready(function() {
                 };
                 $.ajax({
                     type: 'POST',
-                    dataType : "json",
+                    dataType: "json",
                     url: site.uri.public + '/api/users/u/' + $("input[name=user_name]").val() + '/publickey',
                     data: data,
                     async: false

@@ -19,13 +19,12 @@ use Symfony\Component\Routing\RequestContext;
 
 class DumpedRedirectableUrlMatcherTest extends RedirectableUrlMatcherTest
 {
-    protected function getUrlMatcher(RouteCollection $routes, RequestContext $context = null)
-    {
+    protected function getUrlMatcher(RouteCollection $routes, RequestContext $context = NULL) {
         static $i = 0;
 
-        $class = 'DumpedRedirectableUrlMatcher'.++$i;
+        $class = 'DumpedRedirectableUrlMatcher' . ++$i;
         $dumper = new PhpMatcherDumper($routes);
-        eval('?>'.$dumper->dump(array('class' => $class, 'base_class' => 'Symfony\Component\Routing\Tests\Matcher\TestDumpedRedirectableUrlMatcher')));
+        eval('?>' . $dumper->dump(array('class' => $class, 'base_class' => 'Symfony\Component\Routing\Tests\Matcher\TestDumpedRedirectableUrlMatcher')));
 
         return $this->getMockBuilder($class)
             ->setConstructorArgs(array($context ?: new RequestContext()))
@@ -36,8 +35,7 @@ class DumpedRedirectableUrlMatcherTest extends RedirectableUrlMatcherTest
 
 class TestDumpedRedirectableUrlMatcher extends UrlMatcher implements RedirectableUrlMatcherInterface
 {
-    public function redirect($path, $route, $scheme = null)
-    {
+    public function redirect($path, $route, $scheme = NULL) {
         return array();
     }
 }

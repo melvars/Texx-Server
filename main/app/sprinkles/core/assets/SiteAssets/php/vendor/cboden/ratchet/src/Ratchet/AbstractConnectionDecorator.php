@@ -1,4 +1,5 @@
 <?php
+
 namespace Ratchet;
 
 /**
@@ -6,7 +7,8 @@ namespace Ratchet;
  * parameters to bubble through with magic methods
  * @todo It sure would be nice if I could make most of this a trait...
  */
-abstract class AbstractConnectionDecorator implements ConnectionInterface {
+abstract class AbstractConnectionDecorator implements ConnectionInterface
+{
     /**
      * @var ConnectionInterface
      */

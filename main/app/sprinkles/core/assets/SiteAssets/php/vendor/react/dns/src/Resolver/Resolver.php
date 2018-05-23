@@ -12,14 +12,12 @@ class Resolver
     private $nameserver;
     private $executor;
 
-    public function __construct($nameserver, ExecutorInterface $executor)
-    {
+    public function __construct($nameserver, ExecutorInterface $executor) {
         $this->nameserver = $nameserver;
         $this->executor = $executor;
     }
 
-    public function resolve($domain)
-    {
+    public function resolve($domain) {
         $query = new Query($domain, Message::TYPE_A, Message::CLASS_IN, time());
         $that = $this;
 
@@ -30,8 +28,7 @@ class Resolver
             });
     }
 
-    public function extractAddress(Query $query, Message $response)
-    {
+    public function extractAddress(Query $query, Message $response) {
         $answers = $response->answers;
 
         $addresses = $this->resolveAliases($answers, $query->name);
@@ -45,8 +42,7 @@ class Resolver
         return $address;
     }
 
-    public function resolveAliases(array $answers, $name)
-    {
+    public function resolveAliases(array $answers, $name) {
         $named = $this->filterByName($answers, $name);
         $aRecords = $this->filterByType($named, Message::TYPE_A);
         $cnameRecords = $this->filterByType($named, Message::TYPE_CNAME);
@@ -73,26 +69,22 @@ class Resolver
         return array();
     }
 
-    private function filterByName(array $answers, $name)
-    {
+    private function filterByName(array $answers, $name) {
         return $this->filterByField($answers, 'name', $name);
     }
 
-    private function filterByType(array $answers, $type)
-    {
+    private function filterByType(array $answers, $type) {
         return $this->filterByField($answers, 'type', $type);
     }
 
-    private function filterByField(array $answers, $field, $value)
-    {
+    private function filterByField(array $answers, $field, $value) {
         $value = strtolower($value);
         return array_filter($answers, function ($answer) use ($field, $value) {
             return $value === strtolower($answer->$field);
         });
     }
 
-    private function mapRecordData(array $records)
-    {
+    private function mapRecordData(array $records) {
         return array_map(function ($record) {
             return $record->data;
         }, $records);

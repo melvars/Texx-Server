@@ -4,7 +4,6 @@ namespace React\Tests\Stream;
 
 class CallableStub
 {
-    public function __invoke()
-    {
+    public function __invoke() {
     }
 }

@@ -20,8 +20,7 @@ class Parser
      * @throws InvalidArgumentException
      * @return Message
      */
-    public function parseMessage($data)
-    {
+    public function parseMessage($data) {
         $message = new Message();
         if ($this->parse($data, $message) !== $message) {
             throw new InvalidArgumentException('Unable to parse binary message');
@@ -33,13 +32,11 @@ class Parser
     /**
      * @deprecated unused, exists for BC only
      */
-    public function parseChunk($data, Message $message)
-    {
+    public function parseChunk($data, Message $message) {
         return $this->parse($data, $message);
     }
 
-    private function parse($data, Message $message)
-    {
+    private function parse($data, Message $message) {
         $message->data .= $data;
 
         if (!$message->header->get('id')) {
@@ -63,8 +60,7 @@ class Parser
         return $message;
     }
 
-    public function parseHeader(Message $message)
-    {
+    public function parseHeader(Message $message) {
         if (strlen($message->data) < 12) {
             return;
         }
@@ -84,7 +80,7 @@ class Parser
         $qr = ($fields >> 15) & 1;
 
         $vars = compact('id', 'qdCount', 'anCount', 'nsCount', 'arCount',
-                            'qr', 'opcode', 'aa', 'tc', 'rd', 'ra', 'z', 'rcode');
+            'qr', 'opcode', 'aa', 'tc', 'rd', 'ra', 'z', 'rcode');
 
 
         foreach ($vars as $name => $value) {
@@ -94,8 +90,7 @@ class Parser
         return $message;
     }
 
-    public function parseQuestion(Message $message)
-    {
+    public function parseQuestion(Message $message) {
         if (strlen($message->data) < 2) {
             return;
         }
@@ -104,7 +99,7 @@ class Parser
 
         list($labels, $consumed) = $this->readLabels($message->data, $consumed);
 
-        if (null === $labels) {
+        if (NULL === $labels) {
             return;
         }
 
@@ -130,8 +125,7 @@ class Parser
         return $message;
     }
 
-    public function parseAnswer(Message $message)
-    {
+    public function parseAnswer(Message $message) {
         if (strlen($message->data) < 2) {
             return;
         }
@@ -140,7 +134,7 @@ class Parser
 
         list($labels, $consumed) = $this->readLabels($message->data, $consumed);
 
-        if (null === $labels) {
+        if (NULL === $labels) {
             return;
         }
 
@@ -157,7 +151,7 @@ class Parser
         list($rdLength) = array_values(unpack('n', substr($message->data, $consumed, 2)));
         $consumed += 2;
 
-        $rdata = null;
+        $rdata = NULL;
 
         if (Message::TYPE_A === $type || Message::TYPE_AAAA === $type) {
             $ip = substr($message->data, $consumed, $rdLength);
@@ -187,11 +181,10 @@ class Parser
         return $message;
     }
 
-    private function readLabels($data, $consumed)
-    {
+    private function readLabels($data, $consumed) {
         $labels = array();
 
-        while (true) {
+        while (TRUE) {
             if ($this->isEndOfLabels($data, $consumed)) {
                 $consumed += 1;
                 break;
@@ -207,7 +200,7 @@ class Parser
             $consumed += 1;
 
             if (strlen($data) - $consumed < $length) {
-                return array(null, null);
+                return array(NULL, NULL);
             }
 
             $labels[] = substr($data, $consumed, $length);
@@ -217,38 +210,33 @@ class Parser
         return array($labels, $consumed);
     }
 
-    public function isEndOfLabels($data, $consumed)
-    {
+    public function isEndOfLabels($data, $consumed) {
         $length = ord(substr($data, $consumed, 1));
         return 0 === $length;
     }
 
-    public function getCompressedLabel($data, $consumed)
-    {
+    public function getCompressedLabel($data, $consumed) {
         list($nameOffset, $consumed) = $this->getCompressedLabelOffset($data, $consumed);
         list($labels) = $this->readLabels($data, $nameOffset);
 
         return array($labels, $consumed);
     }
 
-    public function isCompressedLabel($data, $consumed)
-    {
+    public function isCompressedLabel($data, $consumed) {
         $mask = 0xc000; // 1100000000000000
         list($peek) = array_values(unpack('n', substr($data, $consumed, 2)));
 
-        return (bool) ($peek & $mask);
+        return (bool)($peek & $mask);
     }
 
-    public function getCompressedLabelOffset($data, $consumed)
-    {
+    public function getCompressedLabelOffset($data, $consumed) {
         $mask = 0x3fff; // 0011111111111111
         list($peek) = array_values(unpack('n', substr($data, $consumed, 2)));
 
         return array($peek & $mask, $consumed + 2);
     }
 
-    public function signedLongToUnsignedLong($i)
-    {
+    public function signedLongToUnsignedLong($i) {
         return $i & 0x80000000 ? $i - 0xffffffff : $i;
     }
 }

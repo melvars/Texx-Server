@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Tests\Unit;
 
 use stdClass;
@@ -20,16 +21,14 @@ use UserFrosting\Sprinkle\Core\Database\Relations\HasManySyncable;
 
 class DatabaseSyncableTest extends TestCase
 {
-    public function tearDown()
-    {
+    public function tearDown() {
         m::close();
     }
 
     /**
      * @dataProvider syncMethodHasManyListProvider
      */
-    public function testSyncMethod($list)
-    {
+    public function testSyncMethod($list) {
         $relation = $this->getRelation();
 
         // Simulate determination of related key from builder
@@ -58,15 +57,14 @@ class DatabaseSyncableTest extends TestCase
             'id' => 'x'
         ]);
         $model->shouldReceive('getAttribute')->with('id')->andReturn('x');
-        
-        $this->assertEquals(['created' => ['x'], 'deleted' => [1], 'updated' => [2,3]], $relation->sync($list));
+
+        $this->assertEquals(['created' => ['x'], 'deleted' => [1], 'updated' => [2, 3]], $relation->sync($list));
     }
 
     /**
      * Set up and simulate base expectations for arguments to relationship.
      */
-    protected function getRelation()
-    {
+    protected function getRelation() {
         $builder = m::mock('Illuminate\Database\Eloquent\Builder');
         $builder->shouldReceive('whereNotNull')->with('table.foreign_key');
         $builder->shouldReceive('where')->with('table.foreign_key', '=', 1);
@@ -79,8 +77,7 @@ class DatabaseSyncableTest extends TestCase
         return new HasManySyncable($builder, $parent, 'table.foreign_key', 'id');
     }
 
-    public function syncMethodHasManyListProvider()
-    {
+    public function syncMethodHasManyListProvider() {
         return [
             // First test set
             [
@@ -103,15 +100,13 @@ class DatabaseSyncableTest extends TestCase
         ];
     }
 
-    protected function expectNewModel($relation, $attributes = null)
-    {
+    protected function expectNewModel($relation, $attributes = NULL) {
         $relation->getRelated()->shouldReceive('newInstance')->once()->with($attributes)->andReturn($model = m::mock(Model::class));
         $model->shouldReceive('setAttribute')->with('foreign_key', 1)->andReturn($model);
         return $model;
     }
 
-    protected function expectCreatedModel($relation, $attributes)
-    {
+    protected function expectCreatedModel($relation, $attributes) {
         $model = $this->expectNewModel($relation, $attributes);
         $model->shouldReceive('save')->andReturn($model);
         return $model;

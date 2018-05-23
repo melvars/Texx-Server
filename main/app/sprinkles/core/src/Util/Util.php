@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Util;
 
 /**
@@ -24,8 +25,7 @@ class Util
      * @param bool $remove
      * @return mixed[]
      */
-    static public function extractFields(&$inputArray, $fieldArray, $remove = true)
-    {
+    static public function extractFields(&$inputArray, $fieldArray, $remove = TRUE) {
         $result = [];
 
         foreach ($fieldArray as $name) {
@@ -48,8 +48,7 @@ class Util
      * @param string $str
      * @return string
      */
-    static public function extractDigits($str)
-    {
+    static public function extractDigits($str) {
         return preg_replace('/[^0-9]/', '', $str);
     }
 
@@ -59,15 +58,14 @@ class Util
      * @param string $phone
      * @return string
      */
-    static public function formatPhoneNumber($phone)
-    {
+    static public function formatPhoneNumber($phone) {
         $num = static::extractDigits($phone);
 
         $len = strlen($num);
 
         if ($len == 7) {
             $num = preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $num);
-        } elseif ($len == 10) {
+        } else if ($len == 10) {
             $num = preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $num);
         }
 
@@ -81,13 +79,12 @@ class Util
      * @param array $arr
      * @return string
      */
-    static public function prettyPrintArray(array $arr)
-    {
+    static public function prettyPrintArray(array $arr) {
         $json = json_encode($arr);
         $result = '';
         $level = 0;
-        $inQuotes = false;
-        $inEscape = false;
+        $inQuotes = FALSE;
+        $inEscape = FALSE;
         $endsLineLevel = NULL;
         $jsonLength = strlen($json);
 
@@ -100,18 +97,20 @@ class Util
                 $endsLineLevel = NULL;
             }
             if ($inEscape) {
-                $inEscape = false;
-            } elseif ($char === '"') {
+                $inEscape = FALSE;
+            } else if ($char === '"') {
                 $inQuotes = !$inQuotes;
-            } elseif (!$inQuotes) {
+            } else if (!$inQuotes) {
                 switch ($char) {
-                    case '}': case ']':
+                    case '}':
+                    case ']':
                         $level--;
                         $endsLineLevel = NULL;
                         $newLineLevel = $level;
                         break;
 
-                    case '{': case '[':
+                    case '{':
+                    case '[':
                         $level++;
 
                     case ',':
@@ -122,21 +121,24 @@ class Util
                         $post = ' ';
                         break;
 
-                    case ' ': case '\t': case '\n': case '\r':
+                    case ' ':
+                    case '\t':
+                    case '\n':
+                    case '\r':
                         $char = '';
                         $endsLineLevel = $newLineLevel;
                         $newLineLevel = NULL;
                         break;
                 }
-            } elseif ($char === '\\') {
-                $inEscape = true;
+            } else if ($char === '\\') {
+                $inEscape = TRUE;
             }
 
             if ($newLineLevel !== NULL) {
-                $result .= '<br>'.str_repeat( '&nbsp;&nbsp;', $newLineLevel);
+                $result .= '<br>' . str_repeat('&nbsp;&nbsp;', $newLineLevel);
             }
 
-            $result .= $char.$post;
+            $result .= $char . $post;
         }
 
         return $result;
@@ -151,8 +153,7 @@ class Util
      * @param string $separator
      * @return string
      */
-    static public function randomPhrase($numAdjectives, $maxLength = 9999999, $maxTries = 10, $separator = '-')
-    {
+    static public function randomPhrase($numAdjectives, $maxLength = 9999999, $maxTries = 10, $separator = '-') {
         $adjectives = include('extra://adjectives.php');
         $nouns = include('extra://nouns.php');
 

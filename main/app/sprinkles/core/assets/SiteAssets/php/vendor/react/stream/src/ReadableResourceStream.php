@@ -35,13 +35,12 @@ final class ReadableResourceStream extends EventEmitter implements ReadableStrea
      */
     private $bufferSize;
 
-    private $closed = false;
-    private $listening = false;
+    private $closed = FALSE;
+    private $listening = FALSE;
 
-    public function __construct($stream, LoopInterface $loop, $readChunkSize = null)
-    {
+    public function __construct($stream, LoopInterface $loop, $readChunkSize = NULL) {
         if (!is_resource($stream) || get_resource_type($stream) !== "stream") {
-             throw new InvalidArgumentException('First parameter must be a valid stream resource');
+            throw new InvalidArgumentException('First parameter must be a valid stream resource');
         }
 
         // ensure resource is opened for reading (fopen mode must contain "r" or "+")
@@ -52,7 +51,7 @@ final class ReadableResourceStream extends EventEmitter implements ReadableStrea
 
         // this class relies on non-blocking I/O in order to not interrupt the event loop
         // e.g. pipes on Windows do not support this: https://bugs.php.net/bug.php?id=47918
-        if (stream_set_blocking($stream, 0) !== true) {
+        if (stream_set_blocking($stream, 0) !== TRUE) {
             throw new \RuntimeException('Unable to set stream resource to non-blocking mode');
         }
 
@@ -70,44 +69,39 @@ final class ReadableResourceStream extends EventEmitter implements ReadableStrea
 
         $this->stream = $stream;
         $this->loop = $loop;
-        $this->bufferSize = ($readChunkSize === null) ? 65536 : (int)$readChunkSize;
+        $this->bufferSize = ($readChunkSize === NULL) ? 65536 : (int)$readChunkSize;
 
         $this->resume();
     }
 
-    public function isReadable()
-    {
+    public function isReadable() {
         return !$this->closed;
     }
 
-    public function pause()
-    {
+    public function pause() {
         if ($this->listening) {
             $this->loop->removeReadStream($this->stream);
-            $this->listening = false;
+            $this->listening = FALSE;
         }
     }
 
-    public function resume()
-    {
+    public function resume() {
         if (!$this->listening && !$this->closed) {
             $this->loop->addReadStream($this->stream, array($this, 'handleData'));
-            $this->listening = true;
+            $this->listening = TRUE;
         }
     }
 
-    public function pipe(WritableStreamInterface $dest, array $options = array())
-    {
+    public function pipe(WritableStreamInterface $dest, array $options = array()) {
         return Util::pipe($this, $dest, $options);
     }
 
-    public function close()
-    {
+    public function close() {
         if ($this->closed) {
             return;
         }
 
-        $this->closed = true;
+        $this->closed = TRUE;
 
         $this->emit('close');
         $this->pause();
@@ -119,9 +113,8 @@ final class ReadableResourceStream extends EventEmitter implements ReadableStrea
     }
 
     /** @internal */
-    public function handleData()
-    {
-        $error = null;
+    public function handleData() {
+        $error = NULL;
         set_error_handler(function ($errno, $errstr, $errfile, $errline) use (&$error) {
             $error = new \ErrorException(
                 $errstr,
@@ -136,7 +129,7 @@ final class ReadableResourceStream extends EventEmitter implements ReadableStrea
 
         restore_error_handler();
 
-        if ($error !== null) {
+        if ($error !== NULL) {
             $this->emit('error', array(new \RuntimeException('Unable to read from stream: ' . $error->getMessage(), 0, $error)));
             $this->close();
             return;
@@ -144,7 +137,7 @@ final class ReadableResourceStream extends EventEmitter implements ReadableStrea
 
         if ($data !== '') {
             $this->emit('data', array($data));
-        } else{
+        } else {
             // no data read => we reached the end and close the stream
             $this->emit('end');
             $this->close();
@@ -163,15 +156,14 @@ final class ReadableResourceStream extends EventEmitter implements ReadableStrea
      *
      * @codeCoverageIgnore
      */
-    private function isLegacyPipe($resource)
-    {
+    private function isLegacyPipe($resource) {
         if (PHP_VERSION_ID < 50428 || (PHP_VERSION_ID >= 50500 && PHP_VERSION_ID < 50512)) {
             $meta = stream_get_meta_data($resource);
 
             if (isset($meta['stream_type']) && $meta['stream_type'] === 'STDIO') {
-                return true;
+                return TRUE;
             }
         }
-        return false;
+        return FALSE;
     }
 }

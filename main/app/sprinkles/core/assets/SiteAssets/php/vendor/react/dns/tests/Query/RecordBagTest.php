@@ -10,22 +10,20 @@ use React\Dns\Model\Record;
 class RecordBagTest extends TestCase
 {
     /**
-    * @covers React\Dns\Query\RecordBag
-    * @test
-    */
-    public function emptyBagShouldBeEmpty()
-    {
+     * @covers React\Dns\Query\RecordBag
+     * @test
+     */
+    public function emptyBagShouldBeEmpty() {
         $recordBag = new RecordBag();
 
         $this->assertSame(array(), $recordBag->all());
     }
 
     /**
-    * @covers React\Dns\Query\RecordBag
-    * @test
-    */
-    public function setShouldSetTheValue()
-    {
+     * @covers React\Dns\Query\RecordBag
+     * @test
+     */
+    public function setShouldSetTheValue() {
         $currentTime = 1345656451;
 
         $recordBag = new RecordBag();
@@ -39,11 +37,10 @@ class RecordBagTest extends TestCase
     }
 
     /**
-    * @covers React\Dns\Query\RecordBag
-    * @test
-    */
-    public function setShouldSetManyValues()
-    {
+     * @covers React\Dns\Query\RecordBag
+     * @test
+     */
+    public function setShouldSetManyValues() {
         $currentTime = 1345656451;
 
         $recordBag = new RecordBag();

@@ -15,8 +15,7 @@ class CachedExecutorTest extends TestCase
      * @covers React\Dns\Query\CachedExecutor
      * @test
      */
-    public function queryShouldDelegateToDecoratedExecutor()
-    {
+    public function queryShouldDelegateToDecoratedExecutor() {
         $executor = $this->createExecutorMock();
         $executor
             ->expects($this->once())
@@ -41,8 +40,7 @@ class CachedExecutorTest extends TestCase
      * @covers React\Dns\Query\CachedExecutor
      * @test
      */
-    public function callingQueryTwiceShouldUseCachedResult()
-    {
+    public function callingQueryTwiceShouldUseCachedResult() {
         $cachedRecords = array(new Record('igor.io', Message::TYPE_A, Message::CLASS_IN));
 
         $executor = $this->createExecutorMock();
@@ -72,12 +70,15 @@ class CachedExecutorTest extends TestCase
         $cachedExecutor = new CachedExecutor($executor, $cache);
 
         $query = new Query('igor.io', Message::TYPE_A, Message::CLASS_IN, 1345656451);
-        $cachedExecutor->query('8.8.8.8', $query, function () {}, function () {});
-        $cachedExecutor->query('8.8.8.8', $query, function () {}, function () {});
+        $cachedExecutor->query('8.8.8.8', $query, function () {
+        }, function () {
+        });
+        $cachedExecutor->query('8.8.8.8', $query, function () {
+        }, function () {
+        });
     }
 
-    private function callQueryCallbackWithAddress($address)
-    {
+    private function callQueryCallbackWithAddress($address) {
         return $this->returnCallback(function ($nameserver, $query) use ($address) {
             $response = new Message();
             $response->header->set('qr', 1);
@@ -88,13 +89,11 @@ class CachedExecutorTest extends TestCase
         });
     }
 
-    private function createExecutorMock()
-    {
+    private function createExecutorMock() {
         return $this->getMockBuilder('React\Dns\Query\ExecutorInterface')->getMock();
     }
 
-    private function createPromiseMock()
-    {
+    private function createPromiseMock() {
         return $this->getMockBuilder('React\Promise\PromiseInterface')->getMock();
     }
 }

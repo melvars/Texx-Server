@@ -20,8 +20,7 @@ class AsseticExtension extends \Twig_Extension implements \Twig_Extension_Global
     protected $functions;
     protected $valueSupplier;
 
-    public function __construct(AssetFactory $factory, $functions = array(), ValueSupplierInterface $valueSupplier = null)
-    {
+    public function __construct(AssetFactory $factory, $functions = array(), ValueSupplierInterface $valueSupplier = NULL) {
         $this->factory = $factory;
         $this->functions = array();
         $this->valueSupplier = $valueSupplier;
@@ -35,17 +34,15 @@ class AsseticExtension extends \Twig_Extension implements \Twig_Extension_Global
         }
     }
 
-    public function getTokenParsers()
-    {
+    public function getTokenParsers() {
         return array(
             new AsseticTokenParser($this->factory, 'javascripts', 'js/*.js'),
             new AsseticTokenParser($this->factory, 'stylesheets', 'css/*.css'),
-            new AsseticTokenParser($this->factory, 'image', 'images/*', true),
+            new AsseticTokenParser($this->factory, 'image', 'images/*', TRUE),
         );
     }
 
-    public function getFunctions()
-    {
+    public function getFunctions() {
         $functions = array();
         foreach ($this->functions as $function => $filter) {
             $functions[] = new AsseticFilterFunction($function);
@@ -54,23 +51,20 @@ class AsseticExtension extends \Twig_Extension implements \Twig_Extension_Global
         return $functions;
     }
 
-    public function getGlobals()
-    {
+    public function getGlobals() {
         return array(
             'assetic' => array(
                 'debug' => $this->factory->isDebug(),
-                'vars'  => null !== $this->valueSupplier ? new ValueContainer($this->valueSupplier) : array(),
+                'vars' => NULL !== $this->valueSupplier ? new ValueContainer($this->valueSupplier) : array(),
             ),
         );
     }
 
-    public function getFilterInvoker($function)
-    {
+    public function getFilterInvoker($function) {
         return new AsseticFilterInvoker($this->factory, $this->functions[$function]);
     }
 
-    public function getName()
-    {
+    public function getName() {
         return 'assetic';
     }
 }

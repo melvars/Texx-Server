@@ -20,8 +20,7 @@ class DirectoryLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function load($file, $type = null)
-    {
+    public function load($file, $type = NULL) {
         $path = $this->locator->locate($file);
 
         $collection = new RouteCollection();
@@ -30,15 +29,15 @@ class DirectoryLoader extends FileLoader
         foreach (scandir($path) as $dir) {
             if ('.' !== $dir[0]) {
                 $this->setCurrentDir($path);
-                $subPath = $path.'/'.$dir;
-                $subType = null;
+                $subPath = $path . '/' . $dir;
+                $subType = NULL;
 
                 if (is_dir($subPath)) {
                     $subPath .= '/';
                     $subType = 'directory';
                 }
 
-                $subCollection = $this->import($subPath, $subType, false, $path);
+                $subCollection = $this->import($subPath, $subType, FALSE, $path);
                 $collection->addCollection($subCollection);
             }
         }
@@ -49,8 +48,7 @@ class DirectoryLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
-    {
+    public function supports($resource, $type = NULL) {
         // only when type is forced to directory, not to conflict with AnnotationLoader
 
         return 'directory' === $type;

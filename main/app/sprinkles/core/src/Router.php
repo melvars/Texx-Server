@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core;
 
 use FastRoute\Dispatcher;
@@ -38,15 +39,14 @@ class Router extends \Slim\Router implements RouterInterface
      * Add route
      *
      * @param  string[] $methods Array of HTTP methods
-     * @param  string   $pattern The route pattern
+     * @param  string $pattern The route pattern
      * @param  callable $handler The route callable
      *
      * @return RouteInterface
      *
      * @throws InvalidArgumentException if the route pattern isn't a string
      */
-    public function map($methods, $pattern, $handler)
-    {
+    public function map($methods, $pattern, $handler) {
         if (!is_string($pattern)) {
             throw new InvalidArgumentException('Route pattern must be a string');
         }
@@ -85,8 +85,7 @@ class Router extends \Slim\Router implements RouterInterface
      * @access public
      * @return bool true/false if operation is successfull
      */
-    public function clearCache()
-    {
+    public function clearCache() {
         // Get Filesystem instance
         $fs = new FileSystem;
 
@@ -96,6 +95,6 @@ class Router extends \Slim\Router implements RouterInterface
         }
 
         // It's still considered a success if file doesn't exist
-        return true;
+        return TRUE;
     }
 }

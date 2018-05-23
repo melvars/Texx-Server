@@ -6,7 +6,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 class MemberAux extends Model
 {
-    public $timestamps = false;
+    public $timestamps = FALSE;
 
     /**
      * @var string The name of the table for the current model.

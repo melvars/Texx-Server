@@ -33,29 +33,25 @@ class AutoprefixerFilter extends BaseNodeFilter
      */
     private $browsers = array();
 
-    public function __construct($autoprefixerBin)
-    {
+    public function __construct($autoprefixerBin) {
         $this->autoprefixerBin = $autoprefixerBin;
     }
 
     /**
      * @param array $browsers
      */
-    public function setBrowsers(array $browsers)
-    {
+    public function setBrowsers(array $browsers) {
         $this->browsers = $browsers;
     }
 
     /**
      * @param string $browser
      */
-    public function addBrowser($browser)
-    {
+    public function addBrowser($browser) {
         $this->browsers[] = $browser;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $input = $asset->getContent();
         $pb = $this->createProcessBuilder(array($this->autoprefixerBin));
 
@@ -81,7 +77,6 @@ class AutoprefixerFilter extends BaseNodeFilter
      *
      * @param AssetInterface $asset An asset
      */
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 }

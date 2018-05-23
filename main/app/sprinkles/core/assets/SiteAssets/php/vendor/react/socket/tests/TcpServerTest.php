@@ -13,8 +13,7 @@ class TcpServerTest extends TestCase
     private $server;
     private $port;
 
-    private function createLoop()
-    {
+    private function createLoop() {
         return Factory::create();
     }
 
@@ -22,8 +21,7 @@ class TcpServerTest extends TestCase
      * @covers React\Socket\TcpServer::__construct
      * @covers React\Socket\TcpServer::getAddress
      */
-    public function setUp()
-    {
+    public function setUp() {
         $this->loop = $this->createLoop();
         $this->server = new TcpServer(0, $this->loop);
 
@@ -33,9 +31,8 @@ class TcpServerTest extends TestCase
     /**
      * @covers React\Socket\TcpServer::handleConnection
      */
-    public function testConnection()
-    {
-        $client = stream_socket_client('tcp://localhost:'.$this->port);
+    public function testConnection() {
+        $client = stream_socket_client('tcp://localhost:' . $this->port);
 
         $this->server->on('connection', $this->expectCallableOnce());
 
@@ -45,11 +42,10 @@ class TcpServerTest extends TestCase
     /**
      * @covers React\Socket\TcpServer::handleConnection
      */
-    public function testConnectionWithManyClients()
-    {
-        $client1 = stream_socket_client('tcp://localhost:'.$this->port);
-        $client2 = stream_socket_client('tcp://localhost:'.$this->port);
-        $client3 = stream_socket_client('tcp://localhost:'.$this->port);
+    public function testConnectionWithManyClients() {
+        $client1 = stream_socket_client('tcp://localhost:' . $this->port);
+        $client2 = stream_socket_client('tcp://localhost:' . $this->port);
+        $client3 = stream_socket_client('tcp://localhost:' . $this->port);
 
         $this->server->on('connection', $this->expectCallableExactly(3));
         $this->tick();
@@ -57,9 +53,8 @@ class TcpServerTest extends TestCase
         $this->tick();
     }
 
-    public function testDataEventWillNotBeEmittedWhenClientSendsNoData()
-    {
-        $client = stream_socket_client('tcp://localhost:'.$this->port);
+    public function testDataEventWillNotBeEmittedWhenClientSendsNoData() {
+        $client = stream_socket_client('tcp://localhost:' . $this->port);
 
         $mock = $this->expectCallableNever();
 
@@ -70,9 +65,8 @@ class TcpServerTest extends TestCase
         $this->tick();
     }
 
-    public function testDataWillBeEmittedWithDataClientSends()
-    {
-        $client = stream_socket_client('tcp://localhost:'.$this->port);
+    public function testDataWillBeEmittedWithDataClientSends() {
+        $client = stream_socket_client('tcp://localhost:' . $this->port);
 
         fwrite($client, "foo\n");
 
@@ -85,8 +79,7 @@ class TcpServerTest extends TestCase
         $this->tick();
     }
 
-    public function testDataWillBeEmittedEvenWhenClientShutsDownAfterSending()
-    {
+    public function testDataWillBeEmittedEvenWhenClientShutsDownAfterSending() {
         $client = stream_socket_client('tcp://localhost:' . $this->port);
         fwrite($client, "foo\n");
         stream_socket_shutdown($client, STREAM_SHUT_WR);
@@ -100,41 +93,37 @@ class TcpServerTest extends TestCase
         $this->tick();
     }
 
-    public function testLoopWillEndWhenServerIsClosed()
-    {
+    public function testLoopWillEndWhenServerIsClosed() {
         // explicitly unset server because we already call close()
         $this->server->close();
-        $this->server = null;
+        $this->server = NULL;
 
         $this->loop->run();
 
         // if we reach this, then everything is good
-        $this->assertNull(null);
+        $this->assertNull(NULL);
     }
 
-    public function testCloseTwiceIsNoOp()
-    {
+    public function testCloseTwiceIsNoOp() {
         $this->server->close();
         $this->server->close();
 
         // if we reach this, then everything is good
-        $this->assertNull(null);
+        $this->assertNull(NULL);
     }
 
-    public function testGetAddressAfterCloseReturnsNull()
-    {
+    public function testGetAddressAfterCloseReturnsNull() {
         $this->server->close();
         $this->assertNull($this->server->getAddress());
     }
 
-    public function testLoopWillEndWhenServerIsClosedAfterSingleConnection()
-    {
+    public function testLoopWillEndWhenServerIsClosedAfterSingleConnection() {
         $client = stream_socket_client('tcp://localhost:' . $this->port);
 
         // explicitly unset server because we only accept a single connection
         // and then already call close()
         $server = $this->server;
-        $this->server = null;
+        $this->server = NULL;
 
         $server->on('connection', function ($conn) use ($server) {
             $conn->close();
@@ -144,11 +133,10 @@ class TcpServerTest extends TestCase
         $this->loop->run();
 
         // if we reach this, then everything is good
-        $this->assertNull(null);
+        $this->assertNull(NULL);
     }
 
-    public function testDataWillBeEmittedInMultipleChunksWhenClientSendsExcessiveAmounts()
-    {
+    public function testDataWillBeEmittedInMultipleChunksWhenClientSendsExcessiveAmounts() {
         $client = stream_socket_client('tcp://localhost:' . $this->port);
         $stream = new DuplexResourceStream($client, $this->loop);
 
@@ -160,7 +148,7 @@ class TcpServerTest extends TestCase
         // explicitly unset server because we only accept a single connection
         // and then already call close()
         $server = $this->server;
-        $this->server = null;
+        $this->server = NULL;
 
         $received = 0;
         $server->on('connection', function ($conn) use ($mock, &$received, $server) {
@@ -180,9 +168,8 @@ class TcpServerTest extends TestCase
         $this->assertEquals($bytes, $received);
     }
 
-    public function testConnectionDoesNotEndWhenClientDoesNotClose()
-    {
-        $client = stream_socket_client('tcp://localhost:'.$this->port);
+    public function testConnectionDoesNotEndWhenClientDoesNotClose() {
+        $client = stream_socket_client('tcp://localhost:' . $this->port);
 
         $mock = $this->expectCallableNever();
 
@@ -196,9 +183,8 @@ class TcpServerTest extends TestCase
     /**
      * @covers React\Socket\Connection::end
      */
-    public function testConnectionDoesEndWhenClientCloses()
-    {
-        $client = stream_socket_client('tcp://localhost:'.$this->port);
+    public function testConnectionDoesEndWhenClientCloses() {
+        $client = stream_socket_client('tcp://localhost:' . $this->port);
 
         fclose($client);
 
@@ -211,16 +197,14 @@ class TcpServerTest extends TestCase
         $this->tick();
     }
 
-    public function testCtorAddsResourceToLoop()
-    {
+    public function testCtorAddsResourceToLoop() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('addReadStream');
 
         $server = new TcpServer(0, $loop);
     }
 
-    public function testResumeWithoutPauseIsNoOp()
-    {
+    public function testResumeWithoutPauseIsNoOp() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('addReadStream');
 
@@ -228,8 +212,7 @@ class TcpServerTest extends TestCase
         $server->resume();
     }
 
-    public function testPauseRemovesResourceFromLoop()
-    {
+    public function testPauseRemovesResourceFromLoop() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('removeReadStream');
 
@@ -237,8 +220,7 @@ class TcpServerTest extends TestCase
         $server->pause();
     }
 
-    public function testPauseAfterPauseIsNoOp()
-    {
+    public function testPauseAfterPauseIsNoOp() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('removeReadStream');
 
@@ -247,8 +229,7 @@ class TcpServerTest extends TestCase
         $server->pause();
     }
 
-    public function testCloseRemovesResourceFromLoop()
-    {
+    public function testCloseRemovesResourceFromLoop() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('removeReadStream');
 
@@ -259,8 +240,7 @@ class TcpServerTest extends TestCase
     /**
      * @expectedException RuntimeException
      */
-    public function testListenOnBusyPortThrows()
-    {
+    public function testListenOnBusyPortThrows() {
         if (DIRECTORY_SEPARATOR === '\\') {
             $this->markTestSkipped('Windows supports listening on same port multiple times');
         }
@@ -271,15 +251,13 @@ class TcpServerTest extends TestCase
     /**
      * @covers React\Socket\TcpServer::close
      */
-    public function tearDown()
-    {
+    public function tearDown() {
         if ($this->server) {
             $this->server->close();
         }
     }
 
-    private function tick()
-    {
+    private function tick() {
         Block\sleep(0, $this->loop);
     }
 }

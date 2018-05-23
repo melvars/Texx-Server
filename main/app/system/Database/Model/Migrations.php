@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Database\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -29,7 +30,7 @@ class Migrations extends Model
     /**
      * @var bool Enable timestamps for this class.
      */
-    public $timestamps = true;
+    public $timestamps = TRUE;
 
     /**
      * @var array List of fields that can be edited by this model
@@ -48,8 +49,7 @@ class Migrations extends Model
      * @param string $sprinkleName
      * @return void
      */
-    protected function scopeForSprinkle($query, $sprinkleName)
-    {
+    protected function scopeForSprinkle($query, $sprinkleName) {
         return $query->where('sprinkle', $sprinkleName);
     }
 }

@@ -22,16 +22,14 @@ abstract class MatcherDumper implements MatcherDumperInterface
 {
     private $routes;
 
-    public function __construct(RouteCollection $routes)
-    {
+    public function __construct(RouteCollection $routes) {
         $this->routes = $routes;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRoutes()
-    {
+    public function getRoutes() {
         return $this->routes;
     }
 }

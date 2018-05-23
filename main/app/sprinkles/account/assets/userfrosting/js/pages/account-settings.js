@@ -6,7 +6,7 @@
  *
  * Target page: account/settings
  */
-$(document).ready(function() {
+$(document).ready(function () {
 
     // Apply select2 to locale field
     $('.js-select2').select2();
@@ -14,7 +14,7 @@ $(document).ready(function() {
     $("#account-settings").ufForm({
         validators: page.validators.account_settings,
         msgTarget: $("#alerts-page")
-    }).on("submitSuccess.ufForm", function() {
+    }).on("submitSuccess.ufForm", function () {
         // Reload the page on success
         window.location.reload();
     });
@@ -22,7 +22,7 @@ $(document).ready(function() {
     $("#profile-settings").ufForm({
         validators: page.validators.profile_settings,
         msgTarget: $("#alerts-page")
-    }).on("submitSuccess.ufForm", function() {
+    }).on("submitSuccess.ufForm", function () {
         // Reload the page on success
         window.location.reload();
     });

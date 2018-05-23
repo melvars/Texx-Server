@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System;
 
 use Interop\Container\ContainerInterface;
@@ -27,8 +28,7 @@ class ServicesProvider
      *
      * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
      */
-    public function register(ContainerInterface $container)
-    {
+    public function register(ContainerInterface $container) {
         /**
          * Set up the event dispatcher, required by Sprinkles to hook into the UF lifecycle.
          */

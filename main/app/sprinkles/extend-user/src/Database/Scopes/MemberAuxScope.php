@@ -11,12 +11,11 @@ class MemberAuxScope implements Scope
     /**
      * Apply the scope to a given Eloquent query builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $builder
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  \Illuminate\Database\Eloquent\Builder $builder
+     * @param  \Illuminate\Database\Eloquent\Model $model
      * @return void
      */
-    public function apply(Builder $builder, Model $model)
-    {
+    public function apply(Builder $builder, Model $model) {
         $baseTable = $model->getTable();
         // Hardcode the table name here, or you can access it using the classMapper and `getTable`
         $auxTable = 'members';

@@ -23,33 +23,29 @@ final class Timer implements TimerInterface
     /**
      * Constructor initializes the fields of the Timer
      *
-     * @param float         $interval The interval after which this timer will execute, in seconds
-     * @param callable      $callback The callback that will be executed when this timer elapses
-     * @param bool          $periodic Whether the time is periodic
+     * @param float $interval The interval after which this timer will execute, in seconds
+     * @param callable $callback The callback that will be executed when this timer elapses
+     * @param bool $periodic Whether the time is periodic
      */
-    public function __construct($interval, $callback, $periodic = false)
-    {
+    public function __construct($interval, $callback, $periodic = FALSE) {
         if ($interval < self::MIN_INTERVAL) {
             $interval = self::MIN_INTERVAL;
         }
 
-        $this->interval = (float) $interval;
+        $this->interval = (float)$interval;
         $this->callback = $callback;
-        $this->periodic = (bool) $periodic;
+        $this->periodic = (bool)$periodic;
     }
 
-    public function getInterval()
-    {
+    public function getInterval() {
         return $this->interval;
     }
 
-    public function getCallback()
-    {
+    public function getCallback() {
         return $this->callback;
     }
 
-    public function isPeriodic()
-    {
+    public function isPeriodic() {
         return $this->periodic;
     }
 }

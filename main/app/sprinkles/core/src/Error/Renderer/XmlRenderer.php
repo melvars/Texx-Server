@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 /**
@@ -15,8 +16,7 @@ class XmlRenderer extends ErrorRenderer
     /**
      * @return string
      */
-    public function render()
-    {
+    public function render() {
         $e = $this->exception;
         $xml = "<error>\n  <message>UserFrosting Application Error</message>\n";
         if ($this->displayErrorDetails) {
@@ -41,8 +41,7 @@ class XmlRenderer extends ErrorRenderer
      * @param  string $content
      * @return string
      */
-    private function createCdataSection($content)
-    {
+    private function createCdataSection($content) {
         return sprintf('<![CDATA[%s]]>', str_replace(']]>', ']]]]><![CDATA[>', $content));
     }
 }

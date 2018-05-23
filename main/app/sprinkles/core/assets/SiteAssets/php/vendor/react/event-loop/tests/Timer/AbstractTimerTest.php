@@ -12,8 +12,7 @@ abstract class AbstractTimerTest extends TestCase
      */
     abstract public function createLoop();
 
-    public function testAddTimerReturnsNonPeriodicTimerInstance()
-    {
+    public function testAddTimerReturnsNonPeriodicTimerInstance() {
         $loop = $this->createLoop();
 
         $timer = $loop->addTimer(0.001, $this->expectCallableNever());
@@ -22,15 +21,14 @@ abstract class AbstractTimerTest extends TestCase
         $this->assertFalse($timer->isPeriodic());
     }
 
-    public function testAddTimerWillBeInvokedOnceAndBlocksLoopWhenRunning()
-    {
+    public function testAddTimerWillBeInvokedOnceAndBlocksLoopWhenRunning() {
         $loop = $this->createLoop();
 
         $loop->addTimer(0.001, $this->expectCallableOnce());
 
-        $start = microtime(true);
+        $start = microtime(TRUE);
         $loop->run();
-        $end = microtime(true);
+        $end = microtime(TRUE);
 
         // make no strict assumptions about actual time interval.
         // must be at least 0.001s (1ms) and should not take longer than 0.1s
@@ -38,8 +36,7 @@ abstract class AbstractTimerTest extends TestCase
         $this->assertLessThan(0.1, $end - $start);
     }
 
-    public function testAddPeriodicTimerReturnsPeriodicTimerInstance()
-    {
+    public function testAddPeriodicTimerReturnsPeriodicTimerInstance() {
         $loop = $this->createLoop();
 
         $periodic = $loop->addPeriodicTimer(0.1, $this->expectCallableNever());
@@ -48,8 +45,7 @@ abstract class AbstractTimerTest extends TestCase
         $this->assertTrue($periodic->isPeriodic());
     }
 
-    public function testAddPeriodicTimerWillBeInvokedUntilItIsCancelled()
-    {
+    public function testAddPeriodicTimerWillBeInvokedUntilItIsCancelled() {
         $loop = $this->createLoop();
 
         $periodic = $loop->addPeriodicTimer(0.1, $this->expectCallableExactly(3));
@@ -63,8 +59,7 @@ abstract class AbstractTimerTest extends TestCase
         $loop->run();
     }
 
-    public function testAddPeriodicTimerWillBeInvokedWithMaximumAccuracyUntilItIsCancelled()
-    {
+    public function testAddPeriodicTimerWillBeInvokedWithMaximumAccuracyUntilItIsCancelled() {
         $loop = $this->createLoop();
 
         $i = 0;
@@ -85,8 +80,7 @@ abstract class AbstractTimerTest extends TestCase
         $this->assertGreaterThan(2, $i);
     }
 
-    public function testAddPeriodicTimerCancelsItself()
-    {
+    public function testAddPeriodicTimerCancelsItself() {
         $loop = $this->createLoop();
 
         $i = 0;
@@ -98,9 +92,9 @@ abstract class AbstractTimerTest extends TestCase
             }
         });
 
-        $start = microtime(true);
+        $start = microtime(TRUE);
         $loop->run();
-        $end = microtime(true);
+        $end = microtime(TRUE);
 
         $this->assertEquals(5, $i);
 
@@ -111,11 +105,11 @@ abstract class AbstractTimerTest extends TestCase
         $this->assertLessThan(0.1, $end - $start);
     }
 
-    public function testMinimumIntervalOneMicrosecond()
-    {
+    public function testMinimumIntervalOneMicrosecond() {
         $loop = $this->createLoop();
 
-        $timer = $loop->addTimer(0, function () {});
+        $timer = $loop->addTimer(0, function () {
+        });
 
         $this->assertEquals(0.000001, $timer->getInterval());
     }

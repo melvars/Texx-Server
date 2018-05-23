@@ -28,14 +28,12 @@ class FixedUriConnector implements ConnectorInterface
      * @param string $uri
      * @param ConnectorInterface $connector
      */
-    public function __construct($uri, ConnectorInterface $connector)
-    {
+    public function __construct($uri, ConnectorInterface $connector) {
         $this->uri = $uri;
         $this->connector = $connector;
     }
 
-    public function connect($_)
-    {
+    public function connect($_) {
         return $this->connector->connect($this->uri);
     }
 }

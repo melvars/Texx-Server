@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
  */
 class BinaryFileResponse extends Response
 {
-    protected static $trustXSendfileTypeHeader = false;
+    protected static $trustXSendfileTypeHeader = FALSE;
 
     /**
      * @var File
@@ -33,20 +33,19 @@ class BinaryFileResponse extends Response
     protected $file;
     protected $offset;
     protected $maxlen;
-    protected $deleteFileAfterSend = false;
+    protected $deleteFileAfterSend = FALSE;
 
     /**
-     * @param \SplFileInfo|string $file               The file to stream
-     * @param int                 $status             The response status code
-     * @param array               $headers            An array of response headers
-     * @param bool                $public             Files are public by default
-     * @param null|string         $contentDisposition The type of Content-Disposition to set automatically with the filename
-     * @param bool                $autoEtag           Whether the ETag header should be automatically set
-     * @param bool                $autoLastModified   Whether the Last-Modified header should be automatically set
+     * @param \SplFileInfo|string $file The file to stream
+     * @param int $status The response status code
+     * @param array $headers An array of response headers
+     * @param bool $public Files are public by default
+     * @param null|string $contentDisposition The type of Content-Disposition to set automatically with the filename
+     * @param bool $autoEtag Whether the ETag header should be automatically set
+     * @param bool $autoLastModified Whether the Last-Modified header should be automatically set
      */
-    public function __construct($file, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
-    {
-        parent::__construct(null, $status, $headers);
+    public function __construct($file, $status = 200, $headers = array(), $public = TRUE, $contentDisposition = NULL, $autoEtag = FALSE, $autoLastModified = TRUE) {
+        parent::__construct(NULL, $status, $headers);
 
         $this->setFile($file, $contentDisposition, $autoEtag, $autoLastModified);
 
@@ -56,40 +55,38 @@ class BinaryFileResponse extends Response
     }
 
     /**
-     * @param \SplFileInfo|string $file               The file to stream
-     * @param int                 $status             The response status code
-     * @param array               $headers            An array of response headers
-     * @param bool                $public             Files are public by default
-     * @param null|string         $contentDisposition The type of Content-Disposition to set automatically with the filename
-     * @param bool                $autoEtag           Whether the ETag header should be automatically set
-     * @param bool                $autoLastModified   Whether the Last-Modified header should be automatically set
+     * @param \SplFileInfo|string $file The file to stream
+     * @param int $status The response status code
+     * @param array $headers An array of response headers
+     * @param bool $public Files are public by default
+     * @param null|string $contentDisposition The type of Content-Disposition to set automatically with the filename
+     * @param bool $autoEtag Whether the ETag header should be automatically set
+     * @param bool $autoLastModified Whether the Last-Modified header should be automatically set
      *
      * @return static
      */
-    public static function create($file = null, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
-    {
+    public static function create($file = NULL, $status = 200, $headers = array(), $public = TRUE, $contentDisposition = NULL, $autoEtag = FALSE, $autoLastModified = TRUE) {
         return new static($file, $status, $headers, $public, $contentDisposition, $autoEtag, $autoLastModified);
     }
 
     /**
      * Sets the file to stream.
      *
-     * @param \SplFileInfo|string $file               The file to stream
-     * @param string              $contentDisposition
-     * @param bool                $autoEtag
-     * @param bool                $autoLastModified
+     * @param \SplFileInfo|string $file The file to stream
+     * @param string $contentDisposition
+     * @param bool $autoEtag
+     * @param bool $autoLastModified
      *
      * @return $this
      *
      * @throws FileException
      */
-    public function setFile($file, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
-    {
+    public function setFile($file, $contentDisposition = NULL, $autoEtag = FALSE, $autoLastModified = TRUE) {
         if (!$file instanceof File) {
             if ($file instanceof \SplFileInfo) {
                 $file = new File($file->getPathname());
             } else {
-                $file = new File((string) $file);
+                $file = new File((string)$file);
             }
         }
 
@@ -119,16 +116,14 @@ class BinaryFileResponse extends Response
      *
      * @return File The file to stream
      */
-    public function getFile()
-    {
+    public function getFile() {
         return $this->file;
     }
 
     /**
      * Automatically sets the Last-Modified header according the file modification date.
      */
-    public function setAutoLastModified()
-    {
+    public function setAutoLastModified() {
         $this->setLastModified(\DateTime::createFromFormat('U', $this->file->getMTime()));
 
         return $this;
@@ -137,9 +132,8 @@ class BinaryFileResponse extends Response
     /**
      * Automatically sets the ETag header according to the checksum of the file.
      */
-    public function setAutoEtag()
-    {
-        $this->setEtag(base64_encode(hash_file('sha256', $this->file->getPathname(), true)));
+    public function setAutoEtag() {
+        $this->setEtag(base64_encode(hash_file('sha256', $this->file->getPathname(), TRUE)));
 
         return $this;
     }
@@ -147,20 +141,19 @@ class BinaryFileResponse extends Response
     /**
      * Sets the Content-Disposition header with the given filename.
      *
-     * @param string $disposition      ResponseHeaderBag::DISPOSITION_INLINE or ResponseHeaderBag::DISPOSITION_ATTACHMENT
-     * @param string $filename         Optionally use this UTF-8 encoded filename instead of the real name of the file
+     * @param string $disposition ResponseHeaderBag::DISPOSITION_INLINE or ResponseHeaderBag::DISPOSITION_ATTACHMENT
+     * @param string $filename Optionally use this UTF-8 encoded filename instead of the real name of the file
      * @param string $filenameFallback A fallback filename, containing only ASCII characters. Defaults to an automatically encoded filename
      *
      * @return $this
      */
-    public function setContentDisposition($disposition, $filename = '', $filenameFallback = '')
-    {
+    public function setContentDisposition($disposition, $filename = '', $filenameFallback = '') {
         if ('' === $filename) {
             $filename = $this->file->getFilename();
         }
 
-        if ('' === $filenameFallback && (!preg_match('/^[\x20-\x7e]*$/', $filename) || false !== strpos($filename, '%'))) {
-            $encoding = mb_detect_encoding($filename, null, true) ?: '8bit';
+        if ('' === $filenameFallback && (!preg_match('/^[\x20-\x7e]*$/', $filename) || FALSE !== strpos($filename, '%'))) {
+            $encoding = mb_detect_encoding($filename, NULL, TRUE) ?: '8bit';
 
             for ($i = 0, $filenameLength = mb_strlen($filename, $encoding); $i < $filenameLength; ++$i) {
                 $char = mb_substr($filename, $i, 1, $encoding);
@@ -182,8 +175,7 @@ class BinaryFileResponse extends Response
     /**
      * {@inheritdoc}
      */
-    public function prepare(Request $request)
-    {
+    public function prepare(Request $request) {
         if (!$this->headers->has('Content-Type')) {
             $this->headers->set('Content-Type', $this->file->getMimeType() ?: 'application/octet-stream');
         }
@@ -197,14 +189,14 @@ class BinaryFileResponse extends Response
         $this->offset = 0;
         $this->maxlen = -1;
 
-        if (false === $fileSize = $this->file->getSize()) {
+        if (FALSE === $fileSize = $this->file->getSize()) {
             return $this;
         }
         $this->headers->set('Content-Length', $fileSize);
 
         if (!$this->headers->has('Accept-Ranges')) {
             // Only accept ranges on safe HTTP methods
-            $this->headers->set('Accept-Ranges', $request->isMethodSafe(false) ? 'bytes' : 'none');
+            $this->headers->set('Accept-Ranges', $request->isMethodSafe(FALSE) ? 'bytes' : 'none');
         }
 
         if (self::$trustXSendfileTypeHeader && $request->headers->has('X-Sendfile-Type')) {
@@ -212,7 +204,7 @@ class BinaryFileResponse extends Response
             $type = $request->headers->get('X-Sendfile-Type');
             $path = $this->file->getRealPath();
             // Fall back to scheme://path for stream wrapped locations.
-            if (false === $path) {
+            if (FALSE === $path) {
                 $path = $this->file->getPathname();
             }
             if ('x-accel-redirect' === strtolower($type)) {
@@ -226,7 +218,7 @@ class BinaryFileResponse extends Response
                         $location = trim($mapping[1]);
 
                         if (substr($path, 0, strlen($pathPrefix)) === $pathPrefix) {
-                            $path = $location.substr($path, strlen($pathPrefix));
+                            $path = $location . substr($path, strlen($pathPrefix));
                             break;
                         }
                     }
@@ -234,27 +226,27 @@ class BinaryFileResponse extends Response
             }
             $this->headers->set($type, $path);
             $this->maxlen = 0;
-        } elseif ($request->headers->has('Range')) {
+        } else if ($request->headers->has('Range')) {
             // Process the range headers.
             if (!$request->headers->has('If-Range') || $this->hasValidIfRangeHeader($request->headers->get('If-Range'))) {
                 $range = $request->headers->get('Range');
 
                 list($start, $end) = explode('-', substr($range, 6), 2) + array(0);
 
-                $end = ('' === $end) ? $fileSize - 1 : (int) $end;
+                $end = ('' === $end) ? $fileSize - 1 : (int)$end;
 
                 if ('' === $start) {
                     $start = $fileSize - $end;
                     $end = $fileSize - 1;
                 } else {
-                    $start = (int) $start;
+                    $start = (int)$start;
                 }
 
                 if ($start <= $end) {
                     if ($start < 0 || $end > $fileSize - 1) {
                         $this->setStatusCode(416);
                         $this->headers->set('Content-Range', sprintf('bytes */%s', $fileSize));
-                    } elseif (0 !== $start || $end !== $fileSize - 1) {
+                    } else if (0 !== $start || $end !== $fileSize - 1) {
                         $this->maxlen = $end < $fileSize ? $end - $start + 1 : -1;
                         $this->offset = $start;
 
@@ -269,17 +261,16 @@ class BinaryFileResponse extends Response
         return $this;
     }
 
-    private function hasValidIfRangeHeader($header)
-    {
+    private function hasValidIfRangeHeader($header) {
         if ($this->getEtag() === $header) {
-            return true;
+            return TRUE;
         }
 
-        if (null === $lastModified = $this->getLastModified()) {
-            return false;
+        if (NULL === $lastModified = $this->getLastModified()) {
+            return FALSE;
         }
 
-        return $lastModified->format('D, d M Y H:i:s').' GMT' === $header;
+        return $lastModified->format('D, d M Y H:i:s') . ' GMT' === $header;
     }
 
     /**
@@ -287,8 +278,7 @@ class BinaryFileResponse extends Response
      *
      * {@inheritdoc}
      */
-    public function sendContent()
-    {
+    public function sendContent() {
         if (!$this->isSuccessful()) {
             return parent::sendContent();
         }
@@ -317,9 +307,8 @@ class BinaryFileResponse extends Response
      *
      * @throws \LogicException when the content is not null
      */
-    public function setContent($content)
-    {
-        if (null !== $content) {
+    public function setContent($content) {
+        if (NULL !== $content) {
             throw new \LogicException('The content cannot be set on a BinaryFileResponse instance.');
         }
     }
@@ -329,17 +318,15 @@ class BinaryFileResponse extends Response
      *
      * @return false
      */
-    public function getContent()
-    {
-        return false;
+    public function getContent() {
+        return FALSE;
     }
 
     /**
      * Trust X-Sendfile-Type header.
      */
-    public static function trustXSendfileTypeHeader()
-    {
-        self::$trustXSendfileTypeHeader = true;
+    public static function trustXSendfileTypeHeader() {
+        self::$trustXSendfileTypeHeader = TRUE;
     }
 
     /**
@@ -350,8 +337,7 @@ class BinaryFileResponse extends Response
      *
      * @return $this
      */
-    public function deleteFileAfterSend($shouldDelete)
-    {
+    public function deleteFileAfterSend($shouldDelete) {
         $this->deleteFileAfterSend = $shouldDelete;
 
         return $this;

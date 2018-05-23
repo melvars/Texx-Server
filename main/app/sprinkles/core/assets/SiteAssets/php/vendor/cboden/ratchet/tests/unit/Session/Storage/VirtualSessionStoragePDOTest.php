@@ -1,11 +1,14 @@
 <?php
+
 namespace Ratchet\Session\Storage;
+
 use Ratchet\Session\Serialize\PhpHandler;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
-class VirtualSessionStoragePDOTest extends \PHPUnit_Framework_TestCase {
+class VirtualSessionStoragePDOTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * @var VirtualSessionStorage
      */
@@ -32,7 +35,7 @@ SQL;
         $pdo = new \PDO($dsn);
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $pdo->exec($schema);
-        $pdo = null;
+        $pdo = NULL;
 
         $sessionHandler = new PdoSessionHandler($dsn);
         $serializer = new PhpHandler();

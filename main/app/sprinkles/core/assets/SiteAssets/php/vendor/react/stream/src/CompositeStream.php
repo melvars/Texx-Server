@@ -8,10 +8,9 @@ final class CompositeStream extends EventEmitter implements DuplexStreamInterfac
 {
     private $readable;
     private $writable;
-    private $closed = false;
+    private $closed = FALSE;
 
-    public function __construct(ReadableStreamInterface $readable, WritableStreamInterface $writable)
-    {
+    public function __construct(ReadableStreamInterface $readable, WritableStreamInterface $writable) {
         $this->readable = $readable;
         $this->writable = $writable;
 
@@ -26,18 +25,15 @@ final class CompositeStream extends EventEmitter implements DuplexStreamInterfac
         $this->writable->on('close', array($this, 'close'));
     }
 
-    public function isReadable()
-    {
+    public function isReadable() {
         return $this->readable->isReadable();
     }
 
-    public function pause()
-    {
+    public function pause() {
         $this->readable->pause();
     }
 
-    public function resume()
-    {
+    public function resume() {
         if (!$this->writable->isWritable()) {
             return;
         }
@@ -45,34 +41,29 @@ final class CompositeStream extends EventEmitter implements DuplexStreamInterfac
         $this->readable->resume();
     }
 
-    public function pipe(WritableStreamInterface $dest, array $options = array())
-    {
+    public function pipe(WritableStreamInterface $dest, array $options = array()) {
         return Util::pipe($this, $dest, $options);
     }
 
-    public function isWritable()
-    {
+    public function isWritable() {
         return $this->writable->isWritable();
     }
 
-    public function write($data)
-    {
+    public function write($data) {
         return $this->writable->write($data);
     }
 
-    public function end($data = null)
-    {
+    public function end($data = NULL) {
         $this->readable->pause();
         $this->writable->end($data);
     }
 
-    public function close()
-    {
+    public function close() {
         if ($this->closed) {
             return;
         }
 
-        $this->closed = true;
+        $this->closed = TRUE;
         $this->readable->close();
         $this->writable->close();
 

@@ -6,8 +6,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function expectCallableOnce()
-    {
+    protected function expectCallableOnce() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -16,8 +15,7 @@ abstract class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function expectCallableOnceWith($value)
-    {
+    protected function expectCallableOnceWith($value) {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -27,8 +25,7 @@ abstract class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function expectCallableNever()
-    {
+    protected function expectCallableNever() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->never())
@@ -37,25 +34,23 @@ abstract class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function createCallableMock()
-    {
+    protected function createCallableMock() {
         return $this->getMockBuilder('React\Tests\Dns\CallableStub')->getMock();
     }
 
-    public function setExpectedException($exception, $exceptionMessage = '', $exceptionCode = null)
-    {
-         if (method_exists($this, 'expectException')) {
-             // PHPUnit 5
-             $this->expectException($exception);
-             if ($exceptionMessage !== '') {
-                 $this->expectExceptionMessage($exceptionMessage);
-             }
-             if ($exceptionCode !== null) {
-                 $this->expectExceptionCode($exceptionCode);
-             }
-         } else {
-             // legacy PHPUnit 4
-             parent::setExpectedException($exception, $exceptionMessage, $exceptionCode);
-         }
-     }
+    public function setExpectedException($exception, $exceptionMessage = '', $exceptionCode = NULL) {
+        if (method_exists($this, 'expectException')) {
+            // PHPUnit 5
+            $this->expectException($exception);
+            if ($exceptionMessage !== '') {
+                $this->expectExceptionMessage($exceptionMessage);
+            }
+            if ($exceptionCode !== NULL) {
+                $this->expectExceptionCode($exceptionCode);
+            }
+        } else {
+            // legacy PHPUnit 4
+            parent::setExpectedException($exception, $exceptionMessage, $exceptionCode);
+        }
+    }
 }

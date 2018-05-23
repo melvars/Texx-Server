@@ -13,8 +13,7 @@ use React\Promise;
 
 class TimeoutExecutorTest extends TestCase
 {
-    public function setUp()
-    {
+    public function setUp() {
         $this->loop = Factory::create();
 
         $this->wrapped = $this->getMockBuilder('React\Dns\Query\ExecutorInterface')->getMock();
@@ -22,8 +21,7 @@ class TimeoutExecutorTest extends TestCase
         $this->executor = new TimeoutExecutor($this->wrapped, 5.0, $this->loop);
     }
 
-    public function testCancellingPromiseWillCancelWrapped()
-    {
+    public function testCancellingPromiseWillCancelWrapped() {
         $cancelled = 0;
 
         $this->wrapped
@@ -48,8 +46,7 @@ class TimeoutExecutorTest extends TestCase
         $promise->then($this->expectCallableNever(), $this->expectCallableOnce());
     }
 
-    public function testResolvesPromiseWhenWrappedResolves()
-    {
+    public function testResolvesPromiseWhenWrappedResolves() {
         $this->wrapped
             ->expects($this->once())
             ->method('query')
@@ -61,8 +58,7 @@ class TimeoutExecutorTest extends TestCase
         $promise->then($this->expectCallableOnce(), $this->expectCallableNever());
     }
 
-    public function testRejectsPromiseWhenWrappedRejects()
-    {
+    public function testRejectsPromiseWhenWrappedRejects() {
         $this->wrapped
             ->expects($this->once())
             ->method('query')
@@ -74,8 +70,7 @@ class TimeoutExecutorTest extends TestCase
         $promise->then($this->expectCallableNever(), $this->expectCallableOnceWith(new \RuntimeException()));
     }
 
-    public function testWrappedWillBeCancelledOnTimeout()
-    {
+    public function testWrappedWillBeCancelledOnTimeout() {
         $this->executor = new TimeoutExecutor($this->wrapped, 0, $this->loop);
 
         $cancelled = 0;

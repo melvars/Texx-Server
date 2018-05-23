@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -41,15 +42,14 @@ class Group extends Model
     /**
      * @var bool Enable timestamps for this class.
      */
-    public $timestamps = true;
+    public $timestamps = TRUE;
 
     /**
      * Delete this group from the database, along with any user associations
      *
      * @todo What do we do with users when their group is deleted?  Reassign them?  Or, can a user be "groupless"?
      */
-    public function delete()
-    {
+    public function delete() {
         // Delete the group
         $result = parent::delete();
 
@@ -59,8 +59,7 @@ class Group extends Model
     /**
      * Lazily load a collection of Users which belong to this group.
      */
-    public function users()
-    {
+    public function users() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 

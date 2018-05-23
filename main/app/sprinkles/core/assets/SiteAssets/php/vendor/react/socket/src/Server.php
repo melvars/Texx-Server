@@ -10,8 +10,7 @@ final class Server extends EventEmitter implements ServerInterface
 {
     private $server;
 
-    public function __construct($uri, LoopInterface $loop, array $context = array())
-    {
+    public function __construct($uri, LoopInterface $loop, array $context = array()) {
         // sanitize TCP context options if not properly wrapped
         if ($context && (!isset($context['tcp']) && !isset($context['tls']) && !isset($context['unix']))) {
             $context = array('tcp' => $context);
@@ -26,7 +25,7 @@ final class Server extends EventEmitter implements ServerInterface
 
         $scheme = 'tcp';
         $pos = strpos($uri, '://');
-        if ($pos !== false) {
+        if ($pos !== FALSE) {
             $scheme = substr($uri, 0, $pos);
         }
 
@@ -51,23 +50,19 @@ final class Server extends EventEmitter implements ServerInterface
         });
     }
 
-    public function getAddress()
-    {
+    public function getAddress() {
         return $this->server->getAddress();
     }
 
-    public function pause()
-    {
+    public function pause() {
         $this->server->pause();
     }
 
-    public function resume()
-    {
+    public function resume() {
         $this->server->resume();
     }
 
-    public function close()
-    {
+    public function close() {
         $this->server->close();
     }
 }

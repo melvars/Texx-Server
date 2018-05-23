@@ -115,8 +115,7 @@ final class SecureServer extends EventEmitter implements ServerInterface
      * @see TcpServer
      * @link http://php.net/manual/en/context.ssl.php for TLS context options
      */
-    public function __construct(ServerInterface $tcp, LoopInterface $loop, array $context)
-    {
+    public function __construct(ServerInterface $tcp, LoopInterface $loop, array $context) {
         if (!function_exists('stream_socket_enable_crypto')) {
             throw new BadMethodCallException('Encryption not supported on your platform (HHVM < 3.8?)'); // @codeCoverageIgnore
         }
@@ -139,34 +138,29 @@ final class SecureServer extends EventEmitter implements ServerInterface
         });
     }
 
-    public function getAddress()
-    {
+    public function getAddress() {
         $address = $this->tcp->getAddress();
-        if ($address === null) {
-            return null;
+        if ($address === NULL) {
+            return NULL;
         }
 
-        return str_replace('tcp://' , 'tls://', $address);
+        return str_replace('tcp://', 'tls://', $address);
     }
 
-    public function pause()
-    {
+    public function pause() {
         $this->tcp->pause();
     }
 
-    public function resume()
-    {
+    public function resume() {
         $this->tcp->resume();
     }
 
-    public function close()
-    {
+    public function close() {
         return $this->tcp->close();
     }
 
     /** @internal */
-    public function handleConnection(ConnectionInterface $connection)
-    {
+    public function handleConnection(ConnectionInterface $connection) {
         if (!$connection instanceof Connection) {
             $this->emit('error', array(new UnexpectedValueException('Base server does not use internal Connection class exposing stream resource')));
             $connection->end();

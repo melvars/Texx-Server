@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Tests\Unit;
 
 use Illuminate\Database\Capsule\Manager as DB;
@@ -24,13 +25,11 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
  */
 class SprunjeTest extends TestCase
 {
-    public function tearDown()
-    {
+    public function tearDown() {
         m::close();
     }
 
-    function testSprunjeApplyFiltersDefault()
-    {
+    function testSprunjeApplyFiltersDefault() {
         $sprunje = new SprunjeStub([
             'filters' => [
                 'species' => 'Tyto'
@@ -42,17 +41,16 @@ class SprunjeTest extends TestCase
         // Need to mock the new Builder instance that Laravel spawns in the where() closure.
         // See https://stackoverflow.com/questions/20701679/mocking-callbacks-in-laravel-4-mockery
         $builder->shouldReceive('newQuery')->andReturn(
-                $subBuilder = m::mock(Builder::class, function ($subQuery) {
-                    $subQuery->makePartial();
-                    $subQuery->shouldReceive('orLike')->with('species', 'Tyto')->once()->andReturn($subQuery);
-                })
-            );
+            $subBuilder = m::mock(Builder::class, function ($subQuery) {
+                $subQuery->makePartial();
+                $subQuery->shouldReceive('orLike')->with('species', 'Tyto')->once()->andReturn($subQuery);
+            })
+        );
 
         $sprunje->applyFilters($builder);
     }
 
-    function testSprunjeApplySortsDefault()
-    {
+    function testSprunjeApplySortsDefault() {
         $sprunje = new SprunjeStub([
             'sorts' => [
                 'species' => 'asc'
@@ -76,14 +74,12 @@ class SprunjeStub extends Sprunje
         'species'
     ];
 
-    public function __construct($options)
-    {
+    public function __construct($options) {
         $classMapper = new ClassMapper();
         parent::__construct($classMapper, $options);
     }
 
-    protected function baseQuery()
-    {
+    protected function baseQuery() {
         // We use a partial mock for Builder, because we need to be able to run some of its actual methods.
         // For example, we need to be able to run the `where` method with a closure.
         $builder = m::mock(Builder::class);

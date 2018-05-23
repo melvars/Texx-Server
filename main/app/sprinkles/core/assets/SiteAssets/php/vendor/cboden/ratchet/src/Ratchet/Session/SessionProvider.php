@@ -1,5 +1,7 @@
 <?php
+
 namespace Ratchet\Session;
+
 use Ratchet\ConnectionInterface;
 use Ratchet\Http\HttpServerInterface;
 use Psr\Http\Message\RequestInterface;
@@ -14,7 +16,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
  * Your website must also use Symfony HttpFoundation Sessions to read your sites session data
  * If your are not using at least PHP 5.4 you must include a SessionHandlerInterface stub (is included in Symfony HttpFoundation, loaded w/ composer)
  */
-class SessionProvider implements HttpServerInterface {
+class SessionProvider implements HttpServerInterface
+{
     /**
      * @var \Ratchet\MessageComponentInterface
      */
@@ -38,16 +41,16 @@ class SessionProvider implements HttpServerInterface {
     protected $_serializer;
 
     /**
-     * @param \Ratchet\Http\HttpServerInterface           $app
-     * @param \SessionHandlerInterface                    $handler
-     * @param array                                       $options
+     * @param \Ratchet\Http\HttpServerInterface $app
+     * @param \SessionHandlerInterface $handler
+     * @param array $options
      * @param \Ratchet\Session\Serialize\HandlerInterface $serializer
      * @throws \RuntimeException
      */
-    public function __construct(HttpServerInterface $app, \SessionHandlerInterface $handler, array $options = array(), HandlerInterface $serializer = null) {
-        $this->_app     = $app;
+    public function __construct(HttpServerInterface $app, \SessionHandlerInterface $handler, array $options = array(), HandlerInterface $serializer = NULL) {
+        $this->_app = $app;
         $this->_handler = $handler;
-        $this->_null    = new NullSessionHandler;
+        $this->_null = new NullSessionHandler;
 
         ini_set('session.auto_start', 0);
         ini_set('session.cache_limiter', '');
@@ -55,7 +58,7 @@ class SessionProvider implements HttpServerInterface {
 
         $this->setOptions($options);
 
-        if (null === $serializer) {
+        if (NULL === $serializer) {
             $serialClass = __NAMESPACE__ . "\\Serialize\\{$this->toClassCase(ini_get('session.serialize_handler'))}Handler"; // awesome/terrible hack, eh?
             if (!class_exists($serialClass)) {
                 throw new \RuntimeException('Unable to parse session serialize handler');
@@ -70,20 +73,20 @@ class SessionProvider implements HttpServerInterface {
     /**
      * {@inheritdoc}
      */
-    public function onOpen(ConnectionInterface $conn, RequestInterface $request = null) {
+    public function onOpen(ConnectionInterface $conn, RequestInterface $request = NULL) {
         $sessionName = ini_get('session.name');
 
-        $id = array_reduce($request->getHeader('Cookie'), function($accumulator, $cookie) use ($sessionName) {
+        $id = array_reduce($request->getHeader('Cookie'), function ($accumulator, $cookie) use ($sessionName) {
             if ($accumulator) {
                 return $accumulator;
             }
 
             $crumbs = $this->parseCookie($cookie);
 
-            return isset($crumbs['cookies'][$sessionName]) ? $crumbs['cookies'][$sessionName] : false;
-        }, false);
+            return isset($crumbs['cookies'][$sessionName]) ? $crumbs['cookies'][$sessionName] : FALSE;
+        }, FALSE);
 
-        if (null === $request || false === $id) {
+        if (NULL === $request || FALSE === $id) {
             $saveHandler = $this->_null;
             $id = '';
         } else {
@@ -164,39 +167,39 @@ class SessionProvider implements HttpServerInterface {
      * Taken from Guzzle3
      */
     private static $cookieParts = array(
-        'domain'      => 'Domain',
-        'path'        => 'Path',
-        'max_age'     => 'Max-Age',
-        'expires'     => 'Expires',
-        'version'     => 'Version',
-        'secure'      => 'Secure',
-        'port'        => 'Port',
-        'discard'     => 'Discard',
-        'comment'     => 'Comment',
+        'domain' => 'Domain',
+        'path' => 'Path',
+        'max_age' => 'Max-Age',
+        'expires' => 'Expires',
+        'version' => 'Version',
+        'secure' => 'Secure',
+        'port' => 'Port',
+        'discard' => 'Discard',
+        'comment' => 'Comment',
         'comment_url' => 'Comment-Url',
-        'http_only'   => 'HttpOnly'
+        'http_only' => 'HttpOnly'
     );
 
     /**
      * Taken from Guzzle3
      */
-    private function parseCookie($cookie, $host = null, $path = null, $decode = false) {
+    private function parseCookie($cookie, $host = NULL, $path = NULL, $decode = FALSE) {
         // Explode the cookie string using a series of semicolons
         $pieces = array_filter(array_map('trim', explode(';', $cookie)));
 
         // The name of the cookie (first kvp) must include an equal sign.
         if (empty($pieces) || !strpos($pieces[0], '=')) {
-            return false;
+            return FALSE;
         }
 
         // Create the default return array
-        $data = array_merge(array_fill_keys(array_keys(self::$cookieParts), null), array(
-            'cookies'   => array(),
-            'data'      => array(),
-            'path'      => $path ?: '/',
-            'http_only' => false,
-            'discard'   => false,
-            'domain'    => $host
+        $data = array_merge(array_fill_keys(array_keys(self::$cookieParts), NULL), array(
+            'cookies' => array(),
+            'data' => array(),
+            'path' => $path ?: '/',
+            'http_only' => FALSE,
+            'discard' => FALSE,
+            'domain' => $host
         ));
         $foundNonCookies = 0;
 
@@ -208,7 +211,7 @@ class SessionProvider implements HttpServerInterface {
 
             if (count($cookieParts) == 1) {
                 // Can be a single value (e.g. secure, httpOnly)
-                $value = true;
+                $value = TRUE;
             } else {
                 // Be sure to strip wrapping quotes
                 $value = trim($cookieParts[1], " \n\r\t\0\x0B\"");
@@ -235,7 +238,7 @@ class SessionProvider implements HttpServerInterface {
 
         // Calculate the expires date
         if (!$data['expires'] && $data['max_age']) {
-            $data['expires'] = time() + (int) $data['max_age'];
+            $data['expires'] = time() + (int)$data['max_age'];
         }
 
         return $data;

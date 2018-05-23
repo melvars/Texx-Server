@@ -13,8 +13,7 @@ abstract class AbstractLoopTest extends TestCase
 
     const PHP_DEFAULT_CHUNK_SIZE = 8192;
 
-    public function setUp()
-    {
+    public function setUp() {
         // It's a timeout, don't set it too low. Travis and other CI systems are slow.
         $this->tickTimeout = 0.02;
         $this->loop = $this->createLoop();
@@ -22,8 +21,7 @@ abstract class AbstractLoopTest extends TestCase
 
     abstract public function createLoop();
 
-    public function createSocketPair()
-    {
+    public function createSocketPair() {
         $domain = (DIRECTORY_SEPARATOR === '\\') ? STREAM_PF_INET : STREAM_PF_UNIX;
         $sockets = stream_socket_pair($domain, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
 
@@ -36,8 +34,7 @@ abstract class AbstractLoopTest extends TestCase
         return $sockets;
     }
 
-    public function testAddReadStream()
-    {
+    public function testAddReadStream() {
         list ($input, $output) = $this->createSocketPair();
 
         $this->loop->addReadStream($input, $this->expectCallableExactly(2));
@@ -49,8 +46,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->tickLoop($this->loop);
     }
 
-    public function testAddReadStreamIgnoresSecondCallable()
-    {
+    public function testAddReadStreamIgnoresSecondCallable() {
         list ($input, $output) = $this->createSocketPair();
 
         $this->loop->addReadStream($input, $this->expectCallableExactly(2));
@@ -63,8 +59,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->tickLoop($this->loop);
     }
 
-    public function testAddReadStreamReceivesDataFromStreamReference()
-    {
+    public function testAddReadStreamReceivesDataFromStreamReference() {
         $this->received = '';
         $this->subAddReadStreamReceivesDataFromStreamReference();
         $this->assertEquals('', $this->received);
@@ -77,8 +72,7 @@ abstract class AbstractLoopTest extends TestCase
      * Helper for above test. This happens in another helper method to verify
      * the loop keeps track of assigned stream resources (refcount).
      */
-    private function subAddReadStreamReceivesDataFromStreamReference()
-    {
+    private function subAddReadStreamReceivesDataFromStreamReference() {
         list ($input, $output) = $this->createSocketPair();
 
         fwrite($input, 'hello');
@@ -98,8 +92,7 @@ abstract class AbstractLoopTest extends TestCase
         });
     }
 
-    public function testAddWriteStream()
-    {
+    public function testAddWriteStream() {
         list ($input) = $this->createSocketPair();
 
         $this->loop->addWriteStream($input, $this->expectCallableExactly(2));
@@ -107,8 +100,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->tickLoop($this->loop);
     }
 
-    public function testAddWriteStreamIgnoresSecondCallable()
-    {
+    public function testAddWriteStreamIgnoresSecondCallable() {
         list ($input) = $this->createSocketPair();
 
         $this->loop->addWriteStream($input, $this->expectCallableExactly(2));
@@ -117,8 +109,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->tickLoop($this->loop);
     }
 
-    public function testRemoveReadStreamInstantly()
-    {
+    public function testRemoveReadStreamInstantly() {
         list ($input, $output) = $this->createSocketPair();
 
         $this->loop->addReadStream($input, $this->expectCallableNever());
@@ -128,8 +119,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->tickLoop($this->loop);
     }
 
-    public function testRemoveReadStreamAfterReading()
-    {
+    public function testRemoveReadStreamAfterReading() {
         list ($input, $output) = $this->createSocketPair();
 
         $this->loop->addReadStream($input, $this->expectCallableOnce());
@@ -143,8 +133,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->tickLoop($this->loop);
     }
 
-    public function testRemoveWriteStreamInstantly()
-    {
+    public function testRemoveWriteStreamInstantly() {
         list ($input) = $this->createSocketPair();
 
         $this->loop->addWriteStream($input, $this->expectCallableNever());
@@ -152,8 +141,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->tickLoop($this->loop);
     }
 
-    public function testRemoveWriteStreamAfterWriting()
-    {
+    public function testRemoveWriteStreamAfterWriting() {
         list ($input) = $this->createSocketPair();
 
         $this->loop->addWriteStream($input, $this->expectCallableOnce());
@@ -163,8 +151,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->tickLoop($this->loop);
     }
 
-    public function testRemoveStreamForReadOnly()
-    {
+    public function testRemoveStreamForReadOnly() {
         list ($input, $output) = $this->createSocketPair();
 
         $this->loop->addReadStream($input, $this->expectCallableNever());
@@ -175,8 +162,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->tickLoop($this->loop);
     }
 
-    public function testRemoveStreamForWriteOnly()
-    {
+    public function testRemoveStreamForWriteOnly() {
         list ($input, $output) = $this->createSocketPair();
 
         fwrite($output, "foo\n");
@@ -188,14 +174,14 @@ abstract class AbstractLoopTest extends TestCase
         $this->tickLoop($this->loop);
     }
 
-    public function testRemoveReadAndWriteStreamFromLoopOnceResourceClosesEndsLoop()
-    {
+    public function testRemoveReadAndWriteStreamFromLoopOnceResourceClosesEndsLoop() {
         list($stream, $other) = $this->createSocketPair();
-        stream_set_blocking($stream, false);
-        stream_set_blocking($other, false);
+        stream_set_blocking($stream, FALSE);
+        stream_set_blocking($other, FALSE);
 
         // dummy writable handler
-        $this->loop->addWriteStream($stream, function () { });
+        $this->loop->addWriteStream($stream, function () {
+        });
 
         // remove stream when the stream is readable (closes)
         $loop = $this->loop;
@@ -211,14 +197,14 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertRunFasterThan($this->tickTimeout);
     }
 
-    public function testRemoveReadAndWriteStreamFromLoopOnceResourceClosesOnEndOfFileEndsLoop()
-    {
+    public function testRemoveReadAndWriteStreamFromLoopOnceResourceClosesOnEndOfFileEndsLoop() {
         list($stream, $other) = $this->createSocketPair();
-        stream_set_blocking($stream, false);
-        stream_set_blocking($other, false);
+        stream_set_blocking($stream, FALSE);
+        stream_set_blocking($other, FALSE);
 
         // dummy writable handler
-        $this->loop->addWriteStream($stream, function () { });
+        $this->loop->addWriteStream($stream, function () {
+        });
 
         // remove stream when the stream is readable (closes)
         $loop = $this->loop;
@@ -242,14 +228,14 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertRunFasterThan(0.1);
     }
 
-    public function testRemoveReadAndWriteStreamFromLoopWithClosingResourceEndsLoop()
-    {
+    public function testRemoveReadAndWriteStreamFromLoopWithClosingResourceEndsLoop() {
         // get only one part of the pair to ensure the other side will close immediately
         list($stream) = $this->createSocketPair();
-        stream_set_blocking($stream, false);
+        stream_set_blocking($stream, FALSE);
 
         // dummy writable handler
-        $this->loop->addWriteStream($stream, function () { });
+        $this->loop->addWriteStream($stream, function () {
+        });
 
         // remove stream when the stream is readable (closes)
         $loop = $this->loop;
@@ -262,26 +248,23 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertRunFasterThan($this->tickTimeout);
     }
 
-    public function testRemoveInvalid()
-    {
+    public function testRemoveInvalid() {
         list ($stream) = $this->createSocketPair();
 
         // remove a valid stream from the event loop that was never added in the first place
         $this->loop->removeReadStream($stream);
         $this->loop->removeWriteStream($stream);
 
-        $this->assertTrue(true);
+        $this->assertTrue(TRUE);
     }
 
     /** @test */
-    public function emptyRunShouldSimplyReturn()
-    {
+    public function emptyRunShouldSimplyReturn() {
         $this->assertRunFasterThan($this->tickTimeout);
     }
 
     /** @test */
-    public function runShouldReturnWhenNoMoreFds()
-    {
+    public function runShouldReturnWhenNoMoreFds() {
         list ($input, $output) = $this->createSocketPair();
 
         $loop = $this->loop;
@@ -295,8 +278,7 @@ abstract class AbstractLoopTest extends TestCase
     }
 
     /** @test */
-    public function stopShouldStopRunningLoop()
-    {
+    public function stopShouldStopRunningLoop() {
         list ($input, $output) = $this->createSocketPair();
 
         $loop = $this->loop;
@@ -309,8 +291,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertRunFasterThan($this->tickTimeout * 2);
     }
 
-    public function testStopShouldPreventRunFromBlocking()
-    {
+    public function testStopShouldPreventRunFromBlocking() {
         $that = $this;
         $this->loop->addTimer(
             1,
@@ -329,13 +310,12 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertRunFasterThan($this->tickTimeout * 2);
     }
 
-    public function testIgnoreRemovedCallback()
-    {
+    public function testIgnoreRemovedCallback() {
         // two independent streams, both should be readable right away
         list ($input1, $output1) = $this->createSocketPair();
         list ($input2, $output2) = $this->createSocketPair();
 
-        $called = false;
+        $called = FALSE;
 
         $loop = $this->loop;
         $loop->addReadStream($input1, function ($stream) use (& $called, $loop, $input2) {
@@ -343,7 +323,7 @@ abstract class AbstractLoopTest extends TestCase
             $loop->removeReadStream($stream);
             $loop->removeReadStream($input2);
 
-            $called = true;
+            $called = TRUE;
         });
 
         // this callback would have to be called as well, but the first stream already removed us
@@ -362,8 +342,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertTrue($called);
     }
 
-    public function testFutureTickEventGeneratedByFutureTick()
-    {
+    public function testFutureTickEventGeneratedByFutureTick() {
         $loop = $this->loop;
         $this->loop->futureTick(
             function () use ($loop) {
@@ -380,12 +359,11 @@ abstract class AbstractLoopTest extends TestCase
         $this->loop->run();
     }
 
-    public function testFutureTick()
-    {
-        $called = false;
+    public function testFutureTick() {
+        $called = FALSE;
 
         $callback = function () use (&$called) {
-            $called = true;
+            $called = TRUE;
         };
 
         $this->loop->futureTick($callback);
@@ -397,8 +375,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertTrue($called);
     }
 
-    public function testFutureTickFiresBeforeIO()
-    {
+    public function testFutureTickFiresBeforeIO() {
         list ($stream) = $this->createSocketPair();
 
         $this->loop->addWriteStream(
@@ -419,8 +396,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->tickLoop($this->loop);
     }
 
-    public function testRecursiveFutureTick()
-    {
+    public function testRecursiveFutureTick() {
         list ($stream) = $this->createSocketPair();
 
         $loop = $this->loop;
@@ -448,8 +424,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->loop->run();
     }
 
-    public function testRunWaitsForFutureTickEvents()
-    {
+    public function testRunWaitsForFutureTickEvents() {
         list ($stream) = $this->createSocketPair();
 
         $loop = $this->loop;
@@ -470,8 +445,7 @@ abstract class AbstractLoopTest extends TestCase
         $this->loop->run();
     }
 
-    public function testFutureTickEventGeneratedByTimer()
-    {
+    public function testFutureTickEventGeneratedByTimer() {
         $loop = $this->loop;
         $this->loop->addTimer(
             0.001,
@@ -489,30 +463,30 @@ abstract class AbstractLoopTest extends TestCase
         $this->loop->run();
     }
 
-    public function testRemoveSignalNotRegisteredIsNoOp()
-    {
-        $this->loop->removeSignal(SIGINT, function () { });
-        $this->assertTrue(true);
+    public function testRemoveSignalNotRegisteredIsNoOp() {
+        $this->loop->removeSignal(SIGINT, function () {
+        });
+        $this->assertTrue(TRUE);
     }
 
-    public function testSignal()
-    {
+    public function testSignal() {
         if (!function_exists('posix_kill') || !function_exists('posix_getpid')) {
             $this->markTestSkipped('Signal test skipped because functions "posix_kill" and "posix_getpid" are missing.');
         }
 
-        $called = false;
-        $calledShouldNot = true;
+        $called = FALSE;
+        $calledShouldNot = TRUE;
 
-        $timer = $this->loop->addPeriodicTimer(1, function () {});
+        $timer = $this->loop->addPeriodicTimer(1, function () {
+        });
 
         $this->loop->addSignal(SIGUSR2, $func2 = function () use (&$calledShouldNot) {
-            $calledShouldNot = false;
+            $calledShouldNot = FALSE;
         });
 
         $loop = $this->loop;
         $this->loop->addSignal(SIGUSR1, $func1 = function () use (&$func1, &$func2, &$called, $timer, $loop) {
-            $called = true;
+            $called = TRUE;
             $loop->removeSignal(SIGUSR1, $func1);
             $loop->removeSignal(SIGUSR2, $func2);
             $loop->cancelTimer($timer);
@@ -528,13 +502,13 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertTrue($calledShouldNot);
     }
 
-    public function testSignalMultipleUsagesForTheSameListener()
-    {
+    public function testSignalMultipleUsagesForTheSameListener() {
         $funcCallCount = 0;
         $func = function () use (&$funcCallCount) {
             $funcCallCount++;
         };
-        $this->loop->addTimer(1, function () {});
+        $this->loop->addTimer(1, function () {
+        });
 
         $this->loop->addSignal(SIGUSR1, $func);
         $this->loop->addSignal(SIGUSR1, $func);
@@ -552,10 +526,10 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertSame(1, $funcCallCount);
     }
 
-    public function testSignalsKeepTheLoopRunning()
-    {
+    public function testSignalsKeepTheLoopRunning() {
         $loop = $this->loop;
-        $function = function () {};
+        $function = function () {
+        };
         $this->loop->addSignal(SIGUSR1, $function);
         $this->loop->addTimer(1.5, function () use ($function, $loop) {
             $loop->removeSignal(SIGUSR1, $function);
@@ -565,10 +539,10 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertRunSlowerThan(1.5);
     }
 
-    public function testSignalsKeepTheLoopRunningAndRemovingItStopsTheLoop()
-    {
+    public function testSignalsKeepTheLoopRunningAndRemovingItStopsTheLoop() {
         $loop = $this->loop;
-        $function = function () {};
+        $function = function () {
+        };
         $this->loop->addSignal(SIGUSR1, $function);
         $this->loop->addTimer(1.5, function () use ($function, $loop) {
             $loop->removeSignal(SIGUSR1, $function);
@@ -577,13 +551,13 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertRunFasterThan(1.6);
     }
 
-    public function testTimerIntervalCanBeFarInFuture()
-    {
+    public function testTimerIntervalCanBeFarInFuture() {
         // get only one part of the pair to ensure the other side will close immediately
         list($stream) = $this->createSocketPair();
 
         // start a timer very far in the future
-        $timer = $this->loop->addTimer(PHP_INT_MAX, function () { });
+        $timer = $this->loop->addTimer(PHP_INT_MAX, function () {
+        });
 
         // remove stream and timer when the stream is readable (closes)
         $loop = $this->loop;
@@ -595,25 +569,23 @@ abstract class AbstractLoopTest extends TestCase
         $this->assertRunFasterThan($this->tickTimeout);
     }
 
-    private function assertRunSlowerThan($minInterval)
-    {
-        $start = microtime(true);
+    private function assertRunSlowerThan($minInterval) {
+        $start = microtime(TRUE);
 
         $this->loop->run();
 
-        $end = microtime(true);
+        $end = microtime(TRUE);
         $interval = $end - $start;
 
         $this->assertLessThan($interval, $minInterval);
     }
 
-    private function assertRunFasterThan($maxInterval)
-    {
-        $start = microtime(true);
+    private function assertRunFasterThan($maxInterval) {
+        $start = microtime(TRUE);
 
         $this->loop->run();
 
-        $end = microtime(true);
+        $end = microtime(TRUE);
         $interval = $end - $start;
 
         $this->assertLessThan($maxInterval, $interval);

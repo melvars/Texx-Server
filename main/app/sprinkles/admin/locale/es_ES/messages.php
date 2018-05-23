@@ -58,7 +58,7 @@ return [
         "ICON" => "Icono de grupo",
         "ICON_EXPLAIN" => "Icono para los miembros del grupo",
         "INFO_PAGE" => "Página de información de grupo para {{name}}",
-        "MANAGE"        => "Administrar grupo",
+        "MANAGE" => "Administrar grupo",
         "NAME" => "Nombre del grupo",
         "NAME_EXPLAIN" => "Introduzca un nombre para el grupo",
         "NOT_EMPTY" => "No puedes hacerlo porque todavía hay usuarios asociados con el grupo <strong> {{name}} </strong>.",

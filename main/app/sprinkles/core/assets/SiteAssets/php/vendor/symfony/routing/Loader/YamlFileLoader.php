@@ -34,15 +34,14 @@ class YamlFileLoader extends FileLoader
     /**
      * Loads a Yaml file.
      *
-     * @param string      $file A Yaml file path
+     * @param string $file A Yaml file path
      * @param string|null $type The resource type
      *
      * @return RouteCollection A RouteCollection instance
      *
      * @throws \InvalidArgumentException When a route can't be parsed because YAML is invalid
      */
-    public function load($file, $type = null)
-    {
+    public function load($file, $type = NULL) {
         $path = $this->locator->locate($file);
 
         if (!stream_is_local($path)) {
@@ -53,14 +52,14 @@ class YamlFileLoader extends FileLoader
             throw new \InvalidArgumentException(sprintf('File "%s" not found.', $path));
         }
 
-        if (null === $this->yamlParser) {
+        if (NULL === $this->yamlParser) {
             $this->yamlParser = new YamlParser();
         }
 
         $prevErrorHandler = set_error_handler(function ($level, $message, $script, $line) use ($file, &$prevErrorHandler) {
-            $message = E_USER_DEPRECATED === $level ? preg_replace('/ on line \d+/', ' in "'.$file.'"$0', $message) : $message;
+            $message = E_USER_DEPRECATED === $level ? preg_replace('/ on line \d+/', ' in "' . $file . '"$0', $message) : $message;
 
-            return $prevErrorHandler ? $prevErrorHandler($level, $message, $script, $line) : false;
+            return $prevErrorHandler ? $prevErrorHandler($level, $message, $script, $line) : FALSE;
         });
 
         try {
@@ -75,7 +74,7 @@ class YamlFileLoader extends FileLoader
         $collection->addResource(new FileResource($path));
 
         // empty file
-        if (null === $parsedConfig) {
+        if (NULL === $parsedConfig) {
             return $collection;
         }
 
@@ -100,28 +99,26 @@ class YamlFileLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
-    {
-        return is_string($resource) && in_array(pathinfo($resource, PATHINFO_EXTENSION), array('yml', 'yaml'), true) && (!$type || 'yaml' === $type);
+    public function supports($resource, $type = NULL) {
+        return is_string($resource) && in_array(pathinfo($resource, PATHINFO_EXTENSION), array('yml', 'yaml'), TRUE) && (!$type || 'yaml' === $type);
     }
 
     /**
      * Parses a route and adds it to the RouteCollection.
      *
      * @param RouteCollection $collection A RouteCollection instance
-     * @param string          $name       Route name
-     * @param array           $config     Route definition
-     * @param string          $path       Full path of the YAML file being processed
+     * @param string $name Route name
+     * @param array $config Route definition
+     * @param string $path Full path of the YAML file being processed
      */
-    protected function parseRoute(RouteCollection $collection, $name, array $config, $path)
-    {
+    protected function parseRoute(RouteCollection $collection, $name, array $config, $path) {
         $defaults = isset($config['defaults']) ? $config['defaults'] : array();
         $requirements = isset($config['requirements']) ? $config['requirements'] : array();
         $options = isset($config['options']) ? $config['options'] : array();
         $host = isset($config['host']) ? $config['host'] : '';
         $schemes = isset($config['schemes']) ? $config['schemes'] : array();
         $methods = isset($config['methods']) ? $config['methods'] : array();
-        $condition = isset($config['condition']) ? $config['condition'] : null;
+        $condition = isset($config['condition']) ? $config['condition'] : NULL;
 
         if (isset($config['controller'])) {
             $defaults['_controller'] = $config['controller'];
@@ -136,21 +133,20 @@ class YamlFileLoader extends FileLoader
      * Parses an import and adds the routes in the resource to the RouteCollection.
      *
      * @param RouteCollection $collection A RouteCollection instance
-     * @param array           $config     Route definition
-     * @param string          $path       Full path of the YAML file being processed
-     * @param string          $file       Loaded file name
+     * @param array $config Route definition
+     * @param string $path Full path of the YAML file being processed
+     * @param string $file Loaded file name
      */
-    protected function parseImport(RouteCollection $collection, array $config, $path, $file)
-    {
-        $type = isset($config['type']) ? $config['type'] : null;
+    protected function parseImport(RouteCollection $collection, array $config, $path, $file) {
+        $type = isset($config['type']) ? $config['type'] : NULL;
         $prefix = isset($config['prefix']) ? $config['prefix'] : '';
         $defaults = isset($config['defaults']) ? $config['defaults'] : array();
         $requirements = isset($config['requirements']) ? $config['requirements'] : array();
         $options = isset($config['options']) ? $config['options'] : array();
-        $host = isset($config['host']) ? $config['host'] : null;
-        $condition = isset($config['condition']) ? $config['condition'] : null;
-        $schemes = isset($config['schemes']) ? $config['schemes'] : null;
-        $methods = isset($config['methods']) ? $config['methods'] : null;
+        $host = isset($config['host']) ? $config['host'] : NULL;
+        $condition = isset($config['condition']) ? $config['condition'] : NULL;
+        $schemes = isset($config['schemes']) ? $config['schemes'] : NULL;
+        $methods = isset($config['methods']) ? $config['methods'] : NULL;
 
         if (isset($config['controller'])) {
             $defaults['_controller'] = $config['controller'];
@@ -158,7 +154,7 @@ class YamlFileLoader extends FileLoader
 
         $this->setCurrentDir(dirname($path));
 
-        $imported = $this->import($config['resource'], $type, false, $file);
+        $imported = $this->import($config['resource'], $type, FALSE, $file);
 
         if (!is_array($imported)) {
             $imported = array($imported);
@@ -167,16 +163,16 @@ class YamlFileLoader extends FileLoader
         foreach ($imported as $subCollection) {
             /* @var $subCollection RouteCollection */
             $subCollection->addPrefix($prefix);
-            if (null !== $host) {
+            if (NULL !== $host) {
                 $subCollection->setHost($host);
             }
-            if (null !== $condition) {
+            if (NULL !== $condition) {
                 $subCollection->setCondition($condition);
             }
-            if (null !== $schemes) {
+            if (NULL !== $schemes) {
                 $subCollection->setSchemes($schemes);
             }
-            if (null !== $methods) {
+            if (NULL !== $methods) {
                 $subCollection->setMethods($methods);
             }
             $subCollection->addDefaults($defaults);
@@ -190,15 +186,14 @@ class YamlFileLoader extends FileLoader
     /**
      * Validates the route configuration.
      *
-     * @param array  $config A resource config
-     * @param string $name   The config key
-     * @param string $path   The loaded file path
+     * @param array $config A resource config
+     * @param string $name The config key
+     * @param string $path The loaded file path
      *
      * @throws \InvalidArgumentException If one of the provided config keys is not supported,
      *                                   something is missing or the combination is nonsense
      */
-    protected function validate($config, $name, $path)
-    {
+    protected function validate($config, $name, $path) {
         if (!is_array($config)) {
             throw new \InvalidArgumentException(sprintf('The definition of "%s" in "%s" must be a YAML array.', $name, $path));
         }

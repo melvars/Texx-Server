@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Http\Concerns;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,8 +40,7 @@ trait DeterminesContentType
      * @param ServerRequestInterface $request
      * @return string
      */
-    protected function determineContentType(ServerRequestInterface $request, $ajaxDebug = false)
-    {
+    protected function determineContentType(ServerRequestInterface $request, $ajaxDebug = FALSE) {
         // For AJAX requests, if AJAX debugging is turned on, always return html
         if ($ajaxDebug && $request->isXhr()) {
             return 'text/html';

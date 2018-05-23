@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Carbon\Carbon;
@@ -38,8 +39,7 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getInfo($request, $response, $args)
-    {
+    public function getInfo($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
@@ -78,8 +78,7 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getList($request, $response, $args)
-    {
+    public function getList($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -111,8 +110,7 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getUsers($request, $response, $args)
-    {
+    public function getUsers($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -150,8 +148,7 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageInfo($request, $response, $args)
-    {
+    public function pageInfo($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
@@ -188,8 +185,7 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageList($request, $response, $args)
-    {
+    public function pageList($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 

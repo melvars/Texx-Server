@@ -1,5 +1,7 @@
 <?php
+
 namespace Ratchet\RFC6455\Test\Unit\Messaging;
+
 use Ratchet\RFC6455\Messaging\Frame;
 
 /**
@@ -7,8 +9,9 @@ use Ratchet\RFC6455\Messaging\Frame;
  * @todo getMaskingKey, getPayloadStartingByte don't have tests yet
  * @todo Could use some clean up in general, I had to rush to fix a bug for a deadline, sorry.
  */
-class FrameTest extends \PHPUnit_Framework_TestCase {
-    protected $_firstByteFinText    = '10000001';
+class FrameTest extends \PHPUnit_Framework_TestCase
+{
+    protected $_firstByteFinText = '10000001';
 
     protected $_secondByteMaskedSPL = '11111101';
 
@@ -31,7 +34,7 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
             $out = '';
             while (strlen($in) >= 8) {
                 $out .= static::encode(substr($in, 0, 8));
-                $in   = substr($in, 8);
+                $in = substr($in, 8);
             }
             return $out;
         }
@@ -73,15 +76,15 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
     /**
      * @dataProvider underflowProvider
      *
-     * @covers Ratchet\RFC6455\Messaging\Frame::isFinal
-     * @covers Ratchet\RFC6455\Messaging\Frame::getRsv1
-     * @covers Ratchet\RFC6455\Messaging\Frame::getRsv2
-     * @covers Ratchet\RFC6455\Messaging\Frame::getRsv3
-     * @covers Ratchet\RFC6455\Messaging\Frame::getOpcode
-     * @covers Ratchet\RFC6455\Messaging\Frame::isMasked
-     * @covers Ratchet\RFC6455\Messaging\Frame::getPayloadLength
-     * @covers Ratchet\RFC6455\Messaging\Frame::getMaskingKey
-     * @covers Ratchet\RFC6455\Messaging\Frame::getPayload
+     * @covers       Ratchet\RFC6455\Messaging\Frame::isFinal
+     * @covers       Ratchet\RFC6455\Messaging\Frame::getRsv1
+     * @covers       Ratchet\RFC6455\Messaging\Frame::getRsv2
+     * @covers       Ratchet\RFC6455\Messaging\Frame::getRsv3
+     * @covers       Ratchet\RFC6455\Messaging\Frame::getOpcode
+     * @covers       Ratchet\RFC6455\Messaging\Frame::isMasked
+     * @covers       Ratchet\RFC6455\Messaging\Frame::getPayloadLength
+     * @covers       Ratchet\RFC6455\Messaging\Frame::getMaskingKey
+     * @covers       Ratchet\RFC6455\Messaging\Frame::getPayload
      */
     public function testUnderflowExceptionFromAllTheMethodsMimickingBuffering($method, $bin) {
         $this->setExpectedException('\UnderflowException');
@@ -99,12 +102,12 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
      */
     public static function firstByteProvider() {
         return array(
-            array(false, false, false, true,   8, '00011000'),
-            array(true,  false, true,  false, 10, '10101010'),
-            array(false, false, false, false, 15, '00001111'),
-            array(true,  false, false, false,  1, '10000001'),
-            array(true,  true,  true,  true,  15, '11111111'),
-            array(true,  true,  false, false,  7, '11000111')
+            array(FALSE, FALSE, FALSE, TRUE, 8, '00011000'),
+            array(TRUE, FALSE, TRUE, FALSE, 10, '10101010'),
+            array(FALSE, FALSE, FALSE, FALSE, 15, '00001111'),
+            array(TRUE, FALSE, FALSE, FALSE, 1, '10000001'),
+            array(TRUE, TRUE, TRUE, TRUE, 15, '11111111'),
+            array(TRUE, TRUE, FALSE, FALSE, 7, '11000111')
         );
     }
 
@@ -159,12 +162,12 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
 
     public static function payloadLengthDescriptionProvider() {
         return array(
-            array(7,  '01110101'),
-            array(7,  '01111101'),
+            array(7, '01110101'),
+            array(7, '01111101'),
             array(23, '01111110'),
             array(71, '01111111'),
-            array(7,  '00000000'), // Should this throw an exception?  Can a payload be empty?
-            array(7,  '00000001')
+            array(7, '00000000'), // Should this throw an exception?  Can a payload be empty?
+            array(7, '00000001')
         );
     }
 
@@ -177,8 +180,8 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
         $this->_frame->addBuffer(static::encode($this->_firstByteFinText));
         $this->_frame->addBuffer(static::encode($bin));
         $ref = new \ReflectionClass($this->_frame);
-        $cb  = $ref->getMethod('getFirstPayloadVal');
-        $cb->setAccessible(true);
+        $cb = $ref->getMethod('getFirstPayloadVal');
+        $cb->setAccessible(TRUE);
         $this->assertEquals(bindec($bin), $cb->invoke($this->_frame));
     }
 
@@ -187,8 +190,8 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
      */
     public function testFirstPayloadValUnderflow() {
         $ref = new \ReflectionClass($this->_frame);
-        $cb  = $ref->getMethod('getFirstPayloadVal');
-        $cb->setAccessible(true);
+        $cb = $ref->getMethod('getFirstPayloadVal');
+        $cb->setAccessible(TRUE);
         $this->setExpectedException('UnderflowException');
         $cb->invoke($this->_frame);
     }
@@ -201,8 +204,8 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
         $this->_frame->addBuffer(static::encode($this->_firstByteFinText));
         $this->_frame->addBuffer(static::encode($bin));
         $ref = new \ReflectionClass($this->_frame);
-        $cb  = $ref->getMethod('getNumPayloadBits');
-        $cb->setAccessible(true);
+        $cb = $ref->getMethod('getNumPayloadBits');
+        $cb->setAccessible(TRUE);
         $this->assertEquals($expected_bits, $cb->invoke($this->_frame));
     }
 
@@ -211,19 +214,20 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
      */
     public function testgetNumPayloadBitsUnderflow() {
         $ref = new \ReflectionClass($this->_frame);
-        $cb  = $ref->getMethod('getNumPayloadBits');
-        $cb->setAccessible(true);
+        $cb = $ref->getMethod('getNumPayloadBits');
+        $cb->setAccessible(TRUE);
         $this->setExpectedException('UnderflowException');
         $cb->invoke($this->_frame);
     }
 
     public function secondByteProvider() {
         return array(
-            array(true,   1, '10000001'),
-            array(false,  1, '00000001'),
-            array(true, 125, $this->_secondByteMaskedSPL)
+            array(TRUE, 1, '10000001'),
+            array(FALSE, 1, '00000001'),
+            array(TRUE, 125, $this->_secondByteMaskedSPL)
         );
     }
+
     /**
      * @dataProvider secondByteProvider
      * covers Ratchet\RFC6455\Messaging\Frame::isMasked
@@ -304,7 +308,7 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
 
     public static function messageFragmentProvider() {
         return array(
-            array(false, '', '', '', '', '')
+            array(FALSE, '', '', '', '', '')
         );
     }
 
@@ -314,7 +318,7 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
      */
     public function testCheckPiecingTogetherMessage($msg, $encoded) {
         $framed = base64_decode($encoded);
-        for ($i = 0, $len = strlen($framed);$i < $len; $i++) {
+        for ($i = 0, $len = strlen($framed); $i < $len; $i++) {
             $this->_frame->addBuffer(substr($framed, $i, 1));
         }
         $this->assertEquals($msg, $this->_frame->getPayload());
@@ -327,8 +331,8 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
      */
     public function testLongCreate() {
         $len = 65525;
-        $pl  = $this->generateRandomString($len);
-        $frame = new Frame($pl, true, Frame::OP_PING);
+        $pl = $this->generateRandomString($len);
+        $frame = new Frame($pl, TRUE, Frame::OP_PING);
         $this->assertTrue($frame->isFinal());
         $this->assertEquals(Frame::OP_PING, $frame->getOpcode());
         $this->assertFalse($frame->isMasked());
@@ -345,15 +349,16 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
         $frame = new Frame($this->generateRandomString($len));
         $this->assertEquals($len, $frame->getPayloadLength());
     }
+
     /**
      * covers Ratchet\RFC6455\Messaging\Frame::__construct
      * covers Ratchet\RFC6455\Messaging\Frame::extractOverflow
      */
     public function testExtractOverflow() {
         $string1 = $this->generateRandomString();
-        $frame1  = new Frame($string1);
+        $frame1 = new Frame($string1);
         $string2 = $this->generateRandomString();
-        $frame2  = new Frame($string2);
+        $frame2 = new Frame($string2);
         $cat = new Frame;
         $cat->addBuffer($frame1->getContents() . $frame2->getContents());
         $this->assertEquals($frame1->getContents(), $cat->getContents());
@@ -369,7 +374,7 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
      */
     public function testEmptyExtractOverflow() {
         $string = $this->generateRandomString();
-        $frame  = new Frame($string);
+        $frame = new Frame($string);
         $this->assertEquals($string, $frame->getPayload());
         $this->assertEquals('', $frame->extractOverflow());
         $this->assertEquals($string, $frame->getPayload());
@@ -391,7 +396,7 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
      * covers Ratchet\RFC6455\Messaging\Frame::maskPayload
      */
     public function testMasking() {
-        $msg   = 'The quick brown fox jumps over the lazy dog.';
+        $msg = 'The quick brown fox jumps over the lazy dog.';
         $frame = new Frame($msg);
         $frame->maskPayload();
         $this->assertTrue($frame->isMasked());
@@ -403,7 +408,7 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
      */
     public function testUnMaskPayload() {
         $string = $this->generateRandomString();
-        $frame  = new Frame($string);
+        $frame = new Frame($string);
         $frame->maskPayload()->unMaskPayload();
         $this->assertFalse($frame->isMasked());
         $this->assertEquals($string, $frame->getPayload());
@@ -413,12 +418,12 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
      * covers Ratchet\RFC6455\Messaging\Frame::generateMaskingKey
      */
     public function testGenerateMaskingKey() {
-        $dupe = false;
+        $dupe = FALSE;
         $done = array();
         for ($i = 0; $i < 10; $i++) {
             $new = $this->_frame->generateMaskingKey();
             if (in_array($new, $done)) {
-                $dupe = true;
+                $dupe = TRUE;
             }
             $done[] = $new;
         }
@@ -446,16 +451,16 @@ class FrameTest extends \PHPUnit_Framework_TestCase {
         $this->_frame->maskPayload('x✖');
     }
 
-    protected function generateRandomString($length = 10, $addSpaces = true, $addNumbers = true) {
+    protected function generateRandomString($length = 10, $addSpaces = TRUE, $addNumbers = TRUE) {
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"$%&/()=[]{}'; // ยง
         $useChars = array();
-        for($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; $i++) {
             $useChars[] = $characters[mt_rand(0, strlen($characters) - 1)];
         }
-        if($addSpaces === true) {
+        if ($addSpaces === TRUE) {
             array_push($useChars, ' ', ' ', ' ', ' ', ' ', ' ');
         }
-        if($addNumbers === true) {
+        if ($addNumbers === TRUE) {
             array_push($useChars, rand(0, 9), rand(0, 9), rand(0, 9));
         }
         shuffle($useChars);

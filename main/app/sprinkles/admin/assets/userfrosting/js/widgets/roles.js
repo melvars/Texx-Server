@@ -15,7 +15,7 @@ function attachRoleForm() {
          */
 
         // Auto-generate slug
-        form.find('input[name=name]').on('input change', function() {
+        form.find('input[name=name]').on('input change', function () {
             var manualSlug = form.find('#form-role-slug-override').prop('checked');
             if (!manualSlug) {
                 var slug = getSlug($(this).val());
@@ -23,7 +23,7 @@ function attachRoleForm() {
             }
         });
 
-        form.find('#form-role-slug-override').on('change', function() {
+        form.find('#form-role-slug-override').on('change', function () {
             if ($(this).prop('checked')) {
                 form.find('input[name=slug]').prop('readonly', false);
             } else {
@@ -35,7 +35,7 @@ function attachRoleForm() {
         // Set up the form for submission
         form.ufForm({
             validators: page.validators
-        }).on("submitSuccess.ufForm", function() {
+        }).on("submitSuccess.ufForm", function () {
             // Reload page on success
             window.location.reload();
         });
@@ -51,7 +51,7 @@ function bindRoleButtons(el) {
      */
 
     // Manage permissions button
-    el.find('.js-role-permissions').click(function() {
+    el.find('.js-role-permissions').click(function () {
         var slug = $(this).data('slug');
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/permissions",
@@ -70,26 +70,25 @@ function bindRoleButtons(el) {
             permissionWidget.ufCollection({
                 dropdown: {
                     ajax: {
-                        url     : site.uri.public + '/api/permissions'
+                        url: site.uri.public + '/api/permissions'
                     },
-                    placeholder : "Select a permission"
+                    placeholder: "Select a permission"
                 },
                 dropdownTemplate: modal.find('#role-permissions-select-option').html(),
-                rowTemplate     : modal.find('#role-permissions-row').html()
+                rowTemplate: modal.find('#role-permissions-row').html()
             });
 
             // Get current roles and add to widget
             $.getJSON(site.uri.public + '/api/roles/r/' + slug + '/permissions')
-            .done(function (data) {
-                $.each(data.rows, function (idx, permission) {
-                    permission.text = permission.name;
-                    permissionWidget.ufCollection('addRow', permission);
+                .done(function (data) {
+                    $.each(data.rows, function (idx, permission) {
+                        permission.text = permission.name;
+                        permissionWidget.ufCollection('addRow', permission);
+                    });
                 });
-            });
 
             // Set up form for submission
-            form.ufForm({
-            }).on("submitSuccess.ufForm", function() {
+            form.ufForm({}).on("submitSuccess.ufForm", function () {
                 // Reload page on success
                 window.location.reload();
             });
@@ -100,7 +99,7 @@ function bindRoleButtons(el) {
      * Buttons that launch a modal dialog
      */
     // Edit role details button
-    el.find('.js-role-edit').click(function() {
+    el.find('.js-role-edit').click(function () {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/edit",
             ajaxParams: {
@@ -113,7 +112,7 @@ function bindRoleButtons(el) {
     });
 
     // Delete role button
-    el.find('.js-role-delete').click(function() {
+    el.find('.js-role-delete').click(function () {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/confirm-delete",
             ajaxParams: {
@@ -127,17 +126,17 @@ function bindRoleButtons(el) {
             var form = modal.find('.js-form');
 
             form.ufForm()
-            .on("submitSuccess.ufForm", function() {
-                // Reload page on success
-                window.location.reload();
-            });
+                .on("submitSuccess.ufForm", function () {
+                    // Reload page on success
+                    window.location.reload();
+                });
         });
     });
 }
 
 function bindRoleCreationButton(el) {
     // Link create button
-    el.find('.js-role-create').click(function() {
+    el.find('.js-role-create').click(function () {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/create",
             msgTarget: $("#alerts-page")

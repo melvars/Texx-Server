@@ -1,11 +1,14 @@
 <?php
+
 namespace Ratchet\Mock;
+
 use Ratchet\AbstractConnectionDecorator;
 
-class ConnectionDecorator extends AbstractConnectionDecorator {
+class ConnectionDecorator extends AbstractConnectionDecorator
+{
     public $last = array(
         'write' => ''
-      , 'end'   => false
+    , 'end' => FALSE
     );
 
     public function send($data) {
@@ -15,7 +18,7 @@ class ConnectionDecorator extends AbstractConnectionDecorator {
     }
 
     public function close() {
-        $this->last[__FUNCTION__] = true;
+        $this->last[__FUNCTION__] = TRUE;
 
         $this->getConnection()->close();
     }

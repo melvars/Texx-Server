@@ -4,21 +4,19 @@ namespace React\Promise;
 
 class CancellationQueue
 {
-    private $started = false;
+    private $started = FALSE;
     private $queue = [];
 
-    public function __invoke()
-    {
+    public function __invoke() {
         if ($this->started) {
             return;
         }
 
-        $this->started = true;
+        $this->started = TRUE;
         $this->drain();
     }
 
-    public function enqueue($cancellable)
-    {
+    public function enqueue($cancellable) {
         if (!method_exists($cancellable, 'then') || !method_exists($cancellable, 'cancel')) {
             return;
         }
@@ -30,12 +28,11 @@ class CancellationQueue
         }
     }
 
-    private function drain()
-    {
+    private function drain() {
         for ($i = key($this->queue); isset($this->queue[$i]); $i++) {
             $cancellable = $this->queue[$i];
 
-            $exception = null;
+            $exception = NULL;
 
             try {
                 $cancellable->cancel();

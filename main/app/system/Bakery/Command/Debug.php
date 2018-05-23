@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,18 +27,16 @@ class Debug extends BaseCommand
     /**
      * {@inheritDoc}
      */
-    protected function configure()
-    {
+    protected function configure() {
         $this->setName("debug")
-             ->setDescription("Test the UserFrosting installation and setup the database")
-             ->setHelp("This command is used to check if the various dependencies of UserFrosting are met and display useful debugging information. \nIf any error occurs, check out the online documentation for more info about that error. \nThis command also provide the necessary tools to setup the database credentials");
+            ->setDescription("Test the UserFrosting installation and setup the database")
+            ->setHelp("This command is used to check if the various dependencies of UserFrosting are met and display useful debugging information. \nIf any error occurs, check out the online documentation for more info about that error. \nThis command also provide the necessary tools to setup the database credentials");
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         // Display header,
         $this->io->title("UserFrosting");
         $this->io->writeln("UserFrosing version : " . \UserFrosting\VERSION);
@@ -67,11 +66,10 @@ class Debug extends BaseCommand
      * @access public
      * @return void
      */
-    protected function checkPhpVersion()
-    {
+    protected function checkPhpVersion() {
         $this->io->writeln("PHP Version : " . phpversion());
         if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
-            $this->io->error("UserFrosting requires php version ".\UserFrosting\PHP_MIN_VERSION." or above. You'll need to update you PHP version before you can continue.");
+            $this->io->error("UserFrosting requires php version " . \UserFrosting\PHP_MIN_VERSION . " or above. You'll need to update you PHP version before you can continue.");
             exit(1);
         }
     }
@@ -82,8 +80,7 @@ class Debug extends BaseCommand
      * @access public
      * @return void
      */
-    protected function checkNodeVersion()
-    {
+    protected function checkNodeVersion() {
         $npmVersion = trim(exec('node -v'));
         $this->io->writeln("Node Version : $npmVersion");
 
@@ -99,8 +96,7 @@ class Debug extends BaseCommand
      * @access public
      * @return void
      */
-    protected function checkNpmVersion()
-    {
+    protected function checkNpmVersion() {
         $npmVersion = trim(exec('npm -v'));
         $this->io->writeln("NPM Version : $npmVersion");
 
@@ -117,12 +113,11 @@ class Debug extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function listSprinkles()
-    {
+    protected function listSprinkles() {
         // Check for Sprinkles schema file
         $path = \UserFrosting\SPRINKLES_SCHEMA_FILE;
         $sprinklesFile = @file_get_contents($path);
-        if ($sprinklesFile === false) {
+        if ($sprinklesFile === FALSE) {
             $this->io->error("The file `$path` not found.");
         }
 
@@ -145,8 +140,7 @@ class Debug extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function checkDatabase()
-    {
+    protected function checkDatabase() {
         $this->io->section("Testing database connection...");
 
         try {
@@ -166,8 +160,7 @@ class Debug extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function showConfig()
-    {
+    protected function showConfig() {
         // Get config
         $config = $this->ci->config;
 

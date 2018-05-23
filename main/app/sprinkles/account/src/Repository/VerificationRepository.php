@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Repository;
 
 /**
@@ -23,8 +24,7 @@ class VerificationRepository extends TokenRepository
     /**
      * {@inheritDoc}
      */
-    protected function updateUser($user, $args)
-    {
+    protected function updateUser($user, $args) {
         $user->flag_verified = 1;
         // TODO: generate user activity? or do this in controller?
         $user->save();

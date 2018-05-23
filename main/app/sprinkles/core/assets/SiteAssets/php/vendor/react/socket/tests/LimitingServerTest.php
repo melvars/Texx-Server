@@ -9,8 +9,7 @@ use Clue\React\Block;
 
 class LimitingServerTest extends TestCase
 {
-    public function testGetAddressWillBePassedThroughToTcpServer()
-    {
+    public function testGetAddressWillBePassedThroughToTcpServer() {
         $tcp = $this->getMockBuilder('React\Socket\ServerInterface')->getMock();
         $tcp->expects($this->once())->method('getAddress')->willReturn('127.0.0.1:1234');
 
@@ -19,8 +18,7 @@ class LimitingServerTest extends TestCase
         $this->assertEquals('127.0.0.1:1234', $server->getAddress());
     }
 
-    public function testPauseWillBePassedThroughToTcpServer()
-    {
+    public function testPauseWillBePassedThroughToTcpServer() {
         $tcp = $this->getMockBuilder('React\Socket\ServerInterface')->getMock();
         $tcp->expects($this->once())->method('pause');
 
@@ -29,8 +27,7 @@ class LimitingServerTest extends TestCase
         $server->pause();
     }
 
-    public function testPauseTwiceWillBePassedThroughToTcpServerOnce()
-    {
+    public function testPauseTwiceWillBePassedThroughToTcpServerOnce() {
         $tcp = $this->getMockBuilder('React\Socket\ServerInterface')->getMock();
         $tcp->expects($this->once())->method('pause');
 
@@ -40,8 +37,7 @@ class LimitingServerTest extends TestCase
         $server->pause();
     }
 
-    public function testResumeWillBePassedThroughToTcpServer()
-    {
+    public function testResumeWillBePassedThroughToTcpServer() {
         $tcp = $this->getMockBuilder('React\Socket\ServerInterface')->getMock();
         $tcp->expects($this->once())->method('resume');
 
@@ -51,8 +47,7 @@ class LimitingServerTest extends TestCase
         $server->resume();
     }
 
-    public function testResumeTwiceWillBePassedThroughToTcpServerOnce()
-    {
+    public function testResumeTwiceWillBePassedThroughToTcpServerOnce() {
         $tcp = $this->getMockBuilder('React\Socket\ServerInterface')->getMock();
         $tcp->expects($this->once())->method('resume');
 
@@ -63,8 +58,7 @@ class LimitingServerTest extends TestCase
         $server->resume();
     }
 
-    public function testCloseWillBePassedThroughToTcpServer()
-    {
+    public function testCloseWillBePassedThroughToTcpServer() {
         $tcp = $this->getMockBuilder('React\Socket\ServerInterface')->getMock();
         $tcp->expects($this->once())->method('close');
 
@@ -73,8 +67,7 @@ class LimitingServerTest extends TestCase
         $server->close();
     }
 
-    public function testSocketErrorWillBeForwarded()
-    {
+    public function testSocketErrorWillBeForwarded() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
 
         $tcp = new TcpServer(0, $loop);
@@ -86,8 +79,7 @@ class LimitingServerTest extends TestCase
         $tcp->emit('error', array(new \RuntimeException('test')));
     }
 
-    public function testSocketConnectionWillBeForwarded()
-    {
+    public function testSocketConnectionWillBeForwarded() {
         $connection = $this->getMockBuilder('React\Socket\ConnectionInterface')->getMock();
 
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
@@ -103,8 +95,7 @@ class LimitingServerTest extends TestCase
         $this->assertEquals(array($connection), $server->getConnections());
     }
 
-    public function testSocketConnectionWillBeClosedOnceLimitIsReached()
-    {
+    public function testSocketConnectionWillBeClosedOnceLimitIsReached() {
         $first = $this->getMockBuilder('React\Socket\ConnectionInterface')->getMock();
         $first->expects($this->never())->method('close');
         $second = $this->getMockBuilder('React\Socket\ConnectionInterface')->getMock();
@@ -122,8 +113,7 @@ class LimitingServerTest extends TestCase
         $tcp->emit('connection', array($second));
     }
 
-    public function testPausingServerWillBePausedOnceLimitIsReached()
-    {
+    public function testPausingServerWillBePausedOnceLimitIsReached() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('addReadStream');
         $loop->expects($this->once())->method('removeReadStream');
@@ -132,13 +122,12 @@ class LimitingServerTest extends TestCase
 
         $connection = $this->getMockBuilder('React\Socket\ConnectionInterface')->getMock();
 
-        $server = new LimitingServer($tcp, 1, true);
+        $server = new LimitingServer($tcp, 1, TRUE);
 
         $tcp->emit('connection', array($connection));
     }
 
-    public function testSocketDisconnectionWillRemoveFromList()
-    {
+    public function testSocketDisconnectionWillRemoveFromList() {
         $loop = Factory::create();
 
         $tcp = new TcpServer(0, $loop);
@@ -155,12 +144,11 @@ class LimitingServerTest extends TestCase
         $this->assertEquals(array(), $server->getConnections());
     }
 
-    public function testPausingServerWillEmitOnlyOneButAcceptTwoConnectionsDueToOperatingSystem()
-    {
+    public function testPausingServerWillEmitOnlyOneButAcceptTwoConnectionsDueToOperatingSystem() {
         $loop = Factory::create();
 
         $server = new TcpServer(0, $loop);
-        $server = new LimitingServer($server, 1, true);
+        $server = new LimitingServer($server, 1, TRUE);
         $server->on('connection', $this->expectCallableOnce());
         $server->on('error', $this->expectCallableNever());
 
@@ -173,15 +161,14 @@ class LimitingServerTest extends TestCase
         fclose($second);
     }
 
-    public function testPausingServerWillEmitTwoConnectionsFromBacklog()
-    {
+    public function testPausingServerWillEmitTwoConnectionsFromBacklog() {
         $loop = Factory::create();
 
         $twice = $this->createCallableMock();
         $twice->expects($this->exactly(2))->method('__invoke');
 
         $server = new TcpServer(0, $loop);
-        $server = new LimitingServer($server, 1, true);
+        $server = new LimitingServer($server, 1, TRUE);
         $server->on('connection', $twice);
         $server->on('error', $this->expectCallableNever());
 

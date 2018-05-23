@@ -111,7 +111,7 @@ class WormholeController extends SimpleController
             ->where('id', 1)
             ->where('token', '=', $access_token)
             ->exists()) {
-            return true;
+            return TRUE;
         } else {
             throw new NotFoundException();
         }

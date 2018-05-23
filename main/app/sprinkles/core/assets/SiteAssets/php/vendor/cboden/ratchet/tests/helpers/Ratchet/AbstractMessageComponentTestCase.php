@@ -1,18 +1,22 @@
 <?php
+
 namespace Ratchet;
 
-abstract class AbstractMessageComponentTestCase extends \PHPUnit_Framework_TestCase {
+abstract class AbstractMessageComponentTestCase extends \PHPUnit_Framework_TestCase
+{
     protected $_app;
     protected $_serv;
     protected $_conn;
 
     abstract public function getConnectionClassString();
+
     abstract public function getDecoratorClassString();
+
     abstract public function getComponentClassString();
 
     public function setUp() {
-        $this->_app  = $this->getMock($this->getComponentClassString());
-        $decorator   = $this->getDecoratorClassString();
+        $this->_app = $this->getMock($this->getComponentClassString());
+        $decorator = $this->getDecoratorClassString();
         $this->_serv = new $decorator($this->_app);
         $this->_conn = $this->getMock('\Ratchet\ConnectionInterface');
 

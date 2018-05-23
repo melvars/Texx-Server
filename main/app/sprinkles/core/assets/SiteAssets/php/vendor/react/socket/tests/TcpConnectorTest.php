@@ -13,29 +13,27 @@ class TcpConnectorTest extends TestCase
     const TIMEOUT = 0.1;
 
     /** @test */
-    public function connectionToEmptyPortShouldFail()
-    {
+    public function connectionToEmptyPortShouldFail() {
         $loop = Factory::create();
 
         $connector = new TcpConnector($loop);
         $connector->connect('127.0.0.1:9999')
-                ->then($this->expectCallableNever(), $this->expectCallableOnce());
+            ->then($this->expectCallableNever(), $this->expectCallableOnce());
 
         $loop->run();
     }
 
     /** @test */
-    public function connectionToTcpServerShouldAddResourceToLoop()
-    {
+    public function connectionToTcpServerShouldAddResourceToLoop() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $connector = new TcpConnector($loop);
 
         $server = new TcpServer(0, $loop);
 
-        $valid = false;
+        $valid = FALSE;
         $loop->expects($this->once())->method('addWriteStream')->with($this->callback(function ($arg) use (&$valid) {
             $valid = is_resource($arg);
-            return true;
+            return TRUE;
         }));
         $connector->connect($server->getAddress());
 
@@ -43,8 +41,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function connectionToTcpServerShouldSucceed()
-    {
+    public function connectionToTcpServerShouldSucceed() {
         $loop = Factory::create();
 
         $server = new TcpServer(9999, $loop);
@@ -61,8 +58,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function connectionToTcpServerShouldSucceedWithRemoteAdressSameAsTarget()
-    {
+    public function connectionToTcpServerShouldSucceedWithRemoteAdressSameAsTarget() {
         $loop = Factory::create();
 
         $server = new TcpServer(9999, $loop);
@@ -79,8 +75,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function connectionToTcpServerShouldSucceedWithLocalAdressOnLocalhost()
-    {
+    public function connectionToTcpServerShouldSucceedWithLocalAdressOnLocalhost() {
         $loop = Factory::create();
 
         $server = new TcpServer(9999, $loop);
@@ -98,8 +93,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function connectionToTcpServerShouldSucceedWithNullAddressesAfterConnectionClosed()
-    {
+    public function connectionToTcpServerShouldSucceedWithNullAddressesAfterConnectionClosed() {
         $loop = Factory::create();
 
         $server = new TcpServer(9999, $loop);
@@ -117,8 +111,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function connectionToTcpServerWillCloseWhenOtherSideCloses()
-    {
+    public function connectionToTcpServerWillCloseWhenOtherSideCloses() {
         $loop = Factory::create();
 
         // immediately close connection and server once connection is in
@@ -139,8 +132,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function connectionToEmptyIp6PortShouldFail()
-    {
+    public function connectionToEmptyIp6PortShouldFail() {
         $loop = Factory::create();
 
         $connector = new TcpConnector($loop);
@@ -152,8 +144,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function connectionToIp6TcpServerShouldSucceed()
-    {
+    public function connectionToIp6TcpServerShouldSucceed() {
         $loop = Factory::create();
 
         try {
@@ -179,8 +170,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function connectionToHostnameShouldFailImmediately()
-    {
+    public function connectionToHostnameShouldFailImmediately() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
 
         $connector = new TcpConnector($loop);
@@ -191,8 +181,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function connectionToInvalidPortShouldFailImmediately()
-    {
+    public function connectionToInvalidPortShouldFailImmediately() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
 
         $connector = new TcpConnector($loop);
@@ -203,8 +192,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function connectionToInvalidSchemeShouldFailImmediately()
-    {
+    public function connectionToInvalidSchemeShouldFailImmediately() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
 
         $connector = new TcpConnector($loop);
@@ -215,8 +203,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function cancellingConnectionShouldRemoveResourceFromLoopAndCloseResource()
-    {
+    public function cancellingConnectionShouldRemoveResourceFromLoopAndCloseResource() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $connector = new TcpConnector($loop);
 
@@ -225,12 +212,12 @@ class TcpConnectorTest extends TestCase
         $loop->expects($this->once())->method('addWriteStream');
         $promise = $connector->connect($server->getAddress());
 
-        $resource = null;
-        $valid = false;
+        $resource = NULL;
+        $valid = FALSE;
         $loop->expects($this->once())->method('removeWriteStream')->with($this->callback(function ($arg) use (&$resource, &$valid) {
             $resource = $arg;
             $valid = is_resource($arg);
-            return true;
+            return TRUE;
         }));
         $promise->cancel();
 
@@ -239,8 +226,7 @@ class TcpConnectorTest extends TestCase
     }
 
     /** @test */
-    public function cancellingConnectionShouldRejectPromise()
-    {
+    public function cancellingConnectionShouldRejectPromise() {
         $loop = Factory::create();
         $connector = new TcpConnector($loop);
 

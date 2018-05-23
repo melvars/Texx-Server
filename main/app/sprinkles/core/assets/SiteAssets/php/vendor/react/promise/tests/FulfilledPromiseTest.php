@@ -9,9 +9,8 @@ class FulfilledPromiseTest extends TestCase
     use PromiseTest\PromiseSettledTestTrait,
         PromiseTest\PromiseFulfilledTestTrait;
 
-    public function getPromiseTestAdapter(callable $canceller = null)
-    {
-        $promise = null;
+    public function getPromiseTestAdapter(callable $canceller = NULL) {
+        $promise = NULL;
 
         return new CallbackPromiseAdapter([
             'promise' => function () use (&$promise) {
@@ -21,7 +20,7 @@ class FulfilledPromiseTest extends TestCase
 
                 return $promise;
             },
-            'resolve' => function ($value = null) use (&$promise) {
+            'resolve' => function ($value = NULL) use (&$promise) {
                 if (!$promise) {
                     $promise = new FulfilledPromise($value);
                 }
@@ -32,7 +31,7 @@ class FulfilledPromiseTest extends TestCase
             'notify' => function () {
                 // no-op
             },
-            'settle' => function ($value = null) use (&$promise) {
+            'settle' => function ($value = NULL) use (&$promise) {
                 if (!$promise) {
                     $promise = new FulfilledPromise($value);
                 }
@@ -41,8 +40,7 @@ class FulfilledPromiseTest extends TestCase
     }
 
     /** @test */
-    public function shouldThrowExceptionIfConstructedWithAPromise()
-    {
+    public function shouldThrowExceptionIfConstructedWithAPromise() {
         $this->setExpectedException('\InvalidArgumentException');
 
         return new FulfilledPromise(new FulfilledPromise());

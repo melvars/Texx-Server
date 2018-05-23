@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Psr7;
 
 use Psr\Http\Message\UriInterface;
@@ -20,8 +21,7 @@ final class UriResolver
      * @return string
      * @link http://tools.ietf.org/html/rfc3986#section-5.2.4
      */
-    public static function removeDotSegments($path)
-    {
+    public static function removeDotSegments($path) {
         if ($path === '' || $path === '/') {
             return $path;
         }
@@ -31,7 +31,7 @@ final class UriResolver
         foreach ($segments as $segment) {
             if ($segment === '..') {
                 array_pop($results);
-            } elseif ($segment !== '.') {
+            } else if ($segment !== '.') {
                 $results[] = $segment;
             }
         }
@@ -41,7 +41,7 @@ final class UriResolver
         if ($path[0] === '/' && (!isset($newPath[0]) || $newPath[0] !== '/')) {
             // Re-add the leading slash if necessary for cases like "/.."
             $newPath = '/' . $newPath;
-        } elseif ($newPath !== '' && ($segment === '.' || $segment === '..')) {
+        } else if ($newPath !== '' && ($segment === '.' || $segment === '..')) {
             // Add the trailing slash if necessary
             // If newPath is not empty, then $segment must be set and is the last segment from the foreach
             $newPath .= '/';
@@ -54,14 +54,13 @@ final class UriResolver
      * Converts the relative URI into a new URI that is resolved against the base URI.
      *
      * @param UriInterface $base Base URI
-     * @param UriInterface $rel  Relative URI
+     * @param UriInterface $rel Relative URI
      *
      * @return UriInterface
      * @link http://tools.ietf.org/html/rfc3986#section-5.2
      */
-    public static function resolve(UriInterface $base, UriInterface $rel)
-    {
-        if ((string) $rel === '') {
+    public static function resolve(UriInterface $base, UriInterface $rel) {
+        if ((string)$rel === '') {
             // we can simply return the same base URI instance for this same-document reference
             return $base;
         }
@@ -87,7 +86,7 @@ final class UriResolver
                         $targetPath = '/' . $rel->getPath();
                     } else {
                         $lastSlashPos = strrpos($base->getPath(), '/');
-                        if ($lastSlashPos === false) {
+                        if ($lastSlashPos === FALSE) {
                             $targetPath = $rel->getPath();
                         } else {
                             $targetPath = substr($base->getPath(), 0, $lastSlashPos + 1) . $rel->getPath();
@@ -129,13 +128,12 @@ final class UriResolver
      *
      *    echo UriResolver::relativize($base, new Uri('/a/b/c'));  // prints 'c' as well
      *
-     * @param UriInterface $base   Base URI
+     * @param UriInterface $base Base URI
      * @param UriInterface $target Target URI
      *
      * @return UriInterface The relative URI reference
      */
-    public static function relativize(UriInterface $base, UriInterface $target)
-    {
+    public static function relativize(UriInterface $base, UriInterface $target) {
         if ($target->getScheme() !== '' &&
             ($base->getScheme() !== $target->getScheme() || $target->getAuthority() === '' && $base->getAuthority() !== '')
         ) {
@@ -156,7 +154,7 @@ final class UriResolver
         // We must remove the path before removing the authority because if the path starts with two slashes, the URI
         // would turn invalid. And we also cannot set a relative path before removing the authority, as that is also
         // invalid.
-        $emptyPathUri = $target->withScheme('')->withPath('')->withUserInfo('')->withPort(null)->withHost('');
+        $emptyPathUri = $target->withScheme('')->withPath('')->withUserInfo('')->withPort(NULL)->withHost('');
 
         if ($base->getPath() !== $target->getPath()) {
             return $emptyPathUri->withPath(self::getRelativePath($base, $target));
@@ -179,8 +177,7 @@ final class UriResolver
         return $emptyPathUri;
     }
 
-    private static function getRelativePath(UriInterface $base, UriInterface $target)
-    {
+    private static function getRelativePath(UriInterface $base, UriInterface $target) {
         $sourceSegments = explode('/', $base->getPath());
         $targetSegments = explode('/', $target->getPath());
         array_pop($sourceSegments);
@@ -198,9 +195,9 @@ final class UriResolver
         // A reference to am empty last segment or an empty first sub-segment must be prefixed with "./".
         // This also applies to a segment with a colon character (e.g., "file:colon") that cannot be used
         // as the first segment of a relative-path reference, as it would be mistaken for a scheme name.
-        if ('' === $relativePath || false !== strpos(explode('/', $relativePath, 2)[0], ':')) {
+        if ('' === $relativePath || FALSE !== strpos(explode('/', $relativePath, 2)[0], ':')) {
             $relativePath = "./$relativePath";
-        } elseif ('/' === $relativePath[0]) {
+        } else if ('/' === $relativePath[0]) {
             if ($base->getAuthority() != '' && $base->getPath() === '') {
                 // In this case an extra slash is added by resolve() automatically. So we must not add one here.
                 $relativePath = ".$relativePath";
@@ -212,8 +209,7 @@ final class UriResolver
         return $relativePath;
     }
 
-    private function __construct()
-    {
+    private function __construct() {
         // cannot be instantiated
     }
 }

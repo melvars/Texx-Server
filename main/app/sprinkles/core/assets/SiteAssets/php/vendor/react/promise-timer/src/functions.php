@@ -7,33 +7,32 @@ use React\EventLoop\LoopInterface;
 use React\Promise\PromiseInterface;
 use React\Promise\Promise;
 
-function timeout(PromiseInterface $promise, $time, LoopInterface $loop)
-{
+function timeout(PromiseInterface $promise, $time, LoopInterface $loop) {
     // cancelling this promise will only try to cancel the input promise,
     // thus leaving responsibility to the input promise.
-    $canceller = null;
+    $canceller = NULL;
     if ($promise instanceof CancellablePromiseInterface) {
         $canceller = array($promise, 'cancel');
     }
 
     return new Promise(function ($resolve, $reject) use ($loop, $time, $promise) {
-        $timer = null;
+        $timer = NULL;
         $promise->then(function ($v) use (&$timer, $loop, $resolve) {
             if ($timer) {
                 $loop->cancelTimer($timer);
             }
-            $timer = false;
+            $timer = FALSE;
             $resolve($v);
         }, function ($v) use (&$timer, $loop, $reject) {
             if ($timer) {
                 $loop->cancelTimer($timer);
             }
-            $timer = false;
+            $timer = FALSE;
             $reject($v);
         });
 
         // promise already resolved => no need to start timer
-        if ($timer === false) {
+        if ($timer === FALSE) {
             return;
         }
 
@@ -48,8 +47,7 @@ function timeout(PromiseInterface $promise, $time, LoopInterface $loop)
     }, $canceller);
 }
 
-function resolve($time, LoopInterface $loop)
-{
+function resolve($time, LoopInterface $loop) {
     return new Promise(function ($resolve) use ($loop, $time, &$timer) {
         // resolve the promise when the timer fires in $time seconds
         $timer = $loop->addTimer($time, function () use ($time, $resolve) {
@@ -62,8 +60,7 @@ function resolve($time, LoopInterface $loop)
     });
 }
 
-function reject($time, LoopInterface $loop)
-{
+function reject($time, LoopInterface $loop) {
     return resolve($time, $loop)->then(function ($time) {
         throw new TimeoutException($time, 'Timer expired after ' . $time . ' seconds');
     });

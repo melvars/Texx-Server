@@ -14,9 +14,14 @@ namespace Evenement;
 interface EventEmitterInterface
 {
     public function on($event, callable $listener);
+
     public function once($event, callable $listener);
+
     public function removeListener($event, callable $listener);
-    public function removeAllListeners($event = null);
-    public function listeners($event = null);
+
+    public function removeAllListeners($event = NULL);
+
+    public function listeners($event = NULL);
+
     public function emit($event, array $arguments = []);
 }

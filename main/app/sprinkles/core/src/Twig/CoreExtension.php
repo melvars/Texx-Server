@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Twig;
 
 use Interop\Container\ContainerInterface;
@@ -28,8 +29,7 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
      *
      * @param ContainerInterface $services The global container object, which holds all your services.
      */
-    public function __construct(ContainerInterface $services)
-    {
+    public function __construct(ContainerInterface $services) {
         $this->services = $services;
     }
 
@@ -38,8 +38,7 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return 'userfrosting/core';
     }
 
@@ -48,11 +47,10 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
      *
      * @return array[\Twig_SimpleFunction]
      */
-    public function getFunctions()
-    {
+    public function getFunctions() {
         return array(
             // Add Twig function for fetching alerts
-            new \Twig_SimpleFunction('getAlerts', function ($clear = true) {
+            new \Twig_SimpleFunction('getAlerts', function ($clear = TRUE) {
                 if ($clear) {
                     return $this->services['alerts']->getAndClearMessages();
                 } else {
@@ -72,13 +70,12 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
      *
      * @return array[\Twig_SimpleFilter]
      */
-    public function getFilters()
-    {
+    public function getFilters() {
         return array(
             /**
              * Converts phone numbers to a standard format.
              *
-             * @param   String   $num   A unformatted phone number
+             * @param   String $num A unformatted phone number
              * @return  String   Returns the formatted phone number
              */
             new \Twig_SimpleFilter('phone', function ($num) {
@@ -95,8 +92,7 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
      *
      * @return array[mixed]
      */
-    public function getGlobals()
-    {
+    public function getGlobals() {
         // CSRF token name and value
         $csrfNameKey = $this->services->csrf->getTokenNameKey();
         $csrfValueKey = $this->services->csrf->getTokenValueKey();
@@ -104,12 +100,12 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
         $csrfValue = $this->services->csrf->getTokenValue();
 
         $csrf = [
-            'csrf'   => [
+            'csrf' => [
                 'keys' => [
-                    'name'  => $csrfNameKey,
+                    'name' => $csrfNameKey,
                     'value' => $csrfValueKey
                 ],
-                'name'  => $csrfName,
+                'name' => $csrfName,
                 'value' => $csrfValue
             ]
         ];
@@ -117,7 +113,7 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
         $site = array_replace_recursive($this->services->config['site'], $csrf);
 
         return [
-            'site'   => $site,
+            'site' => $site,
             'assets' => $this->services->assets
         ];
     }

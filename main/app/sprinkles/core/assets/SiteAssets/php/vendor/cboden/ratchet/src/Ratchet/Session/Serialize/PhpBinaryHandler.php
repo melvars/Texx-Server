@@ -1,7 +1,9 @@
 <?php
+
 namespace Ratchet\Session\Serialize;
 
-class PhpBinaryHandler implements HandlerInterface {
+class PhpBinaryHandler implements HandlerInterface
+{
     /**
      * {@inheritdoc}
      */
@@ -15,14 +17,14 @@ class PhpBinaryHandler implements HandlerInterface {
      */
     public function unserialize($raw) {
         $returnData = array();
-        $offset     = 0;
+        $offset = 0;
 
         while ($offset < strlen($raw)) {
-            $num     = ord($raw[$offset]);
+            $num = ord($raw[$offset]);
             $offset += 1;
             $varname = substr($raw, $offset, $num);
             $offset += $num;
-            $data    = unserialize(substr($raw, $offset));
+            $data = unserialize(substr($raw, $offset));
 
             $returnData[$varname] = $data;
             $offset += strlen(serialize($data));

@@ -1,12 +1,14 @@
 <?php
+
 namespace Ratchet\Wamp;
 
 /**
  * @covers Ratchet\Wamp\Topic
  */
-class TopicTest extends \PHPUnit_Framework_TestCase {
+class TopicTest extends \PHPUnit_Framework_TestCase
+{
     public function testGetId() {
-        $id    = uniqid();
+        $id = uniqid();
         $topic = new Topic($id);
 
         $this->assertEquals($id, $topic->getId());
@@ -23,7 +25,7 @@ class TopicTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testRemove() {
-        $topic   = new Topic('boop');
+        $topic = new Topic('boop');
         $tracked = $this->newConn();
 
         $topic->add($this->newConn());
@@ -36,20 +38,20 @@ class TopicTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testBroadcast() {
-        $msg  = 'Hello World!';
+        $msg = 'Hello World!';
         $name = 'Batman';
         $protocol = json_encode(array(8, $name, $msg));
 
-        $first  = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
+        $first = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
         $second = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
 
         $first->expects($this->once())
-              ->method('send')
-              ->with($this->equalTo($protocol));
+            ->method('send')
+            ->with($this->equalTo($protocol));
 
         $second->expects($this->once())
-              ->method('send')
-              ->with($this->equalTo($protocol));
+            ->method('send')
+            ->with($this->equalTo($protocol));
 
         $topic = new Topic($name);
         $topic->add($first);
@@ -59,13 +61,13 @@ class TopicTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testBroadcastWithExclude() {
-        $msg  = 'Hello odd numbers';
+        $msg = 'Hello odd numbers';
         $name = 'Excluding';
         $protocol = json_encode(array(8, $name, $msg));
 
-        $first  = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
+        $first = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
         $second = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
-        $third  = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
+        $third = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
 
         $first->expects($this->once())
             ->method('send')
@@ -86,13 +88,13 @@ class TopicTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testBroadcastWithEligible() {
-        $msg  = 'Hello white list';
+        $msg = 'Hello white list';
         $name = 'Eligible';
         $protocol = json_encode(array(8, $name, $msg));
 
-        $first  = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
+        $first = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
         $second = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
-        $third  = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
+        $third = $this->getMock('Ratchet\\Wamp\\WampConnection', array('send'), array($this->getMock('\\Ratchet\\ConnectionInterface')));
 
         $first->expects($this->once())
             ->method('send')
@@ -113,29 +115,29 @@ class TopicTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testIterator() {
-        $first  = $this->newConn();
+        $first = $this->newConn();
         $second = $this->newConn();
-        $third  = $this->newConn();
+        $third = $this->newConn();
 
-        $topic  = new Topic('Joker');
+        $topic = new Topic('Joker');
         $topic->add($first)->add($second)->add($third);
 
         $check = array($first, $second, $third);
 
         foreach ($topic as $mock) {
-            $this->assertNotSame(false, array_search($mock, $check));
+            $this->assertNotSame(FALSE, array_search($mock, $check));
         }
     }
 
     public function testToString() {
-        $name  = 'Bane';
+        $name = 'Bane';
         $topic = new Topic($name);
 
         $this->assertEquals($name, (string)$topic);
     }
 
     public function testDoesHave() {
-        $conn  = $this->newConn();
+        $conn = $this->newConn();
         $topic = new Topic('Two Face');
         $topic->add($conn);
 
@@ -143,14 +145,14 @@ class TopicTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testDoesNotHave() {
-        $conn  = $this->newConn();
+        $conn = $this->newConn();
         $topic = new Topic('Alfred');
 
         $this->assertFalse($topic->has($conn));
     }
 
     public function testDoesNotHaveAfterRemove() {
-        $conn  = $this->newConn();
+        $conn = $this->newConn();
         $topic = new Topic('Ras');
 
         $topic->add($conn)->remove($conn);

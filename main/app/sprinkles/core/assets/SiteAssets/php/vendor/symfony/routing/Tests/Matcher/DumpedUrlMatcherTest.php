@@ -21,8 +21,7 @@ class DumpedUrlMatcherTest extends UrlMatcherTest
      * @expectedException \LogicException
      * @expectedExceptionMessage The "schemes" requirement is only supported for URL matchers that implement RedirectableUrlMatcherInterface.
      */
-    public function testSchemeRequirement()
-    {
+    public function testSchemeRequirement() {
         parent::testSchemeRequirement();
     }
 
@@ -30,18 +29,16 @@ class DumpedUrlMatcherTest extends UrlMatcherTest
      * @expectedException \LogicException
      * @expectedExceptionMessage The "schemes" requirement is only supported for URL matchers that implement RedirectableUrlMatcherInterface.
      */
-    public function testSchemeAndMethodMismatch()
-    {
+    public function testSchemeAndMethodMismatch() {
         parent::testSchemeRequirement();
     }
 
-    protected function getUrlMatcher(RouteCollection $routes, RequestContext $context = null)
-    {
+    protected function getUrlMatcher(RouteCollection $routes, RequestContext $context = NULL) {
         static $i = 0;
 
-        $class = 'DumpedUrlMatcher'.++$i;
+        $class = 'DumpedUrlMatcher' . ++$i;
         $dumper = new PhpMatcherDumper($routes);
-        eval('?>'.$dumper->dump(array('class' => $class)));
+        eval('?>' . $dumper->dump(array('class' => $class)));
 
         return new $class($context ?: new RequestContext());
     }

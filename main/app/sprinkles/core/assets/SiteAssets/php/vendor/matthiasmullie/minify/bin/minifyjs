@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+
 use MatthiasMullie\Minify;
 
 // command line utility to minify JS
@@ -17,7 +18,7 @@ error_reporting(E_ALL);
 if (!isset($_SERVER['argv']) && !isset($argv)) {
     fwrite(STDERR, 'Please enable the "register_argc_argv" directive in your php.ini' . PHP_EOL);
     exit(1);
-} elseif (!isset($argv)) {
+} else if (!isset($argv)) {
     $argv = $_SERVER['argv'];
 }
 // check if path to file given

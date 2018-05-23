@@ -1,4 +1,5 @@
 <?php
+
 namespace Nubs\RandomNameGenerator;
 
 use Cinam\Randomizer\Randomizer;
@@ -21,8 +22,7 @@ class All extends AbstractGenerator implements Generator
      * @param array $generators The random generators to use.
      * @param \Cinam\Randomizer\Randomizer $randomizer The random number generator.
      */
-    public function __construct(array $generators, Randomizer $randomizer = null)
-    {
+    public function __construct(array $generators, Randomizer $randomizer = NULL) {
         $this->_generators = $generators;
         $this->_randomizer = $randomizer;
     }
@@ -34,8 +34,7 @@ class All extends AbstractGenerator implements Generator
      * @param \Cinam\Randomizer\Randomizer $randomizer The random number generator.
      * @return \Nubs\RandomNameGenerator\All The constructed generator.
      */
-    public static function create(Randomizer $randomizer = null)
-    {
+    public static function create(Randomizer $randomizer = NULL) {
         return new self([new Alliteration($randomizer), new Vgng($randomizer)], $randomizer);
     }
 
@@ -45,8 +44,7 @@ class All extends AbstractGenerator implements Generator
      * @api
      * @return string A random name.
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->_getRandomGenerator()->getName();
     }
 
@@ -55,8 +53,7 @@ class All extends AbstractGenerator implements Generator
      *
      * @return \Nubs\RandomNameGenerator\Generator A random generator.
      */
-    protected function _getRandomGenerator()
-    {
+    protected function _getRandomGenerator() {
         return $this->_randomizer ? $this->_randomizer->getArrayValue($this->_generators) : $this->_generators[array_rand($this->_generators)];
     }
 }

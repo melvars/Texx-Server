@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Interop\Container\ContainerInterface;
@@ -33,8 +34,7 @@ class AuthorizationManager
      *
      * @param ContainerInterface $ci The global container object, which holds all your services.
      */
-    public function __construct(ContainerInterface $ci, array $callbacks = [])
-    {
+    public function __construct(ContainerInterface $ci, array $callbacks = []) {
         $this->ci = $ci;
         $this->callbacks = $callbacks;
     }
@@ -46,8 +46,7 @@ class AuthorizationManager
      * @param string $name
      * @param callable $callback
      */
-    public function addCallback($name, $callback)
-    {
+    public function addCallback($name, $callback) {
         $this->callbacks[$name] = $callback;
         return $this;
     }
@@ -57,8 +56,7 @@ class AuthorizationManager
      *
      * @return callable[]
      */
-    public function getCallbacks()
-    {
+    public function getCallbacks() {
         return $this->callbacks;
     }
 
@@ -69,12 +67,11 @@ class AuthorizationManager
      *
      * @param UserFrosting\Sprinkle\Account\Database\Models\User $user
      * @param string $slug The permission slug to check for access.
-     * @param array $params[optional] An array of field names => values, specifying any additional data to provide the authorization module
+     * @param array $params [optional] An array of field names => values, specifying any additional data to provide the authorization module
      * when determining whether or not this user has access.
      * @return boolean True if the user has access, false otherwise.
      */
-    public function checkAccess(User $user, $slug, array $params = [])
-    {
+    public function checkAccess(User $user, $slug, array $params = []) {
         $debug = $this->ci->config['debug.auth'];
 
         if ($debug) {
@@ -87,7 +84,7 @@ class AuthorizationManager
             if ($debug) {
                 $this->ci->authLogger->debug("User is not logged in.  Access denied.");
             }
-            return false;
+            return FALSE;
         }
 
         // The master (root) account has access to everything.
@@ -97,7 +94,7 @@ class AuthorizationManager
             if ($debug) {
                 $this->ci->authLogger->debug("User is the master (root) user.  Access granted.");
             }
-            return true;
+            return TRUE;
         }
 
         // Find all permissions that apply to this user (via roles), and check if any evaluate to true.
@@ -107,13 +104,13 @@ class AuthorizationManager
             if ($debug) {
                 $this->ci->authLogger->debug("No matching permissions found.  Access denied.");
             }
-            return false;
+            return FALSE;
         }
 
         $permissions = $permissions[$slug];
 
         if ($debug) {
-            $this->ci->authLogger->debug("Found matching permissions: \n" . print_r($this->getPermissionsArrayDebugInfo($permissions), true));
+            $this->ci->authLogger->debug("Found matching permissions: \n" . print_r($this->getPermissionsArrayDebugInfo($permissions), TRUE));
         }
 
         $nodeVisitor = new ParserNodeFunctionEvaluator($this->callbacks, $this->ci->authLogger, $debug);
@@ -125,7 +122,7 @@ class AuthorizationManager
                 if ($debug) {
                     $this->ci->authLogger->debug("User passed conditions '{$permission->conditions}' .  Access granted.");
                 }
-                return true;
+                return TRUE;
             }
         }
 
@@ -133,7 +130,7 @@ class AuthorizationManager
             $this->ci->authLogger->debug("User failed to pass any of the matched permissions.  Access denied.");
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -142,8 +139,7 @@ class AuthorizationManager
      * @param  array
      * @return array
      */
-    protected function getPermissionsArrayDebugInfo($permissions)
-    {
+    protected function getPermissionsArrayDebugInfo($permissions) {
         $permissionsInfo = [];
         foreach ($permissions as $permission) {
             $permissionData = array_only($permission->toArray(), ['id', 'slug', 'name', 'conditions', 'description']);

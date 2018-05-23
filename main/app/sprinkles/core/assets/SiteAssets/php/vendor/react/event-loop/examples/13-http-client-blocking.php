@@ -12,7 +12,7 @@ $stream = stream_socket_client('tcp://www.google.com:80');
 if (!$stream) {
     exit(1);
 }
-stream_set_blocking($stream, false);
+stream_set_blocking($stream, FALSE);
 
 // send HTTP request
 fwrite($stream, "GET / HTTP/1.1\r\nHost: www.google.com\r\nConnection: close\r\n\r\n");

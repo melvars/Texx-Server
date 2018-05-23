@@ -27,30 +27,25 @@ class AbstractProxyTest extends TestCase
      */
     protected $proxy;
 
-    protected function setUp()
-    {
+    protected function setUp() {
         $this->proxy = $this->getMockForAbstractClass(AbstractProxy::class);
     }
 
-    protected function tearDown()
-    {
-        $this->proxy = null;
+    protected function tearDown() {
+        $this->proxy = NULL;
     }
 
-    public function testGetSaveHandlerName()
-    {
+    public function testGetSaveHandlerName() {
         $this->assertNull($this->proxy->getSaveHandlerName());
     }
 
-    public function testIsSessionHandlerInterface()
-    {
+    public function testIsSessionHandlerInterface() {
         $this->assertFalse($this->proxy->isSessionHandlerInterface());
         $sh = new SessionHandlerProxy(new \SessionHandler());
         $this->assertTrue($sh->isSessionHandlerInterface());
     }
 
-    public function testIsWrapper()
-    {
+    public function testIsWrapper() {
         $this->assertFalse($this->proxy->isWrapper());
     }
 
@@ -58,8 +53,7 @@ class AbstractProxyTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testIsActive()
-    {
+    public function testIsActive() {
         $this->assertFalse($this->proxy->isActive());
         session_start();
         $this->assertTrue($this->proxy->isActive());
@@ -69,8 +63,7 @@ class AbstractProxyTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testName()
-    {
+    public function testName() {
         $this->assertEquals(session_name(), $this->proxy->getName());
         $this->proxy->setName('foo');
         $this->assertEquals('foo', $this->proxy->getName());
@@ -82,8 +75,7 @@ class AbstractProxyTest extends TestCase
      * @preserveGlobalState disabled
      * @expectedException \LogicException
      */
-    public function testNameException()
-    {
+    public function testNameException() {
         session_start();
         $this->proxy->setName('foo');
     }
@@ -92,8 +84,7 @@ class AbstractProxyTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testId()
-    {
+    public function testId() {
         $this->assertEquals(session_id(), $this->proxy->getId());
         $this->proxy->setId('foo');
         $this->assertEquals('foo', $this->proxy->getId());
@@ -105,8 +96,7 @@ class AbstractProxyTest extends TestCase
      * @preserveGlobalState disabled
      * @expectedException \LogicException
      */
-    public function testIdException()
-    {
+    public function testIdException() {
         session_start();
         $this->proxy->setId('foo');
     }

@@ -36,50 +36,43 @@ class SessionTest extends TestCase
      */
     protected $session;
 
-    protected function setUp()
-    {
+    protected function setUp() {
         $this->storage = new MockArraySessionStorage();
         $this->session = new Session($this->storage, new AttributeBag(), new FlashBag());
     }
 
-    protected function tearDown()
-    {
-        $this->storage = null;
-        $this->session = null;
+    protected function tearDown() {
+        $this->storage = NULL;
+        $this->session = NULL;
     }
 
-    public function testStart()
-    {
+    public function testStart() {
         $this->assertEquals('', $this->session->getId());
         $this->assertTrue($this->session->start());
         $this->assertNotEquals('', $this->session->getId());
     }
 
-    public function testIsStarted()
-    {
+    public function testIsStarted() {
         $this->assertFalse($this->session->isStarted());
         $this->session->start();
         $this->assertTrue($this->session->isStarted());
     }
 
-    public function testSetId()
-    {
+    public function testSetId() {
         $this->assertEquals('', $this->session->getId());
         $this->session->setId('0123456789abcdef');
         $this->session->start();
         $this->assertEquals('0123456789abcdef', $this->session->getId());
     }
 
-    public function testSetName()
-    {
+    public function testSetName() {
         $this->assertEquals('MOCKSESSID', $this->session->getName());
         $this->session->setName('session.test.com');
         $this->session->start();
         $this->assertEquals('session.test.com', $this->session->getName());
     }
 
-    public function testGet()
-    {
+    public function testGet() {
         // tests defaults
         $this->assertNull($this->session->get('foo'));
         $this->assertEquals(1, $this->session->get('foo', 1));
@@ -88,8 +81,7 @@ class SessionTest extends TestCase
     /**
      * @dataProvider setProvider
      */
-    public function testSet($key, $value)
-    {
+    public function testSet($key, $value) {
         $this->session->set($key, $value);
         $this->assertEquals($value, $this->session->get($key));
     }
@@ -97,15 +89,13 @@ class SessionTest extends TestCase
     /**
      * @dataProvider setProvider
      */
-    public function testHas($key, $value)
-    {
+    public function testHas($key, $value) {
         $this->session->set($key, $value);
         $this->assertTrue($this->session->has($key));
-        $this->assertFalse($this->session->has($key.'non_value'));
+        $this->assertFalse($this->session->has($key . 'non_value'));
     }
 
-    public function testReplace()
-    {
+    public function testReplace() {
         $this->session->replace(array('happiness' => 'be good', 'symfony' => 'awesome'));
         $this->assertEquals(array('happiness' => 'be good', 'symfony' => 'awesome'), $this->session->all());
         $this->session->replace(array());
@@ -115,8 +105,7 @@ class SessionTest extends TestCase
     /**
      * @dataProvider setProvider
      */
-    public function testAll($key, $value, $result)
-    {
+    public function testAll($key, $value, $result) {
         $this->session->set($key, $value);
         $this->assertEquals($result, $this->session->all());
     }
@@ -124,16 +113,14 @@ class SessionTest extends TestCase
     /**
      * @dataProvider setProvider
      */
-    public function testClear($key, $value)
-    {
+    public function testClear($key, $value) {
         $this->session->set('hi', 'fabien');
         $this->session->set($key, $value);
         $this->session->clear();
         $this->assertEquals(array(), $this->session->all());
     }
 
-    public function setProvider()
-    {
+    public function setProvider() {
         return array(
             array('foo', 'bar', array('foo' => 'bar')),
             array('foo.bar', 'too much beer', array('foo.bar' => 'too much beer')),
@@ -144,57 +131,49 @@ class SessionTest extends TestCase
     /**
      * @dataProvider setProvider
      */
-    public function testRemove($key, $value)
-    {
+    public function testRemove($key, $value) {
         $this->session->set('hi.world', 'have a nice day');
         $this->session->set($key, $value);
         $this->session->remove($key);
         $this->assertEquals(array('hi.world' => 'have a nice day'), $this->session->all());
     }
 
-    public function testInvalidate()
-    {
+    public function testInvalidate() {
         $this->session->set('invalidate', 123);
         $this->session->invalidate();
         $this->assertEquals(array(), $this->session->all());
     }
 
-    public function testMigrate()
-    {
+    public function testMigrate() {
         $this->session->set('migrate', 321);
         $this->session->migrate();
         $this->assertEquals(321, $this->session->get('migrate'));
     }
 
-    public function testMigrateDestroy()
-    {
+    public function testMigrateDestroy() {
         $this->session->set('migrate', 333);
-        $this->session->migrate(true);
+        $this->session->migrate(TRUE);
         $this->assertEquals(333, $this->session->get('migrate'));
     }
 
-    public function testSave()
-    {
+    public function testSave() {
         $this->session->start();
         $this->session->save();
 
         $this->assertFalse($this->session->isStarted());
     }
 
-    public function testGetId()
-    {
+    public function testGetId() {
         $this->assertEquals('', $this->session->getId());
         $this->session->start();
         $this->assertNotEquals('', $this->session->getId());
     }
 
-    public function testGetFlashBag()
-    {
+    public function testGetFlashBag() {
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Session\\Flash\\FlashBagInterface', $this->session->getFlashBag());
     }
 
-    public function testGetIterator()
-    {
+    public function testGetIterator() {
         $attributes = array('hello' => 'world', 'symfony' => 'rocks');
         foreach ($attributes as $key => $val) {
             $this->session->set($key, $val);
@@ -209,21 +188,18 @@ class SessionTest extends TestCase
         $this->assertEquals(count($attributes), $i);
     }
 
-    public function testGetCount()
-    {
+    public function testGetCount() {
         $this->session->set('hello', 'world');
         $this->session->set('symfony', 'rocks');
 
         $this->assertCount(2, $this->session);
     }
 
-    public function testGetMeta()
-    {
+    public function testGetMeta() {
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\MetadataBag', $this->session->getMetadataBag());
     }
 
-    public function testIsEmpty()
-    {
+    public function testIsEmpty() {
         $this->assertTrue($this->session->isEmpty());
 
         $this->session->set('hello', 'world');

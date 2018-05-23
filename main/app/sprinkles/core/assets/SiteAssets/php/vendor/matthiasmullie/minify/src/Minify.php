@@ -8,6 +8,7 @@
  * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
  * @license MIT License
  */
+
 namespace MatthiasMullie\Minify;
 
 use MatthiasMullie\Minify\Exceptions\IOException;
@@ -51,8 +52,7 @@ abstract class Minify
     /**
      * Init the minify class - optionally, code may be passed along already.
      */
-    public function __construct(/* $data = null, ... */)
-    {
+    public function __construct(/* $data = null, ... */) {
         // it's possible to add the source through the constructor as well ;)
         if (func_num_args()) {
             call_user_func_array(array($this, 'add'), func_get_args());
@@ -66,8 +66,7 @@ abstract class Minify
      *
      * @return static
      */
-    public function add($data /* $data = null, ... */)
-    {
+    public function add($data /* $data = null, ... */) {
         // bogus "usage" of parameter $data: scrutinizer warns this variable is
         // not used (we're using func_get_args instead to support overloading),
         // but it still needs to be defined because it makes no sense to have
@@ -82,7 +81,7 @@ abstract class Minify
             }
 
             // redefine var
-            $data = (string) $data;
+            $data = (string)$data;
 
             // load data
             $value = $this->load($data);
@@ -106,12 +105,11 @@ abstract class Minify
      *
      * @return string The minified data
      */
-    public function minify($path = null)
-    {
+    public function minify($path = NULL) {
         $content = $this->execute($path);
 
         // save to path
-        if ($path !== null) {
+        if ($path !== NULL) {
             $this->save($content, $path);
         }
 
@@ -126,13 +124,12 @@ abstract class Minify
      *
      * @return string The minified & gzipped data
      */
-    public function gzip($path = null, $level = 9)
-    {
+    public function gzip($path = NULL, $level = 9) {
         $content = $this->execute($path);
         $content = gzencode($content, $level, FORCE_GZIP);
 
         // save to path
-        if ($path !== null) {
+        if ($path !== NULL) {
             $this->save($content, $path);
         }
 
@@ -146,8 +143,7 @@ abstract class Minify
      *
      * @return CacheItemInterface Cache item with the minifier data
      */
-    public function cache(CacheItemInterface $item)
-    {
+    public function cache(CacheItemInterface $item) {
         $content = $this->execute();
         $item->set($content);
 
@@ -161,7 +157,7 @@ abstract class Minify
      *
      * @return string The minified data
      */
-    abstract public function execute($path = null);
+    abstract public function execute($path = NULL);
 
     /**
      * Load data.
@@ -170,8 +166,7 @@ abstract class Minify
      *
      * @return string
      */
-    protected function load($data)
-    {
+    protected function load($data) {
         // check if the data is a file
         if ($this->canImportFile($data)) {
             $data = file_get_contents($data);
@@ -189,12 +184,11 @@ abstract class Minify
      * Save to file.
      *
      * @param string $content The minified data
-     * @param string $path    The path to save the minified data to
+     * @param string $path The path to save the minified data to
      *
      * @throws IOException
      */
-    protected function save($content, $path)
-    {
+    protected function save($content, $path) {
         $handler = $this->openFileForWriting($path);
 
         $this->writeToFile($handler, $content);
@@ -205,11 +199,10 @@ abstract class Minify
     /**
      * Register a pattern to execute against the source content.
      *
-     * @param string          $pattern     PCRE pattern
+     * @param string $pattern PCRE pattern
      * @param string|callable $replacement Replacement value for matched pattern
      */
-    protected function registerPattern($pattern, $replacement = '')
-    {
+    protected function registerPattern($pattern, $replacement = '') {
         // study the pattern, we'll execute it more than once
         $pattern .= 'S';
 
@@ -228,8 +221,7 @@ abstract class Minify
      *
      * @return string The (manipulated) content
      */
-    protected function replace($content)
-    {
+    protected function replace($content) {
         $processed = '';
         $positions = array_fill(0, count($this->patterns), -1);
         $matches = array();
@@ -245,7 +237,7 @@ abstract class Minify
                     continue;
                 }
 
-                $match = null;
+                $match = NULL;
                 if (preg_match($pattern, $content, $match, PREG_OFFSET_CAPTURE)) {
                     $matches[$i] = $match;
 
@@ -281,8 +273,8 @@ abstract class Minify
 
             // figure out which part of the string was unmatched; that's the
             // part we'll execute the patterns on again next
-            $content = (string) substr($content, $discardLength);
-            $unmatched = (string) substr($content, strpos($content, $match) + strlen($match));
+            $content = (string)substr($content, $discardLength);
+            $unmatched = (string)substr($content, strpos($content, $match) + strlen($match));
 
             // move the replaced part to $processed and prepare $content to
             // again match batch of patterns against
@@ -306,14 +298,13 @@ abstract class Minify
      * This function will be called plenty of times, where $content will always
      * move up 1 character.
      *
-     * @param string          $pattern     Pattern to match
+     * @param string $pattern Pattern to match
      * @param string|callable $replacement Replacement value
-     * @param string          $content     Content to match pattern against
+     * @param string $content Content to match pattern against
      *
      * @return string
      */
-    protected function replacePattern($pattern, $replacement, $content)
-    {
+    protected function replacePattern($pattern, $replacement, $content) {
         if (is_callable($replacement)) {
             return preg_replace_callback($pattern, $replacement, $content, 1, $count);
         } else {
@@ -335,8 +326,7 @@ abstract class Minify
      * @param string[optional] $chars
      * @param string[optional] $placeholderPrefix
      */
-    protected function extractStrings($chars = '\'"', $placeholderPrefix = '')
-    {
+    protected function extractStrings($chars = '\'"', $placeholderPrefix = '') {
         // PHP only supports $this inside anonymous functions since 5.4
         $minifier = $this;
         $callback = function ($match) use ($minifier, $placeholderPrefix) {
@@ -352,8 +342,8 @@ abstract class Minify
             }
 
             $count = count($minifier->extracted);
-            $placeholder = $match[1].$placeholderPrefix.$count.$match[1];
-            $minifier->extracted[$placeholder] = $match[1].$match[2].$match[1];
+            $placeholder = $match[1] . $placeholderPrefix . $count . $match[1];
+            $minifier->extracted[$placeholder] = $match[1] . $match[2] . $match[1];
 
             return $placeholder;
         };
@@ -370,7 +360,7 @@ abstract class Minify
          * considered as escape-char (times 2) and to get it in the regex,
          * escaped (times 2)
          */
-        $this->registerPattern('/(['.$chars.'])(.*?(?<!\\\\)(\\\\\\\\)*+)\\1/s', $callback);
+        $this->registerPattern('/([' . $chars . '])(.*?(?<!\\\\)(\\\\\\\\)*+)\\1/s', $callback);
     }
 
     /**
@@ -382,8 +372,7 @@ abstract class Minify
      *
      * @return string
      */
-    protected function restoreExtractedData($content)
-    {
+    protected function restoreExtractedData($content) {
         if (!$this->extracted) {
             // nothing was extracted, nothing to restore
             return $content;
@@ -403,8 +392,7 @@ abstract class Minify
      *
      * @return bool
      */
-    protected function canImportFile($path)
-    {
+    protected function canImportFile($path) {
         $parsed = parse_url($path);
         if (
             // file is elsewhere
@@ -412,7 +400,7 @@ abstract class Minify
             // file responds to queries (may change, or need to bypass cache)
             isset($parsed['query'])
         ) {
-            return false;
+            return FALSE;
         }
 
         return strlen($path) < PHP_MAXPATHLEN && @is_file($path) && is_readable($path);
@@ -427,10 +415,9 @@ abstract class Minify
      *
      * @throws IOException
      */
-    protected function openFileForWriting($path)
-    {
-        if (($handler = @fopen($path, 'w')) === false) {
-            throw new IOException('The file "'.$path.'" could not be opened for writing. Check if PHP has enough permissions.');
+    protected function openFileForWriting($path) {
+        if (($handler = @fopen($path, 'w')) === FALSE) {
+            throw new IOException('The file "' . $path . '" could not be opened for writing. Check if PHP has enough permissions.');
         }
 
         return $handler;
@@ -440,15 +427,14 @@ abstract class Minify
      * Attempts to write $content to the file specified by $handler. $path is used for printing exceptions.
      *
      * @param resource $handler The resource to write to
-     * @param string   $content The content to write
-     * @param string   $path    The path to the file (for exception printing only)
+     * @param string $content The content to write
+     * @param string $path The path to the file (for exception printing only)
      *
      * @throws IOException
      */
-    protected function writeToFile($handler, $content, $path = '')
-    {
-        if (($result = @fwrite($handler, $content)) === false || ($result < strlen($content))) {
-            throw new IOException('The file "'.$path.'" could not be written to. Check your disk space and file permissions.');
+    protected function writeToFile($handler, $content, $path = '') {
+        if (($result = @fwrite($handler, $content)) === FALSE || ($result < strlen($content))) {
+            throw new IOException('The file "' . $path . '" could not be written to. Check your disk space and file permissions.');
         }
     }
 }

@@ -28,13 +28,12 @@ class AssetWriter
     /**
      * Constructor.
      *
-     * @param string $dir    The base web directory
-     * @param array  $values Variable values
+     * @param string $dir The base web directory
+     * @param array $values Variable values
      *
      * @throws \InvalidArgumentException if a variable value is not a string
      */
-    public function __construct($dir, array $values = array())
-    {
+    public function __construct($dir, array $values = array()) {
         foreach ($values as $var => $vals) {
             foreach ($vals as $value) {
                 if (!is_string($value)) {
@@ -47,20 +46,18 @@ class AssetWriter
         $this->values = $values;
     }
 
-    public function writeManagerAssets(AssetManager $am)
-    {
+    public function writeManagerAssets(AssetManager $am) {
         foreach ($am->getNames() as $name) {
             $this->writeAsset($am->get($name));
         }
     }
 
-    public function writeAsset(AssetInterface $asset)
-    {
+    public function writeAsset(AssetInterface $asset) {
         foreach (VarUtils::getCombinations($asset->getVars(), $this->values) as $combination) {
             $asset->setValues($combination);
 
             static::write(
-                $this->dir.'/'.VarUtils::resolve(
+                $this->dir . '/' . VarUtils::resolve(
                     $asset->getTargetPath(),
                     $asset->getVars(),
                     $asset->getValues()
@@ -70,14 +67,13 @@ class AssetWriter
         }
     }
 
-    protected static function write($path, $contents)
-    {
-        if (!is_dir($dir = dirname($path)) && false === @mkdir($dir, 0777, true)) {
-            throw new \RuntimeException('Unable to create directory '.$dir);
+    protected static function write($path, $contents) {
+        if (!is_dir($dir = dirname($path)) && FALSE === @mkdir($dir, 0777, TRUE)) {
+            throw new \RuntimeException('Unable to create directory ' . $dir);
         }
 
-        if (false === @file_put_contents($path, $contents)) {
-            throw new \RuntimeException('Unable to write file '.$path);
+        if (FALSE === @file_put_contents($path, $contents)) {
+            throw new \RuntimeException('Unable to write file ' . $path);
         }
     }
 
@@ -87,8 +83,7 @@ class AssetWriter
      * This method is provided for backward compatibility with certain versions
      * of AsseticBundle.
      */
-    private function getCombinations(array $vars)
-    {
+    private function getCombinations(array $vars) {
         return VarUtils::getCombinations($vars, $this->values);
     }
 }

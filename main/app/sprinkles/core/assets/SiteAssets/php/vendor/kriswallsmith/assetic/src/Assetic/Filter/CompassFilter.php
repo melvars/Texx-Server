@@ -53,139 +53,114 @@ class CompassFilter extends BaseSassFilter
     private $httpGeneratedImagesPath;
     private $generatedImagesPath;
     private $httpJavascriptsPath;
-    private $homeEnv = true;
+    private $homeEnv = TRUE;
 
-    public function __construct($compassPath = '/usr/bin/compass', $rubyPath = null)
-    {
+    public function __construct($compassPath = '/usr/bin/compass', $rubyPath = NULL) {
         $this->compassPath = $compassPath;
         $this->rubyPath = $rubyPath;
         $this->cacheLocation = FilesystemUtils::getTemporaryDirectory();
 
         if ('cli' !== php_sapi_name()) {
-            $this->boring = true;
+            $this->boring = TRUE;
         }
     }
 
-    public function setScss($scss)
-    {
+    public function setScss($scss) {
         $this->scss = $scss;
     }
 
     // sass options setters
-    public function setUnixNewlines($unixNewlines)
-    {
+    public function setUnixNewlines($unixNewlines) {
         $this->unixNewlines = $unixNewlines;
     }
 
-    public function setDebugInfo($debugInfo)
-    {
+    public function setDebugInfo($debugInfo) {
         $this->debugInfo = $debugInfo;
     }
 
-    public function setCacheLocation($cacheLocation)
-    {
+    public function setCacheLocation($cacheLocation) {
         $this->cacheLocation = $cacheLocation;
     }
 
-    public function setNoCache($noCache)
-    {
+    public function setNoCache($noCache) {
         $this->noCache = $noCache;
     }
 
     // compass options setters
-    public function setForce($force)
-    {
+    public function setForce($force) {
         $this->force = $force;
     }
 
-    public function setStyle($style)
-    {
+    public function setStyle($style) {
         $this->style = $style;
     }
 
-    public function setQuiet($quiet)
-    {
+    public function setQuiet($quiet) {
         $this->quiet = $quiet;
     }
 
-    public function setBoring($boring)
-    {
+    public function setBoring($boring) {
         $this->boring = $boring;
     }
 
-    public function setNoLineComments($noLineComments)
-    {
+    public function setNoLineComments($noLineComments) {
         $this->noLineComments = $noLineComments;
     }
 
-    public function setImagesDir($imagesDir)
-    {
+    public function setImagesDir($imagesDir) {
         $this->imagesDir = $imagesDir;
     }
 
-    public function setJavascriptsDir($javascriptsDir)
-    {
+    public function setJavascriptsDir($javascriptsDir) {
         $this->javascriptsDir = $javascriptsDir;
     }
 
-    public function setFontsDir($fontsDir)
-    {
+    public function setFontsDir($fontsDir) {
         $this->fontsDir = $fontsDir;
     }
 
     // compass configuration file options setters
-    public function setPlugins(array $plugins)
-    {
+    public function setPlugins(array $plugins) {
         $this->plugins = $plugins;
     }
 
-    public function addPlugin($plugin)
-    {
+    public function addPlugin($plugin) {
         $this->plugins[] = $plugin;
     }
 
-    public function setHttpPath($httpPath)
-    {
+    public function setHttpPath($httpPath) {
         $this->httpPath = $httpPath;
     }
 
-    public function setHttpImagesPath($httpImagesPath)
-    {
+    public function setHttpImagesPath($httpImagesPath) {
         $this->httpImagesPath = $httpImagesPath;
     }
 
-    public function setHttpFontsPath($httpFontsPath)
-    {
+    public function setHttpFontsPath($httpFontsPath) {
         $this->httpFontsPath = $httpFontsPath;
     }
 
-    public function setHttpGeneratedImagesPath($httpGeneratedImagesPath)
-    {
+    public function setHttpGeneratedImagesPath($httpGeneratedImagesPath) {
         $this->httpGeneratedImagesPath = $httpGeneratedImagesPath;
     }
 
-    public function setGeneratedImagesPath($generatedImagesPath)
-    {
+    public function setGeneratedImagesPath($generatedImagesPath) {
         $this->generatedImagesPath = $generatedImagesPath;
     }
 
-    public function setHttpJavascriptsPath($httpJavascriptsPath)
-    {
+    public function setHttpJavascriptsPath($httpJavascriptsPath) {
         $this->httpJavascriptsPath = $httpJavascriptsPath;
     }
 
-    public function setHomeEnv($homeEnv)
-    {
+    public function setHomeEnv($homeEnv) {
         $this->homeEnv = $homeEnv;
     }
 
-    public function setRelativeAssets($relativeAssets)
-    {
+    public function setRelativeAssets($relativeAssets) {
         $this->relativeAssets = $relativeAssets;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $loadPaths = $this->loadPaths;
         if ($dir = $asset->getSourceDirectory()) {
             $loadPaths[] = $dir;
@@ -198,7 +173,7 @@ class CompassFilter extends BaseSassFilter
             'compile',
             $tempDir,
         );
-        if (null !== $this->rubyPath) {
+        if (NULL !== $this->rubyPath) {
             $compassProcessArgs = array_merge(explode(' ', $this->rubyPath), $compassProcessArgs);
         }
 
@@ -251,11 +226,11 @@ class CompassFilter extends BaseSassFilter
         }
 
         if ($this->unixNewlines) {
-            $optionsConfig['sass_options']['unix_newlines'] = true;
+            $optionsConfig['sass_options']['unix_newlines'] = TRUE;
         }
 
         if ($this->debugInfo) {
-            $optionsConfig['sass_options']['debug_info'] = true;
+            $optionsConfig['sass_options']['debug_info'] = TRUE;
         }
 
         if ($this->cacheLocation) {
@@ -263,7 +238,7 @@ class CompassFilter extends BaseSassFilter
         }
 
         if ($this->noCache) {
-            $optionsConfig['sass_options']['no_cache'] = true;
+            $optionsConfig['sass_options']['no_cache'] = TRUE;
         }
 
         if ($this->httpPath) {
@@ -299,22 +274,22 @@ class CompassFilter extends BaseSassFilter
             foreach ($optionsConfig as $name => $value) {
                 if (!is_array($value)) {
                     $config[] = sprintf('%s = "%s"', $name, addcslashes($value, '\\'));
-                } elseif (!empty($value)) {
+                } else if (!empty($value)) {
                     $config[] = sprintf('%s = %s', $name, $this->formatArrayToRuby($value));
                 }
             }
 
             $configFile = tempnam($tempDir, 'assetic_compass');
-            file_put_contents($configFile, implode("\n", $config)."\n");
+            file_put_contents($configFile, implode("\n", $config) . "\n");
             $pb->add('--config')->add($configFile);
         }
 
         $pb->add('--sass-dir')->add('')->add('--css-dir')->add('');
 
         // compass choose the type (sass or scss from the filename)
-        if (null !== $this->scss) {
+        if (NULL !== $this->scss) {
             $type = $this->scss ? 'scss' : 'sass';
-        } elseif ($path = $asset->getSourcePath()) {
+        } else if ($path = $asset->getSourcePath()) {
             // FIXME: what if the extension is something else?
             $type = pathinfo($path, PATHINFO_EXTENSION);
         } else {
@@ -325,7 +300,7 @@ class CompassFilter extends BaseSassFilter
         unlink($tempName); // FIXME: don't use tempnam() here
 
         // input
-        $input = $tempName.'.'.$type;
+        $input = $tempName . '.' . $type;
 
         // work-around for https://github.com/chriseppstein/compass/issues/748
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
@@ -336,7 +311,7 @@ class CompassFilter extends BaseSassFilter
         file_put_contents($input, $asset->getContent());
 
         // output
-        $output = $tempName.'.css';
+        $output = $tempName . '.css';
 
         if ($this->homeEnv) {
             // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
@@ -365,12 +340,10 @@ class CompassFilter extends BaseSassFilter
         }
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 
-    private function formatArrayToRuby($array)
-    {
+    private function formatArrayToRuby($array) {
         $output = array();
 
         // does we have an associative array ?
@@ -378,12 +351,12 @@ class CompassFilter extends BaseSassFilter
             foreach ($array as $name => $value) {
                 $output[] = sprintf('    :%s => "%s"', $name, addcslashes($value, '\\'));
             }
-            $output = "{\n".implode(",\n", $output)."\n}";
+            $output = "{\n" . implode(",\n", $output) . "\n}";
         } else {
             foreach ($array as $name => $value) {
                 $output[] = sprintf('    "%s"', addcslashes($value, '\\'));
             }
-            $output = "[\n".implode(",\n", $output)."\n]";
+            $output = "[\n" . implode(",\n", $output) . "\n]";
         }
 
         return $output;

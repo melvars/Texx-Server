@@ -1,4 +1,5 @@
 <?php
+
 namespace UserFrosting\Sprinkle\ExtendUser\Database\Models;
 
 use UserFrosting\Sprinkle\Account\Database\Models\User;
@@ -12,8 +13,7 @@ trait LinkMemberAux
      *
      * @return void
      */
-    protected static function bootLinkMemberAux()
-    {
+    protected static function bootLinkMemberAux() {
         /**
          * Create a new MemberAux if necessary, and save the associated member data every time.
          */
@@ -59,12 +59,11 @@ class Member extends User
      * Required to be able to access the `aux` relationship in Twig without needing to do eager loading.
      * @see http://stackoverflow.com/questions/29514081/cannot-access-eloquent-attributes-on-twig/35908957#35908957
      */
-    public function __isset($name)
-    {
+    public function __isset($name) {
         if (in_array($name, [
             'aux'
         ])) {
-            return true;
+            return TRUE;
         } else {
             return parent::__isset($name);
         }
@@ -73,8 +72,7 @@ class Member extends User
     /**
      * Globally joins the `members` table to access additional properties.
      */
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
 
         static::addGlobalScope(new MemberAuxScope);
@@ -83,8 +81,7 @@ class Member extends User
     /**
      * Custom mutator for Member property
      */
-    public function setCityAttribute($value)
-    {
+    public function setCityAttribute($value) {
         $this->createAuxIfNotExists();
 
         $this->aux->city = $value;
@@ -93,8 +90,7 @@ class Member extends User
     /**
      * Custom mutator for Member property
      */
-    public function setCountryAttribute($value)
-    {
+    public function setCountryAttribute($value) {
         $this->createAuxIfNotExists();
 
         $this->aux->country = $value;
@@ -103,16 +99,14 @@ class Member extends User
     /**
      * Relationship for interacting with aux model (`members` table).
      */
-    public function aux()
-    {
+    public function aux() {
         return $this->hasOne($this->auxType, 'id');
     }
 
     /**
      * If this instance doesn't already have a related aux model (either in the db on in the current object), then create one
      */
-    protected function createAuxIfNotExists()
-    {
+    protected function createAuxIfNotExists() {
         if ($this->auxType && !count($this->aux)) {
             // Create aux model and set primary key to be the same as the main user's
             $aux = new $this->auxType;

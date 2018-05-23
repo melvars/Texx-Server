@@ -15,25 +15,26 @@ const ITERATIONS = 100000;
 
 use Evenement\EventEmitter;
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $emitter = new EventEmitter();
 
 $listeners = [];
 for ($i = 0; $i < ITERATIONS; $i++) {
-    $listeners[] = function ($a, $b, $c) {};
+    $listeners[] = function ($a, $b, $c) {
+    };
 }
 
-$start = microtime(true);
+$start = microtime(TRUE);
 foreach ($listeners as $listener) {
     $emitter->once('event', $listener);
 }
-$time = microtime(true) - $start;
+$time = microtime(TRUE) - $start;
 echo 'Adding ', number_format(ITERATIONS), ' once listeners took: ', number_format($time, 2), 's', PHP_EOL;
 
-$start = microtime(true);
+$start = microtime(TRUE);
 foreach ($listeners as $listener) {
     $emitter->removeListener('event', $listener);
 }
-$time = microtime(true) - $start;
+$time = microtime(TRUE) - $start;
 echo 'Removing ', number_format(ITERATIONS), ' once listeners took: ', number_format($time, 2), 's', PHP_EOL;

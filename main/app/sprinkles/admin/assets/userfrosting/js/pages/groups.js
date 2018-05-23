@@ -7,7 +7,7 @@
  * Target page: /groups
  */
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     $("#widget-groups").ufTable({
         dataUrl: site.uri.public + "/api/groups",

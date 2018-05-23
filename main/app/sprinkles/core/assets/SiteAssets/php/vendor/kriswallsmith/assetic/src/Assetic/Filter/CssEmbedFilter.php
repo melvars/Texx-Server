@@ -34,60 +34,50 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
     private $maxUriLength; // Maximum length for a data URI. Defaults to 32768.
     private $maxImageSize; // Maximum image size (in bytes) to convert.
 
-    public function __construct($jarPath, $javaPath = '/usr/bin/java')
-    {
+    public function __construct($jarPath, $javaPath = '/usr/bin/java') {
         $this->jarPath = $jarPath;
         $this->javaPath = $javaPath;
     }
 
-    public function setCharset($charset)
-    {
+    public function setCharset($charset) {
         $this->charset = $charset;
     }
 
-    public function setMhtml($mhtml)
-    {
+    public function setMhtml($mhtml) {
         $this->mhtml = $mhtml;
     }
 
-    public function setMhtmlRoot($mhtmlRoot)
-    {
+    public function setMhtmlRoot($mhtmlRoot) {
         $this->mhtmlRoot = $mhtmlRoot;
     }
 
-    public function setRoot($root)
-    {
+    public function setRoot($root) {
         $this->root = $root;
     }
 
-    public function setSkipMissing($skipMissing)
-    {
+    public function setSkipMissing($skipMissing) {
         $this->skipMissing = $skipMissing;
     }
 
-    public function setMaxUriLength($maxUriLength)
-    {
+    public function setMaxUriLength($maxUriLength) {
         $this->maxUriLength = $maxUriLength;
     }
 
-    public function setMaxImageSize($maxImageSize)
-    {
+    public function setMaxImageSize($maxImageSize) {
         $this->maxImageSize = $maxImageSize;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $pb = $this->createProcessBuilder(array(
             $this->javaPath,
             '-jar',
             $this->jarPath,
         ));
 
-        if (null !== $this->charset) {
+        if (NULL !== $this->charset) {
             $pb->add('--charset')->add($this->charset);
         }
 
@@ -95,12 +85,12 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
             $pb->add('--mhtml');
         }
 
-        if (null !== $this->mhtmlRoot) {
+        if (NULL !== $this->mhtmlRoot) {
             $pb->add('--mhtmlroot')->add($this->mhtmlRoot);
         }
 
         // automatically define root if not already defined
-        if (null === $this->root) {
+        if (NULL === $this->root) {
             if ($dir = $asset->getSourceDirectory()) {
                 $pb->add('--root')->add($dir);
             }
@@ -112,11 +102,11 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
             $pb->add('--skip-missing');
         }
 
-        if (null !== $this->maxUriLength) {
+        if (NULL !== $this->maxUriLength) {
             $pb->add('--max-uri-length')->add($this->maxUriLength);
         }
 
-        if (null !== $this->maxImageSize) {
+        if (NULL !== $this->maxImageSize) {
             $pb->add('--max-image-size')->add($this->maxImageSize);
         }
 
@@ -135,8 +125,7 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
         $asset->setContent($proc->getOutput());
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
+    public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         // todo
         return array();
     }

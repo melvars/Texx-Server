@@ -1,10 +1,13 @@
 <?php
+
 namespace Ratchet\Mock;
+
 use Ratchet\Wamp\WampServerInterface;
 use Ratchet\WebSocket\WsServerInterface;
 use Ratchet\ConnectionInterface;
 
-class WampComponent implements WampServerInterface, WsServerInterface {
+class WampComponent implements WampServerInterface, WsServerInterface
+{
     public $last = array();
 
     public $protocols = array();

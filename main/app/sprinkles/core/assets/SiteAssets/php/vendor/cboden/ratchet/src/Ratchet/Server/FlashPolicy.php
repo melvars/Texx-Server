@@ -1,5 +1,7 @@
 <?php
+
 namespace Ratchet\Server;
+
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
@@ -13,7 +15,8 @@ use Ratchet\ConnectionInterface;
  * @link http://learn.adobe.com/wiki/download/attachments/64389123/CrossDomain_PolicyFile_Specification.pdf?version=1
  * @link view-source:http://www.adobe.com/xml/schemas/PolicyFileSocket.xsd
  */
-class FlashPolicy implements MessageComponentInterface {
+class FlashPolicy implements MessageComponentInterface
+{
 
     /**
      * Contains the root policy node
@@ -40,7 +43,7 @@ class FlashPolicy implements MessageComponentInterface {
     /**
      * @var string
      */
-    protected $_cacheValid = false;
+    protected $_cacheValid = FALSE;
 
     /**
      * Add a domain to an allowed access list.
@@ -57,29 +60,29 @@ class FlashPolicy implements MessageComponentInterface {
      * @throws \UnexpectedValueException
      * @return FlashPolicy
      */
-    public function addAllowedAccess($domain, $ports = '*', $secure = false) {
+    public function addAllowedAccess($domain, $ports = '*', $secure = FALSE) {
         if (!$this->validateDomain($domain)) {
-           throw new \UnexpectedValueException('Invalid domain');
+            throw new \UnexpectedValueException('Invalid domain');
         }
 
         if (!$this->validatePorts($ports)) {
-           throw new \UnexpectedValueException('Invalid Port');
+            throw new \UnexpectedValueException('Invalid Port');
         }
 
-        $this->_access[]   = array($domain, $ports, (boolean)$secure);
-        $this->_cacheValid = false;
+        $this->_access[] = array($domain, $ports, (boolean)$secure);
+        $this->_cacheValid = FALSE;
 
         return $this;
     }
-    
+
     /**
      * Removes all domains from the allowed access list.
-     * 
+     *
      * @return \Ratchet\Server\FlashPolicy
      */
     public function clearAllowedAccess() {
-        $this->_access      = array();
-        $this->_cacheValid = false;
+        $this->_access = array();
+        $this->_cacheValid = FALSE;
 
         return $this;
     }
@@ -99,7 +102,7 @@ class FlashPolicy implements MessageComponentInterface {
         }
 
         $this->_siteControl = $permittedCrossDomainPolicies;
-        $this->_cacheValid  = false;
+        $this->_cacheValid = FALSE;
 
         return $this;
     }
@@ -115,8 +118,8 @@ class FlashPolicy implements MessageComponentInterface {
      */
     public function onMessage(ConnectionInterface $from, $msg) {
         if (!$this->_cacheValid) {
-            $this->_cache      = $this->renderPolicy()->asXML();
-            $this->_cacheValid = true;
+            $this->_cache = $this->renderPolicy()->asXML();
+            $this->_cacheValid = TRUE;
         }
 
         $from->send($this->_cache . "\0");
@@ -161,7 +164,7 @@ class FlashPolicy implements MessageComponentInterface {
             $tmp = $policy->addChild('allow-access-from');
             $tmp->addAttribute('domain', $access[0]);
             $tmp->addAttribute('to-ports', $access[1]);
-            $tmp->addAttribute('secure', ($access[2] === true) ? 'true' : 'false');
+            $tmp->addAttribute('secure', ($access[2] === TRUE) ? 'true' : 'false');
         }
 
         return $policy;

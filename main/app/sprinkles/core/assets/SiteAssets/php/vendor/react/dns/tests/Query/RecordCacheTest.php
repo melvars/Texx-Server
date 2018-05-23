@@ -13,11 +13,10 @@ use React\Promise\PromiseInterface;
 class RecordCacheTest extends TestCase
 {
     /**
-    * @covers React\Dns\Query\RecordCache
-    * @test
-    */
-    public function lookupOnEmptyCacheShouldReturnNull()
-    {
+     * @covers React\Dns\Query\RecordCache
+     * @test
+     */
+    public function lookupOnEmptyCacheShouldReturnNull() {
         $query = new Query('igor.io', Message::TYPE_A, Message::CLASS_IN, 1345656451);
 
         $cache = new RecordCache(new ArrayCache());
@@ -27,11 +26,10 @@ class RecordCacheTest extends TestCase
     }
 
     /**
-    * @covers React\Dns\Query\RecordCache
-    * @test
-    */
-    public function storeRecordShouldMakeLookupSucceed()
-    {
+     * @covers React\Dns\Query\RecordCache
+     * @test
+     */
+    public function storeRecordShouldMakeLookupSucceed() {
         $query = new Query('igor.io', Message::TYPE_A, Message::CLASS_IN, 1345656451);
 
         $cache = new RecordCache(new ArrayCache());
@@ -46,11 +44,10 @@ class RecordCacheTest extends TestCase
     }
 
     /**
-    * @covers React\Dns\Query\RecordCache
-    * @test
-    */
-    public function storeTwoRecordsShouldReturnBoth()
-    {
+     * @covers React\Dns\Query\RecordCache
+     * @test
+     */
+    public function storeTwoRecordsShouldReturnBoth() {
         $query = new Query('igor.io', Message::TYPE_A, Message::CLASS_IN, 1345656451);
 
         $cache = new RecordCache(new ArrayCache());
@@ -67,11 +64,10 @@ class RecordCacheTest extends TestCase
     }
 
     /**
-    * @covers React\Dns\Query\RecordCache
-    * @test
-    */
-    public function storeResponseMessageShouldStoreAllAnswerValues()
-    {
+     * @covers React\Dns\Query\RecordCache
+     * @test
+     */
+    public function storeResponseMessageShouldStoreAllAnswerValues() {
         $query = new Query('igor.io', Message::TYPE_A, Message::CLASS_IN, 1345656451);
 
         $response = new Message();
@@ -92,11 +88,10 @@ class RecordCacheTest extends TestCase
     }
 
     /**
-    * @covers React\Dns\Query\RecordCache
-    * @test
-    */
-    public function expireShouldExpireDeadRecords()
-    {
+     * @covers React\Dns\Query\RecordCache
+     * @test
+     */
+    public function expireShouldExpireDeadRecords() {
         $cachedTime = 1345656451;
         $currentTime = $cachedTime + 3605;
 
@@ -110,9 +105,8 @@ class RecordCacheTest extends TestCase
         $this->assertInstanceOf('React\Promise\RejectedPromise', $promise);
     }
 
-    private function getPromiseValue(PromiseInterface $promise)
-    {
-        $capturedValue = null;
+    private function getPromiseValue(PromiseInterface $promise) {
+        $capturedValue = NULL;
 
         $promise->then(function ($value) use (&$capturedValue) {
             $capturedValue = $value;

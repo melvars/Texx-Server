@@ -1,8 +1,8 @@
 /**
  * This plugin reloads the captcha in the specified element.
  */
-(function( $ ) {
-    $.fn.captcha = function() {
+(function ($) {
+    $.fn.captcha = function () {
         // Set the new captcha image
         $(this).attr('src', site.uri.public + "/account/captcha?" + new Date().getTime());
 
@@ -10,4 +10,4 @@
         var target = $(this).data('target');
         $(target).val("");
     };
-}( jQuery ));
+}(jQuery));

@@ -7,8 +7,7 @@ use React\Dns\Model\HeaderBag;
 
 class BinaryDumper
 {
-    public function toBinary(Message $message)
-    {
+    public function toBinary(Message $message) {
         $data = '';
 
         $data .= $this->headerToBinary($message->header);
@@ -17,8 +16,7 @@ class BinaryDumper
         return $data;
     }
 
-    private function headerToBinary(HeaderBag $header)
-    {
+    private function headerToBinary(HeaderBag $header) {
         $data = '';
 
         $data .= pack('n', $header->get('id'));
@@ -43,14 +41,13 @@ class BinaryDumper
         return $data;
     }
 
-    private function questionToBinary(array $questions)
-    {
+    private function questionToBinary(array $questions) {
         $data = '';
 
         foreach ($questions as $question) {
             $labels = explode('.', $question['name']);
             foreach ($labels as $label) {
-                $data .= chr(strlen($label)).$label;
+                $data .= chr(strlen($label)) . $label;
             }
             $data .= "\x00";
 

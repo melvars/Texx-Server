@@ -15,19 +15,15 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractAnnotationLoaderTest extends TestCase
 {
-    public function getReader()
-    {
+    public function getReader() {
         return $this->getMockBuilder('Doctrine\Common\Annotations\Reader')
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
     }
 
-    public function getClassLoader($reader)
-    {
+    public function getClassLoader($reader) {
         return $this->getMockBuilder('Symfony\Component\Routing\Loader\AnnotationClassLoader')
             ->setConstructorArgs(array($reader))
-            ->getMockForAbstractClass()
-        ;
+            ->getMockForAbstractClass();
     }
 }

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System;
 
 use Illuminate\Support\Facades\Mockery;
@@ -40,11 +41,10 @@ abstract class Facade
     /**
      * Hotswap the underlying service instance behind the facade.
      *
-     * @param  mixed  $instance
+     * @param  mixed $instance
      * @return void
      */
-    public static function swap($instance)
-    {
+    public static function swap($instance) {
         $name = static::getFacadeAccessor();
 
         static::$resolvedInstance[$name] = $instance;
@@ -60,8 +60,7 @@ abstract class Facade
      * @param  mixed
      * @return \Mockery\Expectation
      */
-    public static function shouldReceive()
-    {
+    public static function shouldReceive() {
         $name = static::getFacadeAccessor();
 
         if (static::isMock()) {
@@ -76,11 +75,10 @@ abstract class Facade
     /**
      * Create a fresh mock instance for the given class.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return \Mockery\Expectation
      */
-    protected static function createFreshMockInstance($name)
-    {
+    protected static function createFreshMockInstance($name) {
         static::$resolvedInstance[$name] = $mock = static::createMockByName($name);
 
         $mock->shouldAllowMockingProtectedMethods();
@@ -95,11 +93,10 @@ abstract class Facade
     /**
      * Create a fresh mock instance for the given class.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return \Mockery\Expectation
      */
-    protected static function createMockByName($name)
-    {
+    protected static function createMockByName($name) {
         $class = static::getMockableClass($name);
 
         return $class ? Mockery::mock($class) : Mockery::mock();
@@ -110,8 +107,7 @@ abstract class Facade
      *
      * @return bool
      */
-    protected static function isMock()
-    {
+    protected static function isMock() {
         $name = static::getFacadeAccessor();
 
         return isset(static::$resolvedInstance[$name]) && static::$resolvedInstance[$name] instanceof MockInterface;
@@ -122,8 +118,7 @@ abstract class Facade
      *
      * @return string|null
      */
-    protected static function getMockableClass()
-    {
+    protected static function getMockableClass() {
         if ($root = static::getFacadeRoot()) {
             return get_class($root);
         }
@@ -134,8 +129,7 @@ abstract class Facade
      *
      * @return mixed
      */
-    public static function getFacadeRoot()
-    {
+    public static function getFacadeRoot() {
         return static::resolveFacadeInstance(static::getFacadeAccessor());
     }
 
@@ -146,19 +140,17 @@ abstract class Facade
      *
      * @throws \RuntimeException
      */
-    protected static function getFacadeAccessor()
-    {
+    protected static function getFacadeAccessor() {
         throw new RuntimeException('Facade does not implement getFacadeAccessor method.');
     }
 
     /**
      * Resolve the facade root instance from the container.
      *
-     * @param  string|object  $name
+     * @param  string|object $name
      * @return mixed
      */
-    protected static function resolveFacadeInstance($name)
-    {
+    protected static function resolveFacadeInstance($name) {
         if (is_object($name)) {
             return $name;
         }
@@ -173,11 +165,10 @@ abstract class Facade
     /**
      * Clear a resolved facade instance.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return void
      */
-    public static function clearResolvedInstance($name)
-    {
+    public static function clearResolvedInstance($name) {
         unset(static::$resolvedInstance[$name]);
     }
 
@@ -186,8 +177,7 @@ abstract class Facade
      *
      * @return void
      */
-    public static function clearResolvedInstances()
-    {
+    public static function clearResolvedInstances() {
         static::$resolvedInstance = [];
     }
 
@@ -196,8 +186,7 @@ abstract class Facade
      *
      * @return \Interop\Container\ContainerInterface
      */
-    public static function getFacadeContainer()
-    {
+    public static function getFacadeContainer() {
         return static::$container;
     }
 
@@ -207,25 +196,23 @@ abstract class Facade
      * @param  \Interop\Container\ContainerInterface $container
      * @return void
      */
-    public static function setFacadeContainer($container)
-    {
+    public static function setFacadeContainer($container) {
         static::$container = $container;
     }
 
     /**
      * Handle dynamic, static calls to the object.
      *
-     * @param  string  $method
-     * @param  array   $args
+     * @param  string $method
+     * @param  array $args
      * @return mixed
      *
      * @throws \RuntimeException
      */
-    public static function __callStatic($method, $args)
-    {
+    public static function __callStatic($method, $args) {
         $instance = static::getFacadeRoot();
 
-        if (! $instance) {
+        if (!$instance) {
             throw new RuntimeException('A facade root has not been set.');
         }
 

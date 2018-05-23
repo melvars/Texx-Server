@@ -6,8 +6,7 @@ use React\EventLoop\ExtLibevLoop;
 
 class ExtLibevLoopTest extends AbstractLoopTest
 {
-    public function createLoop()
-    {
+    public function createLoop() {
         if (!class_exists('libev\EventLoop')) {
             $this->markTestSkipped('libev tests skipped because ext-libev is not installed.');
         }
@@ -15,8 +14,7 @@ class ExtLibevLoopTest extends AbstractLoopTest
         return new ExtLibevLoop();
     }
 
-    public function testLibEvConstructor()
-    {
+    public function testLibEvConstructor() {
         $loop = new ExtLibevLoop();
     }
 }

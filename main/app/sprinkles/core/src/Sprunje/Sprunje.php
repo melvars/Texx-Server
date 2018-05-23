@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Sprunje;
 
 use Carbon\Carbon;
@@ -54,7 +55,7 @@ abstract class Sprunje
         'filters' => [],
         'lists' => [],
         'size' => 'all',
-        'page' => null,
+        'page' => NULL,
         'format' => 'json'
     ];
 
@@ -127,8 +128,7 @@ abstract class Sprunje
      * @param ClassMapper $classMapper
      * @param mixed[] $options
      */
-    public function __construct(ClassMapper $classMapper, array $options)
-    {
+    public function __construct(ClassMapper $classMapper, array $options) {
         $this->classMapper = $classMapper;
 
         // Validation on input data
@@ -140,10 +140,10 @@ abstract class Sprunje
         $v->rule('regex', 'format', '/json|csv/i');
 
         // TODO: translated rules
-        if(!$v->validate()) {
+        if (!$v->validate()) {
             $e = new BadRequestException();
             foreach ($v->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }
@@ -166,8 +166,7 @@ abstract class Sprunje
      * @param callable $callback A callback which accepts and returns a Builder instance.
      * @return $this
      */
-    public function extendQuery(callable $callback)
-    {
+    public function extendQuery(callable $callback) {
         $this->query = $callback($this->query);
         return $this;
     }
@@ -178,8 +177,7 @@ abstract class Sprunje
      * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    public function toResponse(Response $response)
-    {
+    public function toResponse(Response $response) {
         $format = $this->options['format'];
 
         if ($format == 'csv') {
@@ -191,7 +189,7 @@ abstract class Sprunje
             $response = $response->withAddedHeader('Content-Disposition', "attachment;filename=$date-{$this->name}-$settings.csv");
             $response = $response->withAddedHeader('Content-Type', 'text/csv; charset=utf-8');
             return $response->write($result);
-        // Default to JSON
+            // Default to JSON
         } else {
             $result = $this->getArray();
             return $response->withJson($result, 200, JSON_PRETTY_PRINT);
@@ -205,16 +203,15 @@ abstract class Sprunje
      * and `rows` (the filtered result set).
      * @return mixed[]
      */
-    public function getArray()
-    {
+    public function getArray() {
         list($count, $countFiltered, $rows) = $this->getModels();
 
         // Return sprunjed results
         return [
-            $this->countKey           => $count,
-            $this->countFilteredKey   => $countFiltered,
-            $this->rowsKey            => $rows->values()->toArray(),
-            $this->listableKey        => $this->getListable()
+            $this->countKey => $count,
+            $this->countFilteredKey => $countFiltered,
+            $this->rowsKey => $rows->values()->toArray(),
+            $this->listableKey => $this->getListable()
         ];
     }
 
@@ -223,8 +220,7 @@ abstract class Sprunje
      *
      * @return SplTempFileObject
      */
-    public function getCsv()
-    {
+    public function getCsv() {
         $filteredQuery = clone $this->query;
 
         // Apply filters
@@ -280,8 +276,7 @@ abstract class Sprunje
      * Returns the filtered, paginated result set and the counts.
      * @return mixed[]
      */
-    public function getModels()
-    {
+    public function getModels() {
         // Count unfiltered total
         $count = $this->count($this->query);
 
@@ -313,13 +308,12 @@ abstract class Sprunje
      *
      * @return array
      */
-    public function getListable()
-    {
+    public function getListable() {
         $result = [];
         foreach ($this->listable as $name) {
 
             // Determine if a custom filter method has been defined
-            $methodName = 'list'.studly_case($name);
+            $methodName = 'list' . studly_case($name);
 
             if (method_exists($this, $methodName)) {
                 $result[$name] = $this->$methodName();
@@ -336,8 +330,7 @@ abstract class Sprunje
      *
      * @return Builder
      */
-    public function getQuery()
-    {
+    public function getQuery() {
         return $this->query;
     }
 
@@ -347,8 +340,7 @@ abstract class Sprunje
      * @param Builder $query
      * @return $this
      */
-    public function setQuery($query)
-    {
+    public function setQuery($query) {
         $this->query = $query;
         return $this;
     }
@@ -359,8 +351,7 @@ abstract class Sprunje
      * @param Builder $query
      * @return $this
      */
-    public function applyFilters($query)
-    {
+    public function applyFilters($query) {
         foreach ($this->options['filters'] as $name => $value) {
             // Check that this filter is allowed
             if (($name != '_all') && !in_array($name, $this->filterable)) {
@@ -383,8 +374,7 @@ abstract class Sprunje
      * @param Builder $query
      * @return $this
      */
-    public function applySorts($query)
-    {
+    public function applySorts($query) {
         foreach ($this->options['sorts'] as $name => $direction) {
             // Check that this sort is allowed
             if (!in_array($name, $this->sortable)) {
@@ -394,7 +384,7 @@ abstract class Sprunje
             }
 
             // Determine if a custom sort method has been defined
-            $methodName = 'sort'.studly_case($name);
+            $methodName = 'sort' . studly_case($name);
 
             if (method_exists($this, $methodName)) {
                 $this->$methodName($query, $direction);
@@ -412,16 +402,15 @@ abstract class Sprunje
      * @param Builder $query
      * @return $this
      */
-    public function applyPagination($query)
-    {
+    public function applyPagination($query) {
         if (
-            ($this->options['page'] !== null) &&
-            ($this->options['size'] !== null) &&
+            ($this->options['page'] !== NULL) &&
+            ($this->options['size'] !== NULL) &&
             ($this->options['size'] != 'all')
         ) {
-            $offset = $this->options['size']*$this->options['page'];
+            $offset = $this->options['size'] * $this->options['page'];
             $query->skip($offset)
-                  ->take($this->options['size']);
+                ->take($this->options['size']);
         }
 
         return $this;
@@ -434,8 +423,7 @@ abstract class Sprunje
      * @param mixed $value
      * @return $this
      */
-    protected function filterAll($query, $value)
-    {
+    protected function filterAll($query, $value) {
         foreach ($this->filterable as $name) {
             if (studly_case($name) != 'all' && !in_array($name, $this->excludeForAll)) {
                 // Since we want to match _any_ of the fields, we wrap the field callback in a 'orWhere' callback
@@ -456,9 +444,8 @@ abstract class Sprunje
      * @param mixed $value
      * @return $this
      */
-    protected function buildFilterQuery($query, $name, $value)
-    {
-        $methodName = 'filter'.studly_case($name);
+    protected function buildFilterQuery($query, $name, $value) {
+        $methodName = 'filter' . studly_case($name);
 
         // Determine if a custom filter method has been defined
         if (method_exists($this, $methodName)) {
@@ -479,8 +466,7 @@ abstract class Sprunje
      * @param mixed $value
      * @return $this
      */
-    protected function buildFilterDefaultFieldQuery($query, $name, $value)
-    {
+    protected function buildFilterDefaultFieldQuery($query, $name, $value) {
         // Default filter - split value on separator for OR queries
         // and search by column name
         $values = explode($this->orSeparator, $value);
@@ -497,8 +483,7 @@ abstract class Sprunje
      * @param \Illuminate\Database\Eloquent\Collection $collection
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    protected function applyTransformations($collection)
-    {
+    protected function applyTransformations($collection) {
         return $collection;
     }
 
@@ -516,8 +501,7 @@ abstract class Sprunje
      * @param string $column
      * @return array
      */
-    protected function getColumnValues($column)
-    {
+    protected function getColumnValues($column) {
         $rawValues = $this->query->select($column)->distinct()->orderBy($column, 'asc')->get();
         $values = [];
         foreach ($rawValues as $raw) {
@@ -535,8 +519,7 @@ abstract class Sprunje
      * @param Builder $query
      * @return int
      */
-    protected function count($query)
-    {
+    protected function count($query) {
         return $query->count();
     }
 
@@ -546,8 +529,7 @@ abstract class Sprunje
      * @param Builder $query
      * @return int
      */
-    protected function countFiltered($query)
-    {
+    protected function countFiltered($query) {
         return $query->count();
     }
 
@@ -559,8 +541,7 @@ abstract class Sprunje
      * @deprecated since 4.1.7  Use getArray() instead.
      * @return mixed[]
      */
-    public function getResults()
-    {
+    public function getResults() {
         return $this->getArray();
     }
 }

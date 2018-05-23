@@ -7,51 +7,45 @@ trait PromisePendingTestTrait
     /**
      * @return \React\Promise\PromiseAdapter\PromiseAdapterInterface
      */
-    abstract public function getPromiseTestAdapter(callable $canceller = null);
+    abstract public function getPromiseTestAdapter(callable $canceller = NULL);
 
     /** @test */
-    public function thenShouldReturnAPromiseForPendingPromise()
-    {
+    public function thenShouldReturnAPromiseForPendingPromise() {
         $adapter = $this->getPromiseTestAdapter();
 
         $this->assertInstanceOf('React\\Promise\\PromiseInterface', $adapter->promise()->then());
     }
 
     /** @test */
-    public function thenShouldReturnAllowNullForPendingPromise()
-    {
+    public function thenShouldReturnAllowNullForPendingPromise() {
         $adapter = $this->getPromiseTestAdapter();
 
-        $this->assertInstanceOf('React\\Promise\\PromiseInterface', $adapter->promise()->then(null, null, null));
+        $this->assertInstanceOf('React\\Promise\\PromiseInterface', $adapter->promise()->then(NULL, NULL, NULL));
     }
 
     /** @test */
-    public function cancelShouldReturnNullForPendingPromise()
-    {
+    public function cancelShouldReturnNullForPendingPromise() {
         $adapter = $this->getPromiseTestAdapter();
 
         $this->assertNull($adapter->promise()->cancel());
     }
 
     /** @test */
-    public function doneShouldReturnNullForPendingPromise()
-    {
+    public function doneShouldReturnNullForPendingPromise() {
         $adapter = $this->getPromiseTestAdapter();
 
         $this->assertNull($adapter->promise()->done());
     }
 
     /** @test */
-    public function doneShouldReturnAllowNullForPendingPromise()
-    {
+    public function doneShouldReturnAllowNullForPendingPromise() {
         $adapter = $this->getPromiseTestAdapter();
 
-        $this->assertNull($adapter->promise()->done(null, null, null));
+        $this->assertNull($adapter->promise()->done(NULL, NULL, NULL));
     }
 
     /** @test */
-    public function otherwiseShouldNotInvokeRejectionHandlerForPendingPromise()
-    {
+    public function otherwiseShouldNotInvokeRejectionHandlerForPendingPromise() {
         $adapter = $this->getPromiseTestAdapter();
 
         $adapter->settle();
@@ -59,10 +53,10 @@ trait PromisePendingTestTrait
     }
 
     /** @test */
-    public function alwaysShouldReturnAPromiseForPendingPromise()
-    {
+    public function alwaysShouldReturnAPromiseForPendingPromise() {
         $adapter = $this->getPromiseTestAdapter();
 
-        $this->assertInstanceOf('React\\Promise\\PromiseInterface', $adapter->promise()->always(function () {}));
+        $this->assertInstanceOf('React\\Promise\\PromiseInterface', $adapter->promise()->always(function () {
+        }));
     }
 }

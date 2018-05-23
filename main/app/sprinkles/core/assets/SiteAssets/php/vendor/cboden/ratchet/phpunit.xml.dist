@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-    forceCoversAnnotation="true"
-    mapTestClassNameToCoveredClassName="true"
-    bootstrap="tests/bootstrap.php"
-    colors="true"
-    backupGlobals="false"
-    backupStaticAttributes="false"
-    syntaxCheck="false"
-    stopOnError="false"
+        forceCoversAnnotation="true"
+        mapTestClassNameToCoveredClassName="true"
+        bootstrap="tests/bootstrap.php"
+        colors="true"
+        backupGlobals="false"
+        backupStaticAttributes="false"
+        syntaxCheck="false"
+        stopOnError="false"
 >
 
     <testsuites>

@@ -20,12 +20,12 @@ $dn = array(
 // create certificate which is valid for ~10 years
 $privkey = openssl_pkey_new();
 $cert = openssl_csr_new($dn, $privkey);
-$cert = openssl_csr_sign($cert, null, $privkey, 3650);
+$cert = openssl_csr_sign($cert, NULL, $privkey, 3650);
 
 // export public and (optionally encrypted) private key in PEM format
 openssl_x509_export($cert, $out);
 echo $out;
 
-$passphrase = isset($argv[2]) ? $argv[2] : null;
+$passphrase = isset($argv[2]) ? $argv[2] : NULL;
 openssl_pkey_export($privkey, $out, $passphrase);
 echo $out;

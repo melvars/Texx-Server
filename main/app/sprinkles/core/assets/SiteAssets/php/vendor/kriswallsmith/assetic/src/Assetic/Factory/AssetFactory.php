@@ -40,15 +40,14 @@ class AssetFactory
     /**
      * Constructor.
      *
-     * @param string  $root  The default root directory
+     * @param string $root The default root directory
      * @param Boolean $debug Filters prefixed with a "?" will be omitted in debug mode
      */
-    public function __construct($root, $debug = false)
-    {
-        $this->root      = rtrim($root, '/');
-        $this->debug     = $debug;
-        $this->output    = 'assetic/*';
-        $this->workers   = array();
+    public function __construct($root, $debug = FALSE) {
+        $this->root = rtrim($root, '/');
+        $this->debug = $debug;
+        $this->output = 'assetic/*';
+        $this->workers = array();
     }
 
     /**
@@ -56,8 +55,7 @@ class AssetFactory
      *
      * @param Boolean $debug Debug mode
      */
-    public function setDebug($debug)
-    {
+    public function setDebug($debug) {
         $this->debug = $debug;
     }
 
@@ -66,8 +64,7 @@ class AssetFactory
      *
      * @return Boolean Debug mode
      */
-    public function isDebug()
-    {
+    public function isDebug() {
         return $this->debug;
     }
 
@@ -76,8 +73,7 @@ class AssetFactory
      *
      * @param string $output The default output string
      */
-    public function setDefaultOutput($output)
-    {
+    public function setDefaultOutput($output) {
         $this->output = $output;
     }
 
@@ -86,8 +82,7 @@ class AssetFactory
      *
      * @param WorkerInterface $worker A worker
      */
-    public function addWorker(WorkerInterface $worker)
-    {
+    public function addWorker(WorkerInterface $worker) {
         $this->workers[] = $worker;
     }
 
@@ -96,8 +91,7 @@ class AssetFactory
      *
      * @return AssetManager|null The asset manager
      */
-    public function getAssetManager()
-    {
+    public function getAssetManager() {
         return $this->am;
     }
 
@@ -106,8 +100,7 @@ class AssetFactory
      *
      * @param AssetManager $am The asset manager
      */
-    public function setAssetManager(AssetManager $am)
-    {
+    public function setAssetManager(AssetManager $am) {
         $this->am = $am;
     }
 
@@ -116,8 +109,7 @@ class AssetFactory
      *
      * @return FilterManager|null The filter manager
      */
-    public function getFilterManager()
-    {
+    public function getFilterManager() {
         return $this->fm;
     }
 
@@ -126,8 +118,7 @@ class AssetFactory
      *
      * @param FilterManager $fm The filter manager
      */
-    public function setFilterManager(FilterManager $fm)
-    {
+    public function setFilterManager(FilterManager $fm) {
         $this->fm = $fm;
     }
 
@@ -144,14 +135,13 @@ class AssetFactory
      *  * debug:  Forces debug mode on or off for this asset
      *  * root:   An array or string of more root directories
      *
-     * @param array|string $inputs  An array of input strings
+     * @param array|string $inputs An array of input strings
      * @param array|string $filters An array of filter names
-     * @param array        $options An array of options
+     * @param array $options An array of options
      *
      * @return AssetCollection An asset collection
      */
-    public function createAsset($inputs = array(), $filters = array(), array $options = array())
-    {
+    public function createAsset($inputs = array(), $filters = array(), array $options = array()) {
         if (!is_array($inputs)) {
             $inputs = array($inputs);
         }
@@ -196,7 +186,7 @@ class AssetFactory
                 $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
             } else {
                 $asset->add($this->parseInput($input, $options));
-                $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
+                $extensions[pathinfo($input, PATHINFO_EXTENSION)] = TRUE;
             }
         }
 
@@ -204,7 +194,7 @@ class AssetFactory
         foreach ($filters as $filter) {
             if ('?' != $filter[0]) {
                 $asset->ensureFilter($this->getFilter($filter));
-            } elseif (!$options['debug']) {
+            } else if (!$options['debug']) {
                 $asset->ensureFilter($this->getFilter(substr($filter, 1)));
             }
         }
@@ -213,21 +203,21 @@ class AssetFactory
         if (!empty($options['vars'])) {
             $toAdd = array();
             foreach ($options['vars'] as $var) {
-                if (false !== strpos($options['output'], '{'.$var.'}')) {
+                if (FALSE !== strpos($options['output'], '{' . $var . '}')) {
                     continue;
                 }
 
-                $toAdd[] = '{'.$var.'}';
+                $toAdd[] = '{' . $var . '}';
             }
 
             if ($toAdd) {
-                $options['output'] = str_replace('*', '*.'.implode('.', $toAdd), $options['output']);
+                $options['output'] = str_replace('*', '*.' . implode('.', $toAdd), $options['output']);
             }
         }
 
         // append consensus extension if missing
         if (1 == count($extensions) && !pathinfo($options['output'], PATHINFO_EXTENSION) && $extension = key($extensions)) {
-            $options['output'] .= '.'.$extension;
+            $options['output'] .= '.' . $extension;
         }
 
         // output --> target url
@@ -237,19 +227,17 @@ class AssetFactory
         return $this->applyWorkers($asset);
     }
 
-    public function generateAssetName($inputs, $filters, $options = array())
-    {
+    public function generateAssetName($inputs, $filters, $options = array()) {
         foreach (array_diff(array_keys($options), array('output', 'debug', 'root')) as $key) {
             unset($options[$key]);
         }
 
         ksort($options);
 
-        return substr(sha1(serialize($inputs).serialize($filters).serialize($options)), 0, 7);
+        return substr(sha1(serialize($inputs) . serialize($filters) . serialize($options)), 0, 7);
     }
 
-    public function getLastModified(AssetInterface $asset)
-    {
+    public function getLastModified(AssetInterface $asset) {
         $mtime = 0;
         foreach ($asset instanceof AssetCollectionInterface ? $asset : array($asset) as $leaf) {
             $mtime = max($mtime, $leaf->getLastModified());
@@ -295,18 +283,17 @@ class AssetFactory
      *
      * Both globs and paths will be absolutized using the current root directory.
      *
-     * @param string $input   An input string
-     * @param array  $options An array of options
+     * @param string $input An input string
+     * @param array $options An array of options
      *
      * @return AssetInterface An asset
      */
-    protected function parseInput($input, array $options = array())
-    {
+    protected function parseInput($input, array $options = array()) {
         if ('@' == $input[0]) {
             return $this->createAssetReference(substr($input, 1));
         }
 
-        if (false !== strpos($input, '://') || 0 === strpos($input, '//')) {
+        if (FALSE !== strpos($input, '://') || 0 === strpos($input, '//')) {
             return $this->createHttpAsset($input, $options['vars']);
         }
 
@@ -314,28 +301,26 @@ class AssetFactory
             if ($root = self::findRootDir($input, $options['root'])) {
                 $path = ltrim(substr($input, strlen($root)), '/');
             } else {
-                $path = null;
+                $path = NULL;
             }
         } else {
-            $root  = $this->root;
-            $path  = $input;
-            $input = $this->root.'/'.$path;
+            $root = $this->root;
+            $path = $input;
+            $input = $this->root . '/' . $path;
         }
 
-        if (false !== strpos($input, '*')) {
+        if (FALSE !== strpos($input, '*')) {
             return $this->createGlobAsset($input, $root, $options['vars']);
         }
 
         return $this->createFileAsset($input, $root, $path, $options['vars']);
     }
 
-    protected function createAssetCollection(array $assets = array(), array $options = array())
-    {
-        return new AssetCollection($assets, array(), null, isset($options['vars']) ? $options['vars'] : array());
+    protected function createAssetCollection(array $assets = array(), array $options = array()) {
+        return new AssetCollection($assets, array(), NULL, isset($options['vars']) ? $options['vars'] : array());
     }
 
-    protected function createAssetReference($name)
-    {
+    protected function createAssetReference($name) {
         if (!$this->am) {
             throw new \LogicException('There is no asset manager.');
         }
@@ -343,23 +328,19 @@ class AssetFactory
         return new AssetReference($this->am, $name);
     }
 
-    protected function createHttpAsset($sourceUrl, $vars)
-    {
-        return new HttpAsset($sourceUrl, array(), false, $vars);
+    protected function createHttpAsset($sourceUrl, $vars) {
+        return new HttpAsset($sourceUrl, array(), FALSE, $vars);
     }
 
-    protected function createGlobAsset($glob, $root = null, $vars)
-    {
+    protected function createGlobAsset($glob, $root = NULL, $vars) {
         return new GlobAsset($glob, array(), $root, $vars);
     }
 
-    protected function createFileAsset($source, $root = null, $path = null, $vars)
-    {
+    protected function createFileAsset($source, $root = NULL, $path = NULL, $vars) {
         return new FileAsset($source, array(), $root, $path, $vars);
     }
 
-    protected function getFilter($name)
-    {
+    protected function getFilter($name) {
         if (!$this->fm) {
             throw new \LogicException('There is no filter manager.');
         }
@@ -377,8 +358,7 @@ class AssetFactory
      *
      * @return AssetCollectionInterface
      */
-    private function applyWorkers(AssetCollectionInterface $asset)
-    {
+    private function applyWorkers(AssetCollectionInterface $asset) {
         foreach ($asset as $leaf) {
             foreach ($this->workers as $worker) {
                 $retval = $worker->process($leaf, $this);
@@ -400,21 +380,19 @@ class AssetFactory
         return $asset instanceof AssetCollectionInterface ? $asset : $this->createAssetCollection(array($asset));
     }
 
-    private static function isAbsolutePath($path)
-    {
+    private static function isAbsolutePath($path) {
         return '/' == $path[0] || '\\' == $path[0] || (3 < strlen($path) && ctype_alpha($path[0]) && $path[1] == ':' && ('\\' == $path[2] || '/' == $path[2]));
     }
 
     /**
      * Loops through the root directories and returns the first match.
      *
-     * @param string $path  An absolute path
-     * @param array  $roots An array of root directories
+     * @param string $path An absolute path
+     * @param array $roots An array of root directories
      *
      * @return string|null The matching root directory, if found
      */
-    private static function findRootDir($path, array $roots)
-    {
+    private static function findRootDir($path, array $roots) {
         foreach ($roots as $root) {
             if (0 === strpos($path, $root)) {
                 return $root;

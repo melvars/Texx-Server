@@ -38,7 +38,7 @@ if (!defined('PHP_VERSION_ID')) {
         + $RandomCompatversion[1] * 100
         + $RandomCompatversion[2]
     );
-    $RandomCompatversion = null;
+    $RandomCompatversion = NULL;
 }
 
 /**
@@ -77,7 +77,7 @@ if (!is_callable('random_bytes')) {
         // See random_bytes_libsodium.php
         if (PHP_VERSION_ID >= 50300 && is_callable('\\Sodium\\randombytes_buf')) {
             require_once $RandomCompatDIR . '/random_bytes_libsodium.php';
-        } elseif (method_exists('Sodium', 'randombytes_buf')) {
+        } else if (method_exists('Sodium', 'randombytes_buf')) {
             require_once $RandomCompatDIR . '/random_bytes_libsodium_legacy.php';
         }
     }
@@ -88,7 +88,7 @@ if (!is_callable('random_bytes')) {
     if (DIRECTORY_SEPARATOR === '/') {
         // DIRECTORY_SEPARATOR === '/' on Unix-like OSes -- this is a fast
         // way to exclude Windows.
-        $RandomCompatUrandom = true;
+        $RandomCompatUrandom = TRUE;
         $RandomCompat_basedir = ini_get('open_basedir');
 
         if (!empty($RandomCompat_basedir)) {
@@ -97,10 +97,10 @@ if (!is_callable('random_bytes')) {
                 strtolower($RandomCompat_basedir)
             );
             $RandomCompatUrandom = (array() !== array_intersect(
-                array('/dev', '/dev/', '/dev/urandom'),
-                $RandomCompat_open_basedir
-            ));
-            $RandomCompat_open_basedir = null;
+                    array('/dev', '/dev/', '/dev/urandom'),
+                    $RandomCompat_open_basedir
+                ));
+            $RandomCompat_open_basedir = NULL;
         }
 
         if (
@@ -120,9 +120,9 @@ if (!is_callable('random_bytes')) {
             require_once $RandomCompatDIR . '/random_bytes_dev_urandom.php';
         }
         // Unset variables after use
-        $RandomCompat_basedir = null;
+        $RandomCompat_basedir = NULL;
     } else {
-        $RandomCompatUrandom = false;
+        $RandomCompatUrandom = FALSE;
     }
 
     /**
@@ -161,7 +161,7 @@ if (!is_callable('random_bytes')) {
         // See random_bytes_mcrypt.php
         require_once $RandomCompatDIR . '/random_bytes_mcrypt.php';
     }
-    $RandomCompatUrandom = null;
+    $RandomCompatUrandom = NULL;
 
     /**
      * This is a Windows-specific fallback, for when the mcrypt extension
@@ -190,8 +190,8 @@ if (!is_callable('random_bytes')) {
                 // Don't try to use it.
             }
         }
-        $RandomCompat_disabled_classes = null;
-        $RandomCompatCOMtest = null;
+        $RandomCompat_disabled_classes = NULL;
+        $RandomCompatCOMtest = NULL;
     }
 
     /**
@@ -207,8 +207,7 @@ if (!is_callable('random_bytes')) {
          * @throws Exception
          * @return string
          */
-        function random_bytes($length)
-        {
+        function random_bytes($length) {
             unset($length); // Suppress "variable not used" warnings.
             throw new Exception(
                 'There is no suitable CSPRNG installed on your system'
@@ -222,4 +221,4 @@ if (!is_callable('random_int')) {
     require_once $RandomCompatDIR . '/random_int.php';
 }
 
-$RandomCompatDIR = null;
+$RandomCompatDIR = NULL;

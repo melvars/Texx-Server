@@ -15,17 +15,16 @@
         <div class="col-md-12">
             <div id="widget-activities" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title"><i class="fa fa-tasks fa-fw"></i> {{translate('ACTIVITY', 2)}}</h3>
+                    <h3 class="box-title"><i class="fa fa-tasks fa-fw"></i> {{ translate('ACTIVITY', 2) }}</h3>
                     {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
                     {% include "tables/activities.html.twig" with {
-                            "table" : {
-                                "id" : "table-activities",
-                                "columns" : ["user"]
-                            }
+                        "table" : {
+                            "id" : "table-activities",
+                            "columns" : ["user"]
                         }
-                    %}
+                    } %}
                 </div>
             </div>
         </div>
@@ -34,7 +33,7 @@
 {% block scripts_page %}
     <!-- Include validation rules -->
     <script>
-    {% include "pages/partials/page.js.twig" %}
+        {% include "pages/partials/page.js.twig" %}
     </script>
 
     <!-- Include form widgets JS -->

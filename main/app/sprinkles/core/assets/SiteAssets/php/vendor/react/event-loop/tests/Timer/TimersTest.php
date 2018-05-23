@@ -8,8 +8,7 @@ use React\EventLoop\Timer\Timers;
 
 class TimersTest extends TestCase
 {
-    public function testBlockedTimer()
-    {
+    public function testBlockedTimer() {
         $timers = new Timers();
         $timers->tick();
 
@@ -22,6 +21,6 @@ class TimersTest extends TestCase
 
         $timers->tick();
 
-        $this->assertTrue(true);
+        $this->assertTrue(TRUE);
     }
 }

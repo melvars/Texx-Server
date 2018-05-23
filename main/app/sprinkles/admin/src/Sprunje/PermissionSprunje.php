@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -40,8 +41,7 @@ class PermissionSprunje extends Sprunje
     /**
      * {@inheritDoc}
      */
-    protected function baseQuery()
-    {
+    protected function baseQuery() {
         return $this->classMapper->createInstance('permission')->newQuery();
     }
 
@@ -52,8 +52,7 @@ class PermissionSprunje extends Sprunje
      * @param mixed $value
      * @return $this
      */
-    protected function filterInfo($query, $value)
-    {
+    protected function filterInfo($query, $value) {
         return $this->filterProperties($query, $value);
     }
 
@@ -64,15 +63,14 @@ class PermissionSprunje extends Sprunje
      * @param mixed $value
      * @return $this
      */
-    protected function filterProperties($query, $value)
-    {
+    protected function filterProperties($query, $value) {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
         $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
                 $query->orLike('slug', $value)
-                        ->orLike('conditions', $value)
-                        ->orLike('description', $value);
+                    ->orLike('conditions', $value)
+                    ->orLike('description', $value);
             }
         });
         return $this;
@@ -85,8 +83,7 @@ class PermissionSprunje extends Sprunje
      * @param string $direction
      * @return $this
      */
-    protected function sortProperties($query, $direction)
-    {
+    protected function sortProperties($query, $direction) {
         $query->orderBy('slug', $direction);
         return $this;
     }

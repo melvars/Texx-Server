@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Util;
 
 use UserFrosting\Sprinkle\Core\Util\Util as CoreUtil;
@@ -21,8 +22,7 @@ class Util
     /**
      * Generate a random, unique username from a list of adjectives and nouns.
      */
-    static public function randomUniqueUsername($classMapper, $maxLength, $maxTries = 10)
-    {
+    static public function randomUniqueUsername($classMapper, $maxLength, $maxTries = 10) {
         for ($n = 1; $n <= 3; $n++) {
             for ($m = 0; $m < 10; $m++) {
                 // Generate a random phrase with $n adjectives

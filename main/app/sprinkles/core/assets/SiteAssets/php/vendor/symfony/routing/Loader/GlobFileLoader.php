@@ -24,11 +24,10 @@ class GlobFileLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
-    {
+    public function load($resource, $type = NULL) {
         $collection = new RouteCollection();
 
-        foreach ($this->glob($resource, false, $globResource) as $path => $info) {
+        foreach ($this->glob($resource, FALSE, $globResource) as $path => $info) {
             $collection->addCollection($this->import($path));
         }
 
@@ -40,8 +39,7 @@ class GlobFileLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
-    {
+    public function supports($resource, $type = NULL) {
         return 'glob' === $type;
     }
 }

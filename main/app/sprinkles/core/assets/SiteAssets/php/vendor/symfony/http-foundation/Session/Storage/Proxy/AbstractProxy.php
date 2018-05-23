@@ -21,7 +21,7 @@ abstract class AbstractProxy
      *
      * @var bool
      */
-    protected $wrapper = false;
+    protected $wrapper = FALSE;
 
     /**
      * @var string
@@ -33,8 +33,7 @@ abstract class AbstractProxy
      *
      * @return string
      */
-    public function getSaveHandlerName()
-    {
+    public function getSaveHandlerName() {
         return $this->saveHandlerName;
     }
 
@@ -43,8 +42,7 @@ abstract class AbstractProxy
      *
      * @return bool
      */
-    public function isSessionHandlerInterface()
-    {
+    public function isSessionHandlerInterface() {
         return $this instanceof \SessionHandlerInterface;
     }
 
@@ -53,8 +51,7 @@ abstract class AbstractProxy
      *
      * @return bool
      */
-    public function isWrapper()
-    {
+    public function isWrapper() {
         return $this->wrapper;
     }
 
@@ -63,8 +60,7 @@ abstract class AbstractProxy
      *
      * @return bool
      */
-    public function isActive()
-    {
+    public function isActive() {
         return \PHP_SESSION_ACTIVE === session_status();
     }
 
@@ -73,8 +69,7 @@ abstract class AbstractProxy
      *
      * @return string
      */
-    public function getId()
-    {
+    public function getId() {
         return session_id();
     }
 
@@ -85,8 +80,7 @@ abstract class AbstractProxy
      *
      * @throws \LogicException
      */
-    public function setId($id)
-    {
+    public function setId($id) {
         if ($this->isActive()) {
             throw new \LogicException('Cannot change the ID of an active session');
         }
@@ -99,8 +93,7 @@ abstract class AbstractProxy
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return session_name();
     }
 
@@ -111,8 +104,7 @@ abstract class AbstractProxy
      *
      * @throws \LogicException
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         if ($this->isActive()) {
             throw new \LogicException('Cannot change the name of an active session');
         }

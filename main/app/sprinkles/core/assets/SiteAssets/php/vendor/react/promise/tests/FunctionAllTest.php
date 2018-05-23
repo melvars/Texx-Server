@@ -5,8 +5,7 @@ namespace React\Promise;
 class FunctionAllTest extends TestCase
 {
     /** @test */
-    public function shouldResolveEmptyInput()
-    {
+    public function shouldResolveEmptyInput() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -18,8 +17,7 @@ class FunctionAllTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveValuesArray()
-    {
+    public function shouldResolveValuesArray() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -31,8 +29,7 @@ class FunctionAllTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolvePromisesArray()
-    {
+    public function shouldResolvePromisesArray() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -44,21 +41,19 @@ class FunctionAllTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveSparseArrayInput()
-    {
+    public function shouldResolveSparseArrayInput() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
             ->method('__invoke')
-            ->with($this->identicalTo([null, 1, null, 1, 1]));
+            ->with($this->identicalTo([NULL, 1, NULL, 1, 1]));
 
-        all([null, 1, null, 1, 1])
+        all([NULL, 1, NULL, 1, 1])
             ->then($mock);
     }
 
     /** @test */
-    public function shouldRejectIfAnyInputPromiseRejects()
-    {
+    public function shouldRejectIfAnyInputPromiseRejects() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -70,8 +65,7 @@ class FunctionAllTest extends TestCase
     }
 
     /** @test */
-    public function shouldAcceptAPromiseForAnArray()
-    {
+    public function shouldAcceptAPromiseForAnArray() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -83,8 +77,7 @@ class FunctionAllTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveToEmptyArrayWhenInputPromiseDoesNotResolveToArray()
-    {
+    public function shouldResolveToEmptyArrayWhenInputPromiseDoesNotResolveToArray() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -96,8 +89,7 @@ class FunctionAllTest extends TestCase
     }
 
     /** @test */
-    public function shouldPreserveTheOrderOfArrayWhenResolvingAsyncPromises()
-    {
+    public function shouldPreserveTheOrderOfArrayWhenResolvingAsyncPromises() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())

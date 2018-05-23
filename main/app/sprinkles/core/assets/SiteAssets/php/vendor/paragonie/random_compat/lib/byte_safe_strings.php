@@ -43,15 +43,14 @@ if (!is_callable('RandomCompat_strlen')) {
          *
          * @return int
          */
-        function RandomCompat_strlen($binary_string)
-        {
+        function RandomCompat_strlen($binary_string) {
             if (!is_string($binary_string)) {
                 throw new TypeError(
                     'RandomCompat_strlen() expects a string'
                 );
             }
 
-            return (int) mb_strlen($binary_string, '8bit');
+            return (int)mb_strlen($binary_string, '8bit');
         }
 
     } else {
@@ -66,14 +65,13 @@ if (!is_callable('RandomCompat_strlen')) {
          *
          * @return int
          */
-        function RandomCompat_strlen($binary_string)
-        {
+        function RandomCompat_strlen($binary_string) {
             if (!is_string($binary_string)) {
                 throw new TypeError(
                     'RandomCompat_strlen() expects a string'
                 );
             }
-            return (int) strlen($binary_string);
+            return (int)strlen($binary_string);
         }
     }
 }
@@ -99,8 +97,7 @@ if (!is_callable('RandomCompat_substr')) {
          *
          * @return string
          */
-        function RandomCompat_substr($binary_string, $start, $length = null)
-        {
+        function RandomCompat_substr($binary_string, $start, $length = NULL) {
             if (!is_string($binary_string)) {
                 throw new TypeError(
                     'RandomCompat_substr(): First argument should be a string'
@@ -113,13 +110,13 @@ if (!is_callable('RandomCompat_substr')) {
                 );
             }
 
-            if ($length === null) {
+            if ($length === NULL) {
                 /**
                  * mb_substr($str, 0, NULL, '8bit') returns an empty string on
                  * PHP 5.3, so we have to find the length ourselves.
                  */
                 $length = RandomCompat_strlen($binary_string) - $start;
-            } elseif (!is_int($length)) {
+            } else if (!is_int($length)) {
                 throw new TypeError(
                     'RandomCompat_substr(): Third argument should be an integer, or omitted'
                 );
@@ -133,7 +130,7 @@ if (!is_callable('RandomCompat_substr')) {
                 return '';
             }
 
-            return (string) mb_substr($binary_string, $start, $length, '8bit');
+            return (string)mb_substr($binary_string, $start, $length, '8bit');
         }
 
     } else {
@@ -151,8 +148,7 @@ if (!is_callable('RandomCompat_substr')) {
          *
          * @return string
          */
-        function RandomCompat_substr($binary_string, $start, $length = null)
-        {
+        function RandomCompat_substr($binary_string, $start, $length = NULL) {
             if (!is_string($binary_string)) {
                 throw new TypeError(
                     'RandomCompat_substr(): First argument should be a string'
@@ -165,17 +161,17 @@ if (!is_callable('RandomCompat_substr')) {
                 );
             }
 
-            if ($length !== null) {
+            if ($length !== NULL) {
                 if (!is_int($length)) {
                     throw new TypeError(
                         'RandomCompat_substr(): Third argument should be an integer, or omitted'
                     );
                 }
 
-                return (string) substr($binary_string, $start, $length);
+                return (string)substr($binary_string, $start, $length);
             }
 
-            return (string) substr($binary_string, $start);
+            return (string)substr($binary_string, $start);
         }
     }
 }

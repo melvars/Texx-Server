@@ -18,8 +18,7 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
     protected $loader;
     private $reader;
 
-    protected function setUp()
-    {
+    protected function setUp() {
         parent::setUp();
 
         $this->reader = $this->getReader();
@@ -29,48 +28,42 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testLoadMissingClass()
-    {
+    public function testLoadMissingClass() {
         $this->loader->load('MissingClass');
     }
 
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testLoadAbstractClass()
-    {
+    public function testLoadAbstractClass() {
         $this->loader->load('Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\AbstractClass');
     }
 
     /**
      * @dataProvider provideTestSupportsChecksResource
      */
-    public function testSupportsChecksResource($resource, $expectedSupports)
-    {
+    public function testSupportsChecksResource($resource, $expectedSupports) {
         $this->assertSame($expectedSupports, $this->loader->supports($resource), '->supports() returns true if the resource is loadable');
     }
 
-    public function provideTestSupportsChecksResource()
-    {
+    public function provideTestSupportsChecksResource() {
         return array(
-            array('class', true),
-            array('\fully\qualified\class\name', true),
-            array('namespaced\class\without\leading\slash', true),
-            array('ÿClassWithLegalSpecialCharacters', true),
-            array('5', false),
-            array('foo.foo', false),
-            array(null, false),
+            array('class', TRUE),
+            array('\fully\qualified\class\name', TRUE),
+            array('namespaced\class\without\leading\slash', TRUE),
+            array('ÿClassWithLegalSpecialCharacters', TRUE),
+            array('5', FALSE),
+            array('foo.foo', FALSE),
+            array(NULL, FALSE),
         );
     }
 
-    public function testSupportsChecksTypeIfSpecified()
-    {
+    public function testSupportsChecksTypeIfSpecified() {
         $this->assertTrue($this->loader->supports('class', 'annotation'), '->supports() checks the resource type if specified');
         $this->assertFalse($this->loader->supports('class', 'foo'), '->supports() checks the resource type if specified');
     }
 
-    public function getLoadTests()
-    {
+    public function getLoadTests() {
         return array(
             array(
                 'Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\BarClass',
@@ -103,8 +96,7 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
     /**
      * @dataProvider getLoadTests
      */
-    public function testLoad($className, $routeData = array(), $methodArgs = array())
-    {
+    public function testLoad($className, $routeData = array(), $methodArgs = array()) {
         $routeData = array_replace(array(
             'name' => 'route',
             'path' => '/',
@@ -119,8 +111,7 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         $this->reader
             ->expects($this->once())
             ->method('getMethodAnnotations')
-            ->will($this->returnValue(array($this->getAnnotatedRoute($routeData))))
-        ;
+            ->will($this->returnValue(array($this->getAnnotatedRoute($routeData))));
 
         $routeCollection = $this->loader->load($className);
         $route = $routeCollection->get($routeData['name']);
@@ -146,8 +137,7 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         $this->assertSame($routeData['condition'], $route->getCondition(), '->load preserves condition annotation');
     }
 
-    public function testClassRouteLoad()
-    {
+    public function testClassRouteLoad() {
         $classRouteData = array(
             'name' => 'prefix_',
             'path' => '/prefix',
@@ -165,24 +155,21 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         $this->reader
             ->expects($this->once())
             ->method('getClassAnnotation')
-            ->will($this->returnValue($this->getAnnotatedRoute($classRouteData)))
-        ;
+            ->will($this->returnValue($this->getAnnotatedRoute($classRouteData)));
         $this->reader
             ->expects($this->once())
             ->method('getMethodAnnotations')
-            ->will($this->returnValue(array($this->getAnnotatedRoute($methodRouteData))))
-        ;
+            ->will($this->returnValue(array($this->getAnnotatedRoute($methodRouteData))));
 
         $routeCollection = $this->loader->load('Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\BarClass');
-        $route = $routeCollection->get($classRouteData['name'].$methodRouteData['name']);
+        $route = $routeCollection->get($classRouteData['name'] . $methodRouteData['name']);
 
-        $this->assertSame($classRouteData['path'].$methodRouteData['path'], $route->getPath(), '->load concatenates class and method route path');
+        $this->assertSame($classRouteData['path'] . $methodRouteData['path'], $route->getPath(), '->load concatenates class and method route path');
         $this->assertEquals(array_merge($classRouteData['schemes'], $methodRouteData['schemes']), $route->getSchemes(), '->load merges class and method route schemes');
         $this->assertEquals(array_merge($classRouteData['methods'], $methodRouteData['methods']), $route->getMethods(), '->load merges class and method route methods');
     }
 
-    public function testInvokableClassRouteLoad()
-    {
+    public function testInvokableClassRouteLoad() {
         $classRouteData = array(
             'name' => 'route1',
             'path' => '/',
@@ -193,13 +180,11 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         $this->reader
             ->expects($this->exactly(2))
             ->method('getClassAnnotation')
-            ->will($this->returnValue($this->getAnnotatedRoute($classRouteData)))
-        ;
+            ->will($this->returnValue($this->getAnnotatedRoute($classRouteData)));
         $this->reader
             ->expects($this->once())
             ->method('getMethodAnnotations')
-            ->will($this->returnValue(array()))
-        ;
+            ->will($this->returnValue(array()));
 
         $routeCollection = $this->loader->load('Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\BazClass');
         $route = $routeCollection->get($classRouteData['name']);
@@ -209,8 +194,7 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         $this->assertEquals(array_merge($classRouteData['methods'], $classRouteData['methods']), $route->getMethods(), '->load preserves class route methods');
     }
 
-    public function testInvokableClassWithMethodRouteLoad()
-    {
+    public function testInvokableClassWithMethodRouteLoad() {
         $classRouteData = array(
             'name' => 'route1',
             'path' => '/prefix',
@@ -228,28 +212,25 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         $this->reader
             ->expects($this->once())
             ->method('getClassAnnotation')
-            ->will($this->returnValue($this->getAnnotatedRoute($classRouteData)))
-        ;
+            ->will($this->returnValue($this->getAnnotatedRoute($classRouteData)));
         $this->reader
             ->expects($this->once())
             ->method('getMethodAnnotations')
-            ->will($this->returnValue(array($this->getAnnotatedRoute($methodRouteData))))
-        ;
+            ->will($this->returnValue(array($this->getAnnotatedRoute($methodRouteData))));
 
         $routeCollection = $this->loader->load('Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\BazClass');
         $route = $routeCollection->get($classRouteData['name']);
 
         $this->assertNull($route, '->load ignores class route');
 
-        $route = $routeCollection->get($classRouteData['name'].$methodRouteData['name']);
+        $route = $routeCollection->get($classRouteData['name'] . $methodRouteData['name']);
 
-        $this->assertSame($classRouteData['path'].$methodRouteData['path'], $route->getPath(), '->load concatenates class and method route path');
+        $this->assertSame($classRouteData['path'] . $methodRouteData['path'], $route->getPath(), '->load concatenates class and method route path');
         $this->assertEquals(array_merge($classRouteData['schemes'], $methodRouteData['schemes']), $route->getSchemes(), '->load merges class and method route schemes');
         $this->assertEquals(array_merge($classRouteData['methods'], $methodRouteData['methods']), $route->getMethods(), '->load merges class and method route methods');
     }
 
-    private function getAnnotatedRoute($data)
-    {
+    private function getAnnotatedRoute($data) {
         return new Route($data);
     }
 }

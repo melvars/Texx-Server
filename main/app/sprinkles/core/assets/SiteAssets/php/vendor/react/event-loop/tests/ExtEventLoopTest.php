@@ -6,8 +6,7 @@ use React\EventLoop\ExtEventLoop;
 
 class ExtEventLoopTest extends AbstractLoopTest
 {
-    public function createLoop($readStreamCompatible = false)
-    {
+    public function createLoop($readStreamCompatible = FALSE) {
         if ('Linux' === PHP_OS && !extension_loaded('posix')) {
             $this->markTestSkipped('libevent tests skipped on linux due to linux epoll issues.');
         }
@@ -19,8 +18,7 @@ class ExtEventLoopTest extends AbstractLoopTest
         return new ExtEventLoop();
     }
 
-    public function createStream()
-    {
+    public function createStream() {
         // Use a FIFO on linux to get around lack of support for disk-based file
         // descriptors when using the EPOLL back-end.
         if ('Linux' === PHP_OS) {
@@ -32,12 +30,12 @@ class ExtEventLoopTest extends AbstractLoopTest
 
             $stream = fopen($this->fifoPath, 'r+');
 
-        // ext-event (as of 1.8.1) does not yet support in-memory temporary
-        // streams. Setting maxmemory:0 and performing a write forces PHP to
-        // back this temporary stream with a real file.
-        //
-        // This problem is mentioned at https://bugs.php.net/bug.php?id=64652&edit=3
-        // but remains unresolved (despite that issue being closed).
+            // ext-event (as of 1.8.1) does not yet support in-memory temporary
+            // streams. Setting maxmemory:0 and performing a write forces PHP to
+            // back this temporary stream with a real file.
+            //
+            // This problem is mentioned at https://bugs.php.net/bug.php?id=64652&edit=3
+            // but remains unresolved (despite that issue being closed).
         } else {
             $stream = fopen('php://temp/maxmemory:0', 'r+');
 
@@ -48,8 +46,7 @@ class ExtEventLoopTest extends AbstractLoopTest
         return $stream;
     }
 
-    public function writeToStream($stream, $content)
-    {
+    public function writeToStream($stream, $content) {
         if ('Linux' !== PHP_OS) {
             return parent::writeToStream($stream, $content);
         }
@@ -60,13 +57,12 @@ class ExtEventLoopTest extends AbstractLoopTest
     /**
      * @group epoll-readable-error
      */
-    public function testCanUseReadableStreamWithFeatureFds()
-    {
+    public function testCanUseReadableStreamWithFeatureFds() {
         if (PHP_VERSION_ID > 70000) {
             $this->markTestSkipped('Memory stream not supported');
         }
 
-        $this->loop = $this->createLoop(true);
+        $this->loop = $this->createLoop(TRUE);
 
         $input = fopen('php://temp/maxmemory:0', 'r+');
 

@@ -17,8 +17,7 @@ class UnixServerTest extends TestCase
      * @covers React\Socket\UnixServer::__construct
      * @covers React\Socket\UnixServer::getAddress
      */
-    public function setUp()
-    {
+    public function setUp() {
         $this->loop = Factory::create();
         $this->uds = $this->getRandomSocketUri();
         $this->server = new UnixServer($this->uds, $this->loop);
@@ -27,8 +26,7 @@ class UnixServerTest extends TestCase
     /**
      * @covers React\Socket\UnixServer::handleConnection
      */
-    public function testConnection()
-    {
+    public function testConnection() {
         $client = stream_socket_client($this->uds);
 
         $this->server->on('connection', $this->expectCallableOnce());
@@ -38,8 +36,7 @@ class UnixServerTest extends TestCase
     /**
      * @covers React\Socket\UnixServer::handleConnection
      */
-    public function testConnectionWithManyClients()
-    {
+    public function testConnectionWithManyClients() {
         $client1 = stream_socket_client($this->uds);
         $client2 = stream_socket_client($this->uds);
         $client3 = stream_socket_client($this->uds);
@@ -50,8 +47,7 @@ class UnixServerTest extends TestCase
         $this->tick();
     }
 
-    public function testDataEventWillNotBeEmittedWhenClientSendsNoData()
-    {
+    public function testDataEventWillNotBeEmittedWhenClientSendsNoData() {
         $client = stream_socket_client($this->uds);
 
         $mock = $this->expectCallableNever();
@@ -63,8 +59,7 @@ class UnixServerTest extends TestCase
         $this->tick();
     }
 
-    public function testDataWillBeEmittedWithDataClientSends()
-    {
+    public function testDataWillBeEmittedWithDataClientSends() {
         $client = stream_socket_client($this->uds);
 
         fwrite($client, "foo\n");
@@ -78,8 +73,7 @@ class UnixServerTest extends TestCase
         $this->tick();
     }
 
-    public function testDataWillBeEmittedEvenWhenClientShutsDownAfterSending()
-    {
+    public function testDataWillBeEmittedEvenWhenClientShutsDownAfterSending() {
         $client = stream_socket_client($this->uds);
         fwrite($client, "foo\n");
         stream_socket_shutdown($client, STREAM_SHUT_WR);
@@ -93,41 +87,37 @@ class UnixServerTest extends TestCase
         $this->tick();
     }
 
-    public function testLoopWillEndWhenServerIsClosed()
-    {
+    public function testLoopWillEndWhenServerIsClosed() {
         // explicitly unset server because we already call close()
         $this->server->close();
-        $this->server = null;
+        $this->server = NULL;
 
         $this->loop->run();
 
         // if we reach this, then everything is good
-        $this->assertNull(null);
+        $this->assertNull(NULL);
     }
 
-    public function testCloseTwiceIsNoOp()
-    {
+    public function testCloseTwiceIsNoOp() {
         $this->server->close();
         $this->server->close();
 
         // if we reach this, then everything is good
-        $this->assertNull(null);
+        $this->assertNull(NULL);
     }
 
-    public function testGetAddressAfterCloseReturnsNull()
-    {
+    public function testGetAddressAfterCloseReturnsNull() {
         $this->server->close();
         $this->assertNull($this->server->getAddress());
     }
 
-    public function testLoopWillEndWhenServerIsClosedAfterSingleConnection()
-    {
+    public function testLoopWillEndWhenServerIsClosedAfterSingleConnection() {
         $client = stream_socket_client($this->uds);
 
         // explicitly unset server because we only accept a single connection
         // and then already call close()
         $server = $this->server;
-        $this->server = null;
+        $this->server = NULL;
 
         $server->on('connection', function ($conn) use ($server) {
             $conn->close();
@@ -137,11 +127,10 @@ class UnixServerTest extends TestCase
         $this->loop->run();
 
         // if we reach this, then everything is good
-        $this->assertNull(null);
+        $this->assertNull(NULL);
     }
 
-    public function testDataWillBeEmittedInMultipleChunksWhenClientSendsExcessiveAmounts()
-    {
+    public function testDataWillBeEmittedInMultipleChunksWhenClientSendsExcessiveAmounts() {
         $client = stream_socket_client($this->uds);
         $stream = new DuplexResourceStream($client, $this->loop);
 
@@ -153,7 +142,7 @@ class UnixServerTest extends TestCase
         // explicitly unset server because we only accept a single connection
         // and then already call close()
         $server = $this->server;
-        $this->server = null;
+        $this->server = NULL;
 
         $received = 0;
         $server->on('connection', function ($conn) use ($mock, &$received, $server) {
@@ -173,8 +162,7 @@ class UnixServerTest extends TestCase
         $this->assertEquals($bytes, $received);
     }
 
-    public function testConnectionDoesNotEndWhenClientDoesNotClose()
-    {
+    public function testConnectionDoesNotEndWhenClientDoesNotClose() {
         $client = stream_socket_client($this->uds);
 
         $mock = $this->expectCallableNever();
@@ -189,8 +177,7 @@ class UnixServerTest extends TestCase
     /**
      * @covers React\Socket\Connection::end
      */
-    public function testConnectionDoesEndWhenClientCloses()
-    {
+    public function testConnectionDoesEndWhenClientCloses() {
         $client = stream_socket_client($this->uds);
 
         fclose($client);
@@ -204,16 +191,14 @@ class UnixServerTest extends TestCase
         $this->tick();
     }
 
-    public function testCtorAddsResourceToLoop()
-    {
+    public function testCtorAddsResourceToLoop() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('addReadStream');
 
         $server = new UnixServer($this->getRandomSocketUri(), $loop);
     }
 
-    public function testResumeWithoutPauseIsNoOp()
-    {
+    public function testResumeWithoutPauseIsNoOp() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('addReadStream');
 
@@ -221,8 +206,7 @@ class UnixServerTest extends TestCase
         $server->resume();
     }
 
-    public function testPauseRemovesResourceFromLoop()
-    {
+    public function testPauseRemovesResourceFromLoop() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('removeReadStream');
 
@@ -230,8 +214,7 @@ class UnixServerTest extends TestCase
         $server->pause();
     }
 
-    public function testPauseAfterPauseIsNoOp()
-    {
+    public function testPauseAfterPauseIsNoOp() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('removeReadStream');
 
@@ -240,8 +223,7 @@ class UnixServerTest extends TestCase
         $server->pause();
     }
 
-    public function testCloseRemovesResourceFromLoop()
-    {
+    public function testCloseRemovesResourceFromLoop() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
         $loop->expects($this->once())->method('removeReadStream');
 
@@ -252,8 +234,7 @@ class UnixServerTest extends TestCase
     /**
      * @expectedException RuntimeException
      */
-    public function testListenOnBusyPortThrows()
-    {
+    public function testListenOnBusyPortThrows() {
         if (DIRECTORY_SEPARATOR === '\\') {
             $this->markTestSkipped('Windows supports listening on same port multiple times');
         }
@@ -264,20 +245,17 @@ class UnixServerTest extends TestCase
     /**
      * @covers React\Socket\UnixServer::close
      */
-    public function tearDown()
-    {
+    public function tearDown() {
         if ($this->server) {
             $this->server->close();
         }
     }
 
-    private function getRandomSocketUri()
-    {
-        return "unix://" . sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid(rand(), true) . '.sock';
+    private function getRandomSocketUri() {
+        return "unix://" . sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid(rand(), TRUE) . '.sock';
     }
 
-    private function tick()
-    {
+    private function tick() {
         Block\sleep(0, $this->loop);
     }
 }

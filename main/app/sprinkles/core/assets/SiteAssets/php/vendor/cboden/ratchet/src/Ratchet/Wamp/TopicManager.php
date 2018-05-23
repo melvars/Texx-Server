@@ -1,9 +1,12 @@
 <?php
+
 namespace Ratchet\Wamp;
+
 use Ratchet\ConnectionInterface;
 use Ratchet\WebSocket\WsServerInterface;
 
-class TopicManager implements WsServerInterface, WampServerInterface {
+class TopicManager implements WsServerInterface, WampServerInterface
+{
     /**
      * @var WampServerInterface
      */

@@ -7,7 +7,7 @@
  * Target page: /roles
  */
 
-$(document).ready(function() {
+$(document).ready(function () {
     // Set up table of roles
     $("#widget-roles").ufTable({
         dataUrl: site.uri.public + "/api/roles",

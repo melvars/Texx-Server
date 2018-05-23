@@ -25,13 +25,11 @@ class PhpCssEmbedFilter implements DependencyExtractorInterface
 {
     private $presets = array();
 
-    public function setPresets(array $presets)
-    {
+    public function setPresets(array $presets) {
         $this->presets = $presets;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $pce = new CssEmbed();
         if ($dir = $asset->getSourceDirectory()) {
             $pce->setRootDir($dir);
@@ -40,12 +38,10 @@ class PhpCssEmbedFilter implements DependencyExtractorInterface
         $asset->setContent($pce->embedString($asset->getContent()));
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
+    public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         // todo
         return array();
     }

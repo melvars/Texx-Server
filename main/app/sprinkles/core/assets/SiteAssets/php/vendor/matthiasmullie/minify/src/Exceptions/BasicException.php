@@ -8,6 +8,7 @@
  * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
  * @license MIT License
  */
+
 namespace MatthiasMullie\Minify\Exceptions;
 
 use MatthiasMullie\Minify\Exception;

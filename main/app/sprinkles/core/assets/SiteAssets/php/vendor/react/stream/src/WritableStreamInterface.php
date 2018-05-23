@@ -292,7 +292,7 @@ interface WritableStreamInterface extends EventEmitterInterface
      * @param mixed|string|null $data
      * @return void
      */
-    public function end($data = null);
+    public function end($data = NULL);
 
     /**
      * Closes the stream (forcefully).

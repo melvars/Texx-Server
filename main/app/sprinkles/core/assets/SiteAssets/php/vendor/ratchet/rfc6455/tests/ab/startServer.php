@@ -1,11 +1,12 @@
 <?php
+
 use Ratchet\RFC6455\Messaging\MessageInterface;
 use Ratchet\RFC6455\Messaging\FrameInterface;
 use Ratchet\RFC6455\Messaging\Frame;
 
 require_once __DIR__ . "/../bootstrap.php";
 
-$loop   = \React\EventLoop\Factory::create();
+$loop = \React\EventLoop\Factory::create();
 
 $socket = new \React\Socket\Server($loop);
 $server = new \React\Http\Server($socket);
@@ -33,18 +34,18 @@ $server->on('request', function (\React\Http\Request $request, \React\Http\Respo
         return;
     }
 
-    $parser = new \Ratchet\RFC6455\Messaging\MessageBuffer($closeFrameChecker, function(MessageInterface $message) use ($response) {
+    $parser = new \Ratchet\RFC6455\Messaging\MessageBuffer($closeFrameChecker, function (MessageInterface $message) use ($response) {
         $response->write($message->getContents());
-    }, function(FrameInterface $frame) use ($response, &$parser) {
+    }, function (FrameInterface $frame) use ($response, &$parser) {
         switch ($frame->getOpCode()) {
             case Frame::OP_CLOSE:
                 $response->end($frame->getContents());
                 break;
             case Frame::OP_PING:
-                $response->write($parser->newFrame($frame->getPayload(), true, Frame::OP_PONG)->getContents());
+                $response->write($parser->newFrame($frame->getPayload(), TRUE, Frame::OP_PONG)->getContents());
                 break;
         }
-    }, true, function() use ($uException) {
+    }, TRUE, function () use ($uException) {
         return $uException;
     });
 

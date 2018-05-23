@@ -11,7 +11,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $loop = Factory::create();
 
-$executor = new Executor($loop, new Parser(), new BinaryDumper(), null);
+$executor = new Executor($loop, new Parser(), new BinaryDumper(), NULL);
 
 $name = isset($argv[1]) ? $argv[1] : 'www.google.com';
 

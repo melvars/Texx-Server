@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Psr7;
 
 use Psr\Http\Message\StreamInterface;
@@ -18,8 +19,7 @@ class InflateStream implements StreamInterface
 {
     use StreamDecoratorTrait;
 
-    public function __construct(StreamInterface $stream)
-    {
+    public function __construct(StreamInterface $stream) {
         // read the first 10 bytes, ie. gzip header
         $header = $stream->read(10);
         $filenameHeaderLength = $this->getLengthOfPossibleFilenameHeader($stream, $header);
@@ -35,8 +35,7 @@ class InflateStream implements StreamInterface
      * @param $header
      * @return int
      */
-    private function getLengthOfPossibleFilenameHeader(StreamInterface $stream, $header)
-    {
+    private function getLengthOfPossibleFilenameHeader(StreamInterface $stream, $header) {
         $filename_header_length = 0;
 
         if (substr(bin2hex($header), 6, 2) === '08') {

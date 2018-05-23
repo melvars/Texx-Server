@@ -1,5 +1,6 @@
 <?php
 
-class JSMinUnterminatedCommentException extends \Exception {
+class JSMinUnterminatedCommentException extends \Exception
+{
 
 }

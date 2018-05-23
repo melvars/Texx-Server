@@ -22,7 +22,7 @@ require __DIR__ . '/../vendor/autoload.php';
 $loop = Factory::create();
 $connector = new Connector($loop);
 
-$connector->connect($host. ':80')->then(function (ConnectionInterface $connection) use ($host) {
+$connector->connect($host . ':80')->then(function (ConnectionInterface $connection) use ($host) {
     $connection->on('data', function ($data) {
         echo $data;
     });

@@ -24,122 +24,102 @@ class AssetReference implements AssetInterface
     private $am;
     private $name;
     private $filters = array();
-    private $clone = false;
+    private $clone = FALSE;
     private $asset;
 
-    public function __construct(AssetManager $am, $name)
-    {
+    public function __construct(AssetManager $am, $name) {
         $this->am = $am;
         $this->name = $name;
     }
 
-    public function __clone()
-    {
-        $this->clone = true;
+    public function __clone() {
+        $this->clone = TRUE;
 
         if ($this->asset) {
             $this->asset = clone $this->asset;
         }
     }
 
-    public function ensureFilter(FilterInterface $filter)
-    {
+    public function ensureFilter(FilterInterface $filter) {
         $this->filters[] = $filter;
     }
 
-    public function getFilters()
-    {
+    public function getFilters() {
         $this->flushFilters();
 
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function clearFilters()
-    {
+    public function clearFilters() {
         $this->filters = array();
         $this->callAsset(__FUNCTION__);
     }
 
-    public function load(FilterInterface $additionalFilter = null)
-    {
+    public function load(FilterInterface $additionalFilter = NULL) {
         $this->flushFilters();
 
         return $this->callAsset(__FUNCTION__, array($additionalFilter));
     }
 
-    public function dump(FilterInterface $additionalFilter = null)
-    {
+    public function dump(FilterInterface $additionalFilter = NULL) {
         $this->flushFilters();
 
         return $this->callAsset(__FUNCTION__, array($additionalFilter));
     }
 
-    public function getContent()
-    {
+    public function getContent() {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function setContent($content)
-    {
+    public function setContent($content) {
         $this->callAsset(__FUNCTION__, array($content));
     }
 
-    public function getSourceRoot()
-    {
+    public function getSourceRoot() {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function getSourcePath()
-    {
+    public function getSourcePath() {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function getSourceDirectory()
-    {
+    public function getSourceDirectory() {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function getTargetPath()
-    {
+    public function getTargetPath() {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function setTargetPath($targetPath)
-    {
+    public function setTargetPath($targetPath) {
         $this->callAsset(__FUNCTION__, array($targetPath));
     }
 
-    public function getLastModified()
-    {
+    public function getLastModified() {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function getVars()
-    {
+    public function getVars() {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function getValues()
-    {
+    public function getValues() {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function setValues(array $values)
-    {
+    public function setValues(array $values) {
         $this->callAsset(__FUNCTION__, array($values));
     }
 
     // private
 
-    private function callAsset($method, $arguments = array())
-    {
+    private function callAsset($method, $arguments = array()) {
         $asset = $this->resolve();
 
         return call_user_func_array(array($asset, $method), $arguments);
     }
 
-    private function flushFilters()
-    {
+    private function flushFilters() {
         $asset = $this->resolve();
 
         while ($filter = array_shift($this->filters)) {
@@ -147,8 +127,7 @@ class AssetReference implements AssetInterface
         }
     }
 
-    private function resolve()
-    {
+    private function resolve() {
         if ($this->asset) {
             return $this->asset;
         }

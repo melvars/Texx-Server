@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Sprinkle;
 
 use Illuminate\Support\Str;
@@ -47,8 +48,7 @@ class SprinkleManager
      *
      * @param ContainerInterface $ci The global container object, which holds all your services.
      */
-    public function __construct(ContainerInterface $ci)
-    {
+    public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
         $this->sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
 
@@ -72,14 +72,13 @@ class SprinkleManager
      * @param string $sprinkleName
      * @return string|bool The full path to specified resource for the specified Sprinkle (if found).
      */
-    public function addResource($resourceName, $sprinkleName)
-    {
+    public function addResource($resourceName, $sprinkleName) {
         $resourcePath = $this->resourcePaths[$resourceName];
         $fullPath = $this->sprinklesPath . $sprinkleName . $resourcePath;
 
         $this->ci->locator->addPath($resourceName, '', $fullPath);
 
-        return $this->ci->locator->findResource("$resourceName://", true, false);
+        return $this->ci->locator->findResource("$resourceName://", TRUE, FALSE);
 
         /* This would allow a stream to subnavigate to a specific sprinkle (e.g. "templates://core/")
            Not sure if we need this.
@@ -90,8 +89,7 @@ class SprinkleManager
     /**
      * Register resource streams for all base sprinkles.
      */
-    public function addResources()
-    {
+    public function addResources() {
         // For each sprinkle, register its resources and then run its initializer
         foreach ($this->sprinkles as $sprinkleName => $sprinkle) {
             $this->addResource('config', $sprinkleName);
@@ -113,8 +111,7 @@ class SprinkleManager
      * Otherwise, returns null.
      * @param $name The name of the Sprinkle to initialize.
      */
-    public function bootSprinkle($name)
-    {
+    public function bootSprinkle($name) {
         $className = Str::studly($name);
         $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\$className";
 
@@ -123,7 +120,7 @@ class SprinkleManager
             $sprinkle = new $fullClassName($this->ci);
             return $sprinkle;
         } else {
-            return null;
+            return NULL;
         }
     }
 
@@ -132,8 +129,7 @@ class SprinkleManager
      *
      * @return string[]
      */
-    public function getSprinkleNames()
-    {
+    public function getSprinkleNames() {
         return array_keys($this->sprinkles);
     }
 
@@ -142,8 +138,7 @@ class SprinkleManager
      *
      * @return Sprinkle[]
      */
-    public function getSprinkles()
-    {
+    public function getSprinkles() {
         return $this->sprinkles;
     }
 
@@ -153,8 +148,7 @@ class SprinkleManager
      *
      * @param string[] $baseSprinkleNames
      */
-    public function init($sprinkleNames)
-    {
+    public function init($sprinkleNames) {
         foreach ($sprinkleNames as $sprinkleName) {
             $sprinkle = $this->bootSprinkle($sprinkleName);
 
@@ -172,8 +166,7 @@ class SprinkleManager
      *
      * @param string $schemaPath
      */
-    public function initFromSchema($schemaPath)
-    {
+    public function initFromSchema($schemaPath) {
         $baseSprinkleNames = $this->loadSchema($schemaPath)->base;
         $this->init($baseSprinkleNames);
     }
@@ -184,8 +177,7 @@ class SprinkleManager
      *
      * @param $name The name of the Sprinkle
      */
-    public function isAvailable($name)
-    {
+    public function isAvailable($name) {
         return in_array($name, $this->getSprinkleNames());
     }
 
@@ -193,8 +185,7 @@ class SprinkleManager
     /**
      * Interate through the list of loaded Sprinkles, and invoke their ServiceProvider classes.
      */
-    public function registerAllServices()
-    {
+    public function registerAllServices() {
         foreach ($this->getSprinkleNames() as $sprinkleName) {
             $this->registerServices($sprinkleName);
         }
@@ -203,8 +194,7 @@ class SprinkleManager
     /**
      * Register services for a specified Sprinkle.
      */
-    public function registerServices($name)
-    {
+    public function registerServices($name) {
         $className = Str::studly($name);
         $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\ServicesProvider\\ServicesProvider";
 
@@ -222,11 +212,10 @@ class SprinkleManager
      * @param string $schemaPath
      * @return string[]
      */
-    protected function loadSchema($schemaPath)
-    {
+    protected function loadSchema($schemaPath) {
         $sprinklesFile = @file_get_contents($schemaPath);
 
-        if ($sprinklesFile === false) {
+        if ($sprinklesFile === FALSE) {
             $errorMessage = "Error: Unable to determine Sprinkle load order.  File '$schemaPath' not found or unable to read. Please create a 'sprinkles.json' file and try again.";
             throw new FileNotFoundException($errorMessage);
         }

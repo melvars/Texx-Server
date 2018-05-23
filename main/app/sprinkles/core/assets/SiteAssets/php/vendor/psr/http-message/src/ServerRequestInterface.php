@@ -224,7 +224,7 @@ interface ServerRequestInterface extends RequestInterface
      * @param mixed $default Default value to return if the attribute does not exist.
      * @return mixed
      */
-    public function getAttribute($name, $default = null);
+    public function getAttribute($name, $default = NULL);
 
     /**
      * Return an instance with the specified derived request attribute.

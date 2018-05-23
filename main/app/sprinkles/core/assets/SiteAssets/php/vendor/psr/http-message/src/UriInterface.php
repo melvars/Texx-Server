@@ -1,4 +1,5 @@
 <?php
+
 namespace Psr\Http\Message;
 
 /**
@@ -204,7 +205,7 @@ interface UriInterface
      * @param null|string $password The password associated with $user.
      * @return static A new instance with the specified user information.
      */
-    public function withUserInfo($user, $password = null);
+    public function withUserInfo($user, $password = NULL);
 
     /**
      * Return an instance with the specified host.

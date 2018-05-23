@@ -11,7 +11,7 @@
  */
 $app->group('/dashboard', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\AdminController:pageDashboard')
-         ->setName('dashboard');
+        ->setName('dashboard');
 })->add('authGuard');
 
 $app->group('/api/dashboard', function () {

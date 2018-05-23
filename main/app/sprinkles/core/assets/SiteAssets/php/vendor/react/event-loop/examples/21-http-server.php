@@ -10,7 +10,7 @@ $server = stream_socket_server('tcp://127.0.0.1:8080');
 if (!$server) {
     exit(1);
 }
-stream_set_blocking($server, false);
+stream_set_blocking($server, FALSE);
 
 // wait for incoming connections on server socket
 $loop->addReadStream($server, function ($server) use ($loop) {
@@ -29,7 +29,7 @@ $loop->addReadStream($server, function ($server) use ($loop) {
 
 $loop->addPeriodicTimer(5, function () {
     $memory = memory_get_usage() / 1024;
-    $formatted = number_format($memory, 3).'K';
+    $formatted = number_format($memory, 3) . 'K';
     echo "Current memory usage: {$formatted}\n";
 });
 

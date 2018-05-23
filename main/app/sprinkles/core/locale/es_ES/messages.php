@@ -17,8 +17,8 @@ return [
     "ABOUT" => "Acerca de",
     "WELCOME_TO" => "¡Bienvenido a {{title}}!",
 
-	"CAPTCHA" => [
-	    "@TRANSLATION" => "Captcha",
+    "CAPTCHA" => [
+        "@TRANSLATION" => "Captcha",
         "FAIL" => "No ha introducido correctamente el código de captcha.",
         "SPECIFY" => "Introduzca el captcha",
         "VERIFY" => "Verificar el captcha"
@@ -27,7 +27,7 @@ return [
     "CSRF_MISSING" => "¿Falta el símbolo CSRF?. Intente refrescar la página y luego volver a enviarla",
 
     "DB_INVALID" => "No se puede conectar a la base de datos. Si es un administrador, compruebe su registro de errores.",
-    "DESCRIPTION"   => "Descripción",
+    "DESCRIPTION" => "Descripción",
     "DOWNLOAD" => [
         "@TRANSLATION" => "Descargar",
         "CSV" => "Descargar CSV"
@@ -38,7 +38,7 @@ return [
         "YOUR" => "Tu correo electrónico"
     ],
 
-    "HOME"  => "Inicio",
+    "HOME" => "Inicio",
 
     "LEGAL" => "Política Legal",
 
@@ -48,7 +48,7 @@ return [
 
     "MAIL_ERROR" => "Error fatal al intentar enviar correo, póngase en contacto con el administrador del servidor. Si eres el administrador, comprueba el registro de correo de UF.",
 
-    "NAME"  => "Nombre",
+    "NAME" => "Nombre",
     "NAVIGATION" => "Navegación",
 
     "PAGINATION" => [

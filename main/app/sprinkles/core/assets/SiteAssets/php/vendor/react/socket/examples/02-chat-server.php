@@ -31,7 +31,7 @@ $server = new Server(isset($argv[1]) ? $argv[1] : 0, $loop, array(
     )
 ));
 
-$server = new LimitingServer($server, null);
+$server = new LimitingServer($server, NULL);
 
 $server->on('connection', function (ConnectionInterface $client) use ($server) {
     // whenever a new message comes in

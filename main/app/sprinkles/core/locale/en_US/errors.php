@@ -41,7 +41,7 @@ return [
         "ENCOUNTERED" => "Uhhh...something happened.  We don't know what.",
 
         "MAIL" => "Fatal error attempting mail, contact your server administrator.  If you are the admin, please check the UserFrosting log.",
-        
+
         "RETURN" => 'Click <a href="{{url}}">here</a> to return to the front page.',
 
         "SERVER" => "Oops, looks like our server might have goofed. If you're an admin, please check the PHP or UserFrosting logs.",

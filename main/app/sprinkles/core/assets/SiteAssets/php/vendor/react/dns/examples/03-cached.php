@@ -19,19 +19,19 @@ $resolver->resolve($name)->then(function ($ip) use ($name) {
     echo 'IP for ' . $name . ': ' . $ip . PHP_EOL;
 }, 'printf');
 
-$loop->addTimer(1.0, function() use ($name, $resolver) {
+$loop->addTimer(1.0, function () use ($name, $resolver) {
     $resolver->resolve($name)->then(function ($ip) use ($name) {
         echo 'IP for ' . $name . ': ' . $ip . PHP_EOL;
     }, 'printf');
 });
 
-$loop->addTimer(2.0, function() use ($name, $resolver) {
+$loop->addTimer(2.0, function () use ($name, $resolver) {
     $resolver->resolve($name)->then(function ($ip) use ($name) {
         echo 'IP for ' . $name . ': ' . $ip . PHP_EOL;
     }, 'printf');
 });
 
-$loop->addTimer(3.0, function() use ($name, $resolver) {
+$loop->addTimer(3.0, function () use ($name, $resolver) {
     $resolver->resolve($name)->then(function ($ip) use ($name) {
         echo 'IP for ' . $name . ': ' . $ip . PHP_EOL;
     }, 'printf');

@@ -20,43 +20,36 @@ final class Timers
     private $timers;
     private $scheduler;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->timers = new SplObjectStorage();
         $this->scheduler = new SplPriorityQueue();
     }
 
-    public function updateTime()
-    {
-        return $this->time = microtime(true);
+    public function updateTime() {
+        return $this->time = microtime(TRUE);
     }
 
-    public function getTime()
-    {
+    public function getTime() {
         return $this->time ?: $this->updateTime();
     }
 
-    public function add(TimerInterface $timer)
-    {
+    public function add(TimerInterface $timer) {
         $interval = $timer->getInterval();
-        $scheduledAt = $interval + microtime(true);
+        $scheduledAt = $interval + microtime(TRUE);
 
         $this->timers->attach($timer, $scheduledAt);
         $this->scheduler->insert($timer, -$scheduledAt);
     }
 
-    public function contains(TimerInterface $timer)
-    {
+    public function contains(TimerInterface $timer) {
         return $this->timers->contains($timer);
     }
 
-    public function cancel(TimerInterface $timer)
-    {
+    public function cancel(TimerInterface $timer) {
         $this->timers->detach($timer);
     }
 
-    public function getFirst()
-    {
+    public function getFirst() {
         while ($this->scheduler->count()) {
             $timer = $this->scheduler->top();
 
@@ -67,16 +60,14 @@ final class Timers
             $this->scheduler->extract();
         }
 
-        return null;
+        return NULL;
     }
 
-    public function isEmpty()
-    {
+    public function isEmpty() {
         return count($this->timers) === 0;
     }
 
-    public function tick()
-    {
+    public function tick() {
         $time = $this->updateTime();
         $timers = $this->timers;
         $scheduler = $this->scheduler;

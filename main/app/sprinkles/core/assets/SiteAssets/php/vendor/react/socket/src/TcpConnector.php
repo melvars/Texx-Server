@@ -12,15 +12,13 @@ final class TcpConnector implements ConnectorInterface
     private $loop;
     private $context;
 
-    public function __construct(LoopInterface $loop, array $context = array())
-    {
+    public function __construct(LoopInterface $loop, array $context = array()) {
         $this->loop = $loop;
         $this->context = $context;
     }
 
-    public function connect($uri)
-    {
-        if (strpos($uri, '://') === false) {
+    public function connect($uri) {
+        if (strpos($uri, '://') === FALSE) {
             $uri = 'tcp://' . $uri;
         }
 
@@ -30,7 +28,7 @@ final class TcpConnector implements ConnectorInterface
         }
 
         $ip = trim($parts['host'], '[]');
-        if (false === filter_var($ip, FILTER_VALIDATE_IP)) {
+        if (FALSE === filter_var($ip, FILTER_VALIDATE_IP)) {
             return Promise\reject(new InvalidArgumentException('Given URI "' . $ip . '" does not contain a valid host IP'));
         }
 
@@ -52,7 +50,7 @@ final class TcpConnector implements ConnectorInterface
         // If TLS is not enabled later, this doesn't hurt either.
         if (isset($args['hostname'])) {
             $context['ssl'] = array(
-                'SNI_enabled' => true,
+                'SNI_enabled' => TRUE,
                 'peer_name' => $args['hostname']
             );
 
@@ -80,7 +78,7 @@ final class TcpConnector implements ConnectorInterface
             stream_context_create($context)
         );
 
-        if (false === $socket) {
+        if (FALSE === $socket) {
             return Promise\reject(new RuntimeException(
                 sprintf("Connection to %s failed: %s", $uri, $errstr),
                 $errno
@@ -94,8 +92,7 @@ final class TcpConnector implements ConnectorInterface
         return $this->waitForStreamOnce($socket);
     }
 
-    private function waitForStreamOnce($stream)
-    {
+    private function waitForStreamOnce($stream) {
         $loop = $this->loop;
 
         return new Promise\Promise(function ($resolve, $reject) use ($loop, $stream) {
@@ -104,7 +101,7 @@ final class TcpConnector implements ConnectorInterface
 
                 // The following hack looks like the only way to
                 // detect connection refused errors with PHP's stream sockets.
-                if (false === stream_socket_get_name($stream, true)) {
+                if (FALSE === stream_socket_get_name($stream, TRUE)) {
                     fclose($stream);
 
                     $reject(new RuntimeException('Connection refused'));

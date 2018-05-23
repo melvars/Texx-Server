@@ -24,11 +24,10 @@ class DirectoryResource implements IteratorResourceInterface
     /**
      * Constructor.
      *
-     * @param string $path    A directory path
+     * @param string $path A directory path
      * @param string $pattern A filename pattern
      */
-    public function __construct($path, $pattern = null)
-    {
+    public function __construct($path, $pattern = NULL) {
         if (DIRECTORY_SEPARATOR != substr($path, -1)) {
             $path .= DIRECTORY_SEPARATOR;
         }
@@ -37,26 +36,24 @@ class DirectoryResource implements IteratorResourceInterface
         $this->pattern = $pattern;
     }
 
-    public function isFresh($timestamp)
-    {
+    public function isFresh($timestamp) {
         if (!is_dir($this->path) || filemtime($this->path) > $timestamp) {
-            return false;
+            return FALSE;
         }
 
         foreach ($this as $resource) {
             if (!$resource->isFresh($timestamp)) {
-                return false;
+                return FALSE;
             }
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
      * Returns the combined content of all inner resources.
      */
-    public function getContent()
-    {
+    public function getContent() {
         $content = array();
         foreach ($this as $resource) {
             $content[] = $resource->getContent();
@@ -65,20 +62,17 @@ class DirectoryResource implements IteratorResourceInterface
         return implode("\n", $content);
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->path;
     }
 
-    public function getIterator()
-    {
+    public function getIterator() {
         return is_dir($this->path)
             ? new DirectoryResourceIterator($this->getInnerIterator())
             : new \EmptyIterator();
     }
 
-    protected function getInnerIterator()
-    {
+    protected function getInnerIterator() {
         return new DirectoryResourceFilterIterator(new \RecursiveDirectoryIterator($this->path, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), $this->pattern);
     }
 }
@@ -91,8 +85,7 @@ class DirectoryResource implements IteratorResourceInterface
  */
 class DirectoryResourceIterator extends \RecursiveIteratorIterator
 {
-    public function current()
-    {
+    public function current() {
         return new FileResource(parent::current()->getPathname());
     }
 }
@@ -107,15 +100,13 @@ class DirectoryResourceFilterIterator extends \RecursiveFilterIterator
 {
     protected $pattern;
 
-    public function __construct(\RecursiveDirectoryIterator $iterator, $pattern = null)
-    {
+    public function __construct(\RecursiveDirectoryIterator $iterator, $pattern = NULL) {
         parent::__construct($iterator);
 
         $this->pattern = $pattern;
     }
 
-    public function accept()
-    {
+    public function accept() {
         $file = $this->current();
         $name = $file->getBasename();
 
@@ -123,11 +114,10 @@ class DirectoryResourceFilterIterator extends \RecursiveFilterIterator
             return '.' != $name[0];
         }
 
-        return null === $this->pattern || 0 < preg_match($this->pattern, $name);
+        return NULL === $this->pattern || 0 < preg_match($this->pattern, $name);
     }
 
-    public function getChildren()
-    {
+    public function getChildren() {
         return new self(new \RecursiveDirectoryIterator($this->current()->getPathname(), \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), $this->pattern);
     }
 }

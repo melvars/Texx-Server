@@ -21,8 +21,7 @@ if (function_exists('assetic_init')) {
  *
  * @param AssetFactory $factory The asset factory
  */
-function assetic_init(AssetFactory $factory)
-{
+function assetic_init(AssetFactory $factory) {
     global $_assetic;
 
     $_assetic = new stdClass();
@@ -32,14 +31,13 @@ function assetic_init(AssetFactory $factory)
 /**
  * Returns an array of javascript URLs.
  *
- * @param array|string $inputs  Input strings
+ * @param array|string $inputs Input strings
  * @param array|string $filters Filter names
- * @param array        $options An array of options
+ * @param array $options An array of options
  *
  * @return array An array of javascript URLs
  */
-function assetic_javascripts($inputs = array(), $filters = array(), array $options = array())
-{
+function assetic_javascripts($inputs = array(), $filters = array(), array $options = array()) {
     if (!isset($options['output'])) {
         $options['output'] = 'js/*.js';
     }
@@ -50,14 +48,13 @@ function assetic_javascripts($inputs = array(), $filters = array(), array $optio
 /**
  * Returns an array of stylesheet URLs.
  *
- * @param array|string $inputs  Input strings
+ * @param array|string $inputs Input strings
  * @param array|string $filters Filter names
- * @param array        $options An array of options
+ * @param array $options An array of options
  *
  * @return array An array of stylesheet URLs
  */
-function assetic_stylesheets($inputs = array(), $filters = array(), array $options = array())
-{
+function assetic_stylesheets($inputs = array(), $filters = array(), array $options = array()) {
     if (!isset($options['output'])) {
         $options['output'] = 'css/*.css';
     }
@@ -68,14 +65,13 @@ function assetic_stylesheets($inputs = array(), $filters = array(), array $optio
 /**
  * Returns an image URL.
  *
- * @param string       $input   An input
+ * @param string $input An input
  * @param array|string $filters Filter names
- * @param array        $options An array of options
+ * @param array $options An array of options
  *
  * @return string An image URL
  */
-function assetic_image($input, $filters = array(), array $options = array())
-{
+function assetic_image($input, $filters = array(), array $options = array()) {
     if (!isset($options['output'])) {
         $options['output'] = 'images/*';
     }
@@ -88,14 +84,13 @@ function assetic_image($input, $filters = array(), array $options = array())
 /**
  * Returns an array of asset urls.
  *
- * @param array|string $inputs  Input strings
+ * @param array|string $inputs Input strings
  * @param array|string $filters Filter names
- * @param array        $options An array of options
+ * @param array $options An array of options
  *
  * @return array An array of URLs
  */
-function _assetic_urls($inputs = array(), $filters = array(), array $options = array())
-{
+function _assetic_urls($inputs = array(), $filters = array(), array $options = array()) {
     global $_assetic;
 
     if (!is_array($inputs)) {

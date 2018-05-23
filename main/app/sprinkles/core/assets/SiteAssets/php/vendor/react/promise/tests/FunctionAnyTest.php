@@ -7,16 +7,15 @@ use React\Promise\Exception\LengthException;
 class FunctionAnyTest extends TestCase
 {
     /** @test */
-    public function shouldRejectWithLengthExceptionWithEmptyInputArray()
-    {
+    public function shouldRejectWithLengthExceptionWithEmptyInputArray() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
             ->method('__invoke')
             ->with(
-                $this->callback(function($exception){
+                $this->callback(function ($exception) {
                     return $exception instanceof LengthException &&
-                           'Input array must contain at least 1 item but contains only 0 items.' === $exception->getMessage();
+                        'Input array must contain at least 1 item but contains only 0 items.' === $exception->getMessage();
                 })
             );
 
@@ -25,21 +24,19 @@ class FunctionAnyTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveToNullWithNonArrayInput()
-    {
+    public function shouldResolveToNullWithNonArrayInput() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
             ->method('__invoke')
-            ->with($this->identicalTo(null));
+            ->with($this->identicalTo(NULL));
 
-        any(null)
+        any(NULL)
             ->then($mock);
     }
 
     /** @test */
-    public function shouldResolveWithAnInputValue()
-    {
+    public function shouldResolveWithAnInputValue() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -51,8 +48,7 @@ class FunctionAnyTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveWithAPromisedInputValue()
-    {
+    public function shouldResolveWithAPromisedInputValue() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -64,8 +60,7 @@ class FunctionAnyTest extends TestCase
     }
 
     /** @test */
-    public function shouldRejectWithAllRejectedInputValuesIfAllInputsAreRejected()
-    {
+    public function shouldRejectWithAllRejectedInputValuesIfAllInputsAreRejected() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -77,8 +72,7 @@ class FunctionAnyTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveWhenFirstInputPromiseResolves()
-    {
+    public function shouldResolveWhenFirstInputPromiseResolves() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -90,8 +84,7 @@ class FunctionAnyTest extends TestCase
     }
 
     /** @test */
-    public function shouldAcceptAPromiseForAnArray()
-    {
+    public function shouldAcceptAPromiseForAnArray() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -103,21 +96,19 @@ class FunctionAnyTest extends TestCase
     }
 
     /** @test */
-    public function shouldResolveToNullArrayWhenInputPromiseDoesNotResolveToArray()
-    {
+    public function shouldResolveToNullArrayWhenInputPromiseDoesNotResolveToArray() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
             ->method('__invoke')
-            ->with($this->identicalTo(null));
+            ->with($this->identicalTo(NULL));
 
         any(resolve(1))
             ->then($mock);
     }
 
     /** @test */
-    public function shouldNotRelyOnArryIndexesWhenUnwrappingToASingleResolutionValue()
-    {
+    public function shouldNotRelyOnArryIndexesWhenUnwrappingToASingleResolutionValue() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -135,21 +126,19 @@ class FunctionAnyTest extends TestCase
     }
 
     /** @test */
-    public function shouldRejectWhenInputPromiseRejects()
-    {
+    public function shouldRejectWhenInputPromiseRejects() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
             ->method('__invoke')
-            ->with($this->identicalTo(null));
+            ->with($this->identicalTo(NULL));
 
         any(reject())
             ->then($this->expectCallableNever(), $mock);
     }
 
     /** @test */
-    public function shouldCancelInputPromise()
-    {
+    public function shouldCancelInputPromise() {
         $mock = $this
             ->getMockBuilder('React\Promise\CancellablePromiseInterface')
             ->getMock();
@@ -161,8 +150,7 @@ class FunctionAnyTest extends TestCase
     }
 
     /** @test */
-    public function shouldCancelInputArrayPromises()
-    {
+    public function shouldCancelInputArrayPromises() {
         $mock1 = $this
             ->getMockBuilder('React\Promise\CancellablePromiseInterface')
             ->getMock();
@@ -181,8 +169,7 @@ class FunctionAnyTest extends TestCase
     }
 
     /** @test */
-    public function shouldNotCancelOtherPendingInputArrayPromisesIfOnePromiseFulfills()
-    {
+    public function shouldNotCancelOtherPendingInputArrayPromisesIfOnePromiseFulfills() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->never())

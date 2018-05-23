@@ -25,8 +25,7 @@ abstract class BaseProcessFilter implements FilterInterface
      *
      * @param int $timeout The timeout for the process
      */
-    public function setTimeout($timeout)
-    {
+    public function setTimeout($timeout) {
         $this->timeout = $timeout;
     }
 
@@ -37,19 +36,17 @@ abstract class BaseProcessFilter implements FilterInterface
      *
      * @return ProcessBuilder A new process builder
      */
-    protected function createProcessBuilder(array $arguments = array())
-    {
+    protected function createProcessBuilder(array $arguments = array()) {
         $pb = new ProcessBuilder($arguments);
 
-        if (null !== $this->timeout) {
+        if (NULL !== $this->timeout) {
             $pb->setTimeout($this->timeout);
         }
 
         return $pb;
     }
 
-    protected function mergeEnv(ProcessBuilder $pb)
-    {
+    protected function mergeEnv(ProcessBuilder $pb) {
         foreach (array_filter($_SERVER, 'is_scalar') as $key => $value) {
             $pb->setEnv($key, $value);
         }

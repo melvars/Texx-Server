@@ -1,4 +1,5 @@
 <?php
+
 namespace Nubs\RandomNameGenerator;
 
 use PHPUnit_Framework_TestCase;
@@ -19,8 +20,7 @@ class AlliterationTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function getNameBasic()
-    {
+    public function getNameBasic() {
         $generator = new Alliteration();
         $parts = explode(' ', $generator->getName());
         $this->assertSame(2, count($parts));
@@ -36,8 +36,7 @@ class AlliterationTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function getNameForced()
-    {
+    public function getNameForced() {
         $numberGenerator = $this->createMock('\Cinam\Randomizer\NumberGenerator');
         $numberGenerator->expects($this->exactly(2))->method('getInt')->will($this->onConsecutiveCalls(20, 5));
         $randomizer = new Randomizer($numberGenerator);
@@ -56,8 +55,7 @@ class AlliterationTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function toStringBasic()
-    {
+    public function toStringBasic() {
         $generator = new Alliteration();
         $parts = explode(' ', (string)$generator);
         $this->assertSame(2, count($parts));

@@ -16,8 +16,7 @@ class NoConverter implements ConverterInterface
     /**
      * {@inheritdoc}
      */
-    public function convert($path)
-    {
+    public function convert($path) {
         return $path;
     }
 }

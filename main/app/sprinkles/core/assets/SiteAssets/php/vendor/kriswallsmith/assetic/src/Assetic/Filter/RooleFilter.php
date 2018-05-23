@@ -31,18 +31,16 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
      * Constructor
      *
      * @param string $rooleBin The path to the roole binary
-     * @param string $nodeBin  The path to the node binary
+     * @param string $nodeBin The path to the node binary
      */
-    public function __construct($rooleBin = '/usr/bin/roole', $nodeBin = null)
-    {
+    public function __construct($rooleBin = '/usr/bin/roole', $nodeBin = NULL) {
         $this->rooleBin = $rooleBin;
         $this->nodeBin = $nodeBin;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $input = FilesystemUtils::createTemporaryFile('roole');
-        $output = $input.'.css';
+        $output = $input . '.css';
 
         file_put_contents($input, $asset->getContent());
 
@@ -72,12 +70,10 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
         unlink($output);
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
+    public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         // todo
         return array();
     }

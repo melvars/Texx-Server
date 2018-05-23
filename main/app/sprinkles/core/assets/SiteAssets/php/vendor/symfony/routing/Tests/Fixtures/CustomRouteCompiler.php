@@ -19,8 +19,7 @@ class CustomRouteCompiler extends RouteCompiler
     /**
      * {@inheritdoc}
      */
-    public static function compile(Route $route)
-    {
+    public static function compile(Route $route) {
         return new CustomCompiledRoute('', '', array(), array());
     }
 }

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Log;
 
 use Monolog\Formatter\LineFormatter;
@@ -23,13 +24,12 @@ class MixedFormatter extends LineFormatter
     /**
      * Return the JSON representation of a value
      *
-     * @param  mixed             $data
-     * @param  bool              $ignoreErrors
+     * @param  mixed $data
+     * @param  bool $ignoreErrors
      * @throws \RuntimeException if encoding fails and errors are not ignored
      * @return string
      */
-    protected function toJson($data, $ignoreErrors = false)
-    {
+    protected function toJson($data, $ignoreErrors = FALSE) {
         // suppress json_encode errors since it's twitchy with some inputs
         if ($ignoreErrors) {
             return @$this->jsonEncodePretty($data);
@@ -37,7 +37,7 @@ class MixedFormatter extends LineFormatter
 
         $json = $this->jsonEncodePretty($data);
 
-        if ($json === false) {
+        if ($json === FALSE) {
             $json = $this->handleJsonError(json_last_error(), $data);
         }
 
@@ -45,11 +45,10 @@ class MixedFormatter extends LineFormatter
     }
 
     /**
-     * @param  mixed  $data
+     * @param  mixed $data
      * @return string JSON encoded data or null on failure
      */
-    private function jsonEncodePretty($data)
-    {
+    private function jsonEncodePretty($data) {
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
             return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         }

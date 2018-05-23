@@ -16,8 +16,7 @@ use Symfony\Component\Process\PhpProcess;
 
 class PhpProcessTest extends TestCase
 {
-    public function testNonBlockingWorks()
-    {
+    public function testNonBlockingWorks() {
         $expected = 'hello world!';
         $process = new PhpProcess(<<<PHP
 <?php echo '$expected';
@@ -28,8 +27,7 @@ PHP
         $this->assertEquals($expected, $process->getOutput());
     }
 
-    public function testCommandLine()
-    {
+    public function testCommandLine() {
         $process = new PhpProcess(<<<'PHP'
 <?php echo phpversion().PHP_SAPI;
 PHP
@@ -43,6 +41,6 @@ PHP
         $process->wait();
         $this->assertContains($commandLine, $process->getCommandLine(), '::getCommandLine() returns the command line of PHP after wait');
 
-        $this->assertSame(PHP_VERSION.PHP_SAPI, $process->getOutput());
+        $this->assertSame(PHP_VERSION . PHP_SAPI, $process->getOutput());
     }
 }

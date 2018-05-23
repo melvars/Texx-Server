@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
@@ -25,8 +26,7 @@ class PermissionRolesTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function up()
-    {
+    public function up() {
         if (!$this->schema->hasTable('permission_roles')) {
             $this->schema->create('permission_roles', function (Blueprint $table) {
                 $table->integer('permission_id')->unsigned();
@@ -48,8 +48,7 @@ class PermissionRolesTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function down()
-    {
+    public function down() {
         $this->schema->drop('permission_roles');
     }
 }

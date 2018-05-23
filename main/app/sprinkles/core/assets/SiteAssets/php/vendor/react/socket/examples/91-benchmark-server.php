@@ -46,9 +46,9 @@ $server->on('connection', function (ConnectionInterface $conn) use ($loop) {
     });
 
     // report average throughput once client disconnects
-    $t = microtime(true);
+    $t = microtime(TRUE);
     $conn->on('close', function () use ($conn, $t, &$bytes) {
-        $t = microtime(true) - $t;
+        $t = microtime(TRUE) - $t;
         echo '[disconnected after receiving ' . $bytes . ' bytes in ' . round($t, 3) . 's => ' . round($bytes / $t / 1024 / 1024, 1) . ' MiB/s]' . PHP_EOL;
     });
 });

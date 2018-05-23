@@ -21,8 +21,7 @@ use Symfony\Component\Routing\RouteCollectionBuilder;
 
 class RouteCollectionBuilderTest extends TestCase
 {
-    public function testImport()
-    {
+    public function testImport() {
         $resolvedLoader = $this->getMockBuilder('Symfony\Component\Config\Loader\LoaderInterface')->getMock();
         $resolver = $this->getMockBuilder('Symfony\Component\Config\Loader\LoaderResolverInterface')->getMock();
         $resolver->expects($this->once())
@@ -33,7 +32,7 @@ class RouteCollectionBuilderTest extends TestCase
         $originalRoute = new Route('/foo/path');
         $expectedCollection = new RouteCollection();
         $expectedCollection->add('one_test_route', $originalRoute);
-        $expectedCollection->addResource(new FileResource(__DIR__.'/Fixtures/file_resource.yml'));
+        $expectedCollection->addResource(new FileResource(__DIR__ . '/Fixtures/file_resource.yml'));
 
         $resolvedLoader
             ->expects($this->once())
@@ -66,9 +65,8 @@ class RouteCollectionBuilderTest extends TestCase
         $this->assertCount(1, $routeCollection->getResources());
     }
 
-    public function testImportAddResources()
-    {
-        $routeCollectionBuilder = new RouteCollectionBuilder(new YamlFileLoader(new FileLocator(array(__DIR__.'/Fixtures/'))));
+    public function testImportAddResources() {
+        $routeCollectionBuilder = new RouteCollectionBuilder(new YamlFileLoader(new FileLocator(array(__DIR__ . '/Fixtures/'))));
         $routeCollectionBuilder->import('file_resource.yml');
         $routeCollection = $routeCollectionBuilder->build();
 
@@ -78,14 +76,12 @@ class RouteCollectionBuilderTest extends TestCase
     /**
      * @expectedException \BadMethodCallException
      */
-    public function testImportWithoutLoaderThrowsException()
-    {
+    public function testImportWithoutLoaderThrowsException() {
         $collectionBuilder = new RouteCollectionBuilder();
         $collectionBuilder->import('routing.yml');
     }
 
-    public function testAdd()
-    {
+    public function testAdd() {
         $collectionBuilder = new RouteCollectionBuilder();
 
         $addedRoute = $collectionBuilder->add('/checkout', 'AppBundle:Order:checkout');
@@ -97,8 +93,7 @@ class RouteCollectionBuilderTest extends TestCase
         $this->assertSame($addedRoute2, $finalCollection->get('blog_list'));
     }
 
-    public function testFlushOrdering()
-    {
+    public function testFlushOrdering() {
         $importedCollection = new RouteCollection();
         $importedCollection->add('imported_route1', new Route('/imported/foo1'));
         $importedCollection->add('imported_route2', new Route('/imported/foo2'));
@@ -107,7 +102,7 @@ class RouteCollectionBuilderTest extends TestCase
         // make this loader able to do the import - keeps mocking simple
         $loader->expects($this->any())
             ->method('supports')
-            ->will($this->returnValue(true));
+            ->will($this->returnValue(TRUE));
         $loader
             ->expects($this->once())
             ->method('load')
@@ -146,8 +141,7 @@ class RouteCollectionBuilderTest extends TestCase
         $this->assertEquals('fr', $defaults['_locale']);
     }
 
-    public function testFlushSetsRouteNames()
-    {
+    public function testFlushSetsRouteNames() {
         $collectionBuilder = new RouteCollectionBuilder();
 
         // add a "named" route
@@ -168,19 +162,18 @@ class RouteCollectionBuilderTest extends TestCase
         ), $actualRouteNames);
     }
 
-    public function testFlushSetsDetailsOnChildrenRoutes()
-    {
+    public function testFlushSetsDetailsOnChildrenRoutes() {
         $routes = new RouteCollectionBuilder();
 
         $routes->add('/blogs/{page}', 'listAction', 'blog_list')
             // unique things for the route
             ->setDefault('page', 1)
             ->setRequirement('id', '\d+')
-            ->setOption('expose', true)
+            ->setOption('expose', TRUE)
             // things that the collection will try to override (but won't)
             ->setDefault('_format', 'html')
             ->setRequirement('_format', 'json|xml')
-            ->setOption('fooBar', true)
+            ->setOption('fooBar', TRUE)
             ->setHost('example.com')
             ->setCondition('request.isSecure()')
             ->setSchemes(array('https'))
@@ -194,13 +187,13 @@ class RouteCollectionBuilderTest extends TestCase
             // things that will not override the child route
             ->setDefault('_format', 'json')
             ->setRequirement('_format', 'xml')
-            ->setOption('fooBar', false)
+            ->setOption('fooBar', FALSE)
             ->setHost('symfony.com')
             ->setCondition('request.query.get("page")==1')
             // some unique things that should be set on the child
             ->setDefault('_locale', 'fr')
             ->setRequirement('_locale', 'fr|en')
-            ->setOption('niceRoute', true)
+            ->setOption('niceRoute', TRUE)
             ->setSchemes(array('http'))
             ->setMethods(array('GET', 'POST'));
 
@@ -234,8 +227,7 @@ class RouteCollectionBuilderTest extends TestCase
     /**
      * @dataProvider providePrefixTests
      */
-    public function testFlushPrefixesPaths($collectionPrefix, $routePath, $expectedPath)
-    {
+    public function testFlushPrefixesPaths($collectionPrefix, $routePath, $expectedPath) {
         $routes = new RouteCollectionBuilder();
 
         $routes->add($routePath, 'someController', 'test_route');
@@ -248,8 +240,7 @@ class RouteCollectionBuilderTest extends TestCase
         $this->assertEquals($expectedPath, $collection->get('test_route')->getPath());
     }
 
-    public function providePrefixTests()
-    {
+    public function providePrefixTests() {
         $tests = array();
         // empty prefix is of course ok
         $tests[] = array('', '/foo', '/foo');
@@ -264,8 +255,7 @@ class RouteCollectionBuilderTest extends TestCase
         return $tests;
     }
 
-    public function testFlushSetsPrefixedWithMultipleLevels()
-    {
+    public function testFlushSetsPrefixedWithMultipleLevels() {
         $loader = $this->getMockBuilder('Symfony\Component\Config\Loader\LoaderInterface')->getMock();
         $routes = new RouteCollectionBuilder($loader);
 
@@ -296,7 +286,7 @@ class RouteCollectionBuilderTest extends TestCase
         // make this loader able to do the import - keeps mocking simple
         $loader->expects($this->any())
             ->method('supports')
-            ->will($this->returnValue(true));
+            ->will($this->returnValue(TRUE));
         $loader
             ->expects($this->any())
             ->method('load')
@@ -312,8 +302,7 @@ class RouteCollectionBuilderTest extends TestCase
         $this->assertEquals('/admin/imported/foo', $collection->get('imported_route')->getPath(), 'Normal RouteCollections are also prefixed properly');
     }
 
-    public function testAutomaticRouteNamesDoNotConflict()
-    {
+    public function testAutomaticRouteNamesDoNotConflict() {
         $routes = new RouteCollectionBuilder();
 
         $adminRoutes = $routes->createBuilder();
@@ -336,8 +325,7 @@ class RouteCollectionBuilderTest extends TestCase
         $this->assertCount(3, $collection->all());
     }
 
-    public function testAddsThePrefixOnlyOnceWhenLoadingMultipleCollections()
-    {
+    public function testAddsThePrefixOnlyOnceWhenLoadingMultipleCollections() {
         $firstCollection = new RouteCollection();
         $firstCollection->add('a', new Route('/a'));
 
@@ -347,7 +335,7 @@ class RouteCollectionBuilderTest extends TestCase
         $loader = $this->getMockBuilder('Symfony\Component\Config\Loader\LoaderInterface')->getMock();
         $loader->expects($this->any())
             ->method('supports')
-            ->will($this->returnValue(true));
+            ->will($this->returnValue(TRUE));
         $loader
             ->expects($this->any())
             ->method('load')

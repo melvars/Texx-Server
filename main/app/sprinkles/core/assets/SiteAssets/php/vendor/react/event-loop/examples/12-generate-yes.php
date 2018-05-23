@@ -10,7 +10,7 @@ $data = str_repeat($data, round(200000 / strlen($data)));
 
 $loop = React\EventLoop\Factory::create();
 
-if (!defined('STDOUT') || stream_set_blocking(STDOUT, false) !== true) {
+if (!defined('STDOUT') || stream_set_blocking(STDOUT, FALSE) !== TRUE) {
     fwrite(STDERR, 'ERROR: Unable to set STDOUT non-blocking (not CLI or Windows?)' . PHP_EOL);
     exit(1);
 }
@@ -25,7 +25,7 @@ $loop->addWriteStream(STDOUT, function ($stdout) use ($loop, &$data) {
     if ($r === 0) {
         $loop->removeWriteStream($stdout);
         fclose($stdout);
-        stream_set_blocking($stdout, true);
+        stream_set_blocking($stdout, TRUE);
         fwrite(STDERR, 'Stopped because STDOUT closed' . PHP_EOL);
 
         return;

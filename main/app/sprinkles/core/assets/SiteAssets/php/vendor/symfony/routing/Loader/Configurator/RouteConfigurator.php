@@ -24,8 +24,7 @@ class RouteConfigurator
 
     private $parentConfigurator;
 
-    public function __construct(RouteCollection $collection, Route $route, $name = '', CollectionConfigurator $parentConfigurator = null)
-    {
+    public function __construct(RouteCollection $collection, Route $route, $name = '', CollectionConfigurator $parentConfigurator = NULL) {
         $this->collection = $collection;
         $this->route = $route;
         $this->name = $name;

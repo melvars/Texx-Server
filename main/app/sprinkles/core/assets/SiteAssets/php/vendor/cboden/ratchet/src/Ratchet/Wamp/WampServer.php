@@ -1,5 +1,7 @@
 <?php
+
 namespace Ratchet\Wamp;
+
 use Ratchet\MessageComponentInterface;
 use Ratchet\WebSocket\WsServerInterface;
 use Ratchet\ConnectionInterface;
@@ -11,7 +13,8 @@ use Ratchet\ConnectionInterface;
  * @link https://github.com/oberstet/autobahn-js Souce for client side library
  * @link http://autobahn.s3.amazonaws.com/js/autobahn.min.js Minified client side library
  */
-class WampServer implements MessageComponentInterface, WsServerInterface {
+class WampServer implements MessageComponentInterface, WsServerInterface
+{
     /**
      * @var ServerProtocol
      */

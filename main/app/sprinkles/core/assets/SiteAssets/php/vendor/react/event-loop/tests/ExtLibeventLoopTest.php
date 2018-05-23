@@ -8,8 +8,7 @@ class ExtLibeventLoopTest extends AbstractLoopTest
 {
     private $fifoPath;
 
-    public function createLoop()
-    {
+    public function createLoop() {
         if ('Linux' === PHP_OS && !extension_loaded('posix')) {
             $this->markTestSkipped('libevent tests skipped on linux due to linux epoll issues.');
         }
@@ -21,15 +20,13 @@ class ExtLibeventLoopTest extends AbstractLoopTest
         return new ExtLibeventLoop();
     }
 
-    public function tearDown()
-    {
+    public function tearDown() {
         if (file_exists($this->fifoPath)) {
             unlink($this->fifoPath);
         }
     }
 
-    public function createStream()
-    {
+    public function createStream() {
         if ('Linux' !== PHP_OS) {
             return parent::createStream();
         }
@@ -47,8 +44,7 @@ class ExtLibeventLoopTest extends AbstractLoopTest
         return $stream;
     }
 
-    public function writeToStream($stream, $content)
-    {
+    public function writeToStream($stream, $content) {
         if ('Linux' !== PHP_OS) {
             return parent::writeToStream($stream, $content);
         }

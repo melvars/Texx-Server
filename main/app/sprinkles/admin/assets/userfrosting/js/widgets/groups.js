@@ -19,7 +19,7 @@ function attachGroupForm() {
         });
 
         // Auto-generate slug
-        form.find('input[name=name]').on('input change', function() {
+        form.find('input[name=name]').on('input change', function () {
             var manualSlug = form.find('#form-group-slug-override').prop('checked');
             if (!manualSlug) {
                 var slug = getSlug($(this).val());
@@ -27,7 +27,7 @@ function attachGroupForm() {
             }
         });
 
-        form.find('#form-group-slug-override').on('change', function() {
+        form.find('#form-group-slug-override').on('change', function () {
             if ($(this).prop('checked')) {
                 form.find('input[name=slug]').prop('readonly', false);
             } else {
@@ -37,14 +37,14 @@ function attachGroupForm() {
         });
 
         // Set icon when changed
-        form.find('input[name=icon]').on('input change', function() {
+        form.find('input[name=icon]').on('input change', function () {
             $(this).prev(".icon-preview").find("i").removeClass().addClass($(this).val());
         });
 
         // Set up the form for submission
         form.ufForm({
             validators: page.validators
-        }).on("submitSuccess.ufForm", function() {
+        }).on("submitSuccess.ufForm", function () {
             // Reload page on success
             window.location.reload();
         });
@@ -63,7 +63,7 @@ function bindGroupButtons(el) {
      * Buttons that launch a modal dialog
      */
     // Edit group details button
-    el.find('.js-group-edit').click(function() {
+    el.find('.js-group-edit').click(function () {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/groups/edit",
             ajaxParams: {
@@ -76,7 +76,7 @@ function bindGroupButtons(el) {
     });
 
     // Delete group button
-    el.find('.js-group-delete').click(function() {
+    el.find('.js-group-delete').click(function () {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/groups/confirm-delete",
             ajaxParams: {
@@ -90,17 +90,17 @@ function bindGroupButtons(el) {
             var form = modal.find('.js-form');
 
             form.ufForm()
-            .on("submitSuccess.ufForm", function() {
-                // Reload page on success
-                window.location.reload();
-            });
+                .on("submitSuccess.ufForm", function () {
+                    // Reload page on success
+                    window.location.reload();
+                });
         });
     });
 }
 
 function bindGroupCreationButton(el) {
     // Link create button
-    el.find('.js-group-create').click(function() {
+    el.find('.js-group-create').click(function () {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/groups/create",
             msgTarget: $("#alerts-page")

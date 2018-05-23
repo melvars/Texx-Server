@@ -7,15 +7,13 @@ use React\Dns\Config\Config;
 
 class ConfigTest extends TestCase
 {
-    public function testLoadsSystemDefault()
-    {
+    public function testLoadsSystemDefault() {
         $config = Config::loadSystemConfigBlocking();
 
         $this->assertInstanceOf('React\Dns\Config\Config', $config);
     }
 
-    public function testLoadsDefaultPath()
-    {
+    public function testLoadsDefaultPath() {
         if (DIRECTORY_SEPARATOR === '\\') {
             $this->markTestSkipped('Not supported on Windows');
         }
@@ -25,8 +23,7 @@ class ConfigTest extends TestCase
         $this->assertInstanceOf('React\Dns\Config\Config', $config);
     }
 
-    public function testLoadsFromExplicitPath()
-    {
+    public function testLoadsFromExplicitPath() {
         $config = Config::loadResolvConfBlocking(__DIR__ . '/../Fixtures/etc/resolv.conf');
 
         $this->assertEquals(array('8.8.8.8'), $config->nameservers);
@@ -35,13 +32,11 @@ class ConfigTest extends TestCase
     /**
      * @expectedException RuntimeException
      */
-    public function testLoadThrowsWhenPathIsInvalid()
-    {
+    public function testLoadThrowsWhenPathIsInvalid() {
         Config::loadResolvConfBlocking(__DIR__ . '/invalid.conf');
     }
 
-    public function testParsesSingleEntryFile()
-    {
+    public function testParsesSingleEntryFile() {
         $contents = 'nameserver 8.8.8.8';
         $expected = array('8.8.8.8');
 
@@ -49,8 +44,7 @@ class ConfigTest extends TestCase
         $this->assertEquals($expected, $config->nameservers);
     }
 
-    public function testParsesNameserverEntriesFromAverageFileCorrectly()
-    {
+    public function testParsesNameserverEntriesFromAverageFileCorrectly() {
         $contents = '#
 # Mac OS X Notice
 #
@@ -70,8 +64,7 @@ nameserver ::1
         $this->assertEquals($expected, $config->nameservers);
     }
 
-    public function testParsesEmptyFileWithoutNameserverEntries()
-    {
+    public function testParsesEmptyFileWithoutNameserverEntries() {
         $contents = '';
         $expected = array();
 
@@ -79,8 +72,7 @@ nameserver ::1
         $this->assertEquals($expected, $config->nameservers);
     }
 
-    public function testParsesFileAndIgnoresCommentsAndInvalidNameserverEntries()
-    {
+    public function testParsesFileAndIgnoresCommentsAndInvalidNameserverEntries() {
         $contents = '
 # nameserver 1.2.3.4
 ; nameserver 2.3.4.5
@@ -96,8 +88,7 @@ NameServer 7.8.9.10
         $this->assertEquals($expected, $config->nameservers);
     }
 
-    public function testLoadsFromWmicOnWindows()
-    {
+    public function testLoadsFromWmicOnWindows() {
         if (DIRECTORY_SEPARATOR !== '\\') {
             $this->markTestSkipped('Only on Windows');
         }
@@ -107,8 +98,7 @@ NameServer 7.8.9.10
         $this->assertInstanceOf('React\Dns\Config\Config', $config);
     }
 
-    public function testLoadsSingleEntryFromWmicOutput()
-    {
+    public function testLoadsSingleEntryFromWmicOutput() {
         $contents = '
 Node,DNSServerSearchOrder
 ACE,
@@ -122,8 +112,7 @@ ACE,
         $this->assertEquals($expected, $config->nameservers);
     }
 
-    public function testLoadsEmptyListFromWmicOutput()
-    {
+    public function testLoadsEmptyListFromWmicOutput() {
         $contents = '
 Node,DNSServerSearchOrder
 ACE,
@@ -135,8 +124,7 @@ ACE,
         $this->assertEquals($expected, $config->nameservers);
     }
 
-    public function testLoadsSingleEntryForMultipleNicsFromWmicOutput()
-    {
+    public function testLoadsSingleEntryForMultipleNicsFromWmicOutput() {
         $contents = '
 Node,DNSServerSearchOrder
 ACE,
@@ -152,8 +140,7 @@ ACE,
         $this->assertEquals($expected, $config->nameservers);
     }
 
-    public function testLoadsMultipleEntriesForSingleNicWithSemicolonFromWmicOutput()
-    {
+    public function testLoadsMultipleEntriesForSingleNicWithSemicolonFromWmicOutput() {
         $contents = '
 Node,DNSServerSearchOrder
 ACE,
@@ -167,8 +154,7 @@ ACE,
         $this->assertEquals($expected, $config->nameservers);
     }
 
-    public function testLoadsMultipleEntriesForSingleNicWithQuotesFromWmicOutput()
-    {
+    public function testLoadsMultipleEntriesForSingleNicWithQuotesFromWmicOutput() {
         $contents = '
 Node,DNSServerSearchOrder
 ACE,
@@ -182,8 +168,7 @@ ACE,
         $this->assertEquals($expected, $config->nameservers);
     }
 
-    private function echoCommand($output)
-    {
+    private function echoCommand($output) {
         return 'echo ' . escapeshellarg($output);
     }
 }

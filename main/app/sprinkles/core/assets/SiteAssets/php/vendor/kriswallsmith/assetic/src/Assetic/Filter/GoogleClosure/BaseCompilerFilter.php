@@ -50,52 +50,42 @@ abstract class BaseCompilerFilter implements FilterInterface
     protected $warningLevel;
     protected $language;
 
-    public function setTimeout($timeout)
-    {
+    public function setTimeout($timeout) {
         $this->timeout = $timeout;
     }
 
-    public function setCompilationLevel($compilationLevel)
-    {
+    public function setCompilationLevel($compilationLevel) {
         $this->compilationLevel = $compilationLevel;
     }
 
-    public function setJsExterns($jsExterns)
-    {
+    public function setJsExterns($jsExterns) {
         $this->jsExterns = $jsExterns;
     }
 
-    public function setExternsUrl($externsUrl)
-    {
+    public function setExternsUrl($externsUrl) {
         $this->externsUrl = $externsUrl;
     }
 
-    public function setExcludeDefaultExterns($excludeDefaultExterns)
-    {
+    public function setExcludeDefaultExterns($excludeDefaultExterns) {
         $this->excludeDefaultExterns = $excludeDefaultExterns;
     }
 
-    public function setFormatting($formatting)
-    {
+    public function setFormatting($formatting) {
         $this->formatting = $formatting;
     }
 
-    public function setUseClosureLibrary($useClosureLibrary)
-    {
+    public function setUseClosureLibrary($useClosureLibrary) {
         $this->useClosureLibrary = $useClosureLibrary;
     }
 
-    public function setWarningLevel($warningLevel)
-    {
+    public function setWarningLevel($warningLevel) {
         $this->warningLevel = $warningLevel;
     }
 
-    public function setLanguage($language)
-    {
+    public function setLanguage($language) {
         $this->language = $language;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 }

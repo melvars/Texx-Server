@@ -4,10 +4,9 @@ namespace React\Promise;
 
 class SimpleTestCancellable
 {
-    public $cancelCalled = false;
+    public $cancelCalled = FALSE;
 
-    public function cancel()
-    {
-        $this->cancelCalled = true;
+    public function cancel() {
+        $this->cancelCalled = TRUE;
     }
 }

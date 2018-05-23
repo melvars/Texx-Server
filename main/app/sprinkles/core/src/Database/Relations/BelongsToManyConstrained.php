@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Relations;
 
 use Illuminate\Database\Eloquent\Model;
@@ -30,17 +31,16 @@ class BelongsToManyConstrained extends BelongsToMany
     /**
      * Create a new belongs to many constrained relationship instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \Illuminate\Database\Eloquent\Model  $parent
-     * @param  string  $constraintKey
-     * @param  string  $table
-     * @param  string  $foreignKey
-     * @param  string  $relatedKey
-     * @param  string  $relationName
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Model $parent
+     * @param  string $constraintKey
+     * @param  string $table
+     * @param  string $foreignKey
+     * @param  string $relatedKey
+     * @param  string $relationName
      * @return void
      */
-    public function __construct(Builder $query, Model $parent, $constraintKey, $table, $foreignKey, $relatedKey, $relationName = null)
-    {
+    public function __construct(Builder $query, Model $parent, $constraintKey, $table, $foreignKey, $relatedKey, $relationName = NULL) {
         $this->constraintKey = $constraintKey;
         parent::__construct($query, $parent, $table, $foreignKey, $relatedKey, $relationName);
     }
@@ -48,11 +48,10 @@ class BelongsToManyConstrained extends BelongsToMany
     /**
      * Set the constraints for an eager load of the relation.
      *
-     * @param  array  $models
+     * @param  array $models
      * @return void
      */
-    public function addEagerConstraints(array $models)
-    {
+    public function addEagerConstraints(array $models) {
         // To make the query more efficient, we only bother querying related models if their pivot key value
         // matches the pivot key value of one of the parent models. 
         $pivotKeys = $this->getPivotKeys($models, $this->constraintKey);
@@ -63,8 +62,7 @@ class BelongsToManyConstrained extends BelongsToMany
     /**
      * Gets a list of unique pivot key values from an array of models.
      */
-    protected function getPivotKeys(array $models, $pivotKey)
-    {
+    protected function getPivotKeys(array $models, $pivotKey) {
         $pivotKeys = [];
         foreach ($models as $model) {
             $pivotKeys[] = $model->getRelation('pivot')->{$pivotKey};
@@ -77,13 +75,12 @@ class BelongsToManyConstrained extends BelongsToMany
      * in the parent object to the child objects.
      *
      * @link Called in https://github.com/laravel/framework/blob/2f4135d8db5ded851d1f4f611124c53b768a3c08/src/Illuminate/Database/Eloquent/Builder.php
-     * @param  array   $models
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @param  string  $relation
+     * @param  array $models
+     * @param  \Illuminate\Database\Eloquent\Collection $results
+     * @param  string $relation
      * @return array
      */
-    public function match(array $models, Collection $results, $relation)
-    {
+    public function match(array $models, Collection $results, $relation) {
         $dictionary = $this->buildDictionary($results);
 
         // Once we have an array dictionary of child objects we can easily match the
@@ -109,8 +106,7 @@ class BelongsToManyConstrained extends BelongsToMany
      * @param mixed $pivotValue
      * @return array
      */
-    protected function findMatchingPivots($items, $pivotValue)
-    {
+    protected function findMatchingPivots($items, $pivotValue) {
         $result = [];
         foreach ($items as $item) {
             if ($item->getRelation('pivot')->{$this->constraintKey} == $pivotValue) {

@@ -21,40 +21,35 @@ class ExpiringCache implements CacheInterface
     private $cache;
     private $lifetime;
 
-    public function __construct(CacheInterface $cache, $lifetime)
-    {
+    public function __construct(CacheInterface $cache, $lifetime) {
         $this->cache = $cache;
         $this->lifetime = $lifetime;
     }
 
-    public function has($key)
-    {
+    public function has($key) {
         if ($this->cache->has($key)) {
-            if (time() < $this->cache->get($key.'.expires')) {
-                return true;
+            if (time() < $this->cache->get($key . '.expires')) {
+                return TRUE;
             }
 
-            $this->cache->remove($key.'.expires');
+            $this->cache->remove($key . '.expires');
             $this->cache->remove($key);
         }
 
-        return false;
+        return FALSE;
     }
 
-    public function get($key)
-    {
+    public function get($key) {
         return $this->cache->get($key);
     }
 
-    public function set($key, $value)
-    {
-        $this->cache->set($key.'.expires', time() + $this->lifetime);
+    public function set($key, $value) {
+        $this->cache->set($key . '.expires', time() + $this->lifetime);
         $this->cache->set($key, $value);
     }
 
-    public function remove($key)
-    {
-        $this->cache->remove($key.'.expires');
+    public function remove($key) {
+        $this->cache->remove($key . '.expires');
         $this->cache->remove($key);
     }
 }

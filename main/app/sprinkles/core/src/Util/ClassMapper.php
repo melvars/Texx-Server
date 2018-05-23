@@ -30,8 +30,7 @@ class ClassMapper
      * @param string $identifier The identifier for the class, e.g. 'user'
      * @param mixed ...$arg Whatever needs to be passed to the constructor.
      */
-    public function createInstance($identifier)
-    {
+    public function createInstance($identifier) {
         $className = $this->getClassMapping($identifier);
 
         $params = array_slice(func_get_args(), 1);
@@ -48,8 +47,7 @@ class ClassMapper
      * @param string $identifier
      * @return string
      */
-    public function getClassMapping($identifier)
-    {
+    public function getClassMapping($identifier) {
         if (isset($this->classMappings[$identifier])) {
             return $this->classMappings[$identifier];
         } else {
@@ -64,11 +62,10 @@ class ClassMapper
      * @param string $className
      * @return ClassMapper
      */
-    public function setClassMapping($identifier, $className)
-    {
+    public function setClassMapping($identifier, $className) {
         // Check that class exists
         if (!class_exists($className)) {
-            throw new BadClassNameException("Unable to find the class '$className'." );
+            throw new BadClassNameException("Unable to find the class '$className'.");
         }
 
         $this->classMappings[$identifier] = $className;
@@ -83,8 +80,7 @@ class ClassMapper
      * @param string $methodName The method to be invoked.
      * @param mixed ...$arg Whatever needs to be passed to the method.
      */
-    public function staticMethod($identifier, $methodName)
-    {
+    public function staticMethod($identifier, $methodName) {
         $className = $this->getClassMapping($identifier);
 
         $params = array_slice(func_get_args(), 2);

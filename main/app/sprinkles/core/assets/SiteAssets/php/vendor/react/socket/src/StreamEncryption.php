@@ -22,8 +22,7 @@ class StreamEncryption
     private $errstr;
     private $errno;
 
-    public function __construct(LoopInterface $loop, $server = true)
-    {
+    public function __construct(LoopInterface $loop, $server = TRUE) {
         $this->loop = $loop;
         $this->server = $server;
 
@@ -61,18 +60,15 @@ class StreamEncryption
         }
     }
 
-    public function enable(Connection $stream)
-    {
-        return $this->toggle($stream, true);
+    public function enable(Connection $stream) {
+        return $this->toggle($stream, TRUE);
     }
 
-    public function disable(Connection $stream)
-    {
-        return $this->toggle($stream, false);
+    public function disable(Connection $stream) {
+        return $this->toggle($stream, FALSE);
     }
 
-    public function toggle(Connection $stream, $toggle)
-    {
+    public function toggle(Connection $stream, $toggle) {
         // pause actual stream instance to continue operation on raw stream socket
         $stream->pause();
 
@@ -113,22 +109,21 @@ class StreamEncryption
             $stream->resume();
 
             return $stream;
-        }, function($error) use ($stream, $socket, $loop) {
+        }, function ($error) use ($stream, $socket, $loop) {
             $loop->removeReadStream($socket);
             $stream->resume();
             throw $error;
         });
     }
 
-    public function toggleCrypto($socket, Deferred $deferred, $toggle, $method)
-    {
+    public function toggleCrypto($socket, Deferred $deferred, $toggle, $method) {
         set_error_handler(array($this, 'handleError'));
         $result = stream_socket_enable_crypto($socket, $toggle, $method);
         restore_error_handler();
 
-        if (true === $result) {
+        if (TRUE === $result) {
             $deferred->resolve();
-        } else if (false === $result) {
+        } else if (FALSE === $result) {
             $deferred->reject(new UnexpectedValueException(
                 sprintf("Unable to complete SSL/TLS handshake: %s", $this->errstr),
                 $this->errno
@@ -138,9 +133,8 @@ class StreamEncryption
         }
     }
 
-    public function handleError($errno, $errstr)
-    {
+    public function handleError($errno, $errstr) {
         $this->errstr = str_replace(array("\r", "\n"), ' ', $errstr);
-        $this->errno  = $errno;
+        $this->errno = $errno;
     }
 }

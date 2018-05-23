@@ -12,22 +12,24 @@
         {{ alert.generate(input) }}
     {% else %}
         {% if not input.hidden %}
-        <div class="form-group has-feedback">
-            {% if formLayout == 'horizontal' %}<label for="{{input.id}}" class="col-sm-2 control-label">{% else %}<label for="{{input.id}}">{% endif %}
-                {% if input.label %}{{translate(input.label)}}{% else %}&nbsp;{% endif %}
-            </label>
-            {% if formLayout == 'horizontal' %}<div class="col-sm-10">{% endif %}
-                {% if input.type == "textarea" %}
-                    {{ textarea.generate(input) }}
-                {% elseif input.type == "checkbox" %}
-                    {{ checkbox.generate(input) }}
-                {% elseif input.type == "select" %}
-                    {{ select.generate(input) }}
-                {% else %}
-                    {{ text.generate(input) }}
-                {% endif %}
-            {% if formLayout == 'horizontal' %}</div>{% endif %}
-        </div>
+            <div class="form-group has-feedback">
+                {% if formLayout == 'horizontal' %}<label for="{{ input.id }}" class="col-sm-2 control-label">{% else %}
+                    <label for="{{ input.id }}">{% endif %}
+                        {% if input.label %}{{ translate(input.label) }}{% else %}&nbsp;{% endif %}
+                    </label>
+                    {% if formLayout == 'horizontal' %}
+                    <div class="col-sm-10">{% endif %}
+                        {% if input.type == "textarea" %}
+                            {{ textarea.generate(input) }}
+                        {% elseif input.type == "checkbox" %}
+                            {{ checkbox.generate(input) }}
+                        {% elseif input.type == "select" %}
+                            {{ select.generate(input) }}
+                        {% else %}
+                            {{ text.generate(input) }}
+                        {% endif %}
+                        {% if formLayout == 'horizontal' %}</div>{% endif %}
+            </div>
         {% endif %}
     {% endif %}
 {% endfor %}

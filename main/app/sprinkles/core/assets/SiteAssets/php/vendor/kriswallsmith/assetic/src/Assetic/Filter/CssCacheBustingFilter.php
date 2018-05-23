@@ -24,22 +24,18 @@ class CssCacheBustingFilter extends BaseCssFilter
     private $version;
     private $format = '%s?%s';
 
-    public function setVersion($version)
-    {
+    public function setVersion($version) {
         $this->version = $version;
     }
 
-    public function setFormat($versionFormat)
-    {
+    public function setFormat($versionFormat) {
         $this->format = $versionFormat;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         if (!$this->version) {
             return;
         }

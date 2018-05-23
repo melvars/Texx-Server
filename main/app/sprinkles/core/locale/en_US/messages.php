@@ -16,8 +16,8 @@ return [
 
     "ABOUT" => "About",
 
-	"CAPTCHA" => [
-	    "@TRANSLATION" => "Captcha",
+    "CAPTCHA" => [
+        "@TRANSLATION" => "Captcha",
         "FAIL" => "You did not enter the captcha code correctly.",
         "SPECIFY" => "Enter the captcha",
         "VERIFY" => "Verify the captcha"
@@ -26,7 +26,7 @@ return [
     "CSRF_MISSING" => "Missing CSRF token.  Try refreshing the page and then submitting again?",
 
     "DB_INVALID" => "Cannot connect to the database.  If you are an administrator, please check your error log.",
-    "DESCRIPTION"   => "Description",
+    "DESCRIPTION" => "Description",
     "DOWNLOAD" => [
         "@TRANSLATION" => "Download",
         "CSV" => "Download CSV"
@@ -37,7 +37,7 @@ return [
         "YOUR" => "Your email address"
     ],
 
-    "HOME"  => "Home",
+    "HOME" => "Home",
 
     "LEGAL" => [
         "@TRANSLATION" => "Legal Policy",
@@ -48,7 +48,7 @@ return [
         "@TRANSLATION" => "Locale"
     ],
 
-    "NAME"  => "Name",
+    "NAME" => "Name",
     "NAVIGATION" => "Navigation",
     "NO_RESULTS" => "Sorry, we've got nothing here.",
 

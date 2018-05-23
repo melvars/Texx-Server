@@ -21,8 +21,7 @@ use Assetic\Asset\AssetInterface;
  */
 class CssCompressorFilter extends BaseCompressorFilter
 {
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $asset->setContent($this->compress($asset->getContent(), 'css'));
     }
 }

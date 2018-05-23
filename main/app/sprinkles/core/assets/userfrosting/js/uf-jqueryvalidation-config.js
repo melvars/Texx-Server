@@ -2,7 +2,7 @@
  * Set jQuery.validate settings for bootstrap integration
  */
 jQuery.validator.setDefaults({
-    highlight: function(element) {
+    highlight: function (element) {
         var formGroup = jQuery(element).closest('.form-group');
         formGroup.addClass('has-error has-feedback');
         formGroup.removeClass('has-success');
@@ -12,7 +12,7 @@ jQuery.validator.setDefaults({
         // Hide any help block text
         formGroup.find('.help-block').hide();
     },
-    unhighlight: function(element) {
+    unhighlight: function (element) {
         var formGroup = jQuery(element).closest('.form-group');
 
         formGroup.removeClass('has-error');
@@ -30,14 +30,14 @@ jQuery.validator.setDefaults({
     },
     errorElement: 'p',
     errorClass: 'error-block',
-    errorPlacement: function(error, element) {
-        if(element.parent('.input-group').length) {
+    errorPlacement: function (error, element) {
+        if (element.parent('.input-group').length) {
             error.insertAfter(element.parent());
         } else {
             error.insertAfter(element);
         }
     },
-    success: function(element) {
+    success: function (element) {
         var formGroup = jQuery(element).closest('.form-group');
         formGroup.addClass('has-success has-feedback');
         formGroup.find('.form-control-feedback').remove();

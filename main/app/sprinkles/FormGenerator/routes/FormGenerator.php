@@ -9,4 +9,4 @@
 
 global $app;
 
-$app->get('/forms/confirm','UserFrosting\Sprinkle\FormGenerator\Controller\FormGeneratorController:confirm');
+$app->get('/forms/confirm', 'UserFrosting\Sprinkle\FormGenerator\Controller\FormGeneratorController:confirm');

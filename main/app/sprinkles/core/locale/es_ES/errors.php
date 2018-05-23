@@ -27,14 +27,14 @@ return [
             "EXPLAIN" => "No pudimos encontrar la página que buscabas.",
             "RETURN" => 'De cualquier manera, haga clic en <a href="{{url}}"> aquí </a> para volver a la página principal.'
         ],
-        
+
         "CONFIG" => [
             "TITLE" => "¡Problema de configuración del Servidor!",
             "DESCRIPTION" => "Algunos requisitos de configuración de Servidor no se han cumplido.",
             "DETAIL" => "Algo no está bien aquí.",
             "RETURN" => 'Corrija los siguientes errores, luego <a href="{{url}}"> recargue </a>.'
         ],
-        
+
         "DESCRIPTION" => "Hemos sentido una gran perturbación en la Fuerza.",
         "DETAIL" => "Esto es lo que tenemos:",
 

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use UserFrosting\System\Bakery\Migration;
@@ -24,8 +25,7 @@ class ActivitiesTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function up()
-    {
+    public function up() {
         if (!$this->schema->hasTable('activities')) {
             $this->schema->create('activities', function (Blueprint $table) {
                 $table->increments('id');
@@ -47,8 +47,7 @@ class ActivitiesTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public function down()
-    {
+    public function down() {
         $this->schema->drop('activities');
     }
 }

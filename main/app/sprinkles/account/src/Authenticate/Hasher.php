@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 /**
@@ -28,12 +29,11 @@ class Hasher
      * @param string $password the hashed password.
      * @return string "sha1"|"legacy"|"modern".
      */
-    public function getHashType($password)
-    {
+    public function getHashType($password) {
         // If the password in the db is 65 characters long, we have an sha1-hashed password.
         if (strlen($password) == 65) {
             return 'sha1';
-        } elseif (strlen($password) == 82) {
+        } else if (strlen($password) == 82) {
             return 'legacy';
         }
 
@@ -44,12 +44,11 @@ class Hasher
      * Hashes a plaintext password using bcrypt.
      *
      * @param string $password the plaintext password.
-     * @param array  $options
+     * @param array $options
      * @return string the hashed password.
      * @throws HashFailedException
      */
-    public function hash($password, array $options = [])
-    {
+    public function hash($password, array $options = []) {
         $hash = password_hash($password, PASSWORD_BCRYPT, [
             'cost' => $this->cost($options),
         ]);
@@ -66,21 +65,20 @@ class Hasher
      *
      * @param string $password The plaintext password to verify.
      * @param string $hash The hash to compare against.
-     * @param array  $options
+     * @param array $options
      * @return boolean True if the password matches, false otherwise.
      */
-    public function verify($password, $hash, array $options = [])
-    {
+    public function verify($password, $hash, array $options = []) {
         $hashType = $this->getHashType($hash);
 
         if ($hashType == 'sha1') {
             // Legacy UserCake passwords
-            $salt = substr($hash, 0, 25);		// Extract the salt from the hash
+            $salt = substr($hash, 0, 25);        // Extract the salt from the hash
             $inputHash = $salt . sha1($salt . $password);
 
-            return (hash_equals($inputHash, $hash) === true);
+            return (hash_equals($inputHash, $hash) === TRUE);
 
-        } elseif ($hashType == 'legacy') {
+        } else if ($hashType == 'legacy') {
             // Homegrown implementation (assuming that current install has been using a cost parameter of 12)
             // Used for manual implementation of bcrypt.
             // Note that this legacy hashing put the salt at the _end_ for some reason.
@@ -88,7 +86,7 @@ class Hasher
             $inputHash = crypt($password, '$2y$12$' . $salt);
             $correctHash = substr($hash, 0, 60);
 
-            return (hash_equals($inputHash, $correctHash) === true);
+            return (hash_equals($inputHash, $correctHash) === TRUE);
         }
 
         // Modern implementation
@@ -98,11 +96,10 @@ class Hasher
     /**
      * Extract the cost value from the options array.
      *
-     * @param  array  $options
+     * @param  array $options
      * @return int
      */
-    protected function cost(array $options = [])
-    {
+    protected function cost(array $options = []) {
         return isset($options['rounds']) ? $options['rounds'] : $this->defaultRounds;
     }
 }

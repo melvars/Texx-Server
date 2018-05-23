@@ -7,38 +7,34 @@ use React\EventLoop\StreamSelectLoop;
 
 class StreamSelectLoopTest extends AbstractLoopTest
 {
-    protected function tearDown()
-    {
+    protected function tearDown() {
         parent::tearDown();
-        if (strncmp($this->getName(false), 'testSignal', 10) === 0 && extension_loaded('pcntl')) {
+        if (strncmp($this->getName(FALSE), 'testSignal', 10) === 0 && extension_loaded('pcntl')) {
             $this->resetSignalHandlers();
         }
     }
 
-    public function createLoop()
-    {
+    public function createLoop() {
         return new StreamSelectLoop();
     }
 
-    public function testStreamSelectTimeoutEmulation()
-    {
+    public function testStreamSelectTimeoutEmulation() {
         $this->loop->addTimer(
             0.05,
             $this->expectCallableOnce()
         );
 
-        $start = microtime(true);
+        $start = microtime(TRUE);
 
         $this->loop->run();
 
-        $end = microtime(true);
+        $end = microtime(TRUE);
         $interval = $end - $start;
 
         $this->assertGreaterThan(0.04, $interval);
     }
 
-    public function signalProvider()
-    {
+    public function signalProvider() {
         return array(
             array('SIGUSR1'),
             array('SIGHUP'),
@@ -50,14 +46,13 @@ class StreamSelectLoopTest extends AbstractLoopTest
      * Test signal interrupt when no stream is attached to the loop
      * @dataProvider signalProvider
      */
-    public function testSignalInterruptNoStream($signal)
-    {
+    public function testSignalInterruptNoStream($signal) {
         if (!extension_loaded('pcntl')) {
             $this->markTestSkipped('"pcntl" extension is required to run this test.');
         }
 
         // dispatch signal handler every 10ms for 0.1s
-        $check = $this->loop->addPeriodicTimer(0.01, function() {
+        $check = $this->loop->addPeriodicTimer(0.01, function () {
             pcntl_signal_dispatch();
         });
         $loop = $this->loop;
@@ -65,9 +60,9 @@ class StreamSelectLoopTest extends AbstractLoopTest
             $loop->cancelTimer($check);
         });
 
-        $handled = false;
+        $handled = FALSE;
         $this->assertTrue(pcntl_signal(constant($signal), function () use (&$handled) {
-            $handled = true;
+            $handled = TRUE;
         }));
 
         // spawn external process to send signal to current process id
@@ -81,14 +76,13 @@ class StreamSelectLoopTest extends AbstractLoopTest
      * Test signal interrupt when a stream is attached to the loop
      * @dataProvider signalProvider
      */
-    public function testSignalInterruptWithStream($signal)
-    {
+    public function testSignalInterruptWithStream($signal) {
         if (!extension_loaded('pcntl')) {
             $this->markTestSkipped('"pcntl" extension is required to run this test.');
         }
 
         // dispatch signal handler every 10ms
-        $this->loop->addPeriodicTimer(0.01, function() {
+        $this->loop->addPeriodicTimer(0.01, function () {
             pcntl_signal_dispatch();
         });
 
@@ -102,13 +96,13 @@ class StreamSelectLoopTest extends AbstractLoopTest
                 $loop->stop();
             }
         });
-        $this->loop->addTimer(0.1, function() use ($writeStream) {
+        $this->loop->addTimer(0.1, function () use ($writeStream) {
             fwrite($writeStream, "end loop\n");
         });
 
-        $handled = false;
+        $handled = FALSE;
         $this->assertTrue(pcntl_signal(constant($signal), function () use (&$handled) {
-            $handled = true;
+            $handled = TRUE;
         }));
 
         // spawn external process to send signal to current process id
@@ -122,9 +116,8 @@ class StreamSelectLoopTest extends AbstractLoopTest
     /**
      * reset all signal handlers to default
      */
-    protected function resetSignalHandlers()
-    {
-        foreach($this->signalProvider() as $signal) {
+    protected function resetSignalHandlers() {
+        foreach ($this->signalProvider() as $signal) {
             pcntl_signal(constant($signal[0]), SIG_DFL);
         }
     }
@@ -132,8 +125,7 @@ class StreamSelectLoopTest extends AbstractLoopTest
     /**
      * fork child process to send signal to current process id
      */
-    protected function forkSendSignal($signal)
-    {
+    protected function forkSendSignal($signal) {
         $currentPid = posix_getpid();
         $childPid = pcntl_fork();
         if ($childPid == -1) {

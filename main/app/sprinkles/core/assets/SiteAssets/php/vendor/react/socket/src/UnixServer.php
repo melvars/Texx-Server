@@ -24,7 +24,7 @@ final class UnixServer extends EventEmitter implements ServerInterface
 {
     private $master;
     private $loop;
-    private $listening = false;
+    private $listening = FALSE;
 
     /**
      * Creates a plaintext socket server and starts listening on the given unix socket
@@ -37,19 +37,18 @@ final class UnixServer extends EventEmitter implements ServerInterface
      * $server = new UnixServer('unix:///tmp/app.sock', $loop);
      * ```
      *
-     * @param string        $path
+     * @param string $path
      * @param LoopInterface $loop
-     * @param array         $context
+     * @param array $context
      * @throws InvalidArgumentException if the listening address is invalid
      * @throws RuntimeException if listening on this address fails (already in use etc.)
      */
-    public function __construct($path, LoopInterface $loop, array $context = array())
-    {
+    public function __construct($path, LoopInterface $loop, array $context = array()) {
         $this->loop = $loop;
 
-        if (strpos($path, '://') === false) {
+        if (strpos($path, '://') === FALSE) {
             $path = 'unix://' . $path;
-        } elseif (substr($path, 0, 7) !== 'unix://') {
+        } else if (substr($path, 0, 7) !== 'unix://') {
             throw new InvalidArgumentException('Given URI "' . $path . '" is invalid');
         }
 
@@ -60,7 +59,7 @@ final class UnixServer extends EventEmitter implements ServerInterface
             STREAM_SERVER_BIND | STREAM_SERVER_LISTEN,
             stream_context_create(array('socket' => $context))
         );
-        if (false === $this->master) {
+        if (FALSE === $this->master) {
             throw new RuntimeException('Failed to listen on unix domain socket "' . $path . '": ' . $errstr, $errno);
         }
         stream_set_blocking($this->master, 0);
@@ -68,27 +67,24 @@ final class UnixServer extends EventEmitter implements ServerInterface
         $this->resume();
     }
 
-    public function getAddress()
-    {
+    public function getAddress() {
         if (!is_resource($this->master)) {
-            return null;
+            return NULL;
         }
 
-        return 'unix://' . stream_socket_get_name($this->master, false);
+        return 'unix://' . stream_socket_get_name($this->master, FALSE);
     }
 
-    public function pause()
-    {
+    public function pause() {
         if (!$this->listening) {
             return;
         }
 
         $this->loop->removeReadStream($this->master);
-        $this->listening = false;
+        $this->listening = FALSE;
     }
 
-    public function resume()
-    {
+    public function resume() {
         if ($this->listening || !is_resource($this->master)) {
             return;
         }
@@ -96,18 +92,17 @@ final class UnixServer extends EventEmitter implements ServerInterface
         $that = $this;
         $this->loop->addReadStream($this->master, function ($master) use ($that) {
             $newSocket = @stream_socket_accept($master);
-            if (false === $newSocket) {
+            if (FALSE === $newSocket) {
                 $that->emit('error', array(new RuntimeException('Error accepting new connection')));
 
                 return;
             }
             $that->handleConnection($newSocket);
         });
-        $this->listening = true;
+        $this->listening = TRUE;
     }
 
-    public function close()
-    {
+    public function close() {
         if (!is_resource($this->master)) {
             return;
         }
@@ -118,10 +113,9 @@ final class UnixServer extends EventEmitter implements ServerInterface
     }
 
     /** @internal */
-    public function handleConnection($socket)
-    {
+    public function handleConnection($socket) {
         $connection = new Connection($socket, $this->loop);
-        $connection->unix = true;
+        $connection->unix = TRUE;
 
         $this->emit('connection', array(
             $connection

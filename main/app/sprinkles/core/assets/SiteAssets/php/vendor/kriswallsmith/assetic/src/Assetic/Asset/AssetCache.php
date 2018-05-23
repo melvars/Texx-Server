@@ -25,29 +25,24 @@ class AssetCache implements AssetInterface
     private $asset;
     private $cache;
 
-    public function __construct(AssetInterface $asset, CacheInterface $cache)
-    {
+    public function __construct(AssetInterface $asset, CacheInterface $cache) {
         $this->asset = $asset;
         $this->cache = $cache;
     }
 
-    public function ensureFilter(FilterInterface $filter)
-    {
+    public function ensureFilter(FilterInterface $filter) {
         $this->asset->ensureFilter($filter);
     }
 
-    public function getFilters()
-    {
+    public function getFilters() {
         return $this->asset->getFilters();
     }
 
-    public function clearFilters()
-    {
+    public function clearFilters() {
         $this->asset->clearFilters();
     }
 
-    public function load(FilterInterface $additionalFilter = null)
-    {
+    public function load(FilterInterface $additionalFilter = NULL) {
         $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'load');
         if ($this->cache->has($cacheKey)) {
             $this->asset->setContent($this->cache->get($cacheKey));
@@ -59,8 +54,7 @@ class AssetCache implements AssetInterface
         $this->cache->set($cacheKey, $this->asset->getContent());
     }
 
-    public function dump(FilterInterface $additionalFilter = null)
-    {
+    public function dump(FilterInterface $additionalFilter = NULL) {
         $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'dump');
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
@@ -72,58 +66,47 @@ class AssetCache implements AssetInterface
         return $content;
     }
 
-    public function getContent()
-    {
+    public function getContent() {
         return $this->asset->getContent();
     }
 
-    public function setContent($content)
-    {
+    public function setContent($content) {
         $this->asset->setContent($content);
     }
 
-    public function getSourceRoot()
-    {
+    public function getSourceRoot() {
         return $this->asset->getSourceRoot();
     }
 
-    public function getSourcePath()
-    {
+    public function getSourcePath() {
         return $this->asset->getSourcePath();
     }
 
-    public function getSourceDirectory()
-    {
+    public function getSourceDirectory() {
         return $this->asset->getSourceDirectory();
     }
 
-    public function getTargetPath()
-    {
+    public function getTargetPath() {
         return $this->asset->getTargetPath();
     }
 
-    public function setTargetPath($targetPath)
-    {
+    public function setTargetPath($targetPath) {
         $this->asset->setTargetPath($targetPath);
     }
 
-    public function getLastModified()
-    {
+    public function getLastModified() {
         return $this->asset->getLastModified();
     }
 
-    public function getVars()
-    {
+    public function getVars() {
         return $this->asset->getVars();
     }
 
-    public function setValues(array $values)
-    {
+    public function setValues(array $values) {
         $this->asset->setValues($values);
     }
 
-    public function getValues()
-    {
+    public function getValues() {
         return $this->asset->getValues();
     }
 
@@ -138,20 +121,19 @@ class AssetCache implements AssetInterface
      *  * last modified
      *  * filters
      *
-     * @param AssetInterface  $asset            The asset
+     * @param AssetInterface $asset The asset
      * @param FilterInterface $additionalFilter Any additional filter being applied
-     * @param string          $salt             Salt for the key
+     * @param string $salt Salt for the key
      *
      * @return string A key for identifying the current asset
      */
-    private static function getCacheKey(AssetInterface $asset, FilterInterface $additionalFilter = null, $salt = '')
-    {
+    private static function getCacheKey(AssetInterface $asset, FilterInterface $additionalFilter = NULL, $salt = '') {
         if ($additionalFilter) {
             $asset = clone $asset;
             $asset->ensureFilter($additionalFilter);
         }
 
-        $cacheKey  = $asset->getSourceRoot();
+        $cacheKey = $asset->getSourceRoot();
         $cacheKey .= $asset->getSourcePath();
         $cacheKey .= $asset->getTargetPath();
         $cacheKey .= $asset->getLastModified();
@@ -169,6 +151,6 @@ class AssetCache implements AssetInterface
             $cacheKey .= serialize($values);
         }
 
-        return md5($cacheKey.$salt);
+        return md5($cacheKey . $salt);
     }
 }

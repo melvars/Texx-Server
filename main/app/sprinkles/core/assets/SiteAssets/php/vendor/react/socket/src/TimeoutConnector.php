@@ -11,15 +11,13 @@ final class TimeoutConnector implements ConnectorInterface
     private $timeout;
     private $loop;
 
-    public function __construct(ConnectorInterface $connector, $timeout, LoopInterface $loop)
-    {
+    public function __construct(ConnectorInterface $connector, $timeout, LoopInterface $loop) {
         $this->connector = $connector;
         $this->timeout = $timeout;
         $this->loop = $loop;
     }
 
-    public function connect($uri)
-    {
+    public function connect($uri) {
         return Timer\timeout($this->connector->connect($uri), $this->timeout, $this->loop);
     }
 }

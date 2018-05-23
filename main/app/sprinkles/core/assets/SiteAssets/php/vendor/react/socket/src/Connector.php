@@ -28,19 +28,18 @@ final class Connector implements ConnectorInterface
 {
     private $connectors = array();
 
-    public function __construct(LoopInterface $loop, array $options = array())
-    {
+    public function __construct(LoopInterface $loop, array $options = array()) {
         // apply default options if not explicitly given
         $options += array(
-            'tcp' => true,
-            'tls' => true,
-            'unix' => true,
+            'tcp' => TRUE,
+            'tls' => TRUE,
+            'unix' => TRUE,
 
-            'dns' => true,
-            'timeout' => true,
+            'dns' => TRUE,
+            'timeout' => TRUE,
         );
 
-        if ($options['timeout'] === true) {
+        if ($options['timeout'] === TRUE) {
             $options['timeout'] = (float)ini_get("default_socket_timeout");
         }
 
@@ -53,11 +52,11 @@ final class Connector implements ConnectorInterface
             );
         }
 
-        if ($options['dns'] !== false) {
+        if ($options['dns'] !== FALSE) {
             if ($options['dns'] instanceof Resolver) {
                 $resolver = $options['dns'];
             } else {
-                if ($options['dns'] !== true) {
+                if ($options['dns'] !== TRUE) {
                     $server = $options['dns'];
                 } else {
                     // try to load nameservers from system config or default to Google's public DNS
@@ -75,10 +74,10 @@ final class Connector implements ConnectorInterface
             $tcp = new DnsConnector($tcp, $resolver);
         }
 
-        if ($options['tcp'] !== false) {
+        if ($options['tcp'] !== FALSE) {
             $options['tcp'] = $tcp;
 
-            if ($options['timeout'] !== false) {
+            if ($options['timeout'] !== FALSE) {
                 $options['tcp'] = new TimeoutConnector(
                     $options['tcp'],
                     $options['timeout'],
@@ -89,7 +88,7 @@ final class Connector implements ConnectorInterface
             $this->connectors['tcp'] = $options['tcp'];
         }
 
-        if ($options['tls'] !== false) {
+        if ($options['tls'] !== FALSE) {
             if (!$options['tls'] instanceof ConnectorInterface) {
                 $options['tls'] = new SecureConnector(
                     $tcp,
@@ -98,7 +97,7 @@ final class Connector implements ConnectorInterface
                 );
             }
 
-            if ($options['timeout'] !== false) {
+            if ($options['timeout'] !== FALSE) {
                 $options['tls'] = new TimeoutConnector(
                     $options['tls'],
                     $options['timeout'],
@@ -109,7 +108,7 @@ final class Connector implements ConnectorInterface
             $this->connectors['tls'] = $options['tls'];
         }
 
-        if ($options['unix'] !== false) {
+        if ($options['unix'] !== FALSE) {
             if (!$options['unix'] instanceof ConnectorInterface) {
                 $options['unix'] = new UnixConnector($loop);
             }
@@ -117,10 +116,9 @@ final class Connector implements ConnectorInterface
         }
     }
 
-    public function connect($uri)
-    {
+    public function connect($uri) {
         $scheme = 'tcp';
-        if (strpos($uri, '://') !== false) {
+        if (strpos($uri, '://') !== FALSE) {
             $scheme = (string)substr($uri, 0, strpos($uri, '://'));
         }
 

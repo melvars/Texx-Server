@@ -32,18 +32,18 @@ interface AttributeBagInterface extends SessionBagInterface
     /**
      * Returns an attribute.
      *
-     * @param string $name    The attribute name
-     * @param mixed  $default The default value if not found
+     * @param string $name The attribute name
+     * @param mixed $default The default value if not found
      *
      * @return mixed
      */
-    public function get($name, $default = null);
+    public function get($name, $default = NULL);
 
     /**
      * Sets an attribute.
      *
      * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      */
     public function set($name, $value);
 

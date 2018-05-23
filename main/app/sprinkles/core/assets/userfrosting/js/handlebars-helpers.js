@@ -4,10 +4,10 @@
  * @see http://handlebarsjs.com/#helpers
  */
 
- /**
-  * Improved comparison operator
-  * See https://stackoverflow.com/a/16315366/2970321
-  */
+/**
+ * Improved comparison operator
+ * See https://stackoverflow.com/a/16315366/2970321
+ */
 Handlebars.registerHelper('ifx', function (v1, operator, v2, options) {
     switch (operator) {
         case '==':
@@ -37,7 +37,7 @@ Handlebars.registerHelper('ifx', function (v1, operator, v2, options) {
 
 /**
  * Perform simple calculations.
- * 
+ *
  * usage: {{calc x '+' 2}}
  */
 Handlebars.registerHelper('calc', function (v1, operator, v2, options) {
@@ -55,12 +55,12 @@ Handlebars.registerHelper('calc', function (v1, operator, v2, options) {
 
 /**
  * format an ISO date using Moment.js
- * 
+ *
  * moment syntax example: moment(Date("2011-07-18T15:50:52")).format("MMMM YYYY")
  * usage: {{dateFormat creation_date format="MMMM YYYY"}}
  * @requires momentjs http://momentjs.com/
  */
-Handlebars.registerHelper('dateFormat', function(context, block) {
+Handlebars.registerHelper('dateFormat', function (context, block) {
     if (window.moment) {
         var f = block.hash.format || "MMM Do, YYYY";
         return moment(context).format(f);
@@ -74,19 +74,19 @@ Handlebars.registerHelper('dateFormat', function(context, block) {
 /**
  * Format a phone number.
  */
-Handlebars.registerHelper("phoneUSFormat", function(phoneNumber) {
-  if (typeof phoneNumber === 'undefined') {
-    return '';
-  }
+Handlebars.registerHelper("phoneUSFormat", function (phoneNumber) {
+    if (typeof phoneNumber === 'undefined') {
+        return '';
+    }
 
-  phoneNumber = phoneNumber.toString();
-  return "(" + phoneNumber.substr(0,3) + ") " + phoneNumber.substr(3,3) + "-" + phoneNumber.substr(6,4);
+    phoneNumber = phoneNumber.toString();
+    return "(" + phoneNumber.substr(0, 3) + ") " + phoneNumber.substr(3, 3) + "-" + phoneNumber.substr(6, 4);
 });
 
 /**
  * Format currency (USD).
  */
-Handlebars.registerHelper("currencyUsdFormat", function(amount) {
+Handlebars.registerHelper("currencyUsdFormat", function (amount) {
     var parsedAmount = parseFloat(amount);
     if (parsedAmount < 0) {
         return "-$" + Math.abs(parsedAmount).toFixed(2);
@@ -100,7 +100,7 @@ Handlebars.registerHelper("currencyUsdFormat", function(amount) {
  *
  * @requires speakingurl https://pid.github.io/speakingurl/
  */
-Handlebars.registerHelper('slug', function(text) {
+Handlebars.registerHelper('slug', function (text) {
     return getSlug(text);
 });
 
@@ -110,8 +110,8 @@ Handlebars.registerHelper('slug', function(text) {
  * @deprecated since 4.1 - use ifx instead
  * usage: {{ifCond apple orange}}
  */
-Handlebars.registerHelper('ifCond', function(v1, v2, options) {
-    if(v1 == v2) {
+Handlebars.registerHelper('ifCond', function (v1, v2, options) {
+    if (v1 == v2) {
         return options.fn(this);
     }
 

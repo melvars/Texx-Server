@@ -5,18 +5,19 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 interface ErrorRendererInterface
 {
     /**
-     * @param ServerRequestInterface     $request   The most recent Request object
-     * @param ResponseInterface          $response  The most recent Response object
-     * @param Exception                  $exception The caught Exception object
+     * @param ServerRequestInterface $request The most recent Request object
+     * @param ResponseInterface $response The most recent Response object
+     * @param Exception $exception The caught Exception object
      * @param bool $displayErrorDetails
      */
-    public function __construct($request, $response, $exception, $displayErrorDetails = false);
-    
+    public function __construct($request, $response, $exception, $displayErrorDetails = FALSE);
+
     /**
      * @return string
      */

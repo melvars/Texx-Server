@@ -16,7 +16,7 @@ $app->get('/', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageIndex')
 
 $app->get('/test', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageTest');
 
-$app->get('/about','UserFrosting\Sprinkle\Core\Controller\CoreController:pageAbout')->add('checkEnvironment');
+$app->get('/about', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageAbout')->add('checkEnvironment');
 
 $app->get('/alerts', 'UserFrosting\Sprinkle\Core\Controller\CoreController:jsonAlerts');
 

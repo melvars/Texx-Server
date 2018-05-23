@@ -26,22 +26,21 @@ class FileAsset extends BaseAsset
     /**
      * Constructor.
      *
-     * @param string $source     An absolute path
-     * @param array  $filters    An array of filters
+     * @param string $source An absolute path
+     * @param array $filters An array of filters
      * @param string $sourceRoot The source asset root directory
      * @param string $sourcePath The source asset path
-     * @param array  $vars
+     * @param array $vars
      *
      * @throws \InvalidArgumentException If the supplied root doesn't match the source when guessing the path
      */
-    public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
-    {
-        if (null === $sourceRoot) {
+    public function __construct($source, $filters = array(), $sourceRoot = NULL, $sourcePath = NULL, array $vars = array()) {
+        if (NULL === $sourceRoot) {
             $sourceRoot = dirname($source);
-            if (null === $sourcePath) {
+            if (NULL === $sourcePath) {
                 $sourcePath = basename($source);
             }
-        } elseif (null === $sourcePath) {
+        } else if (NULL === $sourcePath) {
             if (0 !== strpos($source, $sourceRoot)) {
                 throw new \InvalidArgumentException(sprintf('The source "%s" is not in the root directory "%s"', $source, $sourceRoot));
             }
@@ -54,8 +53,7 @@ class FileAsset extends BaseAsset
         parent::__construct($filters, $sourceRoot, $sourcePath, $vars);
     }
 
-    public function load(FilterInterface $additionalFilter = null)
-    {
+    public function load(FilterInterface $additionalFilter = NULL) {
         $source = VarUtils::resolve($this->source, $this->getVars(), $this->getValues());
 
         if (!is_file($source)) {
@@ -65,8 +63,7 @@ class FileAsset extends BaseAsset
         $this->doLoad(file_get_contents($source), $additionalFilter);
     }
 
-    public function getLastModified()
-    {
+    public function getLastModified() {
         $source = VarUtils::resolve($this->source, $this->getVars(), $this->getValues());
 
         if (!is_file($source)) {

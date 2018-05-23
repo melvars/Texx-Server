@@ -10,13 +10,11 @@ use Symfony\Component\Routing\RequestContext;
  */
 class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
 {
-    public function __construct(RequestContext $context)
-    {
+    public function __construct(RequestContext $context) {
         $this->context = $context;
     }
 
-    public function match($rawPathinfo)
-    {
+    public function match($rawPathinfo) {
         $allow = array();
         $pathinfo = rawurldecode($rawPathinfo);
         $trimmedPathinfo = rtrim($pathinfo, '/');
@@ -36,7 +34,7 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
 
             // dynamic
             if (preg_match('#^/rootprefix/(?P<var>[^/]++)$#sD', $pathinfo, $matches)) {
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'dynamic')), array ());
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'dynamic')), array());
             }
 
         }

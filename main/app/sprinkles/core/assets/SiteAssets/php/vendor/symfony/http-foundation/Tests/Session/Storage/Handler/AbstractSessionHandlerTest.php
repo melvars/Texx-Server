@@ -20,20 +20,18 @@ class AbstractSessionHandlerTest extends TestCase
 {
     private static $server;
 
-    public static function setUpBeforeClass()
-    {
+    public static function setUpBeforeClass() {
         $spec = array(
             1 => array('file', '/dev/null', 'w'),
             2 => array('file', '/dev/null', 'w'),
         );
-        if (!self::$server = @proc_open('exec php -S localhost:8053', $spec, $pipes, __DIR__.'/Fixtures')) {
+        if (!self::$server = @proc_open('exec php -S localhost:8053', $spec, $pipes, __DIR__ . '/Fixtures')) {
             self::markTestSkipped('PHP server unable to start.');
         }
         sleep(1);
     }
 
-    public static function tearDownAfterClass()
-    {
+    public static function tearDownAfterClass() {
         if (self::$server) {
             proc_terminate(self::$server);
             proc_close(self::$server);
@@ -43,18 +41,16 @@ class AbstractSessionHandlerTest extends TestCase
     /**
      * @dataProvider provideSession
      */
-    public function testSession($fixture)
-    {
+    public function testSession($fixture) {
         $context = array('http' => array('header' => "Cookie: sid=123abc\r\n"));
         $context = stream_context_create($context);
-        $result = file_get_contents(sprintf('http://localhost:8053/%s.php', $fixture), false, $context);
+        $result = file_get_contents(sprintf('http://localhost:8053/%s.php', $fixture), FALSE, $context);
 
-        $this->assertStringEqualsFile(__DIR__.sprintf('/Fixtures/%s.expected', $fixture), $result);
+        $this->assertStringEqualsFile(__DIR__ . sprintf('/Fixtures/%s.expected', $fixture), $result);
     }
 
-    public function provideSession()
-    {
-        foreach (glob(__DIR__.'/Fixtures/*.php') as $file) {
+    public function provideSession() {
+        foreach (glob(__DIR__ . '/Fixtures/*.php') as $file) {
             yield array(pathinfo($file, PATHINFO_FILENAME));
         }
     }

@@ -26,25 +26,22 @@ class UnixPipes extends AbstractPipes
     private $ptyMode;
     private $haveReadSupport;
 
-    public function __construct($ttyMode, $ptyMode, $input, $haveReadSupport)
-    {
-        $this->ttyMode = (bool) $ttyMode;
-        $this->ptyMode = (bool) $ptyMode;
-        $this->haveReadSupport = (bool) $haveReadSupport;
+    public function __construct($ttyMode, $ptyMode, $input, $haveReadSupport) {
+        $this->ttyMode = (bool)$ttyMode;
+        $this->ptyMode = (bool)$ptyMode;
+        $this->haveReadSupport = (bool)$haveReadSupport;
 
         parent::__construct($input);
     }
 
-    public function __destruct()
-    {
+    public function __destruct() {
         $this->close();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDescriptors()
-    {
+    public function getDescriptors() {
         if (!$this->haveReadSupport) {
             $nullstream = fopen('/dev/null', 'c');
 
@@ -81,16 +78,14 @@ class UnixPipes extends AbstractPipes
     /**
      * {@inheritdoc}
      */
-    public function getFiles()
-    {
+    public function getFiles() {
         return array();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function readAndWrite($blocking, $close = false)
-    {
+    public function readAndWrite($blocking, $close = FALSE) {
         $this->unblock();
         $w = $this->write();
 
@@ -99,7 +94,7 @@ class UnixPipes extends AbstractPipes
         unset($r[0]);
 
         // let's have a look if something changed in streams
-        if (($r || $w) && false === @stream_select($r, $w, $e, 0, $blocking ? Process::TIMEOUT_PRECISION * 1E6 : 0)) {
+        if (($r || $w) && FALSE === @stream_select($r, $w, $e, 0, $blocking ? Process::TIMEOUT_PRECISION * 1E6 : 0)) {
             // if a system call has been interrupted, forget about it, let's try again
             // otherwise, an error occurred, let's reset pipes
             if (!$this->hasSystemCallBeenInterrupted()) {
@@ -112,7 +107,7 @@ class UnixPipes extends AbstractPipes
         foreach ($r as $pipe) {
             // prior PHP 5.4 the array passed to stream_select is modified and
             // lose key association, we have to find back the key
-            $read[$type = array_search($pipe, $this->pipes, true)] = '';
+            $read[$type = array_search($pipe, $this->pipes, TRUE)] = '';
 
             do {
                 $data = fread($pipe, self::CHUNK_SIZE);
@@ -135,16 +130,14 @@ class UnixPipes extends AbstractPipes
     /**
      * {@inheritdoc}
      */
-    public function haveReadSupport()
-    {
+    public function haveReadSupport() {
         return $this->haveReadSupport;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function areOpen()
-    {
-        return (bool) $this->pipes;
+    public function areOpen() {
+        return (bool)$this->pipes;
     }
 }

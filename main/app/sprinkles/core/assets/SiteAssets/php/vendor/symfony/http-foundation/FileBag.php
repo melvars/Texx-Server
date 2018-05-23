@@ -26,16 +26,14 @@ class FileBag extends ParameterBag
     /**
      * @param array $parameters An array of HTTP files
      */
-    public function __construct(array $parameters = array())
-    {
+    public function __construct(array $parameters = array()) {
         $this->replace($parameters);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function replace(array $files = array())
-    {
+    public function replace(array $files = array()) {
         $this->parameters = array();
         $this->add($files);
     }
@@ -43,8 +41,7 @@ class FileBag extends ParameterBag
     /**
      * {@inheritdoc}
      */
-    public function set($key, $value)
-    {
+    public function set($key, $value) {
         if (!is_array($value) && !$value instanceof UploadedFile) {
             throw new \InvalidArgumentException('An uploaded file must be an array or an instance of UploadedFile.');
         }
@@ -55,8 +52,7 @@ class FileBag extends ParameterBag
     /**
      * {@inheritdoc}
      */
-    public function add(array $files = array())
-    {
+    public function add(array $files = array()) {
         foreach ($files as $key => $file) {
             $this->set($key, $file);
         }
@@ -69,8 +65,7 @@ class FileBag extends ParameterBag
      *
      * @return UploadedFile[]|UploadedFile|null A (multi-dimensional) array of UploadedFile instances
      */
-    protected function convertFileInformation($file)
-    {
+    protected function convertFileInformation($file) {
         if ($file instanceof UploadedFile) {
             return $file;
         }
@@ -82,7 +77,7 @@ class FileBag extends ParameterBag
 
             if ($keys == self::$fileKeys) {
                 if (UPLOAD_ERR_NO_FILE == $file['error']) {
-                    $file = null;
+                    $file = NULL;
                 } else {
                     $file = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['size'], $file['error']);
                 }
@@ -111,8 +106,7 @@ class FileBag extends ParameterBag
      *
      * @return array
      */
-    protected function fixPhpFilesArray($data)
-    {
+    protected function fixPhpFilesArray($data) {
         if (!is_array($data)) {
             return $data;
         }

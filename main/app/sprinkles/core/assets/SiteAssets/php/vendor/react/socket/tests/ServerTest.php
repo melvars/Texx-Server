@@ -13,8 +13,7 @@ class ServerTest extends TestCase
 {
     const TIMEOUT = 0.1;
 
-    public function testCreateServerWithZeroPortAssignsRandomPort()
-    {
+    public function testCreateServerWithZeroPortAssignsRandomPort() {
         $loop = Factory::create();
 
         $server = new Server(0, $loop);
@@ -25,15 +24,13 @@ class ServerTest extends TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testConstructorThrowsForInvalidUri()
-    {
+    public function testConstructorThrowsForInvalidUri() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
 
         $server = new Server('invalid URI', $loop);
     }
 
-    public function testConstructorCreatesExpectedTcpServer()
-    {
+    public function testConstructorCreatesExpectedTcpServer() {
         $loop = Factory::create();
 
         $server = new Server(0, $loop);
@@ -48,8 +45,7 @@ class ServerTest extends TestCase
         $server->close();
     }
 
-    public function testConstructorCreatesExpectedUnixServer()
-    {
+    public function testConstructorCreatesExpectedUnixServer() {
         $loop = Factory::create();
 
         $server = new Server($this->getRandomSocketUri(), $loop);
@@ -64,8 +60,7 @@ class ServerTest extends TestCase
         $server->close();
     }
 
-    public function testEmitsConnectionForNewConnection()
-    {
+    public function testEmitsConnectionForNewConnection() {
         $loop = Factory::create();
 
         $server = new Server(0, $loop);
@@ -76,8 +71,7 @@ class ServerTest extends TestCase
         Block\sleep(0.1, $loop);
     }
 
-    public function testDoesNotEmitConnectionForNewConnectionToPausedServer()
-    {
+    public function testDoesNotEmitConnectionForNewConnectionToPausedServer() {
         $loop = Factory::create();
 
         $server = new Server(0, $loop);
@@ -89,8 +83,7 @@ class ServerTest extends TestCase
         Block\sleep(0.1, $loop);
     }
 
-    public function testDoesEmitConnectionForNewConnectionToResumedServer()
-    {
+    public function testDoesEmitConnectionForNewConnectionToResumedServer() {
         $loop = Factory::create();
 
         $server = new Server(0, $loop);
@@ -105,8 +98,7 @@ class ServerTest extends TestCase
         Block\sleep(0.1, $loop);
     }
 
-    public function testDoesNotAllowConnectionToClosedServer()
-    {
+    public function testDoesNotAllowConnectionToClosedServer() {
         $loop = Factory::create();
 
         $server = new Server(0, $loop);
@@ -121,8 +113,7 @@ class ServerTest extends TestCase
         $this->assertFalse($client);
     }
 
-    public function testEmitsConnectionWithInheritedContextOptions()
-    {
+    public function testEmitsConnectionWithInheritedContextOptions() {
         if (defined('HHVM_VERSION') && version_compare(HHVM_VERSION, '3.13', '<')) {
             // https://3v4l.org/hB4Tc
             $this->markTestSkipped('Not supported on legacy HHVM < 3.13');
@@ -134,7 +125,7 @@ class ServerTest extends TestCase
             'backlog' => 4
         ));
 
-        $all = null;
+        $all = NULL;
         $server->on('connection', function (ConnectionInterface $conn) use (&$all) {
             $all = stream_context_get_options($conn->stream);
         });
@@ -146,8 +137,7 @@ class ServerTest extends TestCase
         $this->assertEquals(array('socket' => array('backlog' => 4)), $all);
     }
 
-    public function testDoesNotEmitSecureConnectionForNewPlainConnection()
-    {
+    public function testDoesNotEmitSecureConnectionForNewPlainConnection() {
         if (!function_exists('stream_socket_enable_crypto')) {
             $this->markTestSkipped('Not supported on your platform (outdated HHVM?)');
         }
@@ -166,8 +156,7 @@ class ServerTest extends TestCase
         Block\sleep(0.1, $loop);
     }
 
-    private function getRandomSocketUri()
-    {
-        return "unix://" . sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid(rand(), true) . '.sock';
+    private function getRandomSocketUri() {
+        return "unix://" . sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid(rand(), TRUE) . '.sock';
     }
 }

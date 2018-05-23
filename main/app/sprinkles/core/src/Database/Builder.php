@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database;
 
 use Illuminate\Database\Capsule\Manager as DB;
@@ -18,7 +19,7 @@ use Illuminate\Database\Query\Builder as LaravelBuilder;
  */
 class Builder extends LaravelBuilder
 {
-    protected $excludedColumns = null;
+    protected $excludedColumns = NULL;
 
     /**
      * Perform a "begins with" pattern match on a specified column in a query.
@@ -27,8 +28,7 @@ class Builder extends LaravelBuilder
      * @param $field string The column to match
      * @param $value string The value to match
      */
-    public function beginsWith($field, $value)
-    {
+    public function beginsWith($field, $value) {
         return $this->where($field, 'LIKE', "$value%");
     }
 
@@ -39,8 +39,7 @@ class Builder extends LaravelBuilder
      * @param $field string The column to match
      * @param $value string The value to match
      */
-    public function endsWith($field, $value)
-    {
+    public function endsWith($field, $value) {
         return $this->where($field, 'LIKE', "%$value");
     }
 
@@ -50,11 +49,10 @@ class Builder extends LaravelBuilder
      * @param $value array|string The column(s) to exclude
      * @return $this
      */
-    public function exclude($column)
-    {
+    public function exclude($column) {
         $column = is_array($column) ? $column : func_get_args();
 
-        $this->excludedColumns = array_merge((array) $this->excludedColumns, $column);
+        $this->excludedColumns = array_merge((array)$this->excludedColumns, $column);
 
         return $this;
     }
@@ -65,8 +63,7 @@ class Builder extends LaravelBuilder
      * @param $field string The column to match
      * @param $value string The value to match
      */
-    public function like($field, $value)
-    {
+    public function like($field, $value) {
         return $this->where($field, 'LIKE', "%$value%");
     }
 
@@ -76,19 +73,17 @@ class Builder extends LaravelBuilder
      * @param $field string The column to match
      * @param $value string The value to match
      */
-    public function orLike($field, $value)
-    {
+    public function orLike($field, $value) {
         return $this->orWhere($field, 'LIKE', "%$value%");
     }
 
     /**
      * Execute the query as a "select" statement.
      *
-     * @param  array  $columns
+     * @param  array $columns
      * @return \Illuminate\Support\Collection
      */
-    public function get($columns = ['*'])
-    {
+    public function get($columns = ['*']) {
         $original = $this->columns;
 
         if (is_null($original)) {
@@ -110,8 +105,7 @@ class Builder extends LaravelBuilder
     /**
      * Remove excluded columns from the select column list.
      */
-    protected function removeExcludedSelectColumns()
-    {
+    protected function removeExcludedSelectColumns() {
         // Convert current column list and excluded column list to fully-qualified list
         $this->columns = $this->convertColumnsToFullyQualified($this->columns);
         $excludedColumns = $this->convertColumnsToFullyQualified($this->excludedColumns);
@@ -132,8 +126,7 @@ class Builder extends LaravelBuilder
      * @param array $columns
      * @return array
      */
-    protected function replaceWildcardColumns(array $columns)
-    {
+    protected function replaceWildcardColumns(array $columns) {
         $wildcardTables = $this->findWildcardTables($columns);
 
         foreach ($wildcardTables as $wildColumn => $table) {
@@ -153,8 +146,7 @@ class Builder extends LaravelBuilder
      * @param array $columns
      * @return array
      */
-    protected function findWildcardTables(array $columns)
-    {
+    protected function findWildcardTables(array $columns) {
         $tables = [];
 
         foreach ($columns as $column) {
@@ -180,8 +172,7 @@ class Builder extends LaravelBuilder
      * @param string $table
      * @return array
      */
-    protected function getQualifiedColumnNames($table = null)
-    {
+    protected function getQualifiedColumnNames($table = NULL) {
         $schema = $this->getConnection()->getSchemaBuilder();
 
         return $this->convertColumnsToFullyQualified($schema->getColumnListing($table), $table);
@@ -193,14 +184,13 @@ class Builder extends LaravelBuilder
      * @param array $columns
      * @return array
      */
-    protected function convertColumnsToFullyQualified($columns, $table = null)
-    {
+    protected function convertColumnsToFullyQualified($columns, $table = NULL) {
         if (is_null($table)) {
             $table = $this->from;
         }
 
         array_walk($columns, function (&$item, $key) use ($table) {
-            if (strpos($item, '.') === false) {
+            if (strpos($item, '.') === FALSE) {
                 $item = "$table.$item";
             }
         });

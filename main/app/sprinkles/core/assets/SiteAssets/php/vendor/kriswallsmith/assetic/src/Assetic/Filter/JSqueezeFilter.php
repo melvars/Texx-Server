@@ -21,14 +21,13 @@ use Assetic\Asset\AssetInterface;
  */
 class JSqueezeFilter implements FilterInterface
 {
-    private $singleLine = true;
-    private $keepImportantComments = true;
+    private $singleLine = TRUE;
+    private $keepImportantComments = TRUE;
     private $className;
-    private $specialVarRx = false;
+    private $specialVarRx = FALSE;
     private $defaultRx;
 
-    public function __construct()
-    {
+    public function __construct() {
         // JSqueeze is namespaced since 2.x, this works with both 1.x and 2.x
         if (class_exists('\\Patchwork\\JSqueeze')) {
             $this->className = '\\Patchwork\\JSqueeze';
@@ -39,33 +38,28 @@ class JSqueezeFilter implements FilterInterface
         }
     }
 
-    public function setSingleLine($bool)
-    {
-        $this->singleLine = (bool) $bool;
+    public function setSingleLine($bool) {
+        $this->singleLine = (bool)$bool;
     }
 
     // call setSpecialVarRx(true) to enable global var/method/property
     // renaming with the default regex (for 1.x or 2.x)
-    public function setSpecialVarRx($specialVarRx)
-    {
-        if (true === $specialVarRx) {
+    public function setSpecialVarRx($specialVarRx) {
+        if (TRUE === $specialVarRx) {
             $this->specialVarRx = $this->defaultRx;
         } else {
             $this->specialVarRx = $specialVarRx;
         }
     }
 
-    public function keepImportantComments($bool)
-    {
-        $this->keepImportantComments = (bool) $bool;
+    public function keepImportantComments($bool) {
+        $this->keepImportantComments = (bool)$bool;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $parser = new $this->className();
         $asset->setContent($parser->squeeze(
             $asset->getContent(),

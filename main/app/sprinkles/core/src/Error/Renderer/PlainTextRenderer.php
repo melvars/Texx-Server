@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 /**
@@ -12,8 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Error\Renderer;
  */
 class PlainTextRenderer extends ErrorRenderer
 {
-    public function render()
-    {
+    public function render() {
         if ($this->displayErrorDetails) {
             return $this->formatExceptionBody();
         }
@@ -21,8 +21,7 @@ class PlainTextRenderer extends ErrorRenderer
         return $this->exception->getMessage();
     }
 
-    public function formatExceptionBody()
-    {
+    public function formatExceptionBody() {
         $e = $this->exception;
 
         $text = 'UserFrosting Application Error:' . PHP_EOL;
@@ -40,8 +39,7 @@ class PlainTextRenderer extends ErrorRenderer
      * @param \Exception|\Throwable $e
      * @return string
      */
-    public function formatExceptionFragment($e)
-    {
+    public function formatExceptionFragment($e) {
         $text = sprintf('Type: %s' . PHP_EOL, get_class($e));
 
         if ($code = $e->getCode()) {

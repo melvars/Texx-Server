@@ -29,13 +29,12 @@ class AcceptHeader
     /**
      * @var bool
      */
-    private $sorted = true;
+    private $sorted = TRUE;
 
     /**
      * @param AcceptHeaderItem[] $items
      */
-    public function __construct(array $items)
-    {
+    public function __construct(array $items) {
         foreach ($items as $item) {
             $this->add($item);
         }
@@ -48,8 +47,7 @@ class AcceptHeader
      *
      * @return self
      */
-    public static function fromString($headerValue)
-    {
+    public static function fromString($headerValue) {
         $index = 0;
 
         return new self(array_map(function ($itemValue) use (&$index) {
@@ -65,8 +63,7 @@ class AcceptHeader
      *
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return implode(',', $this->items);
     }
 
@@ -77,8 +74,7 @@ class AcceptHeader
      *
      * @return bool
      */
-    public function has($value)
-    {
+    public function has($value) {
         return isset($this->items[$value]);
     }
 
@@ -89,9 +85,8 @@ class AcceptHeader
      *
      * @return AcceptHeaderItem|null
      */
-    public function get($value)
-    {
-        return isset($this->items[$value]) ? $this->items[$value] : null;
+    public function get($value) {
+        return isset($this->items[$value]) ? $this->items[$value] : NULL;
     }
 
     /**
@@ -99,10 +94,9 @@ class AcceptHeader
      *
      * @return $this
      */
-    public function add(AcceptHeaderItem $item)
-    {
+    public function add(AcceptHeaderItem $item) {
         $this->items[$item->getValue()] = $item;
-        $this->sorted = false;
+        $this->sorted = FALSE;
 
         return $this;
     }
@@ -112,8 +106,7 @@ class AcceptHeader
      *
      * @return AcceptHeaderItem[]
      */
-    public function all()
-    {
+    public function all() {
         $this->sort();
 
         return $this->items;
@@ -126,8 +119,7 @@ class AcceptHeader
      *
      * @return self
      */
-    public function filter($pattern)
-    {
+    public function filter($pattern) {
         return new self(array_filter($this->items, function (AcceptHeaderItem $item) use ($pattern) {
             return preg_match($pattern, $item->getValue());
         }));
@@ -138,18 +130,16 @@ class AcceptHeader
      *
      * @return AcceptHeaderItem|null
      */
-    public function first()
-    {
+    public function first() {
         $this->sort();
 
-        return !empty($this->items) ? reset($this->items) : null;
+        return !empty($this->items) ? reset($this->items) : NULL;
     }
 
     /**
      * Sorts items by descending quality.
      */
-    private function sort()
-    {
+    private function sort() {
         if (!$this->sorted) {
             uasort($this->items, function (AcceptHeaderItem $a, AcceptHeaderItem $b) {
                 $qA = $a->getQuality();
@@ -162,7 +152,7 @@ class AcceptHeader
                 return $qA > $qB ? -1 : 1;
             });
 
-            $this->sorted = true;
+            $this->sorted = TRUE;
         }
     }
 }

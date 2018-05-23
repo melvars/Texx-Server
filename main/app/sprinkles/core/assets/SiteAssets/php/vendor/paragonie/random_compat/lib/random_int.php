@@ -38,8 +38,7 @@ if (!is_callable('random_int')) {
      *
      * @return int
      */
-    function random_int($min, $max)
-    {
+    function random_int($min, $max) {
         /**
          * Type and input logic checks
          *
@@ -78,7 +77,7 @@ if (!is_callable('random_int')) {
         }
 
         if ($max === $min) {
-            return (int) $min;
+            return (int)$min;
         }
 
         /**
@@ -185,6 +184,6 @@ if (!is_callable('random_int')) {
              */
         } while (!is_int($val) || $val > $max || $val < $min);
 
-        return (int) $val;
+        return (int)$val;
     }
 }

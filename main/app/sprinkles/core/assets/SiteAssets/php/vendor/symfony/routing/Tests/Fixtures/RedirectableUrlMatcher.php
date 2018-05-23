@@ -19,8 +19,7 @@ use Symfony\Component\Routing\Matcher\RedirectableUrlMatcherInterface;
  */
 class RedirectableUrlMatcher extends UrlMatcher implements RedirectableUrlMatcherInterface
 {
-    public function redirect($path, $route, $scheme = null)
-    {
+    public function redirect($path, $route, $scheme = NULL) {
         return array(
             '_controller' => 'Some controller reference...',
             'path' => $path,

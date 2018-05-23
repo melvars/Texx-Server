@@ -15,23 +15,19 @@ abstract class BaseNodeFilter extends BaseProcessFilter
 {
     private $nodePaths = array();
 
-    public function getNodePaths()
-    {
+    public function getNodePaths() {
         return $this->nodePaths;
     }
 
-    public function setNodePaths(array $nodePaths)
-    {
+    public function setNodePaths(array $nodePaths) {
         $this->nodePaths = $nodePaths;
     }
 
-    public function addNodePath($nodePath)
-    {
+    public function addNodePath($nodePath) {
         $this->nodePaths[] = $nodePath;
     }
 
-    protected function createProcessBuilder(array $arguments = array())
-    {
+    protected function createProcessBuilder(array $arguments = array()) {
         $pb = parent::createProcessBuilder($arguments);
 
         if ($this->nodePaths) {

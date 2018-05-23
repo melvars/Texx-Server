@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Psr7;
 
 use Psr\Http\Message\UriInterface;
@@ -110,14 +111,13 @@ final class UriNormalizer
      * treated equivalent which is not necessarily true according to RFC 3986. But that difference
      * is highly uncommon in reality. So this potential normalization is implied in PSR-7 as well.
      *
-     * @param UriInterface $uri   The URI to normalize
-     * @param int          $flags A bitmask of normalizations to apply, see constants
+     * @param UriInterface $uri The URI to normalize
+     * @param int $flags A bitmask of normalizations to apply, see constants
      *
      * @return UriInterface The normalized URI
      * @link https://tools.ietf.org/html/rfc3986#section-6.2
      */
-    public static function normalize(UriInterface $uri, $flags = self::PRESERVING_NORMALIZATIONS)
-    {
+    public static function normalize(UriInterface $uri, $flags = self::PRESERVING_NORMALIZATIONS) {
         if ($flags & self::CAPITALIZE_PERCENT_ENCODING) {
             $uri = self::capitalizePercentEncoding($uri);
         }
@@ -136,8 +136,8 @@ final class UriNormalizer
             $uri = $uri->withHost('');
         }
 
-        if ($flags & self::REMOVE_DEFAULT_PORT && $uri->getPort() !== null && Uri::isDefaultPort($uri)) {
-            $uri = $uri->withPort(null);
+        if ($flags & self::REMOVE_DEFAULT_PORT && $uri->getPort() !== NULL && Uri::isDefaultPort($uri)) {
+            $uri = $uri->withPort(NULL);
         }
 
         if ($flags & self::REMOVE_DOT_SEGMENTS && !Uri::isRelativePathReference($uri)) {
@@ -165,20 +165,18 @@ final class UriNormalizer
      * resolved against the same base URI. If this is not the case, determination of equivalence or difference of
      * relative references does not mean anything.
      *
-     * @param UriInterface $uri1           An URI to compare
-     * @param UriInterface $uri2           An URI to compare
-     * @param int          $normalizations A bitmask of normalizations to apply, see constants
+     * @param UriInterface $uri1 An URI to compare
+     * @param UriInterface $uri2 An URI to compare
+     * @param int $normalizations A bitmask of normalizations to apply, see constants
      *
      * @return bool
      * @link https://tools.ietf.org/html/rfc3986#section-6.1
      */
-    public static function isEquivalent(UriInterface $uri1, UriInterface $uri2, $normalizations = self::PRESERVING_NORMALIZATIONS)
-    {
-        return (string) self::normalize($uri1, $normalizations) === (string) self::normalize($uri2, $normalizations);
+    public static function isEquivalent(UriInterface $uri1, UriInterface $uri2, $normalizations = self::PRESERVING_NORMALIZATIONS) {
+        return (string)self::normalize($uri1, $normalizations) === (string)self::normalize($uri2, $normalizations);
     }
 
-    private static function capitalizePercentEncoding(UriInterface $uri)
-    {
+    private static function capitalizePercentEncoding(UriInterface $uri) {
         $regex = '/(?:%[A-Fa-f0-9]{2})++/';
 
         $callback = function (array $match) {
@@ -193,8 +191,7 @@ final class UriNormalizer
             );
     }
 
-    private static function decodeUnreservedCharacters(UriInterface $uri)
-    {
+    private static function decodeUnreservedCharacters(UriInterface $uri) {
         $regex = '/%(?:2D|2E|5F|7E|3[0-9]|[46][1-9A-F]|[57][0-9A])/i';
 
         $callback = function (array $match) {
@@ -209,8 +206,7 @@ final class UriNormalizer
             );
     }
 
-    private function __construct()
-    {
+    private function __construct() {
         // cannot be instantiated
     }
 }

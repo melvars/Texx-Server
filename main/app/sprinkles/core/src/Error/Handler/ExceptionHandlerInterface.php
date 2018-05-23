@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
 use Interop\Container\ContainerInterface;
@@ -18,7 +19,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 interface ExceptionHandlerInterface
 {
-    public function __construct(ContainerInterface $ci, ServerRequestInterface $request, ResponseInterface $response, $exception, $displayErrorDetails = false);
+    public function __construct(ContainerInterface $ci, ServerRequestInterface $request, ResponseInterface $response, $exception, $displayErrorDetails = FALSE);
 
     public function handle();
 

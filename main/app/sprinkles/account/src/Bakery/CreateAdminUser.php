@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Bakery;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -40,17 +41,15 @@ class CreateAdminUser extends BaseCommand
     /**
      * {@inheritDoc}
      */
-    protected function configure()
-    {
+    protected function configure() {
         $this->setName("create-admin")
-             ->setDescription("Create the initial admin (root) user account");
+            ->setDescription("Create the initial admin (root) user account");
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         $this->io->title("Root account setup");
 
         // Need the database
@@ -65,8 +64,8 @@ class CreateAdminUser extends BaseCommand
 
         // Need migration table
         if (!Capsule::schema()->hasColumn('migrations', 'id')) {
-                $this->io->error("Migrations doesn't appear to have been run! Make sure the database is properly migrated by using the `php bakery migrate` command.");
-                exit(1);
+            $this->io->error("Migrations doesn't appear to have been run! Make sure the database is properly migrated by using the `php bakery migrate` command.");
+            exit(1);
         }
 
         // Make sure the required mirgations have been run
@@ -128,8 +127,7 @@ class CreateAdminUser extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function askUsername()
-    {
+    protected function askUsername() {
         while (!isset($userName) || !$this->validateUsername($userName)) {
             $userName = $this->io->ask("Choose a root username (1-50 characters, no leading or trailing whitespace)");
         }
@@ -143,12 +141,11 @@ class CreateAdminUser extends BaseCommand
      * @param mixed $userName
      * @return void
      */
-    protected function validateUsername($userName)
-    {
+    protected function validateUsername($userName) {
         // Validate length
         if (strlen($userName) < 1 || strlen($userName) > 50) {
             $this->io->error("Username must be between 1-50 characters");
-            return false;
+            return FALSE;
         }
 
         // Validate format
@@ -160,10 +157,10 @@ class CreateAdminUser extends BaseCommand
         $validate = filter_var($userName, FILTER_VALIDATE_REGEXP, $options);
         if (!$validate) {
             $this->io->error("Username can't have any leading or trailing whitespace");
-            return false;
+            return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -172,8 +169,7 @@ class CreateAdminUser extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function askEmail()
-    {
+    protected function askEmail() {
         while (!isset($email) || !$this->validateEmail($email)) {
             $email = $this->io->ask("Enter a valid email address (1-254 characters, must be compatible with FILTER_VALIDATE_EMAIL)");
         }
@@ -187,21 +183,20 @@ class CreateAdminUser extends BaseCommand
      * @param mixed $email
      * @return void
      */
-    protected function validateEmail($email)
-    {
+    protected function validateEmail($email) {
         // Validate length
         if (strlen($email) < 1 || strlen($email) > 254) {
             $this->io->error("Email must be between 1-254 characters");
-            return false;
+            return FALSE;
         }
 
         // Validate format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->io->error("Email must be compatible with FILTER_VALIDATE_EMAIL");
-            return false;
+            return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -210,8 +205,7 @@ class CreateAdminUser extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function askFirstName()
-    {
+    protected function askFirstName() {
         while (!isset($firstName) || !$this->validateFirstName($firstName)) {
             $firstName = $this->io->ask("Enter the user first name (1-20 characters)");
         }
@@ -225,15 +219,14 @@ class CreateAdminUser extends BaseCommand
      * @param mixed $name
      * @return void
      */
-    protected function validateFirstName($firstName)
-    {
+    protected function validateFirstName($firstName) {
         // Validate length
         if (strlen($firstName) < 1 || strlen($firstName) > 20) {
             $this->io->error("First name must be between 1-20 characters");
-            return false;
+            return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -242,8 +235,7 @@ class CreateAdminUser extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function askLastName()
-    {
+    protected function askLastName() {
         while (!isset($lastName) || !$this->validateLastName($lastName)) {
             $lastName = $this->io->ask("Enter the user last name (1-30 characters)");
         }
@@ -257,15 +249,14 @@ class CreateAdminUser extends BaseCommand
      * @param mixed $lastName
      * @return void
      */
-    protected function validateLastName($lastName)
-    {
+    protected function validateLastName($lastName) {
         // Validate length
         if (strlen($lastName) < 1 || strlen($lastName) > 30) {
             $this->io->error("Last name must be between 1-30 characters");
-            return false;
+            return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -274,8 +265,7 @@ class CreateAdminUser extends BaseCommand
      * @access protected
      * @return void
      */
-    protected function askPassword()
-    {
+    protected function askPassword() {
         while (!isset($password) || !$this->validatePassword($password) || !$this->confirmPassword($password)) {
             $password = $this->io->askHidden("Enter password (12-255 characters)");
         }
@@ -289,14 +279,13 @@ class CreateAdminUser extends BaseCommand
      * @param mixed $password
      * @return void
      */
-    protected function validatePassword($password)
-    {
+    protected function validatePassword($password) {
         if (strlen($password) < 12 || strlen($password) > 255) {
             $this->io->error("Password must be between 12-255 characters");
-            return false;
+            return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -306,8 +295,7 @@ class CreateAdminUser extends BaseCommand
      * @param mixed $passwordToConfirm
      * @return void
      */
-    protected function confirmPassword($passwordToConfirm)
-    {
+    protected function confirmPassword($passwordToConfirm) {
         while (!isset($password)) {
             $password = $this->io->askHidden("Please re-enter the chosen password");
         }
@@ -322,13 +310,12 @@ class CreateAdminUser extends BaseCommand
      * @param mixed $passwordToConfirm
      * @return void
      */
-    protected function validatePasswordConfirmation($password, $passwordToConfirm)
-    {
+    protected function validatePasswordConfirmation($password, $passwordToConfirm) {
         if ($password != $passwordToConfirm) {
             $this->io->error("Passwords do not match, please try again.");
-            return false;
+            return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 }

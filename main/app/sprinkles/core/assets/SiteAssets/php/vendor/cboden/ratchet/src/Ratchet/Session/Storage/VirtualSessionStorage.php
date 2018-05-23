@@ -1,25 +1,28 @@
 <?php
+
 namespace Ratchet\Session\Storage;
+
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Ratchet\Session\Storage\Proxy\VirtualProxy;
 use Ratchet\Session\Serialize\HandlerInterface;
 
-class VirtualSessionStorage extends NativeSessionStorage {
+class VirtualSessionStorage extends NativeSessionStorage
+{
     /**
      * @var \Ratchet\Session\Serialize\HandlerInterface
      */
     protected $_serializer;
 
     /**
-     * @param \SessionHandlerInterface                    $handler
-     * @param string                                      $sessionId The ID of the session to retrieve
+     * @param \SessionHandlerInterface $handler
+     * @param string $sessionId The ID of the session to retrieve
      * @param \Ratchet\Session\Serialize\HandlerInterface $serializer
      */
     public function __construct(\SessionHandlerInterface $handler, $sessionId, HandlerInterface $serializer) {
         $this->setSaveHandler($handler);
         $this->saveHandler->setId($sessionId);
         $this->_serializer = $serializer;
-        $this->setMetadataBag(null);
+        $this->setMetadataBag(NULL);
     }
 
     /**
@@ -27,7 +30,7 @@ class VirtualSessionStorage extends NativeSessionStorage {
      */
     public function start() {
         if ($this->started && !$this->closed) {
-            return true;
+            return TRUE;
         }
 
         // You have to call Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler::open() to use
@@ -36,22 +39,22 @@ class VirtualSessionStorage extends NativeSessionStorage {
         // framework in this case. This must not be the best choice, but it works.
         $this->saveHandler->open(session_save_path(), session_name());
 
-        $rawData     = $this->saveHandler->read($this->saveHandler->getId());
+        $rawData = $this->saveHandler->read($this->saveHandler->getId());
         $sessionData = $this->_serializer->unserialize($rawData);
 
         $this->loadSession($sessionData);
 
         if (!$this->saveHandler->isWrapper() && !$this->saveHandler->isSessionHandlerInterface()) {
-            $this->saveHandler->setActive(false);
+            $this->saveHandler->setActive(FALSE);
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function regenerate($destroy = false, $lifetime = null) {
+    public function regenerate($destroy = FALSE, $lifetime = NULL) {
         // .. ?
     }
 
@@ -65,16 +68,16 @@ class VirtualSessionStorage extends NativeSessionStorage {
 //        $this->saveHandler->write($this->saveHandler->getId(),
 
         if (!$this->saveHandler->isWrapper() && !$this->getSaveHandler()->isSessionHandlerInterface()) {
-            $this->saveHandler->setActive(false);
+            $this->saveHandler->setActive(FALSE);
         }
 
-        $this->closed = true;
+        $this->closed = TRUE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setSaveHandler($saveHandler = null) {
+    public function setSaveHandler($saveHandler = NULL) {
         if (!($saveHandler instanceof \SessionHandlerInterface)) {
             throw new \InvalidArgumentException('Handler must be instance of SessionHandlerInterface');
         }

@@ -1,7 +1,9 @@
 <?php
+
 namespace Ratchet\RFC6455\Messaging;
 
-interface FrameInterface extends DataInterface {
+interface FrameInterface extends DataInterface
+{
     /**
      * Add incoming data to the frame from peer
      * @param string

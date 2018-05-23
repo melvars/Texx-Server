@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -37,8 +38,7 @@ class ActivitySprunje extends Sprunje
     /**
      * Set the initial query used by your Sprunje.
      */
-    protected function baseQuery()
-    {
+    protected function baseQuery() {
         $query = $this->classMapper->createInstance('activity');
 
         return $query->joinUser();
@@ -51,8 +51,7 @@ class ActivitySprunje extends Sprunje
      * @param mixed $value
      * @return $this
      */
-    protected function filterUser($query, $value)
-    {
+    protected function filterUser($query, $value) {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
         $query->where(function ($query) use ($values) {
@@ -72,8 +71,7 @@ class ActivitySprunje extends Sprunje
      * @param string $direction
      * @return $this
      */
-    protected function sortUser($query, $direction)
-    {
+    protected function sortUser($query, $direction) {
         $query->orderBy('users.last_name', $direction);
         return $this;
     }

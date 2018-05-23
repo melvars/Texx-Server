@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Util;
 
 use Interop\Container\ContainerInterface;
@@ -36,8 +37,7 @@ class ShutdownHandler
      * @param ContainerInterface $ci The global container object, which holds all your services.
      * @param bool $displayErrorInfo
      */
-    public function __construct(ContainerInterface $ci, $displayErrorInfo)
-    {
+    public function __construct(ContainerInterface $ci, $displayErrorInfo) {
         $this->ci = $ci;
         $this->displayErrorInfo = $displayErrorInfo;
     }
@@ -47,16 +47,14 @@ class ShutdownHandler
      *
      * @return void
      */
-    public function register()
-    {
+    public function register() {
         register_shutdown_function([$this, 'fatalHandler']);
     }
 
     /**
      * Set up the fatal error handler, so that we get a clean error message and alert instead of a WSOD.
      */
-    public function fatalHandler()
-    {
+    public function fatalHandler() {
         $error = error_get_last();
         $fatalErrorTypes = [
             E_ERROR,
@@ -78,7 +76,7 @@ class ShutdownHandler
 
             // For CLI, just print the message and exit.
             if (php_sapi_name() === 'cli') {
-				exit($errorMessage . PHP_EOL);
+                exit($errorMessage . PHP_EOL);
             }
 
             // For all other environments, print a debug response for the requested data type
@@ -102,11 +100,10 @@ class ShutdownHandler
      * @param array $error
      * @return string
      */
-    protected function buildErrorInfoMessage(array $error)
-    {
+    protected function buildErrorInfoMessage(array $error) {
         $errfile = $error['file'];
-        $errline = (string) $error['line'];
-        $errstr  = $error['message'];
+        $errline = (string)$error['line'];
+        $errstr = $error['message'];
 
         $errorTypes = [
             E_ERROR => 'Fatal error',
@@ -125,8 +122,7 @@ class ShutdownHandler
      * @param string $message
      * @return string
      */
-    protected function buildErrorPage($message)
-    {
+    protected function buildErrorPage($message) {
         $contentType = $this->determineContentType($this->ci->request, $this->ci->config['site.debug.ajax']);
 
         switch ($contentType) {
@@ -149,8 +145,7 @@ class ShutdownHandler
      * @param string $errorMessage
      * @return string
      */
-    protected function buildHtmlErrorPage($message)
-    {
+    protected function buildHtmlErrorPage($message) {
         $title = 'UserFrosting Application Error';
         $html = "<p>$message</p>";
 

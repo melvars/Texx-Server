@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 use Monolog\Logger;
@@ -35,12 +36,11 @@ class Mailer
      * @param mixed[] $config An array of configuration parameters for phpMailer.
      * @throws \phpmailerException Wrong mailer config value given.
      */
-    public function __construct($logger, $config = [])
-    {
+    public function __construct($logger, $config = []) {
         $this->logger = $logger;
 
         // 'true' tells PHPMailer to use exceptions instead of error codes
-        $this->phpMailer = new \PHPMailer(true);
+        $this->phpMailer = new \PHPMailer(TRUE);
 
         // Configuration options
         if (isset($config['mailer'])) {
@@ -49,14 +49,14 @@ class Mailer
             }
 
             if ($config['mailer'] == 'smtp') {
-                $this->phpMailer->isSMTP(true);
-                $this->phpMailer->Host =       $config['host'];
-                $this->phpMailer->Port =       $config['port'];
-                $this->phpMailer->SMTPAuth =   $config['auth'];
+                $this->phpMailer->isSMTP(TRUE);
+                $this->phpMailer->Host = $config['host'];
+                $this->phpMailer->Port = $config['port'];
+                $this->phpMailer->SMTPAuth = $config['auth'];
                 $this->phpMailer->SMTPSecure = $config['secure'];
-                $this->phpMailer->Username =   $config['username'];
-                $this->phpMailer->Password =   $config['password'];
-                $this->phpMailer->SMTPDebug =  $config['smtp_debug'];
+                $this->phpMailer->Username = $config['username'];
+                $this->phpMailer->Password = $config['password'];
+                $this->phpMailer->SMTPDebug = $config['smtp_debug'];
 
                 if (isset($config['smtp_options'])) {
                     $this->phpMailer->SMTPOptions = $config['smtp_options'];
@@ -71,7 +71,7 @@ class Mailer
         }
 
         // Pass logger into phpMailer object
-        $this->phpMailer->Debugoutput = function($message, $level) {
+        $this->phpMailer->Debugoutput = function ($message, $level) {
             $this->logger->debug($message);
         };
     }
@@ -81,8 +81,7 @@ class Mailer
      *
      * @return \PHPMailer
      */
-    public function getPhpMailer()
-    {
+    public function getPhpMailer() {
         return $this->phpMailer;
     }
 
@@ -95,8 +94,7 @@ class Mailer
      * @param bool $clearRecipients Set to true to clear the list of recipients in the message after calling send().  This helps avoid accidentally sending a message multiple times.
      * @throws \phpmailerException The message could not be sent.
      */
-    public function send(MailMessage $message, $clearRecipients = true)
-    {
+    public function send(MailMessage $message, $clearRecipients = TRUE) {
         $this->phpMailer->From = $message->getFromEmail();
         $this->phpMailer->FromName = $message->getFromName();
         $this->phpMailer->addReplyTo($message->getReplyEmail(), $message->getReplyName());
@@ -107,20 +105,20 @@ class Mailer
 
             // Add any CCs and BCCs
             if ($recipient->getCCs()) {
-                foreach($recipient->getCCs() as $cc) {
+                foreach ($recipient->getCCs() as $cc) {
                     $this->phpMailer->addCC($cc['email'], $cc['name']);
                 }
             }
-    
+
             if ($recipient->getBCCs()) {
-                foreach($recipient->getBCCs() as $bcc) {
+                foreach ($recipient->getBCCs() as $bcc) {
                     $this->phpMailer->addBCC($bcc['email'], $bcc['name']);
                 }
             }
         }
 
         $this->phpMailer->Subject = $message->renderSubject();
-        $this->phpMailer->Body    = $message->renderBody();
+        $this->phpMailer->Body = $message->renderBody();
 
         // Try to send the mail.  Will throw an exception on failure.
         $this->phpMailer->send();
@@ -136,15 +134,14 @@ class Mailer
     }
 
     /**
-     * Send a MailMessage message, sending a separate email to each recipient. 
+     * Send a MailMessage message, sending a separate email to each recipient.
      *
      * If the message object supports message templates, this will render the template with the corresponding placeholder values for each recipient.
      * @param MailMessage $message
      * @param bool $clearRecipients Set to true to clear the list of recipients in the message after calling send().  This helps avoid accidentally sending a message multiple times.
      * @throws \phpmailerException The message could not be sent.
      */
-    public function sendDistinct(MailMessage $message, $clearRecipients = true)
-    {
+    public function sendDistinct(MailMessage $message, $clearRecipients = TRUE) {
         $this->phpMailer->From = $message->getFromEmail();
         $this->phpMailer->FromName = $message->getFromName();
         $this->phpMailer->addReplyTo($message->getReplyEmail(), $message->getReplyName());
@@ -155,23 +152,23 @@ class Mailer
 
             // Add any CCs and BCCs
             if ($recipient->getCCs()) {
-                foreach($recipient->getCCs() as $cc) {
+                foreach ($recipient->getCCs() as $cc) {
                     $this->phpMailer->addCC($cc['email'], $cc['name']);
                 }
             }
-    
+
             if ($recipient->getBCCs()) {
-                foreach($recipient->getBCCs() as $bcc) {
+                foreach ($recipient->getBCCs() as $bcc) {
                     $this->phpMailer->addBCC($bcc['email'], $bcc['name']);
                 }
             }
-    
+
             $this->phpMailer->Subject = $message->renderSubject($recipient->getParams());
-            $this->phpMailer->Body    = $message->renderBody($recipient->getParams());
-    
+            $this->phpMailer->Body = $message->renderBody($recipient->getParams());
+
             // Try to send the mail.  Will throw an exception on failure.
             $this->phpMailer->send();
-    
+
             // Clear recipients from the PHPMailer object for this iteration,
             // so that we can send a separate email to the next recipient.
             $this->phpMailer->clearAllRecipients();
@@ -189,8 +186,7 @@ class Mailer
      * @param mixed[] $options
      * @return Mailer
      */
-    public function setOptions($options)
-    {
+    public function setOptions($options) {
         if (isset($options['isHtml'])) {
             $this->phpMailer->isHTML($options['isHtml']);
         }

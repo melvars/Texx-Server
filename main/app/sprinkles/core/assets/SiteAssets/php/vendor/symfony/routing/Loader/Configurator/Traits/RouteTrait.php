@@ -26,8 +26,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function defaults(array $defaults)
-    {
+    final public function defaults(array $defaults) {
         $this->route->addDefaults($defaults);
 
         return $this;
@@ -38,8 +37,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function requirements(array $requirements)
-    {
+    final public function requirements(array $requirements) {
         $this->route->addRequirements($requirements);
 
         return $this;
@@ -50,8 +48,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function options(array $options)
-    {
+    final public function options(array $options) {
         $this->route->addOptions($options);
 
         return $this;
@@ -64,8 +61,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function condition($condition)
-    {
+    final public function condition($condition) {
         $this->route->setCondition($condition);
 
         return $this;
@@ -78,8 +74,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function host($pattern)
-    {
+    final public function host($pattern) {
         $this->route->setHost($pattern);
 
         return $this;
@@ -93,8 +88,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function schemes(array $schemes)
-    {
+    final public function schemes(array $schemes) {
         $this->route->setSchemes($schemes);
 
         return $this;
@@ -108,8 +102,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function methods(array $methods)
-    {
+    final public function methods(array $methods) {
         $this->route->setMethods($methods);
 
         return $this;
@@ -122,8 +115,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function controller($controller)
-    {
+    final public function controller($controller) {
         $this->route->addDefaults(array('_controller' => $controller));
 
         return $this;

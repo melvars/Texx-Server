@@ -7,8 +7,7 @@ use React\Tests\Socket\TestCase;
 
 class FixedUriConnectorTest extends TestCase
 {
-    public function testWillInvokeGivenConnector()
-    {
+    public function testWillInvokeGivenConnector() {
         $base = $this->getMockBuilder('React\Socket\ConnectorInterface')->getMock();
         $base->expects($this->once())->method('connect')->with('test')->willReturn('ret');
 

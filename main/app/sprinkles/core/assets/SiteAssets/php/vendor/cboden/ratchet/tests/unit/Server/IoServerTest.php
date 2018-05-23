@@ -1,5 +1,7 @@
 <?php
+
 namespace Ratchet\Server;
+
 use Ratchet\Server\IoServer;
 use React\EventLoop\StreamSelectLoop;
 use React\Socket\Server;
@@ -7,7 +9,8 @@ use React\Socket\Server;
 /**
  * @covers Ratchet\Server\IoServer
  */
-class IoServerTest extends \PHPUnit_Framework_TestCase {
+class IoServerTest extends \PHPUnit_Framework_TestCase
+{
     protected $server;
 
     protected $app;
@@ -23,7 +26,7 @@ class IoServerTest extends \PHPUnit_Framework_TestCase {
         $this->reactor = new Server(0, $loop);
 
         $uri = $this->reactor->getAddress();
-        $this->port   = parse_url((strpos($uri, '://') === false ? 'tcp://' : '') . $uri, PHP_URL_PORT);
+        $this->port = parse_url((strpos($uri, '://') === FALSE ? 'tcp://' : '') . $uri, PHP_URL_PORT);
         $this->server = new IoServer($this->app, $this->reactor, $loop);
     }
 
@@ -43,7 +46,7 @@ class IoServerTest extends \PHPUnit_Framework_TestCase {
 
         $this->app->expects($this->once())->method('onMessage')->with(
             $this->isInstanceOf('\\Ratchet\\ConnectionInterface')
-          , $msg
+            , $msg
         );
 
         $client = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
@@ -89,14 +92,14 @@ class IoServerTest extends \PHPUnit_Framework_TestCase {
     public function testNoLoopProvidedError() {
         $this->setExpectedException('RuntimeException');
 
-        $io   = new IoServer($this->app, $this->reactor);
+        $io = new IoServer($this->app, $this->reactor);
         $io->run();
     }
 
     public function testOnErrorPassesException() {
         $conn = $this->getMock('\\React\\Socket\\ConnectionInterface');
         $conn->decor = $this->getMock('\\Ratchet\\ConnectionInterface');
-        $err  = new \Exception("Nope");
+        $err = new \Exception("Nope");
 
         $this->app->expects($this->once())->method('onError')->with($conn->decor, $err);
 

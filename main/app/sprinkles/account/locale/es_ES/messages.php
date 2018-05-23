@@ -27,9 +27,9 @@ return [
         "MY" => "Mi Perfil",
 
         "SESSION_COMPROMISED" => [
-            "@TRANSLATION"  => "Su sesión ha sido comprometida. Debe desconectarse de todos los dispositivos y, a continuación, volver a iniciar sesión y asegurarse de que sus datos no han sido manipulados.",
-            "TITLE"         => "Es posible que su cuenta se haya visto comprometida.",
-            "TEXT"          => "Alguien puede haber utilizado su información de acceso para acceder a esta página. Para su seguridad, todas las sesiones se cerraron. <a href=\"{{url}}\"> ingrese </a> y compruebe si su actividad es sospechosa en su cuenta. También puede cambiar su contraseña."
+            "@TRANSLATION" => "Su sesión ha sido comprometida. Debe desconectarse de todos los dispositivos y, a continuación, volver a iniciar sesión y asegurarse de que sus datos no han sido manipulados.",
+            "TITLE" => "Es posible que su cuenta se haya visto comprometida.",
+            "TEXT" => "Alguien puede haber utilizado su información de acceso para acceder a esta página. Para su seguridad, todas las sesiones se cerraron. <a href=\"{{url}}\"> ingrese </a> y compruebe si su actividad es sospechosa en su cuenta. También puede cambiar su contraseña."
         ],
         "SESSION_EXPIRED" => "Su sesión ha caducado. Inicie sesión nuevamente.",
 
@@ -105,9 +105,9 @@ return [
         "CONFIRM_NEW_EXPLAIN" => "Vuelve a ingresar tu nueva contraseña",
         "CONFIRM_NEW_HELP" => "Sólo se requiere si se selecciona una nueva contraseña",
         "CREATE" => [
-            "@TRANSLATION"  => "Crear contraseña",
-            "PAGE"          => "Elija una contraseña para su nueva cuenta.",
-            "SET"           => "Establecer contraseña e iniciar sesión"
+            "@TRANSLATION" => "Crear contraseña",
+            "PAGE" => "Elija una contraseña para su nueva cuenta.",
+            "SET" => "Establecer contraseña e iniciar sesión"
         ],
         "CURRENT" => "Contraseña actual",
         "CURRENT_EXPLAIN" => "Debe confirmar su contraseña actual para realizar cambios",
@@ -156,7 +156,7 @@ return [
         "LOGOUT" => "Lo siento, no puede registrarse para una cuenta mientras está conectado. Por favor, cierra la sesión primero.",
         "WELCOME" => "El registro es rápido y sencillo."
     ],
-   
+
     "REMEMBER_ME" => "¡Recuérdame!",
     "REMEMBER_ME_ON_COMPUTER" => "Recuérdeme en este ordenador (no se recomienda para ordenadores públicos)",
 
@@ -165,7 +165,7 @@ return [
     "SIGNUP" => "Regístrate",
     "SUGGEST" => "Sugerencia",
     "HAVE_ACCOUNT" => "¿Ya tienes una cuenta?",
-    "SIGN_IN_HERE"=> "¿Ya tienes una cuenta? <a href=\"{{url}}\"> Acceda aquí. </a>",
+    "SIGN_IN_HERE" => "¿Ya tienes una cuenta? <a href=\"{{url}}\"> Acceda aquí. </a>",
 
 
     "TOS" => "Términos y Condiciones",

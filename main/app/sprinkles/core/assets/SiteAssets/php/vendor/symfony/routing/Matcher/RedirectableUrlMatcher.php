@@ -22,8 +22,7 @@ abstract class RedirectableUrlMatcher extends UrlMatcher implements Redirectable
     /**
      * {@inheritdoc}
      */
-    public function match($pathinfo)
-    {
+    public function match($pathinfo) {
         try {
             $parameters = parent::match($pathinfo);
         } catch (ResourceNotFoundException $e) {
@@ -32,9 +31,9 @@ abstract class RedirectableUrlMatcher extends UrlMatcher implements Redirectable
             }
 
             try {
-                $parameters = parent::match($pathinfo.'/');
+                $parameters = parent::match($pathinfo . '/');
 
-                return array_replace($parameters, $this->redirect($pathinfo.'/', isset($parameters['_route']) ? $parameters['_route'] : null));
+                return array_replace($parameters, $this->redirect($pathinfo . '/', isset($parameters['_route']) ? $parameters['_route'] : NULL));
             } catch (ResourceNotFoundException $e2) {
                 throw $e;
             }
@@ -46,11 +45,10 @@ abstract class RedirectableUrlMatcher extends UrlMatcher implements Redirectable
     /**
      * {@inheritdoc}
      */
-    protected function handleRouteRequirements($pathinfo, $name, Route $route)
-    {
+    protected function handleRouteRequirements($pathinfo, $name, Route $route) {
         // expression condition
         if ($route->getCondition() && !$this->getExpressionLanguage()->evaluate($route->getCondition(), array('context' => $this->context, 'request' => $this->request ?: $this->createRequest($pathinfo)))) {
-            return array(self::REQUIREMENT_MISMATCH, null);
+            return array(self::REQUIREMENT_MISMATCH, NULL);
         }
 
         // check HTTP scheme requirement
@@ -60,6 +58,6 @@ abstract class RedirectableUrlMatcher extends UrlMatcher implements Redirectable
             return array(self::ROUTE_MATCH, $this->redirect($pathinfo, $name, current($schemes)));
         }
 
-        return array(self::REQUIREMENT_MATCH, null);
+        return array(self::REQUIREMENT_MATCH, NULL);
     }
 }

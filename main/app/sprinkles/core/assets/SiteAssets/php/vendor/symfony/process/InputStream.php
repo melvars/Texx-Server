@@ -21,15 +21,14 @@ use Symfony\Component\Process\Exception\RuntimeException;
 class InputStream implements \IteratorAggregate
 {
     /** @var null|callable */
-    private $onEmpty = null;
+    private $onEmpty = NULL;
     private $input = array();
-    private $open = true;
+    private $open = TRUE;
 
     /**
      * Sets a callback that is called when the write buffer becomes empty.
      */
-    public function onEmpty(callable $onEmpty = null)
-    {
+    public function onEmpty(callable $onEmpty = NULL) {
         $this->onEmpty = $onEmpty;
     }
 
@@ -39,9 +38,8 @@ class InputStream implements \IteratorAggregate
      * @param resource|string|int|float|bool|\Traversable|null The input to append as scalar,
      *                                                         stream resource or \Traversable
      */
-    public function write($input)
-    {
-        if (null === $input) {
+    public function write($input) {
+        if (NULL === $input) {
             return;
         }
         if ($this->isClosed()) {
@@ -53,22 +51,19 @@ class InputStream implements \IteratorAggregate
     /**
      * Closes the write buffer.
      */
-    public function close()
-    {
-        $this->open = false;
+    public function close() {
+        $this->open = FALSE;
     }
 
     /**
      * Tells whether the write buffer is closed or not.
      */
-    public function isClosed()
-    {
+    public function isClosed() {
         return !$this->open;
     }
 
-    public function getIterator()
-    {
-        $this->open = true;
+    public function getIterator() {
+        $this->open = TRUE;
 
         while ($this->open || $this->input) {
             if (!$this->input) {
@@ -84,7 +79,7 @@ class InputStream implements \IteratorAggregate
             } else {
                 yield $current;
             }
-            if (!$this->input && $this->open && null !== $onEmpty = $this->onEmpty) {
+            if (!$this->input && $this->open && NULL !== $onEmpty = $this->onEmpty) {
                 $this->write($onEmpty($this));
             }
         }

@@ -25,8 +25,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
     protected $factory;
     protected $prototypes;
 
-    public function __construct(AssetFactory $factory)
-    {
+    public function __construct(AssetFactory $factory) {
         $this->factory = $factory;
         $this->prototypes = array();
 
@@ -35,16 +34,14 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
         }
     }
 
-    public function addPrototype($prototype, array $options = array())
-    {
-        $tokens = token_get_all('<?php '.$prototype);
+    public function addPrototype($prototype, array $options = array()) {
+        $tokens = token_get_all('<?php ' . $prototype);
         array_shift($tokens);
 
         $this->prototypes[$prototype] = array($tokens, $options);
     }
 
-    public function load(ResourceInterface $resource)
-    {
+    public function load(ResourceInterface $resource) {
         if (!$nbProtos = count($this->prototypes)) {
             throw new \LogicException('There are no prototypes registered.');
         }
@@ -60,28 +57,32 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
             $current = self::tokenToString($token);
             // loop through each prototype (by reference)
             foreach (array_keys($this->prototypes) as $i) {
-                $prototype = & $this->prototypes[$i][0];
+                $prototype = &$this->prototypes[$i][0];
                 $options = $this->prototypes[$i][1];
-                $buffer = & $buffers[$i];
-                $level = & $bufferLevels[$i];
+                $buffer = &$buffers[$i];
+                $level = &$bufferLevels[$i];
 
                 if (isset($buffersInWildcard[$i])) {
                     switch ($current) {
-                        case '(': ++$level; break;
-                        case ')': --$level; break;
+                        case '(':
+                            ++$level;
+                            break;
+                        case ')':
+                            --$level;
+                            break;
                     }
 
                     $buffer .= $current;
 
                     if (!$level) {
-                        $calls[] = array($buffer.';', $options);
+                        $calls[] = array($buffer . ';', $options);
                         $buffer = '';
                         unset($buffersInWildcard[$i]);
                     }
-                } elseif ($current == self::tokenToString(current($prototype))) {
+                } else if ($current == self::tokenToString(current($prototype))) {
                     $buffer .= $current;
                     if ('*' == self::tokenToString(next($prototype))) {
-                        $buffersInWildcard[$i] = true;
+                        $buffersInWildcard[$i] = TRUE;
                         ++$level;
                     }
                 } else {
@@ -100,8 +101,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
         return $formulae;
     }
 
-    private function processCall($call, array $protoOptions = array())
-    {
+    private function processCall($call, array $protoOptions = array()) {
         $tmp = FilesystemUtils::createTemporaryFile('php_formula_loader');
         file_put_contents($tmp, implode("\n", array(
             '<?php',
@@ -109,10 +109,10 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
             $call,
             'echo serialize($_call);',
         )));
-        $args = unserialize(shell_exec('php '.escapeshellarg($tmp)));
+        $args = unserialize(shell_exec('php ' . escapeshellarg($tmp)));
         unlink($tmp);
 
-        $inputs  = isset($args[0]) ? self::argumentToArray($args[0]) : array();
+        $inputs = isset($args[0]) ? self::argumentToArray($args[0]) : array();
         $filters = isset($args[1]) ? self::argumentToArray($args[1]) : array();
         $options = isset($args[2]) ? $args[2] : array();
 
@@ -148,13 +148,11 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
      */
     abstract protected function registerSetupCode();
 
-    protected static function tokenToString($token)
-    {
+    protected static function tokenToString($token) {
         return is_array($token) ? $token[1] : $token;
     }
 
-    protected static function argumentToArray($argument)
-    {
+    protected static function argumentToArray($argument) {
         return is_array($argument) ? $argument : array_filter(array_map('trim', explode(',', $argument)));
     }
 }

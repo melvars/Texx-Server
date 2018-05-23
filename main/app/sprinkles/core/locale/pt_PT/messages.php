@@ -16,8 +16,8 @@ return [
 
     "ABOUT" => "Acerca",
 
-	"CAPTCHA" => [
-	    "@TRANSLATION" => "Captcha",
+    "CAPTCHA" => [
+        "@TRANSLATION" => "Captcha",
         "FAIL" => "Código captcha não introduzido corretamente.",
         "SPECIFY" => "Introduza o código captcha",
         "VERIFY" => "Verifique o código captcha"
@@ -26,7 +26,7 @@ return [
     "CSRF_MISSING" => "Token CSRF em falta.  Tente refrescar a página e submeter de novo?",
 
     "DB_INVALID" => "Não é possível estabelecer ligação com a base de dados.  Se é administrador, por favor consulte o log do servidor.",
-    "DESCRIPTION"   => "Descrição",
+    "DESCRIPTION" => "Descrição",
     "DOWNLOAD" => [
         "@TRANSLATION" => "Descarregar",
         "CSV" => "Descarregar CSV"
@@ -37,7 +37,7 @@ return [
         "YOUR" => "O seu endereço de email"
     ],
 
-    "HOME"  => "Início",
+    "HOME" => "Início",
 
     "LEGAL" => "Política Legal",
 
@@ -45,7 +45,7 @@ return [
         "@TRANSLATION" => "Localização"
     ],
 
-    "NAME"  => "Nome",
+    "NAME" => "Nome",
     "NAVIGATION" => "Navegação",
 
     "PAGINATION" => [

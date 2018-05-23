@@ -32,10 +32,9 @@ class UglifyCssFilter extends BaseNodeFilter
 
     /**
      * @param string $uglifycssBin Absolute path to the uglifycss executable
-     * @param string $nodeBin      Absolute path to the folder containg node.js executable
+     * @param string $nodeBin Absolute path to the folder containg node.js executable
      */
-    public function __construct($uglifycssBin = '/usr/bin/uglifycss', $nodeBin = null)
-    {
+    public function __construct($uglifycssBin = '/usr/bin/uglifycss', $nodeBin = NULL) {
         $this->uglifycssBin = $uglifycssBin;
         $this->nodeBin = $nodeBin;
     }
@@ -44,8 +43,7 @@ class UglifyCssFilter extends BaseNodeFilter
      * Expand variables
      * @param bool $expandVars True to enable
      */
-    public function setExpandVars($expandVars)
-    {
+    public function setExpandVars($expandVars) {
         $this->expandVars = $expandVars;
     }
 
@@ -53,8 +51,7 @@ class UglifyCssFilter extends BaseNodeFilter
      * Remove newlines within preserved comments
      * @param bool $uglyComments True to enable
      */
-    public function setUglyComments($uglyComments)
-    {
+    public function setUglyComments($uglyComments) {
         $this->uglyComments = $uglyComments;
     }
 
@@ -62,16 +59,14 @@ class UglifyCssFilter extends BaseNodeFilter
      * Preserve newlines within and around preserved comments
      * @param bool $cuteComments True to enable
      */
-    public function setCuteComments($cuteComments)
-    {
+    public function setCuteComments($cuteComments) {
         $this->cuteComments = $cuteComments;
     }
 
     /**
      * @see Assetic\Filter\FilterInterface::filterLoad()
      */
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
     /**
@@ -79,8 +74,7 @@ class UglifyCssFilter extends BaseNodeFilter
      *
      * @see Assetic\Filter\FilterInterface::filterDump()
      */
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $pb = $this->createProcessBuilder($this->nodeBin
             ? array($this->nodeBin, $this->uglifycssBin)
             : array($this->uglifycssBin));

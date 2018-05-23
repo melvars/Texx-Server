@@ -1,11 +1,9 @@
-.uf-alert
-{
+.uf-alert {
     margin: 10px 0px 0px 0px;
 }
 
 /* Invert margin when inside a modal-body */
-.modal-body .uf-alert
-{
+.modal-body .uf-alert {
     margin: 0px 0px 10px 0px;
 }
 

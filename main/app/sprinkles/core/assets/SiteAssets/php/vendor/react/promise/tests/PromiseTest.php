@@ -8,13 +8,12 @@ class PromiseTest extends TestCase
 {
     use PromiseTest\FullTestTrait;
 
-    public function getPromiseTestAdapter(callable $canceller = null)
-    {
-        $resolveCallback = $rejectCallback = $progressCallback = null;
+    public function getPromiseTestAdapter(callable $canceller = NULL) {
+        $resolveCallback = $rejectCallback = $progressCallback = NULL;
 
         $promise = new Promise(function ($resolve, $reject, $progress) use (&$resolveCallback, &$rejectCallback, &$progressCallback) {
-            $resolveCallback  = $resolve;
-            $rejectCallback   = $reject;
+            $resolveCallback = $resolve;
+            $rejectCallback = $reject;
             $progressCallback = $progress;
         }, $canceller);
 
@@ -23,15 +22,14 @@ class PromiseTest extends TestCase
                 return $promise;
             },
             'resolve' => $resolveCallback,
-            'reject'  => $rejectCallback,
-            'notify'  => $progressCallback,
-            'settle'  => $resolveCallback,
+            'reject' => $rejectCallback,
+            'notify' => $progressCallback,
+            'settle' => $resolveCallback,
         ]);
     }
 
     /** @test */
-    public function shouldRejectIfResolverThrowsException()
-    {
+    public function shouldRejectIfResolverThrowsException() {
         $exception = new \Exception('foo');
 
         $promise = new Promise(function () use ($exception) {
@@ -49,8 +47,7 @@ class PromiseTest extends TestCase
     }
 
     /** @test */
-    public function shouldFulfillIfFullfilledWithSimplePromise()
-    {
+    public function shouldFulfillIfFullfilledWithSimplePromise() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -66,8 +63,7 @@ class PromiseTest extends TestCase
     }
 
     /** @test */
-    public function shouldRejectIfRejectedWithSimplePromise()
-    {
+    public function shouldRejectIfRejectedWithSimplePromise() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Sprinkle;
 
 use Interop\Container\ContainerInterface;
@@ -30,8 +31,7 @@ class Sprinkle implements EventSubscriberInterface
      *
      * @return array
      */
-    public static function getSubscribedEvents()
-    {
+    public static function getSubscribedEvents() {
         $methods = get_class_methods(get_called_class());
 
         $list = [];
@@ -49,8 +49,7 @@ class Sprinkle implements EventSubscriberInterface
      *
      * @param ContainerInterface $ci The global container object, which holds all your services.
      */
-    public function __construct(ContainerInterface $ci)
-    {
+    public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
     }
 }

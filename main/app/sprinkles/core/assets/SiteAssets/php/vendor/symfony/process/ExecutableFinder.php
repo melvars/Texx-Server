@@ -24,8 +24,7 @@ class ExecutableFinder
     /**
      * Replaces default suffixes of executable.
      */
-    public function setSuffixes(array $suffixes)
-    {
+    public function setSuffixes(array $suffixes) {
         $this->suffixes = $suffixes;
     }
 
@@ -34,22 +33,20 @@ class ExecutableFinder
      *
      * @param string $suffix
      */
-    public function addSuffix($suffix)
-    {
+    public function addSuffix($suffix) {
         $this->suffixes[] = $suffix;
     }
 
     /**
      * Finds an executable by name.
      *
-     * @param string $name      The executable name (without the extension)
-     * @param string $default   The default to return if no executable is found
-     * @param array  $extraDirs Additional dirs to check into
+     * @param string $name The executable name (without the extension)
+     * @param string $default The default to return if no executable is found
+     * @param array $extraDirs Additional dirs to check into
      *
      * @return string The executable path or default value
      */
-    public function find($name, $default = null, array $extraDirs = array())
-    {
+    public function find($name, $default = NULL, array $extraDirs = array()) {
         if (ini_get('open_basedir')) {
             $searchPath = explode(PATH_SEPARATOR, ini_get('open_basedir'));
             $dirs = array();
@@ -77,7 +74,7 @@ class ExecutableFinder
         }
         foreach ($suffixes as $suffix) {
             foreach ($dirs as $dir) {
-                if (@is_file($file = $dir.DIRECTORY_SEPARATOR.$name.$suffix) && ('\\' === DIRECTORY_SEPARATOR || is_executable($file))) {
+                if (@is_file($file = $dir . DIRECTORY_SEPARATOR . $name . $suffix) && ('\\' === DIRECTORY_SEPARATOR || is_executable($file))) {
                     return $file;
                 }
             }

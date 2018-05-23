@@ -35,9 +35,8 @@ final class ExtLibevLoop implements LoopInterface
     private $signals;
     private $signalEvents = array();
 
-    public function __construct()
-    {
-        if (!class_exists('libev\EventLoop', false)) {
+    public function __construct() {
+        if (!class_exists('libev\EventLoop', FALSE)) {
             throw new BadMethodCallException('Cannot create ExtLibevLoop, ext-libev extension missing');
         }
 
@@ -47,9 +46,8 @@ final class ExtLibevLoop implements LoopInterface
         $this->signals = new SignalsHandler();
     }
 
-    public function addReadStream($stream, $listener)
-    {
-        if (isset($this->readEvents[(int) $stream])) {
+    public function addReadStream($stream, $listener) {
+        if (isset($this->readEvents[(int)$stream])) {
             return;
         }
 
@@ -60,12 +58,11 @@ final class ExtLibevLoop implements LoopInterface
         $event = new IOEvent($callback, $stream, IOEvent::READ);
         $this->loop->add($event);
 
-        $this->readEvents[(int) $stream] = $event;
+        $this->readEvents[(int)$stream] = $event;
     }
 
-    public function addWriteStream($stream, $listener)
-    {
-        if (isset($this->writeEvents[(int) $stream])) {
+    public function addWriteStream($stream, $listener) {
+        if (isset($this->writeEvents[(int)$stream])) {
             return;
         }
 
@@ -76,12 +73,11 @@ final class ExtLibevLoop implements LoopInterface
         $event = new IOEvent($callback, $stream, IOEvent::WRITE);
         $this->loop->add($event);
 
-        $this->writeEvents[(int) $stream] = $event;
+        $this->writeEvents[(int)$stream] = $event;
     }
 
-    public function removeReadStream($stream)
-    {
-        $key = (int) $stream;
+    public function removeReadStream($stream) {
+        $key = (int)$stream;
 
         if (isset($this->readEvents[$key])) {
             $this->readEvents[$key]->stop();
@@ -90,9 +86,8 @@ final class ExtLibevLoop implements LoopInterface
         }
     }
 
-    public function removeWriteStream($stream)
-    {
-        $key = (int) $stream;
+    public function removeWriteStream($stream) {
+        $key = (int)$stream;
 
         if (isset($this->writeEvents[$key])) {
             $this->writeEvents[$key]->stop();
@@ -101,9 +96,8 @@ final class ExtLibevLoop implements LoopInterface
         }
     }
 
-    public function addTimer($interval, $callback)
-    {
-        $timer = new Timer( $interval, $callback, false);
+    public function addTimer($interval, $callback) {
+        $timer = new Timer($interval, $callback, FALSE);
 
         $that = $this;
         $timers = $this->timerEvents;
@@ -122,9 +116,8 @@ final class ExtLibevLoop implements LoopInterface
         return $timer;
     }
 
-    public function addPeriodicTimer($interval, $callback)
-    {
-        $timer = new Timer($interval, $callback, true);
+    public function addPeriodicTimer($interval, $callback) {
+        $timer = new Timer($interval, $callback, TRUE);
 
         $callback = function () use ($timer) {
             call_user_func($timer->getCallback(), $timer);
@@ -137,21 +130,18 @@ final class ExtLibevLoop implements LoopInterface
         return $timer;
     }
 
-    public function cancelTimer(TimerInterface $timer)
-    {
+    public function cancelTimer(TimerInterface $timer) {
         if (isset($this->timerEvents[$timer])) {
             $this->loop->remove($this->timerEvents[$timer]);
             $this->timerEvents->detach($timer);
         }
     }
 
-    public function futureTick($listener)
-    {
+    public function futureTick($listener) {
         $this->futureTickQueue->add($listener);
     }
 
-    public function addSignal($signal, $listener)
-    {
+    public function addSignal($signal, $listener) {
         $this->signals->add($signal, $listener);
 
         if (!isset($this->signalEvents[$signal])) {
@@ -163,8 +153,7 @@ final class ExtLibevLoop implements LoopInterface
         }
     }
 
-    public function removeSignal($signal, $listener)
-    {
+    public function removeSignal($signal, $listener) {
         $this->signals->remove($signal, $listener);
 
         if (isset($this->signalEvents[$signal]) && $this->signals->count($signal) === 0) {
@@ -174,9 +163,8 @@ final class ExtLibevLoop implements LoopInterface
         }
     }
 
-    public function run()
-    {
-        $this->running = true;
+    public function run() {
+        $this->running = TRUE;
 
         while ($this->running) {
             $this->futureTickQueue->tick();
@@ -184,7 +172,7 @@ final class ExtLibevLoop implements LoopInterface
             $flags = EventLoop::RUN_ONCE;
             if (!$this->running || !$this->futureTickQueue->isEmpty()) {
                 $flags |= EventLoop::RUN_NOWAIT;
-            } elseif (!$this->readEvents && !$this->writeEvents && !$this->timerEvents->count() && $this->signals->isEmpty()) {
+            } else if (!$this->readEvents && !$this->writeEvents && !$this->timerEvents->count() && $this->signals->isEmpty()) {
                 break;
             }
 
@@ -192,8 +180,7 @@ final class ExtLibevLoop implements LoopInterface
         }
     }
 
-    public function stop()
-    {
-        $this->running = false;
+    public function stop() {
+        $this->running = FALSE;
     }
 }

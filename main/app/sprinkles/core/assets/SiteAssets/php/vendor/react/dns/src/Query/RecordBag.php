@@ -9,13 +9,11 @@ class RecordBag
 {
     private $records = array();
 
-    public function set($currentTime, Record $record)
-    {
+    public function set($currentTime, Record $record) {
         $this->records[$record->data] = array($currentTime + $record->ttl, $record);
     }
 
-    public function all()
-    {
+    public function all() {
         return array_values(array_map(
             function ($value) {
                 list($expiresAt, $record) = $value;

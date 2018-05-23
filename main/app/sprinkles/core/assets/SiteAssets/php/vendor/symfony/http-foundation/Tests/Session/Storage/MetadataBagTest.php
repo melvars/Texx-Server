@@ -28,23 +28,20 @@ class MetadataBagTest extends TestCase
 
     protected $array = array();
 
-    protected function setUp()
-    {
+    protected function setUp() {
         parent::setUp();
         $this->bag = new MetadataBag();
         $this->array = array(MetadataBag::CREATED => 1234567, MetadataBag::UPDATED => 12345678, MetadataBag::LIFETIME => 0);
         $this->bag->initialize($this->array);
     }
 
-    protected function tearDown()
-    {
+    protected function tearDown() {
         $this->array = array();
-        $this->bag = null;
+        $this->bag = NULL;
         parent::tearDown();
     }
 
-    public function testInitialize()
-    {
+    public function testInitialize() {
         $sessionMetadata = array();
 
         $bag1 = new MetadataBag();
@@ -67,46 +64,39 @@ class MetadataBagTest extends TestCase
         $this->assertNotEquals($bag3->getCreated(), $bag3->getLastUsed());
     }
 
-    public function testGetSetName()
-    {
+    public function testGetSetName() {
         $this->assertEquals('__metadata', $this->bag->getName());
         $this->bag->setName('foo');
         $this->assertEquals('foo', $this->bag->getName());
     }
 
-    public function testGetStorageKey()
-    {
+    public function testGetStorageKey() {
         $this->assertEquals('_sf2_meta', $this->bag->getStorageKey());
     }
 
-    public function testGetLifetime()
-    {
+    public function testGetLifetime() {
         $bag = new MetadataBag();
         $array = array(MetadataBag::CREATED => 1234567, MetadataBag::UPDATED => 12345678, MetadataBag::LIFETIME => 1000);
         $bag->initialize($array);
         $this->assertEquals(1000, $bag->getLifetime());
     }
 
-    public function testGetCreated()
-    {
+    public function testGetCreated() {
         $this->assertEquals(1234567, $this->bag->getCreated());
     }
 
-    public function testGetLastUsed()
-    {
+    public function testGetLastUsed() {
         $this->assertLessThanOrEqual(time(), $this->bag->getLastUsed());
     }
 
-    public function testClear()
-    {
+    public function testClear() {
         $this->bag->clear();
 
         // the clear method has no side effects, we just want to ensure it doesn't trigger any exceptions
         $this->addToAssertionCount(1);
     }
 
-    public function testSkipLastUsedUpdate()
-    {
+    public function testSkipLastUsedUpdate() {
         $bag = new MetadataBag('', 30);
         $timeStamp = time();
 
@@ -121,8 +111,7 @@ class MetadataBagTest extends TestCase
         $this->assertEquals($created, $sessionMetadata[MetadataBag::UPDATED]);
     }
 
-    public function testDoesNotSkipLastUsedUpdate()
-    {
+    public function testDoesNotSkipLastUsedUpdate() {
         $bag = new MetadataBag('', 30);
         $timeStamp = time();
 

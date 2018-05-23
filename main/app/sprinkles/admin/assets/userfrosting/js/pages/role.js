@@ -7,7 +7,7 @@
  * Target page: /roles/r/{slug}
  */
 
-$(document).ready(function() {
+$(document).ready(function () {
     // Control buttons
     bindRoleButtons($("#view-role"));
 

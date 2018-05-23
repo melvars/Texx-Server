@@ -7,7 +7,7 @@
  * Target page: /users/u/{user_name}
  */
 
-$(document).ready(function() {
+$(document).ready(function () {
     // Control buttons
     bindUserButtons($("#view-user"));
 

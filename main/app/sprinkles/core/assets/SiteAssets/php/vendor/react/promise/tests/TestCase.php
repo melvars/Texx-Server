@@ -4,8 +4,7 @@ namespace React\Promise;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
-    public function expectCallableExactly($amount)
-    {
+    public function expectCallableExactly($amount) {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->exactly($amount))
@@ -14,8 +13,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return $mock;
     }
 
-    public function expectCallableOnce()
-    {
+    public function expectCallableOnce() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -24,8 +22,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return $mock;
     }
 
-    public function expectCallableNever()
-    {
+    public function expectCallableNever() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->never())
@@ -34,8 +31,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return $mock;
     }
 
-    public function createCallableMock()
-    {
+    public function createCallableMock() {
         return $this
             ->getMockBuilder('React\\Promise\Stub\CallableStub')
             ->getMock();

@@ -34,54 +34,44 @@ class GssFilter extends BaseProcessFilter
     private $outputOrientation;
     private $prettyPrint;
 
-    public function __construct($jarPath, $javaPath = '/usr/bin/java')
-    {
+    public function __construct($jarPath, $javaPath = '/usr/bin/java') {
         $this->jarPath = $jarPath;
         $this->javaPath = $javaPath;
     }
 
-    public function setAllowUnrecognizedFunctions($allowUnrecognizedFunctions)
-    {
+    public function setAllowUnrecognizedFunctions($allowUnrecognizedFunctions) {
         $this->allowUnrecognizedFunctions = $allowUnrecognizedFunctions;
     }
 
-    public function setAllowedNonStandardFunctions($allowNonStandardFunctions)
-    {
+    public function setAllowedNonStandardFunctions($allowNonStandardFunctions) {
         $this->allowedNonStandardFunctions = $allowNonStandardFunctions;
     }
 
-    public function setCopyrightNotice($copyrightNotice)
-    {
+    public function setCopyrightNotice($copyrightNotice) {
         $this->copyrightNotice = $copyrightNotice;
     }
 
-    public function setDefine($define)
-    {
+    public function setDefine($define) {
         $this->define = $define;
     }
 
-    public function setGssFunctionMapProvider($gssFunctionMapProvider)
-    {
+    public function setGssFunctionMapProvider($gssFunctionMapProvider) {
         $this->gssFunctionMapProvider = $gssFunctionMapProvider;
     }
 
-    public function setInputOrientation($inputOrientation)
-    {
+    public function setInputOrientation($inputOrientation) {
         $this->inputOrientation = $inputOrientation;
     }
 
-    public function setOutputOrientation($outputOrientation)
-    {
+    public function setOutputOrientation($outputOrientation) {
         $this->outputOrientation = $outputOrientation;
     }
 
-    public function setPrettyPrint($prettyPrint)
-    {
+    public function setPrettyPrint($prettyPrint) {
         $this->prettyPrint = $prettyPrint;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $cleanup = array();
 
         $pb = $this->createProcessBuilder(array(
@@ -90,35 +80,35 @@ class GssFilter extends BaseProcessFilter
             $this->jarPath,
         ));
 
-        if (null !== $this->allowUnrecognizedFunctions) {
+        if (NULL !== $this->allowUnrecognizedFunctions) {
             $pb->add('--allow-unrecognized-functions');
         }
 
-        if (null !== $this->allowedNonStandardFunctions) {
+        if (NULL !== $this->allowedNonStandardFunctions) {
             $pb->add('--allowed_non_standard_functions')->add($this->allowedNonStandardFunctions);
         }
 
-        if (null !== $this->copyrightNotice) {
+        if (NULL !== $this->copyrightNotice) {
             $pb->add('--copyright-notice')->add($this->copyrightNotice);
         }
 
-        if (null !== $this->define) {
+        if (NULL !== $this->define) {
             $pb->add('--define')->add($this->define);
         }
 
-        if (null !== $this->gssFunctionMapProvider) {
+        if (NULL !== $this->gssFunctionMapProvider) {
             $pb->add('--gss-function-map-provider')->add($this->gssFunctionMapProvider);
         }
 
-        if (null !== $this->inputOrientation) {
+        if (NULL !== $this->inputOrientation) {
             $pb->add('--input-orientation')->add($this->inputOrientation);
         }
 
-        if (null !== $this->outputOrientation) {
+        if (NULL !== $this->outputOrientation) {
             $pb->add('--output-orientation')->add($this->outputOrientation);
         }
 
-        if (null !== $this->prettyPrint) {
+        if (NULL !== $this->prettyPrint) {
             $pb->add('--pretty-print');
         }
 
@@ -136,7 +126,6 @@ class GssFilter extends BaseProcessFilter
         $asset->setContent($proc->getOutput());
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 }

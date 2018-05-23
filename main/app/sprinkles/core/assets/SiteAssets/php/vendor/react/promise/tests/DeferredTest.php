@@ -8,22 +8,20 @@ class DeferredTest extends TestCase
 {
     use PromiseTest\FullTestTrait;
 
-    public function getPromiseTestAdapter(callable $canceller = null)
-    {
+    public function getPromiseTestAdapter(callable $canceller = NULL) {
         $d = new Deferred($canceller);
 
         return new CallbackPromiseAdapter([
             'promise' => [$d, 'promise'],
             'resolve' => [$d, 'resolve'],
-            'reject'  => [$d, 'reject'],
-            'notify'  => [$d, 'progress'],
-            'settle'  => [$d, 'resolve'],
+            'reject' => [$d, 'reject'],
+            'notify' => [$d, 'progress'],
+            'settle' => [$d, 'resolve'],
         ]);
     }
 
     /** @test */
-    public function progressIsAnAliasForNotify()
-    {
+    public function progressIsAnAliasForNotify() {
         $deferred = new Deferred();
 
         $sentinel = new \stdClass();

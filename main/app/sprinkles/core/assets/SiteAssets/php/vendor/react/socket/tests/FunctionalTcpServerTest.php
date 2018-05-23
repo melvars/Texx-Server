@@ -10,8 +10,7 @@ use Clue\React\Block;
 
 class FunctionalTcpServerTest extends TestCase
 {
-    public function testEmitsConnectionForNewConnection()
-    {
+    public function testEmitsConnectionForNewConnection() {
         $loop = Factory::create();
 
         $server = new TcpServer(0, $loop);
@@ -25,8 +24,7 @@ class FunctionalTcpServerTest extends TestCase
         Block\sleep(0.1, $loop);
     }
 
-    public function testEmitsNoConnectionForNewConnectionWhenPaused()
-    {
+    public function testEmitsNoConnectionForNewConnectionWhenPaused() {
         $loop = Factory::create();
 
         $server = new TcpServer(0, $loop);
@@ -41,8 +39,7 @@ class FunctionalTcpServerTest extends TestCase
         Block\sleep(0.1, $loop);
     }
 
-    public function testEmitsConnectionForNewConnectionWhenResumedAfterPause()
-    {
+    public function testEmitsConnectionForNewConnectionWhenResumedAfterPause() {
         $loop = Factory::create();
 
         $server = new TcpServer(0, $loop);
@@ -58,12 +55,11 @@ class FunctionalTcpServerTest extends TestCase
         Block\sleep(0.1, $loop);
     }
 
-    public function testEmitsConnectionWithRemoteIp()
-    {
+    public function testEmitsConnectionWithRemoteIp() {
         $loop = Factory::create();
 
         $server = new TcpServer(0, $loop);
-        $peer = null;
+        $peer = NULL;
         $server->on('connection', function (ConnectionInterface $conn) use (&$peer) {
             $peer = $conn->getRemoteAddress();
         });
@@ -78,12 +74,11 @@ class FunctionalTcpServerTest extends TestCase
         $this->assertContains('127.0.0.1:', $peer);
     }
 
-    public function testEmitsConnectionWithLocalIp()
-    {
+    public function testEmitsConnectionWithLocalIp() {
         $loop = Factory::create();
 
         $server = new TcpServer(0, $loop);
-        $local = null;
+        $local = NULL;
         $server->on('connection', function (ConnectionInterface $conn) use (&$local) {
             $local = $conn->getLocalAddress();
         });
@@ -99,12 +94,11 @@ class FunctionalTcpServerTest extends TestCase
         $this->assertEquals($server->getAddress(), $local);
     }
 
-    public function testEmitsConnectionWithLocalIpDespiteListeningOnAll()
-    {
+    public function testEmitsConnectionWithLocalIpDespiteListeningOnAll() {
         $loop = Factory::create();
 
         $server = new TcpServer('0.0.0.0:0', $loop);
-        $local = null;
+        $local = NULL;
         $server->on('connection', function (ConnectionInterface $conn) use (&$local) {
             $local = $conn->getLocalAddress();
         });
@@ -119,12 +113,11 @@ class FunctionalTcpServerTest extends TestCase
         $this->assertContains('127.0.0.1:', $local);
     }
 
-    public function testEmitsConnectionWithRemoteIpAfterConnectionIsClosedByPeer()
-    {
+    public function testEmitsConnectionWithRemoteIpAfterConnectionIsClosedByPeer() {
         $loop = Factory::create();
 
         $server = new TcpServer(0, $loop);
-        $peer = null;
+        $peer = NULL;
         $server->on('connection', function (ConnectionInterface $conn) use (&$peer) {
             $conn->on('close', function () use ($conn, &$peer) {
                 $peer = $conn->getRemoteAddress();
@@ -142,12 +135,11 @@ class FunctionalTcpServerTest extends TestCase
         $this->assertContains('127.0.0.1:', $peer);
     }
 
-    public function testEmitsConnectionWithRemoteNullAddressAfterConnectionIsClosedLocally()
-    {
+    public function testEmitsConnectionWithRemoteNullAddressAfterConnectionIsClosedLocally() {
         $loop = Factory::create();
 
         $server = new TcpServer(0, $loop);
-        $peer = null;
+        $peer = NULL;
         $server->on('connection', function (ConnectionInterface $conn) use (&$peer) {
             $conn->close();
             $peer = $conn->getRemoteAddress();
@@ -163,8 +155,7 @@ class FunctionalTcpServerTest extends TestCase
         $this->assertNull($peer);
     }
 
-    public function testEmitsConnectionEvenIfConnectionIsCancelled()
-    {
+    public function testEmitsConnectionEvenIfConnectionIsCancelled() {
         if (PHP_OS !== 'Linux') {
             $this->markTestSkipped('Linux only (OS is ' . PHP_OS . ')');
         }
@@ -178,13 +169,12 @@ class FunctionalTcpServerTest extends TestCase
         $promise = $connector->connect($server->getAddress());
         $promise->cancel();
 
-        $promise->then(null, $this->expectCallableOnce());
+        $promise->then(NULL, $this->expectCallableOnce());
 
         Block\sleep(0.1, $loop);
     }
 
-    public function testEmitsConnectionForNewIpv6Connection()
-    {
+    public function testEmitsConnectionForNewIpv6Connection() {
         $loop = Factory::create();
 
         try {
@@ -203,8 +193,7 @@ class FunctionalTcpServerTest extends TestCase
         Block\sleep(0.1, $loop);
     }
 
-    public function testEmitsConnectionWithRemoteIpv6()
-    {
+    public function testEmitsConnectionWithRemoteIpv6() {
         $loop = Factory::create();
 
         try {
@@ -213,7 +202,7 @@ class FunctionalTcpServerTest extends TestCase
             $this->markTestSkipped('Unable to start IPv6 server socket (not available on your platform?)');
         }
 
-        $peer = null;
+        $peer = NULL;
         $server->on('connection', function (ConnectionInterface $conn) use (&$peer) {
             $peer = $conn->getRemoteAddress();
         });
@@ -228,8 +217,7 @@ class FunctionalTcpServerTest extends TestCase
         $this->assertContains('[::1]:', $peer);
     }
 
-    public function testEmitsConnectionWithLocalIpv6()
-    {
+    public function testEmitsConnectionWithLocalIpv6() {
         $loop = Factory::create();
 
         try {
@@ -238,7 +226,7 @@ class FunctionalTcpServerTest extends TestCase
             $this->markTestSkipped('Unable to start IPv6 server socket (not available on your platform?)');
         }
 
-        $local = null;
+        $local = NULL;
         $server->on('connection', function (ConnectionInterface $conn) use (&$local) {
             $local = $conn->getLocalAddress();
         });
@@ -254,8 +242,7 @@ class FunctionalTcpServerTest extends TestCase
         $this->assertEquals($server->getAddress(), $local);
     }
 
-    public function testEmitsConnectionWithInheritedContextOptions()
-    {
+    public function testEmitsConnectionWithInheritedContextOptions() {
         if (defined('HHVM_VERSION') && version_compare(HHVM_VERSION, '3.13', '<')) {
             // https://3v4l.org/hB4Tc
             $this->markTestSkipped('Not supported on legacy HHVM < 3.13');
@@ -267,7 +254,7 @@ class FunctionalTcpServerTest extends TestCase
             'backlog' => 4
         ));
 
-        $all = null;
+        $all = NULL;
         $server->on('connection', function (ConnectionInterface $conn) use (&$all) {
             $all = stream_context_get_options($conn->stream);
         });
@@ -285,8 +272,7 @@ class FunctionalTcpServerTest extends TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testFailsToListenOnInvalidUri()
-    {
+    public function testFailsToListenOnInvalidUri() {
         $loop = Factory::create();
 
         new TcpServer('///', $loop);
@@ -295,8 +281,7 @@ class FunctionalTcpServerTest extends TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testFailsToListenOnUriWithoutPort()
-    {
+    public function testFailsToListenOnUriWithoutPort() {
         $loop = Factory::create();
 
         new TcpServer('127.0.0.1', $loop);
@@ -305,8 +290,7 @@ class FunctionalTcpServerTest extends TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testFailsToListenOnUriWithWrongScheme()
-    {
+    public function testFailsToListenOnUriWithWrongScheme() {
         $loop = Factory::create();
 
         new TcpServer('udp://127.0.0.1:0', $loop);
@@ -315,8 +299,7 @@ class FunctionalTcpServerTest extends TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testFailsToListenOnUriWIthHostname()
-    {
+    public function testFailsToListenOnUriWIthHostname() {
         $loop = Factory::create();
 
         new TcpServer('localhost:8080', $loop);

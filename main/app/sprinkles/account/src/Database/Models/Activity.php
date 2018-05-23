@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -39,8 +40,7 @@ class Activity extends Model
     /**
      * Joins the activity's user, so we can do things like sort, search, paginate, etc.
      */
-    public function scopeJoinUser($query)
-    {
+    public function scopeJoinUser($query) {
         $query = $query->select('activities.*');
 
         $query = $query->leftJoin('users', 'activities.user_id', '=', 'users.id');
@@ -53,8 +53,7 @@ class Activity extends Model
      *
      * @return \Illuminate\Database\Query\Builder
      */
-    public function scopeMostRecentEvents($query)
-    {
+    public function scopeMostRecentEvents($query) {
         return $query->select('user_id', 'event_type', Capsule::raw('MAX(occurred_at) as occurred_at'))
             ->groupBy('user_id')
             ->groupBy('type');
@@ -66,8 +65,7 @@ class Activity extends Model
      * @param string $type The type of event, matching the `event_type` field in the user_event table.
      * @return \Illuminate\Database\Query\Builder
      */
-    public function scopeMostRecentEventsByType($query, $type)
-    {
+    public function scopeMostRecentEventsByType($query, $type) {
         return $query->select('user_id', Capsule::raw('MAX(occurred_at) as occurred_at'))
             ->where('type', $type)
             ->groupBy('user_id');
@@ -76,8 +74,7 @@ class Activity extends Model
     /**
      * Get the user associated with this activity.
      */
-    public function user()
-    {
+    public function user() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 

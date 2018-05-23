@@ -1,9 +1,12 @@
 <?php
+
 namespace Ratchet\RFC6455\Handshake;
+
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class ResponseVerifier {
+class ResponseVerifier
+{
     public function verifyAll(RequestInterface $request, ResponseInterface $response) {
         $passes = 0;
 
@@ -12,11 +15,11 @@ class ResponseVerifier {
         $passes += (int)$this->verifyConnection($response->getHeader('Connection'));
         $passes += (int)$this->verifySecWebSocketAccept(
             $response->getHeader('Sec-WebSocket-Accept')
-          , $request->getHeader('Sec-WebSocket-Key')
+            , $request->getHeader('Sec-WebSocket-Key')
         );
         $passes += (int)$this->verifySubProtocol(
             $request->getHeader('Sec-WebSocket-Protocol')
-          , $response->getHeader('Sec-WebSocket-Protocol')
+            , $response->getHeader('Sec-WebSocket-Protocol')
         );
 
         return (5 === $passes);
@@ -43,7 +46,7 @@ class ResponseVerifier {
     }
 
     public function sign($key) {
-        return base64_encode(sha1($key . NegotiatorInterface::GUID, true));
+        return base64_encode(sha1($key . NegotiatorInterface::GUID, TRUE));
     }
 
     public function verifySubProtocol(array $requestHeader, array $responseHeader) {

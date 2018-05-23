@@ -31,25 +31,21 @@ class OptiPngFilter extends BaseProcessFilter
      *
      * @param string $optipngBin Path to the optipng binary
      */
-    public function __construct($optipngBin = '/usr/bin/optipng')
-    {
+    public function __construct($optipngBin = '/usr/bin/optipng') {
         $this->optipngBin = $optipngBin;
     }
 
-    public function setLevel($level)
-    {
+    public function setLevel($level) {
         $this->level = $level;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $pb = $this->createProcessBuilder(array($this->optipngBin));
 
-        if (null !== $this->level) {
+        if (NULL !== $this->level) {
             $pb->add('-o')->add($this->level);
         }
 

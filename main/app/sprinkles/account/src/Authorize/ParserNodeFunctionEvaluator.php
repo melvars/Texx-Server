@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Monolog\Logger;
@@ -53,17 +54,15 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
      * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.
      * @param bool $debug Set to true if you want debugging information printed to the auth log.
      */
-    public function __construct($callbacks, $logger, $debug = false)
-    {
+    public function __construct($callbacks, $logger, $debug = FALSE) {
         $this->callbacks = $callbacks;
         $this->prettyPrinter = new StandardPrettyPrinter;
-        $this->logger        = $logger;
+        $this->logger = $logger;
         $this->debug = $debug;
         $this->params = [];
     }
 
-    public function leaveNode(Node $node)
-    {
+    public function leaveNode(Node $node) {
         // Look for function calls
         if ($node instanceof \PhpParser\Node\Expr\FuncCall) {
             $eval = new \PhpParser\Node\Scalar\LNumber;
@@ -87,26 +86,26 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
                     $value = $this->resolveParamPath($argString);
                     $currentArgInfo['type'] = "parameter";
                     $currentArgInfo['resolved_value'] = $value;
-                // Resolve arrays
-                } elseif ($arg->value instanceof \PhpParser\Node\Expr\Array_) {
+                    // Resolve arrays
+                } else if ($arg->value instanceof \PhpParser\Node\Expr\Array_) {
                     $value = $this->resolveArray($arg);
                     $currentArgInfo['type'] = "array";
-                    $currentArgInfo['resolved_value'] = print_r($value, true);
-                // Resolve strings
-                } elseif ($arg->value instanceof \PhpParser\Node\Scalar\String_) {
+                    $currentArgInfo['resolved_value'] = print_r($value, TRUE);
+                    // Resolve strings
+                } else if ($arg->value instanceof \PhpParser\Node\Scalar\String_) {
                     $value = $arg->value->value;
                     $currentArgInfo['type'] = "string";
                     $currentArgInfo['resolved_value'] = $value;
-                // Resolve numbers
-                } elseif ($arg->value instanceof \PhpParser\Node\Scalar\DNumber) {
+                    // Resolve numbers
+                } else if ($arg->value instanceof \PhpParser\Node\Scalar\DNumber) {
                     $value = $arg->value->value;
                     $currentArgInfo['type'] = "float";
                     $currentArgInfo['resolved_value'] = $value;
-                } elseif ($arg->value instanceof \PhpParser\Node\Scalar\LNumber) {
+                } else if ($arg->value instanceof \PhpParser\Node\Scalar\LNumber) {
                     $value = $arg->value->value;
                     $currentArgInfo['type'] = "integer";
                     $currentArgInfo['resolved_value'] = $value;
-                // Anything else is simply interpreted as its literal string value
+                    // Anything else is simply interpreted as its literal string value
                 } else {
                     $value = $argString;
                     $currentArgInfo['type'] = "unknown";
@@ -140,8 +139,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
         }
     }
 
-    public function setParams($params)
-    {
+    public function setParams($params) {
         $this->params = $params;
     }
 
@@ -151,10 +149,9 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
      * @param string $arg the array, represented as a string.
      * @return array[mixed] the array, as a plain ol' PHP array.
      */
-    private function resolveArray($arg)
-    {
+    private function resolveArray($arg) {
         $arr = [];
-        $items = (array) $arg->value->items;
+        $items = (array)$arg->value->items;
         foreach ($items as $item) {
             if ($item->key) {
                 $arr[$item->key] = $item->value->value;
@@ -172,8 +169,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
      * @throws Exception the path could not be resolved.  Path is malformed or key does not exist.
      * @return mixed the value of the specified parameter.
      */
-    private function resolveParamPath($path)
-    {
+    private function resolveParamPath($path) {
         $pathTokens = explode(".", $path);
         $value = $this->params;
         foreach ($pathTokens as $token) {
@@ -181,7 +177,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
             if (is_array($value) && isset($value[$token])) {
                 $value = $value[$token];
                 continue;
-            } elseif (is_object($value) && isset($value->$token)) {
+            } else if (is_object($value) && isset($value->$token)) {
                 $value = $value->$token;
                 continue;
             } else {

@@ -28,8 +28,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @see http://www.php.net/manual/en/function.finfo-open.php
      */
-    public function __construct($magicFile = null)
-    {
+    public function __construct($magicFile = NULL) {
         $this->magicFile = $magicFile;
     }
 
@@ -38,16 +37,14 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @return bool
      */
-    public static function isSupported()
-    {
+    public static function isSupported() {
         return function_exists('finfo_open');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function guess($path)
-    {
+    public function guess($path) {
         if (!is_file($path)) {
             throw new FileNotFoundException($path);
         }

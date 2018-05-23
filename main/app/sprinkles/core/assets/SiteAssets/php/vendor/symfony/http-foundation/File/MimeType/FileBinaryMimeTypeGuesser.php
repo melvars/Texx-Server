@@ -31,8 +31,7 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @param string $cmd The command to run to get the mime type of a file
      */
-    public function __construct($cmd = 'file -b --mime %s 2>/dev/null')
-    {
+    public function __construct($cmd = 'file -b --mime %s 2>/dev/null') {
         $this->cmd = $cmd;
     }
 
@@ -41,16 +40,14 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @return bool
      */
-    public static function isSupported()
-    {
+    public static function isSupported() {
         return '\\' !== DIRECTORY_SEPARATOR && function_exists('passthru') && function_exists('escapeshellarg');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function guess($path)
-    {
+    public function guess($path) {
         if (!is_file($path)) {
             throw new FileNotFoundException($path);
         }

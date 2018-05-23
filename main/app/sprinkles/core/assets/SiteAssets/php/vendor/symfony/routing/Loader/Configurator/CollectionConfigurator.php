@@ -25,8 +25,7 @@ class CollectionConfigurator
     private $parent;
     private $parentConfigurator;
 
-    public function __construct(RouteCollection $parent, $name, self $parentConfigurator = null)
-    {
+    public function __construct(RouteCollection $parent, $name, self $parentConfigurator = NULL) {
         $this->parent = $parent;
         $this->name = $name;
         $this->collection = new RouteCollection();
@@ -34,8 +33,7 @@ class CollectionConfigurator
         $this->parentConfigurator = $parentConfigurator; // for GC control
     }
 
-    public function __destruct()
-    {
+    public function __destruct() {
         $this->collection->addPrefix(rtrim($this->route->getPath(), '/'));
         $this->parent->addCollection($this->collection);
     }
@@ -48,9 +46,8 @@ class CollectionConfigurator
      *
      * @return RouteConfigurator
      */
-    final public function add($name, $path)
-    {
-        $this->collection->add($this->name.$name, $route = clone $this->route);
+    final public function add($name, $path) {
+        $this->collection->add($this->name . $name, $route = clone $this->route);
 
         return new RouteConfigurator($this->collection, $route->setPath($path), $this->name, $this);
     }
@@ -60,9 +57,8 @@ class CollectionConfigurator
      *
      * @return self
      */
-    final public function collection($name = '')
-    {
-        return new self($this->collection, $this->name.$name, $this);
+    final public function collection($name = '') {
+        return new self($this->collection, $this->name . $name, $this);
     }
 
     /**
@@ -72,8 +68,7 @@ class CollectionConfigurator
      *
      * @return $this
      */
-    final public function prefix($prefix)
-    {
+    final public function prefix($prefix) {
         $this->route->setPath($prefix);
 
         return $this;

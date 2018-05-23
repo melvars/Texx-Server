@@ -6,6 +6,7 @@
  *
  * @author Matthias Mullie <minify@mullie.eu>
  */
+
 namespace MatthiasMullie\Minify;
 
 /**

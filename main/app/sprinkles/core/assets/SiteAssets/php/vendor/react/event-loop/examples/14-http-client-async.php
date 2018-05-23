@@ -9,18 +9,18 @@ $loop = Factory::create();
 // resolve hostname before establishing TCP/IP connection (resolving DNS is still blocking here)
 // for illustration purposes only, should use react/socket or react/dns instead!
 $ip = gethostbyname('www.google.com');
-if (ip2long($ip) === false) {
+if (ip2long($ip) === FALSE) {
     echo 'Unable to resolve hostname' . PHP_EOL;
     exit(1);
 }
 
 // establish TCP/IP connection (non-blocking)
 // for illustraction purposes only, should use react/socket instead!
-$stream = stream_socket_client('tcp://' . $ip . ':80', $errno, $errstr, null, STREAM_CLIENT_CONNECT | STREAM_CLIENT_ASYNC_CONNECT);
+$stream = stream_socket_client('tcp://' . $ip . ':80', $errno, $errstr, NULL, STREAM_CLIENT_CONNECT | STREAM_CLIENT_ASYNC_CONNECT);
 if (!$stream) {
     exit(1);
 }
-stream_set_blocking($stream, false);
+stream_set_blocking($stream, FALSE);
 
 // print progress every 10ms
 echo 'Connecting';
@@ -34,7 +34,7 @@ $loop->addWriteStream($stream, function ($stream) use ($loop, $timer) {
     $loop->cancelTimer($timer);
 
     // check for socket error (connection rejected)
-    if (stream_socket_get_name($stream, true) === false) {
+    if (stream_socket_get_name($stream, TRUE) === FALSE) {
         echo '[unable to connect]' . PHP_EOL;
         exit(1);
     } else {

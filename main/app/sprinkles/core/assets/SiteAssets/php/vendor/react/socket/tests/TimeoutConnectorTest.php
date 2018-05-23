@@ -8,9 +8,9 @@ use React\EventLoop\Factory;
 
 class TimeoutConnectorTest extends TestCase
 {
-    public function testRejectsOnTimeout()
-    {
-        $promise = new Promise\Promise(function () { });
+    public function testRejectsOnTimeout() {
+        $promise = new Promise\Promise(function () {
+        });
 
         $connector = $this->getMockBuilder('React\Socket\ConnectorInterface')->getMock();
         $connector->expects($this->once())->method('connect')->with('google.com:80')->will($this->returnValue($promise));
@@ -27,8 +27,7 @@ class TimeoutConnectorTest extends TestCase
         $loop->run();
     }
 
-    public function testRejectsWhenConnectorRejects()
-    {
+    public function testRejectsWhenConnectorRejects() {
         $promise = Promise\reject(new \RuntimeException());
 
         $connector = $this->getMockBuilder('React\Socket\ConnectorInterface')->getMock();
@@ -46,8 +45,7 @@ class TimeoutConnectorTest extends TestCase
         $loop->run();
     }
 
-    public function testResolvesWhenConnectorResolves()
-    {
+    public function testResolvesWhenConnectorResolves() {
         $promise = Promise\resolve();
 
         $connector = $this->getMockBuilder('React\Socket\ConnectorInterface')->getMock();
@@ -65,9 +63,9 @@ class TimeoutConnectorTest extends TestCase
         $loop->run();
     }
 
-    public function testRejectsAndCancelsPendingPromiseOnTimeout()
-    {
-        $promise = new Promise\Promise(function () { }, $this->expectCallableOnce());
+    public function testRejectsAndCancelsPendingPromiseOnTimeout() {
+        $promise = new Promise\Promise(function () {
+        }, $this->expectCallableOnce());
 
         $connector = $this->getMockBuilder('React\Socket\ConnectorInterface')->getMock();
         $connector->expects($this->once())->method('connect')->with('google.com:80')->will($this->returnValue($promise));
@@ -84,9 +82,11 @@ class TimeoutConnectorTest extends TestCase
         $loop->run();
     }
 
-    public function testCancelsPendingPromiseOnCancel()
-    {
-        $promise = new Promise\Promise(function () { }, function () { throw new \Exception(); });
+    public function testCancelsPendingPromiseOnCancel() {
+        $promise = new Promise\Promise(function () {
+        }, function () {
+            throw new \Exception();
+        });
 
         $connector = $this->getMockBuilder('React\Socket\ConnectorInterface')->getMock();
         $connector->expects($this->once())->method('connect')->with('google.com:80')->will($this->returnValue($promise));

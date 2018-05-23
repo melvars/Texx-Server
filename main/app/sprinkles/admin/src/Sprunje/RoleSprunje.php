@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -40,8 +41,7 @@ class RoleSprunje extends Sprunje
     /**
      * {@inheritDoc}
      */
-    protected function baseQuery()
-    {
+    protected function baseQuery() {
         return $this->classMapper->createInstance('role')->newQuery();
     }
 
@@ -52,14 +52,13 @@ class RoleSprunje extends Sprunje
      * @param mixed $value
      * @return $this
      */
-    protected function filterInfo($query, $value)
-    {
+    protected function filterInfo($query, $value) {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
         $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
                 $query->orLike('name', $value)
-                        ->orLike('description', $value);
+                    ->orLike('description', $value);
             }
         });
         return $this;

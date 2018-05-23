@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -39,20 +40,18 @@ class Verification extends Model
     /**
      * @var bool Enable timestamps for Verifications.
      */
-    public $timestamps = true;
+    public $timestamps = TRUE;
 
     /**
      * Stores the raw (unhashed) token when created, so that it can be emailed out to the user.  NOT persisted.
      */
     protected $token;
 
-    public function getToken()
-    {
+    public function getToken() {
         return $this->token;
     }
 
-    public function setToken($value)
-    {
+    public function setToken($value) {
         $this->token = $value;
         return $this;
     }
@@ -60,8 +59,7 @@ class Verification extends Model
     /**
      * Get the user associated with this verification request.
      */
-    public function user()
-    {
+    public function user() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 

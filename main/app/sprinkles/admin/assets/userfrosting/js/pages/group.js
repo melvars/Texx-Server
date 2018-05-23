@@ -7,7 +7,7 @@
  * Target page: /groups/g/{slug}
  */
 
-$(document).ready(function() {
+$(document).ready(function () {
     // Control buttons
     bindGroupButtons($("#view-group"));
 

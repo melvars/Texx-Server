@@ -30,24 +30,20 @@ class CoffeeScriptFilter extends BaseNodeFilter
     private $bare;
     private $noHeader;
 
-    public function __construct($coffeeBin = '/usr/bin/coffee', $nodeBin = null)
-    {
+    public function __construct($coffeeBin = '/usr/bin/coffee', $nodeBin = NULL) {
         $this->coffeeBin = $coffeeBin;
         $this->nodeBin = $nodeBin;
     }
 
-    public function setBare($bare)
-    {
+    public function setBare($bare) {
         $this->bare = $bare;
     }
 
-    public function setNoHeader($noHeader)
-    {
+    public function setNoHeader($noHeader) {
         $this->noHeader = $noHeader;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $input = FilesystemUtils::createTemporaryFile('coffee');
         file_put_contents($input, $asset->getContent());
 
@@ -77,7 +73,6 @@ class CoffeeScriptFilter extends BaseNodeFilter
         $asset->setContent($proc->getOutput());
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 }

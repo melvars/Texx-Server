@@ -33,13 +33,12 @@ class EnsureFilterWorker implements WorkerInterface
     /**
      * Constructor.
      *
-     * @param string          $pattern A regex for checking the asset's target URL
-     * @param FilterInterface $filter  A filter to apply if the regex matches
-     * @param integer         $flags   Flags for what to check
+     * @param string $pattern A regex for checking the asset's target URL
+     * @param FilterInterface $filter A filter to apply if the regex matches
+     * @param integer $flags Flags for what to check
      */
-    public function __construct($pattern, FilterInterface $filter, $flags = null)
-    {
-        if (null === $flags) {
+    public function __construct($pattern, FilterInterface $filter, $flags = NULL) {
+        if (NULL === $flags) {
             $flags = self::CHECK_SOURCE | self::CHECK_TARGET;
         }
 
@@ -48,8 +47,7 @@ class EnsureFilterWorker implements WorkerInterface
         $this->flags = $flags;
     }
 
-    public function process(AssetInterface $asset, AssetFactory $factory)
-    {
+    public function process(AssetInterface $asset, AssetFactory $factory) {
         if (
             (self::CHECK_SOURCE === (self::CHECK_SOURCE & $this->flags) && preg_match($this->pattern, $asset->getSourcePath()))
             ||

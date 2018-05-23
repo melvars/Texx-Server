@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Log;
 
 use UserFrosting\Sprinkle\Core\Log\DatabaseHandler;
@@ -19,8 +20,7 @@ class UserActivityDatabaseHandler extends DatabaseHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record)
-    {
+    protected function write(array $record) {
         $log = $this->classMapper->createInstance($this->modelName, $record['extra']);
         $log->save();
 

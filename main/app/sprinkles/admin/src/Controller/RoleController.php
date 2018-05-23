@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Carbon\Carbon;
@@ -43,8 +44,7 @@ class RoleController extends SimpleController
      * Request type: POST
      * @see getModalCreateRole
      */
-    public function create($request, $response, $args)
-    {
+    public function create($request, $response, $args) {
         // Get POST parameters: name, slug, description
         $params = $request->getParsedBody();
 
@@ -69,13 +69,13 @@ class RoleController extends SimpleController
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        $error = false;
+        $error = FALSE;
 
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            $error = true;
+            $error = TRUE;
         }
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -84,12 +84,12 @@ class RoleController extends SimpleController
         // Check if name or slug already exists
         if ($classMapper->staticMethod('role', 'where', 'name', $data['name'])->first()) {
             $ms->addMessageTranslated('danger', 'ROLE.NAME_IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($classMapper->staticMethod('role', 'where', 'slug', $data['slug'])->first()) {
             $ms->addMessageTranslated('danger', 'SLUG_IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($error) {
@@ -101,7 +101,7 @@ class RoleController extends SimpleController
 
         // All checks passed!  log events/activities and create role
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
+        Capsule::transaction(function () use ($classMapper, $data, $ms, $config, $currentUser) {
             // Create the role
             $role = $classMapper->createInstance('role', $data);
 
@@ -132,8 +132,7 @@ class RoleController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      * Request type: DELETE
      */
-    public function delete($request, $response, $args)
-    {
+    public function delete($request, $response, $args) {
         $role = $this->getRoleFromParams($args);
 
         // If the role doesn't exist, return 404
@@ -178,7 +177,7 @@ class RoleController extends SimpleController
         $roleName = $role->name;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($role, $roleName, $currentUser) {
+        Capsule::transaction(function () use ($role, $roleName, $currentUser) {
             $role->delete();
             unset($role);
 
@@ -205,8 +204,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getInfo($request, $response, $args)
-    {
+    public function getInfo($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
@@ -245,8 +243,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getList($request, $response, $args)
-    {
+    public function getList($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -271,8 +268,7 @@ class RoleController extends SimpleController
         return $sprunje->toResponse($response);
     }
 
-    public function getModalConfirmDelete($request, $response, $args)
-    {
+    public function getModalConfirmDelete($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -332,8 +328,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalCreate($request, $response, $args)
-    {
+    public function getModalCreate($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -376,7 +371,7 @@ class RoleController extends SimpleController
                 'submit_text' => $translator->translate('CREATE')
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
+                'validators' => $validator->rules('json', FALSE)
             ]
         ]);
     }
@@ -388,8 +383,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEdit($request, $response, $args)
-    {
+    public function getModalEdit($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -440,7 +434,7 @@ class RoleController extends SimpleController
                 'submit_text' => $translator->translate('UPDATE')
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
+                'validators' => $validator->rules('json', FALSE)
             ]
         ]);
     }
@@ -452,8 +446,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEditPermissions($request, $response, $args)
-    {
+    public function getModalEditPermissions($request, $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -490,8 +483,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getPermissions($request, $response, $args)
-    {
+    public function getPermissions($request, $response, $args) {
         $role = $this->getRoleFromParams($args);
 
         // If the role no longer exists, forward to main role listing page
@@ -535,8 +527,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getUsers($request, $response, $args)
-    {
+    public function getUsers($request, $response, $args) {
         $role = $this->getRoleFromParams($args);
 
         // If the role doesn't exist, return 404
@@ -583,8 +574,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageInfo($request, $response, $args)
-    {
+    public function pageInfo($request, $response, $args) {
         $role = $this->getRoleFromParams($args);
 
         // If the role no longer exists, forward to main role listing page
@@ -601,8 +591,8 @@ class RoleController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_role', [
-                'role' => $role
-            ])) {
+            'role' => $role
+        ])) {
             throw new ForbiddenException();
         }
 
@@ -656,8 +646,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageList($request, $response, $args)
-    {
+    public function pageList($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
@@ -683,8 +672,7 @@ class RoleController extends SimpleController
      * Request type: PUT
      * @see getModalRoleEdit
      */
-    public function updateInfo($request, $response, $args)
-    {
+    public function updateInfo($request, $response, $args) {
         // Get the role based on slug in the URL
         $role = $this->getRoleFromParams($args);
 
@@ -708,13 +696,13 @@ class RoleController extends SimpleController
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        $error = false;
+        $error = FALSE;
 
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            $error = true;
+            $error = TRUE;
         }
 
         // Determine targeted fields
@@ -747,7 +735,7 @@ class RoleController extends SimpleController
             $classMapper->staticMethod('role', 'where', 'name', $data['name'])->first()
         ) {
             $ms->addMessageTranslated('danger', 'ROLE.NAME_IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if (
@@ -756,7 +744,7 @@ class RoleController extends SimpleController
             $classMapper->staticMethod('role', 'where', 'slug', $data['slug'])->first()
         ) {
             $ms->addMessageTranslated('danger', 'SLUG_IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($error) {
@@ -764,10 +752,10 @@ class RoleController extends SimpleController
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($data, $role, $currentUser) {
+        Capsule::transaction(function () use ($data, $role, $currentUser) {
             // Update the role and generate success messages
             foreach ($data as $name => $value) {
-                if ($value != $role->$name){
+                if ($value != $role->$name) {
                     $role->$name = $value;
                 }
             }
@@ -797,8 +785,7 @@ class RoleController extends SimpleController
      * This route requires authentication.
      * Request type: PUT
      */
-    public function updateField($request, $response, $args)
-    {
+    public function updateField($request, $response, $args) {
         // Get the username from the URL
         $role = $this->getRoleFromParams($args);
 
@@ -852,7 +839,7 @@ class RoleController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }
@@ -866,7 +853,7 @@ class RoleController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($fieldName, $fieldValue, $role, $currentUser) {
+        Capsule::transaction(function () use ($fieldName, $fieldValue, $role, $currentUser) {
             if ($fieldName == 'permissions') {
                 $newPermissions = collect($fieldValue)->pluck('permission_id')->all();
                 $role->permissions()->sync($newPermissions);
@@ -896,8 +883,7 @@ class RoleController extends SimpleController
         return $response->withStatus(200);
     }
 
-    protected function getRoleFromParams($params)
-    {
+    protected function getRoleFromParams($params) {
         // Load the request schema
         $schema = new RequestSchema('schema://requests/role/get-by-slug.yaml');
 
@@ -911,7 +897,7 @@ class RoleController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }

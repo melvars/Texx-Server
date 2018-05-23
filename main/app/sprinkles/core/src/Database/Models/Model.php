@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Models;
 
 use Illuminate\Database\Capsule\Manager as DB;
@@ -29,10 +30,9 @@ abstract class Model extends LaravelModel
     /**
      * @var bool Disable timestamps for now.
      */
-    public $timestamps = false;
+    public $timestamps = FALSE;
 
-    public function __construct(array $attributes = [])
-    {
+    public function __construct(array $attributes = []) {
         // Hacky way to force the DB service to load before attempting to use the model
         static::$ci['db'];
 
@@ -42,24 +42,22 @@ abstract class Model extends LaravelModel
     /**
      * Determine if an attribute exists on the model - even if it is null.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return bool
      */
-    public function attributeExists($key)
-    {
+    public function attributeExists($key) {
         return array_key_exists($key, $this->attributes);
     }
 
     /**
      * Determines whether a model exists by checking a unique column, including checking soft-deleted records
      *
-     * @param mixed  $value
+     * @param mixed $value
      * @param string $identifier
-     * @param bool   $checkDeleted set to true to include soft-deleted records
+     * @param bool $checkDeleted set to true to include soft-deleted records
      * @return       \UserFrosting\Sprinkle\Core\Database\Models\Model|null
      */
-    public static function findUnique($value, $identifier, $checkDeleted = true)
-    {
+    public static function findUnique($value, $identifier, $checkDeleted = TRUE) {
         $query = static::where($identifier, $value);
 
         if ($checkDeleted) {
@@ -72,11 +70,10 @@ abstract class Model extends LaravelModel
     /**
      * Determine if an relation exists on the model - even if it is null.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return bool
      */
-    public function relationExists($key)
-    {
+    public function relationExists($key) {
         return array_key_exists($key, $this->relations);
     }
 
@@ -86,8 +83,7 @@ abstract class Model extends LaravelModel
      * Calls save(), then returns the id of the new record in the database.
      * @return int the id of this object.
      */
-    public function store()
-    {
+    public function store() {
         $this->save();
 
         // Store function should always return the id of the object
@@ -99,8 +95,7 @@ abstract class Model extends LaravelModel
      *
      * @return \UserFrosting\Sprinkles\Core\Database\Builder
      */
-    protected function newBaseQueryBuilder()
-    {
+    protected function newBaseQueryBuilder() {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
@@ -120,8 +115,7 @@ abstract class Model extends LaravelModel
      * @deprecated since 4.1.8 There is no point in having this alias.
      * @return array
      */
-    public function export()
-    {
+    public function export() {
         return $this->toArray();
     }
 
@@ -131,8 +125,7 @@ abstract class Model extends LaravelModel
      * @deprecated since 4.1.8 setFetchMode is no longer available as of Laravel 5.4.
      * @link https://github.com/laravel/framework/issues/17728
      */
-    public static function queryBuilder()
-    {
+    public static function queryBuilder() {
         // Set query builder to fetch result sets as associative arrays (instead of creating stdClass objects)
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
         return DB::table(static::$table);

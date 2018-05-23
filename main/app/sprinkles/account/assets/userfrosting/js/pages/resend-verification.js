@@ -6,13 +6,13 @@
  *
  * Target page: account/resend-verification
  */
-$(document).ready(function() {
+$(document).ready(function () {
 
     // TODO: Process form
     $("#request-verification-email").ufForm({
         validators: page.validators.resend_verification,
         msgTarget: $("#alerts-page")
-    }).on("submitSuccess.ufForm", function() {
+    }).on("submitSuccess.ufForm", function () {
         // Forward to login page on success
         window.location.replace(site.uri.public + "/account/sign-in");
     });

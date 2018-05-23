@@ -12,13 +12,11 @@ class RecordCache
     private $cache;
     private $expiredAt;
 
-    public function __construct(CacheInterface $cache)
-    {
+    public function __construct(CacheInterface $cache) {
         $this->cache = $cache;
     }
 
-    public function lookup(Query $query)
-    {
+    public function lookup(Query $query) {
         $id = $this->serializeQueryToIdentity($query);
 
         $expiredAt = $this->expiredAt;
@@ -28,7 +26,7 @@ class RecordCache
             ->then(function ($value) use ($query, $expiredAt) {
                 $recordBag = unserialize($value);
 
-                if (null !== $expiredAt && $expiredAt <= $query->currentTime) {
+                if (NULL !== $expiredAt && $expiredAt <= $query->currentTime) {
                     return Promise\reject();
                 }
 
@@ -36,15 +34,13 @@ class RecordCache
             });
     }
 
-    public function storeResponseMessage($currentTime, Message $message)
-    {
+    public function storeResponseMessage($currentTime, Message $message) {
         foreach ($message->answers as $record) {
             $this->storeRecord($currentTime, $record);
         }
     }
 
-    public function storeRecord($currentTime, Record $record)
-    {
+    public function storeRecord($currentTime, Record $record) {
         $id = $this->serializeRecordToIdentity($record);
 
         $cache = $this->cache;
@@ -65,18 +61,15 @@ class RecordCache
             });
     }
 
-    public function expire($currentTime)
-    {
+    public function expire($currentTime) {
         $this->expiredAt = $currentTime;
     }
 
-    public function serializeQueryToIdentity(Query $query)
-    {
+    public function serializeQueryToIdentity(Query $query) {
         return sprintf('%s:%s:%s', $query->name, $query->type, $query->class);
     }
 
-    public function serializeRecordToIdentity(Record $record)
-    {
+    public function serializeRecordToIdentity(Record $record) {
         return sprintf('%s:%s:%s', $record->name, $record->type, $record->class);
     }
 }

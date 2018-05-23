@@ -22,14 +22,12 @@ class ImportConfigurator
 
     private $parent;
 
-    public function __construct(RouteCollection $parent, RouteCollection $route)
-    {
+    public function __construct(RouteCollection $parent, RouteCollection $route) {
         $this->parent = $parent;
         $this->route = $route;
     }
 
-    public function __destruct()
-    {
+    public function __destruct() {
         $this->parent->addCollection($this->route);
     }
 
@@ -40,8 +38,7 @@ class ImportConfigurator
      *
      * @return $this
      */
-    final public function prefix($prefix)
-    {
+    final public function prefix($prefix) {
         $this->route->addPrefix($prefix);
 
         return $this;

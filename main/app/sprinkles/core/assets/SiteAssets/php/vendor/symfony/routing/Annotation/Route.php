@@ -36,15 +36,14 @@ class Route
      *
      * @throws \BadMethodCallException
      */
-    public function __construct(array $data)
-    {
+    public function __construct(array $data) {
         if (isset($data['value'])) {
             $data['path'] = $data['value'];
             unset($data['value']);
         }
 
         foreach ($data as $key => $value) {
-            $method = 'set'.str_replace('_', '', $key);
+            $method = 'set' . str_replace('_', '', $key);
             if (!method_exists($this, $method)) {
                 throw new \BadMethodCallException(sprintf('Unknown property "%s" on annotation "%s".', $key, get_class($this)));
             }
@@ -52,93 +51,75 @@ class Route
         }
     }
 
-    public function setPath($path)
-    {
+    public function setPath($path) {
         $this->path = $path;
     }
 
-    public function getPath()
-    {
+    public function getPath() {
         return $this->path;
     }
 
-    public function setHost($pattern)
-    {
+    public function setHost($pattern) {
         $this->host = $pattern;
     }
 
-    public function getHost()
-    {
+    public function getHost() {
         return $this->host;
     }
 
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
     }
 
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
-    public function setRequirements($requirements)
-    {
+    public function setRequirements($requirements) {
         $this->requirements = $requirements;
     }
 
-    public function getRequirements()
-    {
+    public function getRequirements() {
         return $this->requirements;
     }
 
-    public function setOptions($options)
-    {
+    public function setOptions($options) {
         $this->options = $options;
     }
 
-    public function getOptions()
-    {
+    public function getOptions() {
         return $this->options;
     }
 
-    public function setDefaults($defaults)
-    {
+    public function setDefaults($defaults) {
         $this->defaults = $defaults;
     }
 
-    public function getDefaults()
-    {
+    public function getDefaults() {
         return $this->defaults;
     }
 
-    public function setSchemes($schemes)
-    {
+    public function setSchemes($schemes) {
         $this->schemes = is_array($schemes) ? $schemes : array($schemes);
     }
 
-    public function getSchemes()
-    {
+    public function getSchemes() {
         return $this->schemes;
     }
 
-    public function setMethods($methods)
-    {
+    public function setMethods($methods) {
         $this->methods = is_array($methods) ? $methods : array($methods);
     }
 
-    public function getMethods()
-    {
+    public function getMethods() {
         return $this->methods;
     }
 
-    public function setCondition($condition)
-    {
+    public function setCondition($condition) {
         $this->condition = $condition;
     }
 
-    public function getCondition()
-    {
+    public function getCondition() {
         return $this->condition;
     }
 }

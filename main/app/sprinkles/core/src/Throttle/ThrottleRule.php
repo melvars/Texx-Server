@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Throttle;
 
 /**
@@ -35,8 +36,7 @@ class ThrottleRule
      * @param int $interval The amount of time, in seconds, to look back in determining attempts to consider.
      * @param int[] $delays A mapping of minimum observation counts (x) to delays (y), in seconds.
      */
-    public function __construct($method, $interval, $delays)
-    {
+    public function __construct($method, $interval, $delays) {
         $this->setMethod($method);
         $this->setInterval($interval);
         $this->setDelays($delays);
@@ -48,8 +48,7 @@ class ThrottleRule
      * @param Carbon\Carbon $lastEventTime The timestamp for the last countable event.
      * @param int $count The total number of events which have occurred in an interval.
      */
-    public function getDelay($lastEventTime, $count)
-    {
+    public function getDelay($lastEventTime, $count) {
         // Zero occurrences always maps to a delay of 0 seconds.
         if ($count == 0) {
             return 0;
@@ -75,8 +74,7 @@ class ThrottleRule
      *
      * @return int[]
      */
-    public function getDelays()
-    {
+    public function getDelays() {
         return $this->delays;
     }
 
@@ -85,8 +83,7 @@ class ThrottleRule
      *
      * @return int
      */
-    public function getInterval()
-    {
+    public function getInterval() {
         return $this->interval;
     }
 
@@ -95,8 +92,7 @@ class ThrottleRule
      *
      * @return string
      */
-    public function getMethod()
-    {
+    public function getMethod() {
         return $this->method;
     }
 
@@ -105,8 +101,7 @@ class ThrottleRule
      *
      * @param int[] A mapping of minimum observation counts (x) to delays (y), in seconds.
      */
-    public function setDelays($delays)
-    {
+    public function setDelays($delays) {
         // Sort the array by key, from highest to lowest value
         $this->delays = $delays;
         krsort($this->delays);
@@ -119,8 +114,7 @@ class ThrottleRule
      *
      * @param int The amount of time, in seconds, to look back in determining attempts to consider.
      */
-    public function setInterval($interval)
-    {
+    public function setInterval($interval) {
         $this->interval = $interval;
 
         return $this;
@@ -131,8 +125,7 @@ class ThrottleRule
      *
      * @param string Set to 'ip' for ip-based throttling, 'data' for request-data-based throttling.
      */
-    public function setMethod($method)
-    {
+    public function setMethod($method) {
         $this->method = $method;
 
         return $this;

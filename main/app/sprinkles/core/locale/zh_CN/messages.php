@@ -16,8 +16,8 @@ return [
 
     "ABOUT" => "关于",
 
-	"CAPTCHA" => [
-	    "@TRANSLATION" => "验证码",
+    "CAPTCHA" => [
+        "@TRANSLATION" => "验证码",
         "FAIL" => "Y验证码输入错误.",
         "SPECIFY" => "输入验证码",
         "VERIFY" => "验证"
@@ -26,7 +26,7 @@ return [
     "CSRF_MISSING" => " CSRF 标记丢失.  请尝试重新加载页面?",
 
     "DB_INVALID" => "无法连接到数据库.  如果你是管理员, 请检查错误日志文件.",
-    "DESCRIPTION"   => "描述",
+    "DESCRIPTION" => "描述",
     "DOWNLOAD" => [
         "@TRANSLATION" => "下载",
         "CSV" => "下载 CSV 文件"
@@ -37,7 +37,7 @@ return [
         "YOUR" => "你的邮件地址"
     ],
 
-    "HOME"  => "首页",
+    "HOME" => "首页",
 
     "LEGAL" => "法律政策",
 
@@ -47,7 +47,7 @@ return [
 
     "MAIL_ERROR" => "尝试发送邮件发送致命错误, 联系网站管理员.  如果你是管理员，请检查UF邮件错误日志.",
 
-    "NAME"  => "名字",
+    "NAME" => "名字",
     "NAVIGATION" => "导航",
 
     "PAGINATION" => [

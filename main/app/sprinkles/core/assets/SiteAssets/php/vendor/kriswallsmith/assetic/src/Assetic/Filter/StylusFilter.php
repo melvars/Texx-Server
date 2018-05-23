@@ -31,11 +31,10 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
     /**
      * Constructs filter.
      *
-     * @param string $nodeBin   The path to the node binary
-     * @param array  $nodePaths An array of node paths
+     * @param string $nodeBin The path to the node binary
+     * @param array $nodePaths An array of node paths
      */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
-    {
+    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array()) {
         $this->nodeBin = $nodeBin;
         $this->setNodePaths($nodePaths);
     }
@@ -45,8 +44,7 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
      *
      * @param boolean $compress
      */
-    public function setCompress($compress)
-    {
+    public function setCompress($compress) {
         $this->compress = $compress;
     }
 
@@ -55,16 +53,14 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
      *
      * @param boolean $useNib
      */
-    public function setUseNib($useNib)
-    {
+    public function setUseNib($useNib) {
         $this->useNib = $useNib;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         static $format = <<<'EOF'
 var stylus = require('stylus');
 var sys    = require(process.binding('natives').util ? 'util' : 'sys');
@@ -87,7 +83,7 @@ EOF;
             $parserOptions['filename'] = basename($asset->getSourcePath());
         }
 
-        if (null !== $this->compress) {
+        if (NULL !== $this->compress) {
             $parserOptions['compress'] = $this->compress;
         }
 
@@ -114,12 +110,10 @@ EOF;
     /**
      * {@inheritdoc}
      */
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
+    public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         // todo
         return array();
     }

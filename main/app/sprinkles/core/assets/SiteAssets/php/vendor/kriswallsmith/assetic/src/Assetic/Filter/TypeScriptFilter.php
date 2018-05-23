@@ -26,14 +26,12 @@ class TypeScriptFilter extends BaseNodeFilter
     private $tscBin;
     private $nodeBin;
 
-    public function __construct($tscBin = '/usr/bin/tsc', $nodeBin = null)
-    {
+    public function __construct($tscBin = '/usr/bin/tsc', $nodeBin = NULL) {
         $this->tscBin = $tscBin;
         $this->nodeBin = $nodeBin;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $pb = $this->createProcessBuilder($this->nodeBin
             ? array($this->nodeBin, $this->tscBin)
             : array($this->tscBin));
@@ -45,7 +43,7 @@ class TypeScriptFilter extends BaseNodeFilter
         }
 
         $inputDirPath = FilesystemUtils::createThrowAwayDirectory('typescript_in');
-        $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName.'.ts';
+        $inputPath = $inputDirPath . DIRECTORY_SEPARATOR . $templateName . '.ts';
         $outputPath = FilesystemUtils::createTemporaryFile('typescript_out');
 
         file_put_contents($inputPath, $asset->getContent());
@@ -74,7 +72,6 @@ class TypeScriptFilter extends BaseNodeFilter
         $asset->setContent($compiledJs);
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 }

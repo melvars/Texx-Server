@@ -27,21 +27,19 @@ class GlobAsset extends AssetCollection
     /**
      * Constructor.
      *
-     * @param string|array $globs   A single glob path or array of paths
-     * @param array        $filters An array of filters
-     * @param string       $root    The root directory
-     * @param array        $vars
+     * @param string|array $globs A single glob path or array of paths
+     * @param array $filters An array of filters
+     * @param string $root The root directory
+     * @param array $vars
      */
-    public function __construct($globs, $filters = array(), $root = null, array $vars = array())
-    {
-        $this->globs = (array) $globs;
-        $this->initialized = false;
+    public function __construct($globs, $filters = array(), $root = NULL, array $vars = array()) {
+        $this->globs = (array)$globs;
+        $this->initialized = FALSE;
 
         parent::__construct(array(), $filters, $root, $vars);
     }
 
-    public function all()
-    {
+    public function all() {
         if (!$this->initialized) {
             $this->initialize();
         }
@@ -49,8 +47,7 @@ class GlobAsset extends AssetCollection
         return parent::all();
     }
 
-    public function load(FilterInterface $additionalFilter = null)
-    {
+    public function load(FilterInterface $additionalFilter = NULL) {
         if (!$this->initialized) {
             $this->initialize();
         }
@@ -58,8 +55,7 @@ class GlobAsset extends AssetCollection
         parent::load($additionalFilter);
     }
 
-    public function dump(FilterInterface $additionalFilter = null)
-    {
+    public function dump(FilterInterface $additionalFilter = NULL) {
         if (!$this->initialized) {
             $this->initialize();
         }
@@ -67,8 +63,7 @@ class GlobAsset extends AssetCollection
         return parent::dump($additionalFilter);
     }
 
-    public function getLastModified()
-    {
+    public function getLastModified() {
         if (!$this->initialized) {
             $this->initialize();
         }
@@ -76,8 +71,7 @@ class GlobAsset extends AssetCollection
         return parent::getLastModified();
     }
 
-    public function getIterator()
-    {
+    public function getIterator() {
         if (!$this->initialized) {
             $this->initialize();
         }
@@ -85,24 +79,22 @@ class GlobAsset extends AssetCollection
         return parent::getIterator();
     }
 
-    public function setValues(array $values)
-    {
+    public function setValues(array $values) {
         parent::setValues($values);
-        $this->initialized = false;
+        $this->initialized = FALSE;
     }
 
     /**
      * Initializes the collection based on the glob(s) passed in.
      */
-    private function initialize()
-    {
+    private function initialize() {
         foreach ($this->globs as $glob) {
             $glob = VarUtils::resolve($glob, $this->getVars(), $this->getValues());
 
-            if (false !== $paths = glob($glob)) {
+            if (FALSE !== $paths = glob($glob)) {
                 foreach ($paths as $path) {
                     if (is_file($path)) {
-                        $asset = new FileAsset($path, array(), $this->getSourceRoot(), null, $this->getVars());
+                        $asset = new FileAsset($path, array(), $this->getSourceRoot(), NULL, $this->getVars());
                         $asset->setValues($this->getValues());
                         $this->add($asset);
                     }
@@ -110,6 +102,6 @@ class GlobAsset extends AssetCollection
             }
         }
 
-        $this->initialized = true;
+        $this->initialized = TRUE;
     }
 }

@@ -1,5 +1,7 @@
 <?php
+
 namespace Ratchet\Http;
+
 use Ratchet\WebSocket\WsServerInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
@@ -11,7 +13,8 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 /**
  * @covers Ratchet\Http\Router
  */
-class RouterTest extends \PHPUnit_Framework_TestCase {
+class RouterTest extends \PHPUnit_Framework_TestCase
+{
     protected $_router;
     protected $_matcher;
     protected $_conn;
@@ -20,8 +23,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 
     public function setUp() {
         $this->_conn = $this->getMock('\Ratchet\ConnectionInterface');
-        $this->_uri  = $this->getMock('Psr\Http\Message\UriInterface');
-        $this->_req  = $this->getMock('\Psr\Http\Message\RequestInterface');
+        $this->_uri = $this->getMock('Psr\Http\Message\UriInterface');
+        $this->_req = $this->getMock('\Psr\Http\Message\RequestInterface');
         $this->_req
             ->expects($this->any())
             ->method('getUri')
@@ -31,13 +34,13 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
             ->expects($this->any())
             ->method('getContext')
             ->will($this->returnValue($this->getMock('Symfony\Component\Routing\RequestContext')));
-        $this->_router  = new Router($this->_matcher);
+        $this->_router = new Router($this->_matcher);
 
         $this->_uri->expects($this->any())->method('getPath')->will($this->returnValue('ws://doesnt.matter/'));
-        $this->_uri->expects($this->any())->method('withQuery')->with($this->callback(function($val) {
+        $this->_uri->expects($this->any())->method('withQuery')->with($this->callback(function ($val) {
             $this->setResult($val);
 
-            return true;
+            return TRUE;
         }))->will($this->returnSelf());
         $this->_uri->expects($this->any())->method('getQuery')->will($this->returnCallback([$this, 'getResult']));
         $this->_req->expects($this->any())->method('withUri')->will($this->returnSelf());
@@ -95,7 +98,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testControllerOnErrorBubbles() {
-        $e= new \Exception('One cannot be betrayed if one has no exceptions');
+        $e = new \Exception('One cannot be betrayed if one has no exceptions');
         $controller = $this->getMockBuilder('\Ratchet\WebSocket\WsServer')->disableOriginalConstructor()->getMock();
         $controller->expects($this->once())->method('onError')->with($this->_conn, $e);
 
@@ -126,17 +129,17 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
             $this->returnValue(['_controller' => $controller, 'foo' => 'bar', 'baz' => 'qux'])
         );
 
-        $conn    = $this->getMock('Ratchet\Mock\Connection');
+        $conn = $this->getMock('Ratchet\Mock\Connection');
         $request = $this->getMock('Psr\Http\Message\RequestInterface');
         $uri = new \GuzzleHttp\Psr7\Uri('ws://doesnt.matter/endpoint?hello=world&foo=nope');
 
-        $request->expects($this->any())->method('getUri')->will($this->returnCallback(function() use (&$uri) {
+        $request->expects($this->any())->method('getUri')->will($this->returnCallback(function () use (&$uri) {
             return $uri;
         }));
-        $request->expects($this->any())->method('withUri')->with($this->callback(function($url) use (&$uri) {
+        $request->expects($this->any())->method('withUri')->with($this->callback(function ($url) use (&$uri) {
             $uri = $url;
 
-            return true;
+            return TRUE;
         }))->will($this->returnSelf());
 
         $router = new Router($this->_matcher);

@@ -9,8 +9,7 @@ use React\Dns\Query\HostsFileExecutor;
 class FactoryTest extends TestCase
 {
     /** @test */
-    public function createShouldCreateResolver()
-    {
+    public function createShouldCreateResolver() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
 
         $factory = new Factory();
@@ -20,8 +19,7 @@ class FactoryTest extends TestCase
     }
 
     /** @test */
-    public function createWithoutPortShouldCreateResolverWithDefaultPort()
-    {
+    public function createWithoutPortShouldCreateResolverWithDefaultPort() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
 
         $factory = new Factory();
@@ -32,8 +30,7 @@ class FactoryTest extends TestCase
     }
 
     /** @test */
-    public function createCachedShouldCreateResolverWithCachedExecutor()
-    {
+    public function createCachedShouldCreateResolverWithCachedExecutor() {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
 
         $factory = new Factory();
@@ -49,8 +46,7 @@ class FactoryTest extends TestCase
     }
 
     /** @test */
-    public function createCachedShouldCreateResolverWithCachedExecutorWithCustomCache()
-    {
+    public function createCachedShouldCreateResolverWithCachedExecutorWithCustomCache() {
         $cache = $this->getMockBuilder('React\Cache\CacheInterface')->getMock();
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
 
@@ -70,8 +66,7 @@ class FactoryTest extends TestCase
      * @test
      * @dataProvider factoryShouldAddDefaultPortProvider
      */
-    public function factoryShouldAddDefaultPort($input, $expected)
-    {
+    public function factoryShouldAddDefaultPort($input, $expected) {
         $loop = $this->getMockBuilder('React\EventLoop\LoopInterface')->getMock();
 
         $factory = new Factory();
@@ -81,26 +76,24 @@ class FactoryTest extends TestCase
         $this->assertSame($expected, $this->getResolverPrivateMemberValue($resolver, 'nameserver'));
     }
 
-    public static function factoryShouldAddDefaultPortProvider()
-    {
+    public static function factoryShouldAddDefaultPortProvider() {
         return array(
-            array('8.8.8.8',        '8.8.8.8:53'),
-            array('1.2.3.4:5',      '1.2.3.4:5'),
-            array('localhost',      'localhost:53'),
+            array('8.8.8.8', '8.8.8.8:53'),
+            array('1.2.3.4:5', '1.2.3.4:5'),
+            array('localhost', 'localhost:53'),
             array('localhost:1234', 'localhost:1234'),
-            array('::1',            '[::1]:53'),
-            array('[::1]:53',       '[::1]:53')
+            array('::1', '[::1]:53'),
+            array('[::1]:53', '[::1]:53')
         );
     }
 
-    private function getResolverPrivateExecutor($resolver)
-    {
+    private function getResolverPrivateExecutor($resolver) {
         $executor = $this->getResolverPrivateMemberValue($resolver, 'executor');
 
         // extract underlying executor that may be wrapped in multiple layers of hosts file executors
         while ($executor instanceof HostsFileExecutor) {
             $reflector = new \ReflectionProperty('React\Dns\Query\HostsFileExecutor', 'fallback');
-            $reflector->setAccessible(true);
+            $reflector->setAccessible(TRUE);
 
             $executor = $reflector->getValue($executor);
         }
@@ -108,24 +101,21 @@ class FactoryTest extends TestCase
         return $executor;
     }
 
-    private function getResolverPrivateMemberValue($resolver, $field)
-    {
+    private function getResolverPrivateMemberValue($resolver, $field) {
         $reflector = new \ReflectionProperty('React\Dns\Resolver\Resolver', $field);
-        $reflector->setAccessible(true);
+        $reflector->setAccessible(TRUE);
         return $reflector->getValue($resolver);
     }
 
-    private function getCachedExecutorPrivateMemberValue($resolver, $field)
-    {
+    private function getCachedExecutorPrivateMemberValue($resolver, $field) {
         $reflector = new \ReflectionProperty('React\Dns\Query\CachedExecutor', $field);
-        $reflector->setAccessible(true);
+        $reflector->setAccessible(TRUE);
         return $reflector->getValue($resolver);
     }
 
-    private function getRecordCachePrivateMemberValue($resolver, $field)
-    {
+    private function getRecordCachePrivateMemberValue($resolver, $field) {
         $reflector = new \ReflectionProperty('React\Dns\Query\RecordCache', $field);
-        $reflector->setAccessible(true);
+        $reflector->setAccessible(TRUE);
         return $reflector->getValue($resolver);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
-class JSMinUnterminatedStringException extends \Exception {
+class JSMinUnterminatedStringException extends \Exception
+{
 
 }

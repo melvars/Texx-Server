@@ -45,8 +45,7 @@ class LessphpFilter implements DependencyExtractorInterface
      *
      * @param string $path Load Path
      */
-    public function addLoadPath($path)
-    {
+    public function addLoadPath($path) {
         $this->loadPaths[] = $path;
     }
 
@@ -55,39 +54,33 @@ class LessphpFilter implements DependencyExtractorInterface
      *
      * @param array $loadPaths Load paths
      */
-    public function setLoadPaths(array $loadPaths)
-    {
+    public function setLoadPaths(array $loadPaths) {
         $this->loadPaths = $loadPaths;
     }
 
-    public function setPresets(array $presets)
-    {
+    public function setPresets(array $presets) {
         $this->presets = $presets;
     }
-    
-    public function setOptions(array $options)
-    {
-    	$this->options = $options;
+
+    public function setOptions(array $options) {
+        $this->options = $options;
     }
 
     /**
      * @param string $formatter One of "lessjs", "compressed", or "classic".
      */
-    public function setFormatter($formatter)
-    {
+    public function setFormatter($formatter) {
         $this->formatter = $formatter;
     }
 
     /**
      * @param boolean $preserveComments
      */
-    public function setPreserveComments($preserveComments)
-    {
+    public function setPreserveComments($preserveComments) {
         $this->preserveComments = $preserveComments;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $lc = new \lessc();
         if ($dir = $asset->getSourceDirectory()) {
             $lc->importDir = $dir;
@@ -105,30 +98,27 @@ class LessphpFilter implements DependencyExtractorInterface
             $lc->setFormatter($this->formatter);
         }
 
-        if (null !== $this->preserveComments) {
+        if (NULL !== $this->preserveComments) {
             $lc->setPreserveComments($this->preserveComments);
         }
-        
-        if (method_exists($lc, 'setOptions') && count($this->options) > 0 ) {
-        	$lc->setOptions($this->options);
+
+        if (method_exists($lc, 'setOptions') && count($this->options) > 0) {
+            $lc->setOptions($this->options);
         }
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));
     }
 
-    public function registerFunction($name, $callable)
-    {
+    public function registerFunction($name, $callable) {
         $this->customFunctions[$name] = $callable;
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
+    public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         $loadPaths = $this->loadPaths;
-        if (null !== $loadPath) {
+        if (NULL !== $loadPath) {
             $loadPaths[] = $loadPath;
         }
 
@@ -149,7 +139,7 @@ class LessphpFilter implements DependencyExtractorInterface
             }
 
             foreach ($loadPaths as $loadPath) {
-                if (file_exists($file = $loadPath.'/'.$reference)) {
+                if (file_exists($file = $loadPath . '/' . $reference)) {
                     $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
                     foreach ($coll as $leaf) {
                         $leaf->ensureFilter($this);

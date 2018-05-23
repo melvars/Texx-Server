@@ -1,12 +1,12 @@
 {
-    "myField" : {
-        "form" : {
-            "type" : "foo"
-        }
-    },
-    "myOtherField" : {
-        "form" : {
-            "value" : "Bar"
-        }
+  "myField": {
+    "form": {
+      "type": "foo"
     }
+  },
+  "myOtherField": {
+    "form": {
+      "value": "Bar"
+    }
+  }
 }

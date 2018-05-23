@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\ServicesProvider;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,8 +26,7 @@ class ServicesProvider
      *
      * @param Container $container A DI container implementing ArrayAccess and container-interop.
      */
-    public function register($container)
-    {
+    public function register($container) {
         /**
          * Extend the 'classMapper' service to register sprunje classes.
          *
@@ -53,8 +53,8 @@ class ServicesProvider
              * This method is invoked when a user completes the login process.
              *
              * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
-             * @param \Psr\Http\Message\ServerRequestInterface $request  
-             * @param \Psr\Http\Message\ResponseInterface      $response 
+             * @param \Psr\Http\Message\ServerRequestInterface $request
+             * @param \Psr\Http\Message\ResponseInterface $response
              * @param array $args
              * @return \Psr\Http\Message\ResponseInterface
              */
@@ -62,7 +62,7 @@ class ServicesProvider
                 // Backwards compatibility for the deprecated determineRedirectOnLogin service
                 if ($c->has('determineRedirectOnLogin')) {
                     $determineRedirectOnLogin = $c->determineRedirectOnLogin;
-            
+
                     return $determineRedirectOnLogin($response)->withStatus(200);
                 }
 
@@ -73,7 +73,7 @@ class ServicesProvider
 
                 if ($authorizer->checkAccess($currentUser, 'uri_dashboard')) {
                     return $response->withHeader('UF-Redirect', $c->router->pathFor('dashboard'));
-                } elseif ($authorizer->checkAccess($currentUser, 'uri_account_settings')) {
+                } else if ($authorizer->checkAccess($currentUser, 'uri_account_settings')) {
                     return $response->withHeader('UF-Redirect', $c->router->pathFor('settings'));
                 } else {
                     return $response->withHeader('UF-Redirect', $c->router->pathFor('index'));

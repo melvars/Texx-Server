@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Controller;
 
 use Carbon\Carbon;
@@ -47,8 +48,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function checkUsername(Request $request, Response $response, $args)
-    {
+    public function checkUsername(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
@@ -68,7 +68,7 @@ class AccountController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException('Missing or malformed request data!');
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }
@@ -114,8 +114,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function denyResetPassword(Request $request, Response $response, $args)
-    {
+    public function denyResetPassword(Request $request, Response $response, $args) {
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -172,8 +171,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function forgotPassword(Request $request, Response $response, $args)
-    {
+    public function forgotPassword(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
@@ -217,7 +215,7 @@ class AccountController extends SimpleController
 
         // All checks passed!  log events/activities, update user, and send email
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $throttler, $throttleData, $config) {
+        Capsule::transaction(function () use ($classMapper, $data, $throttler, $throttleData, $config) {
 
             // Log throttleable event
             $throttler->logEvent('password_reset_request', $throttleData);
@@ -235,12 +233,12 @@ class AccountController extends SimpleController
                 // Create and send email
                 $message = new TwigMailMessage($this->ci->view, 'mail/password-reset.html.twig');
                 $message->from($config['address_book.admin'])
-                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
-                        ->addParams([
-                            'user' => $user,
-                            'token' => $passwordReset->getToken(),
-                            'request_date' => Carbon::now()->format('Y-m-d H:i:s')
-                        ]);
+                    ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                    ->addParams([
+                        'user' => $user,
+                        'token' => $passwordReset->getToken(),
+                        'request_date' => Carbon::now()->format('Y-m-d H:i:s')
+                    ]);
 
                 $this->ci->mailer->send($message);
             }
@@ -263,8 +261,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function getModalAccountTos(Request $request, Response $response, $args)
-    {
+    public function getModalAccountTos(Request $request, Response $response, $args) {
         return $this->ci->view->render($response, 'modals/tos.html.twig');
     }
 
@@ -278,14 +275,13 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function imageCaptcha(Request $request, Response $response, $args)
-    {
+    public function imageCaptcha(Request $request, Response $response, $args) {
         $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
         $captcha->generateRandomCode();
 
         return $response->withStatus(200)
-                    ->withHeader('Content-Type', 'image/png;base64')
-                    ->write($captcha->getImage());
+            ->withHeader('Content-Type', 'image/png;base64')
+            ->write($captcha->getImage());
     }
 
     /**
@@ -306,8 +302,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function login(Request $request, Response $response, $args)
-    {
+    public function login(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
@@ -399,8 +394,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function logout(Request $request, Response $response, $args)
-    {
+    public function logout(Request $request, Response $response, $args) {
         // Destroy the session
         $this->ci->authenticator->logout();
 
@@ -421,8 +415,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function pageForgotPassword(Request $request, Response $response, $args)
-    {
+    public function pageForgotPassword(Request $request, Response $response, $args) {
         // Load validation rules
         $schema = new RequestSchema('schema://requests/forgot-password.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
@@ -430,7 +423,7 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/forgot-password.html.twig', [
             'page' => [
                 'validators' => [
-                    'forgot_password'    => $validator->rules('json', false)
+                    'forgot_password' => $validator->rules('json', FALSE)
                 ]
             ]
         ]);
@@ -449,8 +442,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function pageRegister(Request $request, Response $response, $args)
-    {
+    public function pageRegister(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
@@ -475,7 +467,7 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/register.html.twig', [
             'page' => [
                 'validators' => [
-                    'register' => $validatorRegister->rules('json', false)
+                    'register' => $validatorRegister->rules('json', FALSE)
                 ]
             ]
         ]);
@@ -493,8 +485,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function pageResendVerification(Request $request, Response $response, $args)
-    {
+    public function pageResendVerification(Request $request, Response $response, $args) {
         // Load validation rules
         $schema = new RequestSchema('schema://requests/resend-verification.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
@@ -502,7 +493,7 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/resend-verification.html.twig', [
             'page' => [
                 'validators' => [
-                    'resend_verification'    => $validator->rules('json', false)
+                    'resend_verification' => $validator->rules('json', FALSE)
                 ]
             ]
         ]);
@@ -519,8 +510,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function pageResetPassword(Request $request, Response $response, $args)
-    {
+    public function pageResetPassword(Request $request, Response $response, $args) {
         // Insert the user's secret token from the link into the password reset form
         $params = $request->getQueryParams();
 
@@ -531,7 +521,7 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
             'page' => [
                 'validators' => [
-                    'set_password'    => $validator->rules('json', false)
+                    'set_password' => $validator->rules('json', FALSE)
                 ]
             ],
             'token' => isset($params['token']) ? $params['token'] : '',
@@ -550,8 +540,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function pageSetPassword(Request $request, Response $response, $args)
-    {
+    public function pageSetPassword(Request $request, Response $response, $args) {
         // Insert the user's secret token from the link into the password set form
         $params = $request->getQueryParams();
 
@@ -562,7 +551,7 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/set-password.html.twig', [
             'page' => [
                 'validators' => [
-                    'set_password'    => $validator->rules('json', false)
+                    'set_password' => $validator->rules('json', FALSE)
                 ]
             ],
             'token' => isset($params['token']) ? $params['token'] : '',
@@ -582,8 +571,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function pageSettings(Request $request, Response $response, $args)
-    {
+    public function pageSettings(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
@@ -612,8 +600,8 @@ class AccountController extends SimpleController
             'locales' => $locales,
             'page' => [
                 'validators' => [
-                    'account_settings'    => $validatorAccountSettings->rules('json', false),
-                    'profile_settings'    => $validatorProfileSettings->rules('json', false)
+                    'account_settings' => $validatorAccountSettings->rules('json', FALSE),
+                    'profile_settings' => $validatorProfileSettings->rules('json', FALSE)
                 ],
                 'visibility' => ($authorizer->checkAccess($currentUser, 'update_account_settings') ? '' : 'disabled')
             ]
@@ -632,8 +620,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function pageSignIn(Request $request, Response $response, $args)
-    {
+    public function pageSignIn(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
@@ -654,7 +641,7 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/sign-in.html.twig', [
             'page' => [
                 'validators' => [
-                    'login'    => $validatorLogin->rules('json', false)
+                    'login' => $validatorLogin->rules('json', FALSE)
                 ]
             ]
         ]);
@@ -674,8 +661,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function profile(Request $request, Response $response, $args)
-    {
+    public function profile(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
@@ -708,20 +694,20 @@ class AccountController extends SimpleController
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        $error = false;
+        $error = FALSE;
 
         // Validate, and halt on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            $error = true;
+            $error = TRUE;
         }
 
         // Check that locale is valid
         $locales = $config->getDefined('site.locales.available');
         if (!array_key_exists($data['locale'], $locales)) {
             $ms->addMessageTranslated('danger', 'LOCALE.INVALID', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($error) {
@@ -765,8 +751,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function register(Request $request, Response $response, $args)
-    {
+    public function register(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
@@ -781,7 +766,7 @@ class AccountController extends SimpleController
 
         // Check the honeypot. 'spiderbro' is not a real field, it is hidden on the main page and must be submitted with its default value for this to be processed.
         if (!isset($params['spiderbro']) || $params['spiderbro'] != 'http://') {
-            throw new SpammyRequestException('Possible spam received:' . print_r($params, true));
+            throw new SpammyRequestException('Possible spam received:' . print_r($params, TRUE));
         }
 
         // Security measure: do not allow registering new users until the master account has been created.
@@ -812,13 +797,13 @@ class AccountController extends SimpleController
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        $error = false;
+        $error = FALSE;
 
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            $error = true;
+            $error = TRUE;
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
@@ -833,12 +818,12 @@ class AccountController extends SimpleController
         // Check if username or email already exists
         if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
             $ms->addMessageTranslated('danger', 'USERNAME.IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         // Check captcha, if required
@@ -846,7 +831,7 @@ class AccountController extends SimpleController
             $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
             if (!$data['captcha'] || !$captcha->verifyCode($data['captcha'])) {
                 $ms->addMessageTranslated('danger', 'CAPTCHA.FAIL');
-                $error = true;
+                $error = TRUE;
             }
         }
 
@@ -859,9 +844,9 @@ class AccountController extends SimpleController
         unset($data['passwordc']);
 
         if ($config['site.registration.require_email_verification']) {
-            $data['flag_verified'] = false;
+            $data['flag_verified'] = FALSE;
         } else {
-            $data['flag_verified'] = true;
+            $data['flag_verified'] = TRUE;
         }
 
         // Load default group
@@ -885,7 +870,7 @@ class AccountController extends SimpleController
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $throttler) {
+        Capsule::transaction(function () use ($classMapper, $data, $ms, $config, $throttler) {
             // Log throttleable event
             $throttler->logEvent('registration_attempt');
 
@@ -918,11 +903,11 @@ class AccountController extends SimpleController
                 $message = new TwigMailMessage($this->ci->view, 'mail/verify-account.html.twig');
 
                 $message->from($config['address_book.admin'])
-                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
-                        ->addParams([
-                            'user' => $user,
-                            'token' => $verification->getToken()
-                        ]);
+                    ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                    ->addParams([
+                        'user' => $user,
+                        'token' => $verification->getToken()
+                    ]);
 
                 $this->ci->mailer->send($message);
 
@@ -952,8 +937,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function resendVerification(Request $request, Response $response, $args)
-    {
+    public function resendVerification(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
@@ -997,7 +981,7 @@ class AccountController extends SimpleController
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $throttler, $throttleData, $config) {
+        Capsule::transaction(function () use ($classMapper, $data, $throttler, $throttleData, $config) {
             // Log throttleable event
             $throttler->logEvent('verification_request', $throttleData);
 
@@ -1015,11 +999,11 @@ class AccountController extends SimpleController
                 $message = new TwigMailMessage($this->ci->view, 'mail/resend-verification.html.twig');
 
                 $message->from($config['address_book.admin'])
-                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
-                        ->addParams([
-                            'user' => $user,
-                            'token' => $verification->getToken()
-                        ]);
+                    ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                    ->addParams([
+                        'user' => $user,
+                        'token' => $verification->getToken()
+                    ]);
 
                 $this->ci->mailer->send($message);
             }
@@ -1045,8 +1029,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function setPassword(Request $request, Response $response, $args)
-    {
+    public function setPassword(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
@@ -1118,8 +1101,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function settings(Request $request, Response $response, $args)
-    {
+    public function settings(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
@@ -1152,19 +1134,19 @@ class AccountController extends SimpleController
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        $error = false;
+        $error = FALSE;
 
         // Validate, and halt on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            $error = true;
+            $error = TRUE;
         }
 
         // Confirm current password
         if (!isset($data['passwordcheck']) || !Password::verify($data['passwordcheck'], $currentUser->password)) {
             $ms->addMessageTranslated('danger', 'PASSWORD.INVALID');
-            $error = true;
+            $error = TRUE;
         }
 
         // Remove password check, password confirmation from object data after validation
@@ -1174,7 +1156,7 @@ class AccountController extends SimpleController
         // If new email was submitted, check that the email address is not in use
         if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
-            $error = true;
+            $error = TRUE;
         }
 
         if ($error) {
@@ -1216,8 +1198,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function suggestUsername(Request $request, Response $response, $args)
-    {
+    public function suggestUsername(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
@@ -1247,8 +1228,7 @@ class AccountController extends SimpleController
      * @param  array $args
      * @return void
      */
-    public function verify(Request $request, Response $response, $args)
-    {
+    public function verify(Request $request, Response $response, $args) {
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 

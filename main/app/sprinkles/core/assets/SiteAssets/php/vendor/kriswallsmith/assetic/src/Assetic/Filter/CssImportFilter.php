@@ -30,50 +30,48 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
      *
      * @param FilterInterface $importFilter Filter for each imported asset
      */
-    public function __construct(FilterInterface $importFilter = null)
-    {
+    public function __construct(FilterInterface $importFilter = NULL) {
         $this->importFilter = $importFilter ?: new CssRewriteFilter();
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
         $importFilter = $this->importFilter;
         $sourceRoot = $asset->getSourceRoot();
         $sourcePath = $asset->getSourcePath();
 
         $callback = function ($matches) use ($importFilter, $sourceRoot, $sourcePath) {
-            if (!$matches['url'] || null === $sourceRoot) {
+            if (!$matches['url'] || NULL === $sourceRoot) {
                 return $matches[0];
             }
 
             $importRoot = $sourceRoot;
 
-            if (false !== strpos($matches['url'], '://')) {
+            if (FALSE !== strpos($matches['url'], '://')) {
                 // absolute
                 list($importScheme, $tmp) = explode('://', $matches['url'], 2);
                 list($importHost, $importPath) = explode('/', $tmp, 2);
-                $importRoot = $importScheme.'://'.$importHost;
-            } elseif (0 === strpos($matches['url'], '//')) {
+                $importRoot = $importScheme . '://' . $importHost;
+            } else if (0 === strpos($matches['url'], '//')) {
                 // protocol-relative
                 list($importHost, $importPath) = explode('/', substr($matches['url'], 2), 2);
-                $importRoot = '//'.$importHost;
-            } elseif ('/' == $matches['url'][0]) {
+                $importRoot = '//' . $importHost;
+            } else if ('/' == $matches['url'][0]) {
                 // root-relative
                 $importPath = substr($matches['url'], 1);
-            } elseif (null !== $sourcePath) {
+            } else if (NULL !== $sourcePath) {
                 // document-relative
                 $importPath = $matches['url'];
                 if ('.' != $sourceDir = dirname($sourcePath)) {
-                    $importPath = $sourceDir.'/'.$importPath;
+                    $importPath = $sourceDir . '/' . $importPath;
                 }
             } else {
                 return $matches[0];
             }
 
-            $importSource = $importRoot.'/'.$importPath;
-            if (false !== strpos($importSource, '://') || 0 === strpos($importSource, '//')) {
-                $import = new HttpAsset($importSource, array($importFilter), true);
-            } elseif ('css' != pathinfo($importPath, PATHINFO_EXTENSION) || !file_exists($importSource)) {
+            $importSource = $importRoot . '/' . $importPath;
+            if (FALSE !== strpos($importSource, '://') || 0 === strpos($importSource, '//')) {
+                $import = new HttpAsset($importSource, array($importFilter), TRUE);
+            } else if ('css' != pathinfo($importPath, PATHINFO_EXTENSION) || !file_exists($importSource)) {
                 // ignore non-css and non-existant imports
                 return $matches[0];
             } else {
@@ -96,12 +94,10 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
         $asset->setContent($content);
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
+    public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         // todo
         return array();
     }

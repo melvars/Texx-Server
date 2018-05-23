@@ -7,7 +7,7 @@
  * Target page: /users
  */
 
-$(document).ready(function() {
+$(document).ready(function () {
     // Set up table of users
     $("#widget-users").ufTable({
         dataUrl: site.uri.public + "/api/users",

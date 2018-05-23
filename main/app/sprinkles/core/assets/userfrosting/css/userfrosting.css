@@ -10,7 +10,7 @@ label.label-switch {
 }
 
 form textarea {
-  resize: vertical; /* user can resize vertically, but width is fixed */
+    resize: vertical; /* user can resize vertically, but width is fixed */
 }
 
 /* Custom styling for table tool menus */
@@ -109,42 +109,43 @@ form textarea {
 
 /* Styling for AdminLTE form control icons, that doesn't interfere with validation plugin */
 .form-control-icon {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 2;
-  display: block;
-  width: 34px;
-  height: 34px;
-  line-height: 34px;
-  text-align: center;
-  pointer-events: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    display: block;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    pointer-events: none;
 }
 
 .input-lg ~ .form-control-icon,
 .input-group-lg ~ .form-control-icon,
 .form-group-lg .form-control ~ .form-control-icon {
-  width: 46px;
-  height: 46px;
-  line-height: 46px;
+    width: 46px;
+    height: 46px;
+    line-height: 46px;
 }
+
 .input-sm ~ .form-control-icon,
 .input-group-sm ~ .form-control-icon,
 .form-group-sm .form-control ~ .form-control-icon {
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
 }
 
 @media (min-width: 768px) {
-  .form-inline .has-feedback .form-control-icon,
-  .navbar-form .has-feedback .form-control-icon {
-    top: 0;
-  }
+    .form-inline .has-feedback .form-control-icon,
+    .navbar-form .has-feedback .form-control-icon {
+        top: 0;
+    }
 }
 
 .form-horizontal .has-feedback .form-control-icon {
-  right: 15px;
+    right: 15px;
 }
 
 /* Fix for select2 not resizing properly when the page is resized */
@@ -192,11 +193,12 @@ a .info-box {
     left: auto;
 }
 
-@media(min-width: 561px) {
+@media (min-width: 561px) {
     .dropdown-menu-right-responsive {
         right: 0;
         left: auto;
     }
+
     .dropdown-menu-left-responsive {
         right: auto;
         left: 0;

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Controller;
 
 use Interop\Container\ContainerInterface;
@@ -29,8 +30,7 @@ class SimpleController
      *
      * @param ContainerInterface $ci The global container object, which holds all your services.
      */
-    public function __construct(ContainerInterface $ci)
-    {
+    public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
     }
 }

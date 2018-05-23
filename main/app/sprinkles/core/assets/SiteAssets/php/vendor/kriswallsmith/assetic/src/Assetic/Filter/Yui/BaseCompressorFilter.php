@@ -30,46 +30,40 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
     private $lineBreak;
     private $stackSize;
 
-    public function __construct($jarPath, $javaPath = '/usr/bin/java')
-    {
+    public function __construct($jarPath, $javaPath = '/usr/bin/java') {
         $this->jarPath = $jarPath;
         $this->javaPath = $javaPath;
     }
 
-    public function setCharset($charset)
-    {
+    public function setCharset($charset) {
         $this->charset = $charset;
     }
 
-    public function setLineBreak($lineBreak)
-    {
+    public function setLineBreak($lineBreak) {
         $this->lineBreak = $lineBreak;
     }
 
-    public function setStackSize($stackSize)
-    {
+    public function setStackSize($stackSize) {
         $this->stackSize = $stackSize;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
     /**
      * Compresses a string.
      *
      * @param string $content The content to compress
-     * @param string $type    The type of content, either "js" or "css"
-     * @param array  $options An indexed array of additional options
+     * @param string $type The type of content, either "js" or "css"
+     * @param array $options An indexed array of additional options
      *
      * @return string The compressed content
      */
-    protected function compress($content, $type, $options = array())
-    {
+    protected function compress($content, $type, $options = array()) {
         $pb = $this->createProcessBuilder(array($this->javaPath));
 
-        if (null !== $this->stackSize) {
-            $pb->add('-Xss'.$this->stackSize);
+        if (NULL !== $this->stackSize) {
+            $pb->add('-Xss' . $this->stackSize);
         }
 
         $pb->add('-jar')->add($this->jarPath);
@@ -78,11 +72,11 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
             $pb->add($option);
         }
 
-        if (null !== $this->charset) {
+        if (NULL !== $this->charset) {
             $pb->add('--charset')->add($this->charset);
         }
 
-        if (null !== $this->lineBreak) {
+        if (NULL !== $this->lineBreak) {
             $pb->add('--line-break')->add($this->lineBreak);
         }
 

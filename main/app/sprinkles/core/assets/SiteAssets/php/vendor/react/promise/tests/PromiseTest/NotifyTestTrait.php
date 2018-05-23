@@ -7,11 +7,10 @@ trait NotifyTestTrait
     /**
      * @return \React\Promise\PromiseAdapter\PromiseAdapterInterface
      */
-    abstract public function getPromiseTestAdapter(callable $canceller = null);
+    abstract public function getPromiseTestAdapter(callable $canceller = NULL);
 
     /** @test */
-    public function notifyShouldProgress()
-    {
+    public function notifyShouldProgress() {
         $adapter = $this->getPromiseTestAdapter();
 
         $sentinel = new \stdClass();
@@ -29,8 +28,7 @@ trait NotifyTestTrait
     }
 
     /** @test */
-    public function notifyShouldPropagateProgressToDownstreamPromises()
-    {
+    public function notifyShouldPropagateProgressToDownstreamPromises() {
         $adapter = $this->getPromiseTestAdapter();
 
         $sentinel = new \stdClass();
@@ -63,8 +61,7 @@ trait NotifyTestTrait
     }
 
     /** @test */
-    public function notifyShouldPropagateTransformedProgressToDownstreamPromises()
-    {
+    public function notifyShouldPropagateTransformedProgressToDownstreamPromises() {
         $adapter = $this->getPromiseTestAdapter();
 
         $sentinel = new \stdClass();
@@ -97,8 +94,7 @@ trait NotifyTestTrait
     }
 
     /** @test */
-    public function notifyShouldPropagateCaughtExceptionValueAsProgress()
-    {
+    public function notifyShouldPropagateCaughtExceptionValueAsProgress() {
         $adapter = $this->getPromiseTestAdapter();
 
         $exception = new \Exception();
@@ -131,8 +127,7 @@ trait NotifyTestTrait
     }
 
     /** @test */
-    public function notifyShouldForwardProgressEventsWhenIntermediaryCallbackTiedToAResolvedPromiseReturnsAPromise()
-    {
+    public function notifyShouldForwardProgressEventsWhenIntermediaryCallbackTiedToAResolvedPromiseReturnsAPromise() {
         $adapter = $this->getPromiseTestAdapter();
         $adapter2 = $this->getPromiseTestAdapter();
 
@@ -163,8 +158,7 @@ trait NotifyTestTrait
     }
 
     /** @test */
-    public function notifyShouldForwardProgressEventsWhenIntermediaryCallbackTiedToAnUnresolvedPromiseReturnsAPromise()
-    {
+    public function notifyShouldForwardProgressEventsWhenIntermediaryCallbackTiedToAnUnresolvedPromiseReturnsAPromise() {
         $adapter = $this->getPromiseTestAdapter();
         $adapter2 = $this->getPromiseTestAdapter();
 
@@ -194,8 +188,7 @@ trait NotifyTestTrait
     }
 
     /** @test */
-    public function notifyShouldForwardProgressWhenResolvedWithAnotherPromise()
-    {
+    public function notifyShouldForwardProgressWhenResolvedWithAnotherPromise() {
         $adapter = $this->getPromiseTestAdapter();
         $adapter2 = $this->getPromiseTestAdapter();
 
@@ -230,8 +223,7 @@ trait NotifyTestTrait
     }
 
     /** @test */
-    public function notifyShouldAllowResolveAfterProgress()
-    {
+    public function notifyShouldAllowResolveAfterProgress() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -256,8 +248,7 @@ trait NotifyTestTrait
     }
 
     /** @test */
-    public function notifyShouldAllowRejectAfterProgress()
-    {
+    public function notifyShouldAllowRejectAfterProgress() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -282,8 +273,7 @@ trait NotifyTestTrait
     }
 
     /** @test */
-    public function notifyShouldReturnSilentlyOnProgressWhenAlreadyRejected()
-    {
+    public function notifyShouldReturnSilentlyOnProgressWhenAlreadyRejected() {
         $adapter = $this->getPromiseTestAdapter();
 
         $adapter->reject(1);
@@ -292,8 +282,7 @@ trait NotifyTestTrait
     }
 
     /** @test */
-    public function notifyShouldInvokeProgressHandler()
-    {
+    public function notifyShouldInvokeProgressHandler() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -307,8 +296,7 @@ trait NotifyTestTrait
     }
 
     /** @test */
-    public function notifyShouldInvokeProgressHandlerFromDone()
-    {
+    public function notifyShouldInvokeProgressHandlerFromDone() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -317,18 +305,17 @@ trait NotifyTestTrait
             ->method('__invoke')
             ->with($this->identicalTo(1));
 
-        $this->assertNull($adapter->promise()->done(null, null, $mock));
+        $this->assertNull($adapter->promise()->done(NULL, NULL, $mock));
         $adapter->notify(1);
     }
 
     /** @test */
-    public function notifyShouldThrowExceptionThrownProgressHandlerFromDone()
-    {
+    public function notifyShouldThrowExceptionThrownProgressHandlerFromDone() {
         $adapter = $this->getPromiseTestAdapter();
 
         $this->setExpectedException('\Exception', 'UnhandledRejectionException');
 
-        $this->assertNull($adapter->promise()->done(null, null, function () {
+        $this->assertNull($adapter->promise()->done(NULL, NULL, function () {
             throw new \Exception('UnhandledRejectionException');
         }));
         $adapter->notify(1);

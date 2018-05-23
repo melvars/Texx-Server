@@ -9,11 +9,10 @@ trait ResolveTestTrait
     /**
      * @return \React\Promise\PromiseAdapter\PromiseAdapterInterface
      */
-    abstract public function getPromiseTestAdapter(callable $canceller = null);
+    abstract public function getPromiseTestAdapter(callable $canceller = NULL);
 
     /** @test */
-    public function resolveShouldResolve()
-    {
+    public function resolveShouldResolve() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -29,8 +28,7 @@ trait ResolveTestTrait
     }
 
     /** @test */
-    public function resolveShouldResolveWithPromisedValue()
-    {
+    public function resolveShouldResolveWithPromisedValue() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -46,8 +44,7 @@ trait ResolveTestTrait
     }
 
     /** @test */
-    public function resolveShouldRejectWhenResolvedWithRejectedPromise()
-    {
+    public function resolveShouldRejectWhenResolvedWithRejectedPromise() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -63,8 +60,7 @@ trait ResolveTestTrait
     }
 
     /** @test */
-    public function resolveShouldForwardValueWhenCallbackIsNull()
-    {
+    public function resolveShouldForwardValueWhenCallbackIsNull() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -75,7 +71,7 @@ trait ResolveTestTrait
 
         $adapter->promise()
             ->then(
-                null,
+                NULL,
                 $this->expectCallableNever()
             )
             ->then(
@@ -87,8 +83,7 @@ trait ResolveTestTrait
     }
 
     /** @test */
-    public function resolveShouldMakePromiseImmutable()
-    {
+    public function resolveShouldMakePromiseImmutable() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -115,8 +110,7 @@ trait ResolveTestTrait
     /**
      * @test
      */
-    public function resolveShouldRejectWhenResolvedWithItself()
-    {
+    public function resolveShouldRejectWhenResolvedWithItself() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -137,8 +131,7 @@ trait ResolveTestTrait
     /**
      * @test
      */
-    public function resolveShouldRejectWhenResolvedWithAPromiseWhichFollowsItself()
-    {
+    public function resolveShouldRejectWhenResolvedWithAPromiseWhichFollowsItself() {
         $adapter1 = $this->getPromiseTestAdapter();
         $adapter2 = $this->getPromiseTestAdapter();
 
@@ -162,8 +155,7 @@ trait ResolveTestTrait
     }
 
     /** @test */
-    public function doneShouldInvokeFulfillmentHandler()
-    {
+    public function doneShouldInvokeFulfillmentHandler() {
         $adapter = $this->getPromiseTestAdapter();
 
         $mock = $this->createCallableMock();
@@ -177,8 +169,7 @@ trait ResolveTestTrait
     }
 
     /** @test */
-    public function doneShouldThrowExceptionThrownFulfillmentHandler()
-    {
+    public function doneShouldThrowExceptionThrownFulfillmentHandler() {
         $adapter = $this->getPromiseTestAdapter();
 
         $this->setExpectedException('\Exception', 'UnhandledRejectionException');
@@ -190,8 +181,7 @@ trait ResolveTestTrait
     }
 
     /** @test */
-    public function doneShouldThrowUnhandledRejectionExceptionWhenFulfillmentHandlerRejects()
-    {
+    public function doneShouldThrowUnhandledRejectionExceptionWhenFulfillmentHandlerRejects() {
         $adapter = $this->getPromiseTestAdapter();
 
         $this->setExpectedException('React\\Promise\\UnhandledRejectionException');
@@ -203,8 +193,7 @@ trait ResolveTestTrait
     }
 
     /** @test */
-    public function alwaysShouldNotSuppressValue()
-    {
+    public function alwaysShouldNotSuppressValue() {
         $adapter = $this->getPromiseTestAdapter();
 
         $value = new \stdClass();
@@ -216,15 +205,15 @@ trait ResolveTestTrait
             ->with($this->identicalTo($value));
 
         $adapter->promise()
-            ->always(function () {})
+            ->always(function () {
+            })
             ->then($mock);
 
         $adapter->resolve($value);
     }
 
     /** @test */
-    public function alwaysShouldNotSuppressValueWhenHandlerReturnsANonPromise()
-    {
+    public function alwaysShouldNotSuppressValueWhenHandlerReturnsANonPromise() {
         $adapter = $this->getPromiseTestAdapter();
 
         $value = new \stdClass();
@@ -245,8 +234,7 @@ trait ResolveTestTrait
     }
 
     /** @test */
-    public function alwaysShouldNotSuppressValueWhenHandlerReturnsAPromise()
-    {
+    public function alwaysShouldNotSuppressValueWhenHandlerReturnsAPromise() {
         $adapter = $this->getPromiseTestAdapter();
 
         $value = new \stdClass();
@@ -267,8 +255,7 @@ trait ResolveTestTrait
     }
 
     /** @test */
-    public function alwaysShouldRejectWhenHandlerThrowsForFulfillment()
-    {
+    public function alwaysShouldRejectWhenHandlerThrowsForFulfillment() {
         $adapter = $this->getPromiseTestAdapter();
 
         $exception = new \Exception();
@@ -283,14 +270,13 @@ trait ResolveTestTrait
             ->always(function () use ($exception) {
                 throw $exception;
             })
-            ->then(null, $mock);
+            ->then(NULL, $mock);
 
         $adapter->resolve(1);
     }
 
     /** @test */
-    public function alwaysShouldRejectWhenHandlerRejectsForFulfillment()
-    {
+    public function alwaysShouldRejectWhenHandlerRejectsForFulfillment() {
         $adapter = $this->getPromiseTestAdapter();
 
         $exception = new \Exception();
@@ -305,7 +291,7 @@ trait ResolveTestTrait
             ->always(function () use ($exception) {
                 return \React\Promise\reject($exception);
             })
-            ->then(null, $mock);
+            ->then(NULL, $mock);
 
         $adapter->resolve(1);
     }

@@ -30,7 +30,7 @@ class ExtensionGuesser implements ExtensionGuesserInterface
      *
      * @var ExtensionGuesser
      */
-    private static $instance = null;
+    private static $instance = NULL;
 
     /**
      * All registered ExtensionGuesserInterface instances.
@@ -44,9 +44,8 @@ class ExtensionGuesser implements ExtensionGuesserInterface
      *
      * @return self
      */
-    public static function getInstance()
-    {
-        if (null === self::$instance) {
+    public static function getInstance() {
+        if (NULL === self::$instance) {
             self::$instance = new self();
         }
 
@@ -56,8 +55,7 @@ class ExtensionGuesser implements ExtensionGuesserInterface
     /**
      * Registers all natively provided extension guessers.
      */
-    private function __construct()
-    {
+    private function __construct() {
         $this->register(new MimeTypeExtensionGuesser());
     }
 
@@ -66,8 +64,7 @@ class ExtensionGuesser implements ExtensionGuesserInterface
      *
      * When guessing, this guesser is preferred over previously registered ones.
      */
-    public function register(ExtensionGuesserInterface $guesser)
-    {
+    public function register(ExtensionGuesserInterface $guesser) {
         array_unshift($this->guessers, $guesser);
     }
 
@@ -83,10 +80,9 @@ class ExtensionGuesser implements ExtensionGuesserInterface
      *
      * @return string The guessed extension or NULL, if none could be guessed
      */
-    public function guess($mimeType)
-    {
+    public function guess($mimeType) {
         foreach ($this->guessers as $guesser) {
-            if (null !== $extension = $guesser->guess($mimeType)) {
+            if (NULL !== $extension = $guesser->guess($mimeType)) {
                 return $extension;
             }
         }

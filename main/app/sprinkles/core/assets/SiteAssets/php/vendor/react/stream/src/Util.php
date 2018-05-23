@@ -13,8 +13,7 @@ final class Util
      * @return WritableStreamInterface $dest stream as-is
      * @see ReadableStreamInterface::pipe() for more details
      */
-    public static function pipe(ReadableStreamInterface $source, WritableStreamInterface $dest, array $options = array())
-    {
+    public static function pipe(ReadableStreamInterface $source, WritableStreamInterface $dest, array $options = array()) {
         // source not readable => NO-OP
         if (!$source->isReadable()) {
             return $dest;
@@ -33,7 +32,7 @@ final class Util
         $source->on('data', $dataer = function ($data) use ($source, $dest) {
             $feedMore = $dest->write($data);
 
-            if (false === $feedMore) {
+            if (FALSE === $feedMore) {
                 $source->pause();
             }
         });
@@ -51,7 +50,7 @@ final class Util
         });
 
         // forward end event from source as $dest->end()
-        $end = isset($options['end']) ? $options['end'] : true;
+        $end = isset($options['end']) ? $options['end'] : TRUE;
         if ($end) {
             $source->on('end', $ender = function () use ($dest) {
                 $dest->end();
@@ -64,8 +63,7 @@ final class Util
         return $dest;
     }
 
-    public static function forwardEvents($source, $target, array $events)
-    {
+    public static function forwardEvents($source, $target, array $events) {
         foreach ($events as $event) {
             $source->on($event, function () use ($event, $target) {
                 $target->emit($event, func_get_args());

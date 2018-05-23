@@ -7,7 +7,7 @@
  * Target page: /permissions
  */
 
-$(document).ready(function() {
+$(document).ready(function () {
     // Set up table of permissions
     $("#widget-permissions").ufTable({
         dataUrl: site.uri.public + "/api/permissions",

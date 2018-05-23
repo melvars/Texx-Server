@@ -13,15 +13,13 @@ final class DnsConnector implements ConnectorInterface
     private $connector;
     private $resolver;
 
-    public function __construct(ConnectorInterface $connector, Resolver $resolver)
-    {
+    public function __construct(ConnectorInterface $connector, Resolver $resolver) {
         $this->connector = $connector;
         $this->resolver = $resolver;
     }
 
-    public function connect($uri)
-    {
-        if (strpos($uri, '://') === false) {
+    public function connect($uri) {
+        if (strpos($uri, '://') === FALSE) {
             $parts = parse_url('tcp://' . $uri);
             unset($parts['scheme']);
         } else {
@@ -45,7 +43,7 @@ final class DnsConnector implements ConnectorInterface
                     $uri .= $parts['scheme'] . '://';
                 }
 
-                if (strpos($ip, ':') !== false) {
+                if (strpos($ip, ':') !== FALSE) {
                     // enclose IPv6 addresses in square brackets before appending port
                     $uri .= '[' . $ip . ']';
                 } else {
@@ -84,9 +82,8 @@ final class DnsConnector implements ConnectorInterface
             });
     }
 
-    private function resolveHostname($host)
-    {
-        if (false !== filter_var($host, FILTER_VALIDATE_IP)) {
+    private function resolveHostname($host) {
+        if (FALSE !== filter_var($host, FILTER_VALIDATE_IP)) {
             return Promise\resolve($host);
         }
 

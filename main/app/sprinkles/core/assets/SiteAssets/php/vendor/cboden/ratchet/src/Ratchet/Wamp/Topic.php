@@ -1,11 +1,14 @@
 <?php
+
 namespace Ratchet\Wamp;
+
 use Ratchet\ConnectionInterface;
 
 /**
  * A topic/channel containing connections that have subscribed to it
  */
-class Topic implements \IteratorAggregate, \Countable {
+class Topic implements \IteratorAggregate, \Countable
+{
     private $id;
 
     private $subscribers;

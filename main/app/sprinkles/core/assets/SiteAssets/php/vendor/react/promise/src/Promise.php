@@ -13,19 +13,17 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
     private $requiredCancelRequests = 0;
     private $cancelRequests = 0;
 
-    public function __construct(callable $resolver, callable $canceller = null)
-    {
+    public function __construct(callable $resolver, callable $canceller = NULL) {
         $this->canceller = $canceller;
         $this->call($resolver);
     }
 
-    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
-    {
-        if (null !== $this->result) {
+    public function then(callable $onFulfilled = NULL, callable $onRejected = NULL, callable $onProgress = NULL) {
+        if (NULL !== $this->result) {
             return $this->result->then($onFulfilled, $onRejected, $onProgress);
         }
 
-        if (null === $this->canceller) {
+        if (NULL === $this->canceller) {
             return new static($this->resolver($onFulfilled, $onRejected, $onProgress));
         }
 
@@ -40,9 +38,8 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         });
     }
 
-    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
-    {
-        if (null !== $this->result) {
+    public function done(callable $onFulfilled = NULL, callable $onRejected = NULL, callable $onProgress = NULL) {
+        if (NULL !== $this->result) {
             return $this->result->done($onFulfilled, $onRejected, $onProgress);
         }
 
@@ -56,9 +53,8 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         }
     }
 
-    public function otherwise(callable $onRejected)
-    {
-        return $this->then(null, function ($reason) use ($onRejected) {
+    public function otherwise(callable $onRejected) {
+        return $this->then(NULL, function ($reason) use ($onRejected) {
             if (!_checkTypehint($onRejected, $reason)) {
                 return new RejectedPromise($reason);
             }
@@ -67,8 +63,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         });
     }
 
-    public function always(callable $onFulfilledOrRejected)
-    {
+    public function always(callable $onFulfilledOrRejected) {
         return $this->then(function ($value) use ($onFulfilledOrRejected) {
             return resolve($onFulfilledOrRejected())->then(function () use ($value) {
                 return $value;
@@ -80,25 +75,22 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         });
     }
 
-    public function progress(callable $onProgress)
-    {
-        return $this->then(null, null, $onProgress);
+    public function progress(callable $onProgress) {
+        return $this->then(NULL, NULL, $onProgress);
     }
 
-    public function cancel()
-    {
-        if (null === $this->canceller || null !== $this->result) {
+    public function cancel() {
+        if (NULL === $this->canceller || NULL !== $this->result) {
             return;
         }
 
         $canceller = $this->canceller;
-        $this->canceller = null;
+        $this->canceller = NULL;
 
         $this->call($canceller);
     }
 
-    private function resolver(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
-    {
+    private function resolver(callable $onFulfilled = NULL, callable $onRejected = NULL, callable $onProgress = NULL) {
         return function ($resolve, $reject, $notify) use ($onFulfilled, $onRejected, $onProgress) {
             if ($onProgress) {
                 $progressHandler = function ($update) use ($notify, $onProgress) {
@@ -124,27 +116,24 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         };
     }
 
-    private function resolve($value = null)
-    {
-        if (null !== $this->result) {
+    private function resolve($value = NULL) {
+        if (NULL !== $this->result) {
             return;
         }
 
         $this->settle(resolve($value));
     }
 
-    private function reject($reason = null)
-    {
-        if (null !== $this->result) {
+    private function reject($reason = NULL) {
+        if (NULL !== $this->result) {
             return;
         }
 
         $this->settle(reject($reason));
     }
 
-    private function notify($update = null)
-    {
-        if (null !== $this->result) {
+    private function notify($update = NULL) {
+        if (NULL !== $this->result) {
             return;
         }
 
@@ -153,8 +142,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         }
     }
 
-    private function settle(ExtendedPromiseInterface $promise)
-    {
+    private function settle(ExtendedPromiseInterface $promise) {
         $promise = $this->unwrap($promise);
 
         $handlers = $this->handlers;
@@ -167,19 +155,17 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         }
     }
 
-    private function unwrap($promise)
-    {
+    private function unwrap($promise) {
         $promise = $this->extract($promise);
 
-        while ($promise instanceof self && null !== $promise->result) {
+        while ($promise instanceof self && NULL !== $promise->result) {
             $promise = $this->extract($promise->result);
         }
 
         return $promise;
     }
 
-    private function extract($promise)
-    {
+    private function extract($promise) {
         if ($promise instanceof LazyPromise) {
             $promise = $promise->promise();
         }
@@ -193,17 +179,16 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         return $promise;
     }
 
-    private function call(callable $callback)
-    {
+    private function call(callable $callback) {
         try {
             $callback(
-                function ($value = null) {
+                function ($value = NULL) {
                     $this->resolve($value);
                 },
-                function ($reason = null) {
+                function ($reason = NULL) {
                     $this->reject($reason);
                 },
-                function ($update = null) {
+                function ($update = NULL) {
                     $this->notify($update);
                 }
             );

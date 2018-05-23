@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Error\Handler;
 
 use UserFrosting\Sprinkle\Core\Error\Handler\HttpExceptionHandler;
@@ -22,8 +23,7 @@ class AuthCompromisedExceptionHandler extends HttpExceptionHandler
      *
      * @return ResponseInterface
      */
-    public function renderGenericResponse()
-    {
+    public function renderGenericResponse() {
         $template = $this->ci->view->getEnvironment()->loadTemplate('pages/error/compromised.html.twig');
 
         return $this->response

@@ -30,17 +30,16 @@ class Converter implements ConverterInterface
 
     /**
      * @param string $from The original base path (directory, not file!)
-     * @param string $to   The new base path (directory, not file!)
+     * @param string $to The new base path (directory, not file!)
      */
-    public function __construct($from, $to)
-    {
+    public function __construct($from, $to) {
         $shared = $this->shared($from, $to);
         if ($shared === '') {
             // when both paths have nothing in common, one of them is probably
             // absolute while the other is relative
             $cwd = getcwd();
-            $from = strpos($from, $cwd) === 0 ? $from : $cwd.'/'.$from;
-            $to = strpos($to, $cwd) === 0 ? $to : $cwd.'/'.$to;
+            $from = strpos($from, $cwd) === 0 ? $from : $cwd . '/' . $from;
+            $to = strpos($to, $cwd) === 0 ? $to : $cwd . '/' . $to;
 
             // or traveling the tree via `..`
             // attempt to resolve path, or assume it's fine if it doesn't exist
@@ -65,8 +64,7 @@ class Converter implements ConverterInterface
      *
      * @return string
      */
-    protected function normalize($path)
-    {
+    protected function normalize($path) {
         // deal with different operating systems' directory structure
         $path = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $path), '/');
 
@@ -98,8 +96,7 @@ class Converter implements ConverterInterface
      *
      * @return string
      */
-    protected function shared($path1, $path2)
-    {
+    protected function shared($path1, $path2) {
         // $path could theoretically be empty (e.g. no path is given), in which
         // case it shouldn't expand to array(''), which would compare to one's
         // root /
@@ -133,8 +130,7 @@ class Converter implements ConverterInterface
      *
      * @return string The new relative path
      */
-    public function convert($path)
-    {
+    public function convert($path) {
         // quit early if conversion makes no sense
         if ($this->from === $this->to) {
             return $path;
@@ -147,7 +143,7 @@ class Converter implements ConverterInterface
         }
 
         // normalize paths
-        $path = $this->normalize($this->from.'/'.$path);
+        $path = $this->normalize($this->from . '/' . $path);
 
         // strip shared ancestor paths
         $shared = $this->shared($path, $this->to);
@@ -157,7 +153,7 @@ class Converter implements ConverterInterface
         // add .. for every directory that needs to be traversed to new path
         $to = str_repeat('../', mb_substr_count($to, '/'));
 
-        return $to.ltrim($path, '/');
+        return $to . ltrim($path, '/');
     }
 
     /**
@@ -167,8 +163,7 @@ class Converter implements ConverterInterface
      *
      * @return string
      */
-    protected function dirname($path)
-    {
+    protected function dirname($path) {
         if (@is_file($path)) {
             return dirname($path);
         }

@@ -32,10 +32,9 @@ trait AddTrait
      *
      * @return RouteConfigurator
      */
-    final public function add($name, $path)
-    {
-        $parentConfigurator = $this instanceof RouteConfigurator ? $this->parentConfigurator : null;
-        $this->collection->add($this->name.$name, $route = new Route($path));
+    final public function add($name, $path) {
+        $parentConfigurator = $this instanceof RouteConfigurator ? $this->parentConfigurator : NULL;
+        $this->collection->add($this->name . $name, $route = new Route($path));
 
         return new RouteConfigurator($this->collection, $route, '', $parentConfigurator);
     }
@@ -48,8 +47,7 @@ trait AddTrait
      *
      * @return RouteConfigurator
      */
-    final public function __invoke($name, $path)
-    {
+    final public function __invoke($name, $path) {
         return $this->add($name, $path);
     }
 }

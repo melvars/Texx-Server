@@ -6,8 +6,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-    protected function expectCallableExactly($amount)
-    {
+    protected function expectCallableExactly($amount) {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->exactly($amount))
@@ -16,8 +15,7 @@ class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function expectCallableOnce()
-    {
+    protected function expectCallableOnce() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->once())
@@ -26,8 +24,7 @@ class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function expectCallableNever()
-    {
+    protected function expectCallableNever() {
         $mock = $this->createCallableMock();
         $mock
             ->expects($this->never())
@@ -36,8 +33,7 @@ class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function createCallableMock()
-    {
+    protected function createCallableMock() {
         return $this->getMockBuilder('React\Tests\Cache\CallableStub')->getMock();
     }
 }

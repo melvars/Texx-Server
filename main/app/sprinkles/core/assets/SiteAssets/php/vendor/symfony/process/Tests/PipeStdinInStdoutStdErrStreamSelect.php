@@ -25,45 +25,45 @@ $out = $err = '';
 while ($read || $write) {
     $r = $read;
     $w = $write;
-    $e = null;
+    $e = NULL;
     $n = stream_select($r, $w, $e, 5);
 
-    if (false === $n) {
+    if (FALSE === $n) {
         die(ERR_SELECT_FAILED);
-    } elseif ($n < 1) {
+    } else if ($n < 1) {
         die(ERR_TIMEOUT);
     }
 
     if (in_array(STDOUT, $w) && strlen($out) > 0) {
-        $written = fwrite(STDOUT, (binary) $out, 32768);
-        if (false === $written) {
+        $written = fwrite(STDOUT, (binary)$out, 32768);
+        if (FALSE === $written) {
             die(ERR_WRITE_FAILED);
         }
-        $out = (binary) substr($out, $written);
+        $out = (binary)substr($out, $written);
     }
-    if (null === $read && '' === $out) {
+    if (NULL === $read && '' === $out) {
         $write = array_diff($write, array(STDOUT));
     }
 
     if (in_array(STDERR, $w) && strlen($err) > 0) {
-        $written = fwrite(STDERR, (binary) $err, 32768);
-        if (false === $written) {
+        $written = fwrite(STDERR, (binary)$err, 32768);
+        if (FALSE === $written) {
             die(ERR_WRITE_FAILED);
         }
-        $err = (binary) substr($err, $written);
+        $err = (binary)substr($err, $written);
     }
-    if (null === $read && '' === $err) {
+    if (NULL === $read && '' === $err) {
         $write = array_diff($write, array(STDERR));
     }
 
     if ($r) {
         $str = fread(STDIN, 32768);
-        if (false !== $str) {
+        if (FALSE !== $str) {
             $out .= $str;
             $err .= $str;
         }
-        if (false === $str || feof(STDIN)) {
-            $read = null;
+        if (FALSE === $str || feof(STDIN)) {
+            $read = NULL;
             if (!feof(STDIN)) {
                 die(ERR_READ_FAILED);
             }

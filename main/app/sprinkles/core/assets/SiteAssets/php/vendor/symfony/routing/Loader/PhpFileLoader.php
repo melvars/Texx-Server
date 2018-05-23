@@ -28,13 +28,12 @@ class PhpFileLoader extends FileLoader
     /**
      * Loads a PHP file.
      *
-     * @param string      $file A PHP file path
+     * @param string $file A PHP file path
      * @param string|null $type The resource type
      *
      * @return RouteCollection A RouteCollection instance
      */
-    public function load($file, $type = null)
-    {
+    public function load($file, $type = NULL) {
         $path = $this->locator->locate($file);
         $this->setCurrentDir(dirname($path));
 
@@ -42,7 +41,7 @@ class PhpFileLoader extends FileLoader
         $loader = $this;
         $load = \Closure::bind(function ($file) use ($loader) {
             return include $file;
-        }, null, ProtectedPhpFileLoader::class);
+        }, NULL, ProtectedPhpFileLoader::class);
 
         $result = $load($path);
 
@@ -61,8 +60,7 @@ class PhpFileLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
-    {
+    public function supports($resource, $type = NULL) {
         return is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'php' === $type);
     }
 }

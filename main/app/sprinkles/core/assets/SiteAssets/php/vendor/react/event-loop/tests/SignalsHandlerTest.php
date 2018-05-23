@@ -6,8 +6,7 @@ use React\EventLoop\SignalsHandler;
 
 final class SignalsHandlerTest extends TestCase
 {
-    public function testEmittedEventsAndCallHandling()
-    {
+    public function testEmittedEventsAndCallHandling() {
         $callCount = 0;
         $func = function () use (&$callCount) {
             $callCount++;

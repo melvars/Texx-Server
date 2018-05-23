@@ -6,8 +6,7 @@ class UnhandledRejectionException extends \RuntimeException
 {
     private $reason;
 
-    public static function resolve($reason)
-    {
+    public static function resolve($reason) {
         if ($reason instanceof \Exception || $reason instanceof \Throwable) {
             return $reason;
         }
@@ -15,8 +14,7 @@ class UnhandledRejectionException extends \RuntimeException
         return new static($reason);
     }
 
-    public function __construct($reason)
-    {
+    public function __construct($reason) {
         $this->reason = $reason;
 
         $message = sprintf('Unhandled Rejection: %s', json_encode($reason));
@@ -24,8 +22,7 @@ class UnhandledRejectionException extends \RuntimeException
         parent::__construct($message, 0);
     }
 
-    public function getReason()
-    {
+    public function getReason() {
         return $this->reason;
     }
 }

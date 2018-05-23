@@ -8,14 +8,12 @@ class ArrayCacheTest extends TestCase
 {
     private $cache;
 
-    public function setUp()
-    {
+    public function setUp() {
         $this->cache = new ArrayCache();
     }
 
     /** @test */
-    public function getShouldRejectPromiseForNonExistentKey()
-    {
+    public function getShouldRejectPromiseForNonExistentKey() {
         $this->cache
             ->get('foo')
             ->then(
@@ -25,8 +23,7 @@ class ArrayCacheTest extends TestCase
     }
 
     /** @test */
-    public function setShouldSetKey()
-    {
+    public function setShouldSetKey() {
         $this->cache
             ->set('foo', 'bar');
 
@@ -42,8 +39,7 @@ class ArrayCacheTest extends TestCase
     }
 
     /** @test */
-    public function removeShouldRemoveKey()
-    {
+    public function removeShouldRemoveKey() {
         $this->cache
             ->set('foo', 'bar');
 

@@ -35,12 +35,11 @@ class Message
      * @param Query $query
      * @return self
      */
-    public static function createRequestForQuery(Query $query)
-    {
+    public static function createRequestForQuery(Query $query) {
         $request = new Message();
         $request->header->set('id', self::generateId());
         $request->header->set('rd', 1);
-        $request->questions[] = (array) $query;
+        $request->questions[] = (array)$query;
         $request->prepare();
 
         return $request;
@@ -49,12 +48,11 @@ class Message
     /**
      * Creates a new response message for the given query with the given answer records
      *
-     * @param Query    $query
+     * @param Query $query
      * @param Record[] $answers
      * @return self
      */
-    public static function createResponseWithAnswersForQuery(Query $query, array $answers)
-    {
+    public static function createResponseWithAnswersForQuery(Query $query, array $answers) {
         $response = new Message();
         $response->header->set('id', self::generateId());
         $response->header->set('qr', 1);
@@ -62,7 +60,7 @@ class Message
         $response->header->set('rd', 1);
         $response->header->set('rcode', Message::RCODE_OK);
 
-        $response->questions[] = (array) $query;
+        $response->questions[] = (array)$query;
 
         foreach ($answers as $record) {
             $response->answers[] = $record;
@@ -73,8 +71,7 @@ class Message
         return $response;
     }
 
-    private static function generateId()
-    {
+    private static function generateId() {
         return mt_rand(0, 0xffff);
     }
 
@@ -88,13 +85,11 @@ class Message
 
     public $consumed = 0;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->header = new HeaderBag();
     }
 
-    public function prepare()
-    {
+    public function prepare() {
         $this->header->populateCounts($this);
     }
 }

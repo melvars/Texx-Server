@@ -39,9 +39,9 @@ class LimitingServer extends EventEmitter implements ServerInterface
     private $server;
     private $limit;
 
-    private $pauseOnLimit = false;
-    private $autoPaused = false;
-    private $manuPaused = false;
+    private $pauseOnLimit = FALSE;
+    private $autoPaused = FALSE;
+    private $manuPaused = FALSE;
 
     /**
      * Instantiates a new LimitingServer.
@@ -89,14 +89,13 @@ class LimitingServer extends EventEmitter implements ServerInterface
      * ```
      *
      * @param ServerInterface $server
-     * @param int|null        $connectionLimit
-     * @param bool            $pauseOnLimit
+     * @param int|null $connectionLimit
+     * @param bool $pauseOnLimit
      */
-    public function __construct(ServerInterface $server, $connectionLimit, $pauseOnLimit = false)
-    {
+    public function __construct(ServerInterface $server, $connectionLimit, $pauseOnLimit = FALSE) {
         $this->server = $server;
         $this->limit = $connectionLimit;
-        if ($connectionLimit !== null) {
+        if ($connectionLimit !== NULL) {
             $this->pauseOnLimit = $pauseOnLimit;
         }
 
@@ -115,20 +114,17 @@ class LimitingServer extends EventEmitter implements ServerInterface
      *
      * @return ConnectionInterface[]
      */
-    public function getConnections()
-    {
+    public function getConnections() {
         return $this->connections;
     }
 
-    public function getAddress()
-    {
+    public function getAddress() {
         return $this->server->getAddress();
     }
 
-    public function pause()
-    {
+    public function pause() {
         if (!$this->manuPaused) {
-            $this->manuPaused = true;
+            $this->manuPaused = TRUE;
 
             if (!$this->autoPaused) {
                 $this->server->pause();
@@ -136,10 +132,9 @@ class LimitingServer extends EventEmitter implements ServerInterface
         }
     }
 
-    public function resume()
-    {
+    public function resume() {
         if ($this->manuPaused) {
-            $this->manuPaused = false;
+            $this->manuPaused = FALSE;
 
             if (!$this->autoPaused) {
                 $this->server->resume();
@@ -147,16 +142,14 @@ class LimitingServer extends EventEmitter implements ServerInterface
         }
     }
 
-    public function close()
-    {
+    public function close() {
         $this->server->close();
     }
 
     /** @internal */
-    public function handleConnection(ConnectionInterface $connection)
-    {
+    public function handleConnection(ConnectionInterface $connection) {
         // close connection if limit exceeded
-        if ($this->limit !== null && count($this->connections) >= $this->limit) {
+        if ($this->limit !== NULL && count($this->connections) >= $this->limit) {
             $this->handleError(new OverflowException('Connection closed because server reached connection limit'));
             $connection->close();
             return;
@@ -170,7 +163,7 @@ class LimitingServer extends EventEmitter implements ServerInterface
 
         // pause accepting new connections if limit exceeded
         if ($this->pauseOnLimit && !$this->autoPaused && count($this->connections) >= $this->limit) {
-            $this->autoPaused = true;
+            $this->autoPaused = TRUE;
 
             if (!$this->manuPaused) {
                 $this->server->pause();
@@ -181,13 +174,12 @@ class LimitingServer extends EventEmitter implements ServerInterface
     }
 
     /** @internal */
-    public function handleDisconnection(ConnectionInterface $connection)
-    {
+    public function handleDisconnection(ConnectionInterface $connection) {
         unset($this->connections[array_search($connection, $this->connections)]);
 
         // continue accepting new connection if below limit
         if ($this->autoPaused && count($this->connections) < $this->limit) {
-            $this->autoPaused = false;
+            $this->autoPaused = FALSE;
 
             if (!$this->manuPaused) {
                 $this->server->resume();
@@ -196,8 +188,7 @@ class LimitingServer extends EventEmitter implements ServerInterface
     }
 
     /** @internal */
-    public function handleError(Exception $error)
-    {
+    public function handleError(Exception $error) {
         $this->emit('error', array($error));
     }
 }

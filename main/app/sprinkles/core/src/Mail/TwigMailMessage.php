@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 /**
@@ -37,8 +38,7 @@ class TwigMailMessage extends MailMessage
      * @param Slim\Views\Twig $view The Twig view object used to render mail templates.
      * @param string $filename optional Set the Twig template to use for this message.
      */
-    public function __construct($view, $filename = null)
-    {
+    public function __construct($view, $filename = NULL) {
         $this->view = $view;
 
         $twig = $this->view->getEnvironment();
@@ -46,7 +46,7 @@ class TwigMailMessage extends MailMessage
         // TODO: should we keep this separate from the local parameters?
         $this->params = $twig->getGlobals();
 
-        if ($filename !== null) {
+        if ($filename !== NULL) {
             $this->template = $twig->loadTemplate($filename);
         }
     }
@@ -56,8 +56,7 @@ class TwigMailMessage extends MailMessage
      *
      * @param mixed[] $params
      */
-    public function addParams($params = [])
-    {
+    public function addParams($params = []) {
         $this->params = array_replace_recursive($this->params, $params);
         return $this;
     }
@@ -65,8 +64,7 @@ class TwigMailMessage extends MailMessage
     /**
      * {@inheritDoc}
      */
-    public function renderSubject($params = [])
-    {
+    public function renderSubject($params = []) {
         $params = array_replace_recursive($this->params, $params);
         return $this->template->renderBlock('subject', $params);
     }
@@ -74,8 +72,7 @@ class TwigMailMessage extends MailMessage
     /**
      * {@inheritDoc}
      */
-    public function renderBody($params = [])
-    {
+    public function renderBody($params = []) {
         $params = array_replace_recursive($this->params, $params);
         return $this->template->renderBlock('body', $params);
     }
@@ -85,8 +82,7 @@ class TwigMailMessage extends MailMessage
      *
      * @param Twig_Template $template The Twig template object, to source the content for this message.
      */
-    public function setTemplate($template)
-    {
+    public function setTemplate($template) {
         $this->template = $template;
         return $this;
     }

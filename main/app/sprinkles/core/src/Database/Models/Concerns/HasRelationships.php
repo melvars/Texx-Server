@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Models\Concerns;
 
 use Illuminate\Support\Arr;
@@ -41,8 +42,7 @@ trait HasRelationships
      * {@inheritDoc}
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\HasManySyncable
      */
-    public function hasMany($related, $foreignKey = null, $localKey = null)
-    {
+    public function hasMany($related, $foreignKey = NULL, $localKey = NULL) {
         $instance = $this->newRelatedInstance($related);
 
         $foreignKey = $foreignKey ?: $this->getForeignKey();
@@ -50,7 +50,7 @@ trait HasRelationships
         $localKey = $localKey ?: $this->getKeyName();
 
         return new HasManySyncable(
-            $instance->newQuery(), $this, $instance->getTable().'.'.$foreignKey, $localKey
+            $instance->newQuery(), $this, $instance->getTable() . '.' . $foreignKey, $localKey
         );
     }
 
@@ -60,8 +60,7 @@ trait HasRelationships
      * {@inheritDoc}
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\MorphManySyncable
      */
-    public function morphMany($related, $name, $type = null, $id = null, $localKey = null)
-    {
+    public function morphMany($related, $name, $type = NULL, $id = NULL, $localKey = NULL) {
         $instance = $this->newRelatedInstance($related);
 
         // Here we will gather up the morph type and ID for the relationship so that we
@@ -71,38 +70,37 @@ trait HasRelationships
         $table = $instance->getTable();
         $localKey = $localKey ?: $this->getKeyName();
 
-        return new MorphManySyncable($instance->newQuery(), $this, $table.'.'.$type, $table.'.'.$id, $localKey);
+        return new MorphManySyncable($instance->newQuery(), $this, $table . '.' . $type, $table . '.' . $id, $localKey);
     }
 
     /**
      * Define a many-to-many 'through' relationship.
      * This is basically hasManyThrough for many-to-many relationships.
      *
-     * @param  string  $related
-     * @param  string  $through
-     * @param  string  $firstJoiningTable
-     * @param  string  $firstForeignKey
-     * @param  string  $firstRelatedKey
-     * @param  string  $secondJoiningTable
-     * @param  string  $secondForeignKey
-     * @param  string  $secondRelatedKey
-     * @param  string  $throughRelation
-     * @param  string  $relation
+     * @param  string $related
+     * @param  string $through
+     * @param  string $firstJoiningTable
+     * @param  string $firstForeignKey
+     * @param  string $firstRelatedKey
+     * @param  string $secondJoiningTable
+     * @param  string $secondForeignKey
+     * @param  string $secondRelatedKey
+     * @param  string $throughRelation
+     * @param  string $relation
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough
      */
     public function belongsToManyThrough(
         $related,
         $through,
-        $firstJoiningTable = null,
-        $firstForeignKey = null,
-        $firstRelatedKey = null,
-        $secondJoiningTable = null,
-        $secondForeignKey = null,
-        $secondRelatedKey = null,
-        $throughRelation = null,
-        $relation = null
-    )
-    {
+        $firstJoiningTable = NULL,
+        $firstForeignKey = NULL,
+        $firstRelatedKey = NULL,
+        $secondJoiningTable = NULL,
+        $secondForeignKey = NULL,
+        $secondRelatedKey = NULL,
+        $throughRelation = NULL,
+        $relation = NULL
+    ) {
         // If no relationship name was passed, we will pull backtraces to get the
         // name of the calling function. We will use that function name as the
         // title of this relation since that is a great convention to apply.
@@ -153,8 +151,7 @@ trait HasRelationships
      * {@inheritDoc}
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyUnique
      */
-    public function belongsToManyUnique($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
-    {
+    public function belongsToManyUnique($related, $table = NULL, $foreignKey = NULL, $relatedKey = NULL, $relation = NULL) {
         // If no relationship name was passed, we will pull backtraces to get the
         // name of the calling function. We will use that function name as the
         // title of this relation since that is a great convention to apply.
@@ -189,14 +186,13 @@ trait HasRelationships
      * {@inheritDoc}
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\MorphToManyUnique
      */
-    public function morphToManyUnique($related, $name, $table = null, $foreignKey = null, $otherKey = null, $inverse = false)
-    {
+    public function morphToManyUnique($related, $name, $table = NULL, $foreignKey = NULL, $otherKey = NULL, $inverse = FALSE) {
         $caller = $this->getBelongsToManyCaller();
 
         // First, we will need to determine the foreign key and "other key" for the
         // relationship. Once we have determined the keys we will make the query
         // instances, as well as the relationship instances we need for these.
-        $foreignKey = $foreignKey ?: $name.'_id';
+        $foreignKey = $foreignKey ?: $name . '_id';
 
         $instance = new $related;
 
@@ -221,16 +217,15 @@ trait HasRelationships
      * This has been superseded by the belongsToManyUnique relationship's `withTernary` method since 4.1.7.
      *
      * @deprecated since 4.1.6
-     * @param  string  $related
-     * @param  string  $constraintKey
-     * @param  string  $table
-     * @param  string  $foreignKey
-     * @param  string  $relatedKey
-     * @param  string  $relation
+     * @param  string $related
+     * @param  string $constraintKey
+     * @param  string $table
+     * @param  string $foreignKey
+     * @param  string $relatedKey
+     * @param  string $relation
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyConstrained
      */
-    public function belongsToManyConstrained($related, $constraintKey, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
-    {
+    public function belongsToManyConstrained($related, $constraintKey, $table = NULL, $foreignKey = NULL, $relatedKey = NULL, $relation = NULL) {
         // If no relationship name was passed, we will pull backtraces to get the
         // name of the calling function. We will use that function name as the
         // title of this relation since that is a great convention to apply.
@@ -264,15 +259,14 @@ trait HasRelationships
      *
      * @return string
      */
-    protected function getBelongsToManyCaller()
-    {
+    protected function getBelongsToManyCaller() {
         $self = __FUNCTION__;
 
         $caller = Arr::first(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), function ($key, $trace) use ($self) {
             $caller = $trace['function'];
-            return ! in_array($caller, HasRelationships::$manyMethodsExtended) && $caller != $self;
+            return !in_array($caller, HasRelationships::$manyMethodsExtended) && $caller != $self;
         });
 
-        return ! is_null($caller) ? $caller['function'] : null;
+        return !is_null($caller) ? $caller['function'] : NULL;
     }
 }

@@ -12,59 +12,59 @@
  * - Your table should have a unique id, and your paging controls should be wrapped in an element with the `.js-uf-table-pager` class.
  * - Create a button with the `.js-uf-table-download` class, and it will be automatically bound to trigger an AJAX request for downloading the table (CSV, etc).
  *
-    <div id="widget-users">
-       <table id="table-users" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
-           <thead>
-               <tr>
-                   <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info">User <i class="fa fa-sort"></i></th>
-                   <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity">Last Activity <i class="fa fa-sort"></i></th>
-               </tr>
-           </thead>
-           <tbody>
-           </tbody>
-       </table>
+ <div id="widget-users">
+ <table id="table-users" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
+ <thead>
+ <tr>
+ <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info">User <i class="fa fa-sort"></i></th>
+ <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity">Last Activity <i class="fa fa-sort"></i></th>
+ </tr>
+ </thead>
+ <tbody>
+ </tbody>
+ </table>
 
-       <script id="user-table-column-info" type="text/x-handlebars-template">
-           <td data-text="{{row.last_name}}">
-               <strong>
-                   <a href="{{site.uri.public}}/users/u/{{row.user_name}}">{{row.first_name}} {{row.last_name}} ({{row.user_name}})</a>
-               </strong>
-               <div>
-                   <i class="fa fa-envelope"></i> <a href="mailto:{{row.email}}">{{row.email}}</a>
-               </div>
-           </td>
-       </script>
+ <script id="user-table-column-info" type="text/x-handlebars-template">
+ <td data-text="{{row.last_name}}">
+ <strong>
+ <a href="{{site.uri.public}}/users/u/{{row.user_name}}">{{row.first_name}} {{row.last_name}} ({{row.user_name}})</a>
+ </strong>
+ <div>
+ <i class="fa fa-envelope"></i> <a href="mailto:{{row.email}}">{{row.email}}</a>
+ </div>
+ </td>
+ </script>
 
-       <script id="user-table-column-last-activity" type="text/x-handlebars-template">
-           {{#if row.last_activity_at }}
-           <td data-num="{{dateFormat row.last_activity_at format='x'}}">
-               {{dateFormat row.last_activity_at format="dddd"}}<br>{{dateFormat row.last_activity_at format="MMM Do, YYYY h:mm a"}}
-               <br>
-               <i>{{row.last_activity.description}}</i>
-           </td>
-           {{ else }}
-           <td data-num="0">
-                   <i>Unknown</i>
-           </td>
-           {{/if }}
-       </script>
+ <script id="user-table-column-last-activity" type="text/x-handlebars-template">
+ {{#if row.last_activity_at }}
+ <td data-num="{{dateFormat row.last_activity_at format='x'}}">
+ {{dateFormat row.last_activity_at format="dddd"}}<br>{{dateFormat row.last_activity_at format="MMM Do, YYYY h:mm a"}}
+ <br>
+ <i>{{row.last_activity.description}}</i>
+ </td>
+ {{ else }}
+ <td data-num="0">
+ <i>Unknown</i>
+ </td>
+ {{/if }}
+ </script>
 
-       <div class="pager pager-lg tablesorter-pager js-uf-table-pager">
-           <span class="pager-control first" title="First page"><i class="fa fa-angle-double-left"></i></span>
-           <span class="pager-control prev" title="Previous page"><i class="fa fa-angle-left"></i></span>
-           <span class="pagedisplay"></span>
-           <span class="pager-control next" title="Next page"><i class="fa fa-angle-right"></i></span>
-           <span class="pager-control last" title= "Last page"><i class="fa fa-angle-double-right"></i></span>
-           <br><br>
-           Jump to Page: <select class="gotoPage"></select> &bull; Show:
-           <select class="pagesize">
-               <option value="5">5</option>
-               <option value="10">10</option>
-           </select>
-       </div>
+ <div class="pager pager-lg tablesorter-pager js-uf-table-pager">
+ <span class="pager-control first" title="First page"><i class="fa fa-angle-double-left"></i></span>
+ <span class="pager-control prev" title="Previous page"><i class="fa fa-angle-left"></i></span>
+ <span class="pagedisplay"></span>
+ <span class="pager-control next" title="Next page"><i class="fa fa-angle-right"></i></span>
+ <span class="pager-control last" title= "Last page"><i class="fa fa-angle-double-right"></i></span>
+ <br><br>
+ Jump to Page: <select class="gotoPage"></select> &bull; Show:
+ <select class="pagesize">
+ <option value="5">5</option>
+ <option value="10">10</option>
+ </select>
+ </div>
 
-       <button class="btn btn-sm btn-default js-uf-table-download">Download CSV</button>
-   </div>
+ <button class="btn btn-sm btn-default js-uf-table-download">Download CSV</button>
+ </div>
  *
  * Initialize ufTable on your container object:
  *
@@ -89,36 +89,38 @@
  * UserFrosting https://www.userfrosting.com
  * @author Alexander Weissman <https://alexanderweissman.com>
  */
-;(function($, window, document, undefined) {
+;(function ($, window, document, undefined) {
     'use strict';
 
     // Define plugin name and defaults.
     var pluginName = 'ufTable',
         defaults = {
-            DEBUG                : false,
-            site                 : site, // global site variables
-            dataUrl              : '',
-            msgTarget            : $('#alerts-page'),
-            addParams            : {},
-            filterAllField       : '_all',
-            useLoadingTransition : true,
-            rowTemplate          : null,
-            columnTemplates      : {},
-            tablesorter     : {
+            DEBUG: false,
+            site: site, // global site variables
+            dataUrl: '',
+            msgTarget: $('#alerts-page'),
+            addParams: {},
+            filterAllField: '_all',
+            useLoadingTransition: true,
+            rowTemplate: null,
+            columnTemplates: {},
+            tablesorter: {
                 debug: false,
-                theme     : 'bootstrap',
+                theme: 'bootstrap',
                 widthFixed: true,
                 // Set up pagination of data via an AJAX source
                 // See http://jsfiddle.net/Mottie/uwZc2/
                 // Also see https://mottie.github.io/tablesorter/docs/example-pager-ajax.html
                 widgets: ['saveSort', 'sort2Hash', 'filter', 'pager', 'columnSelector', 'reflow2'],
-                widgetOptions : {
-                    columnSelector_layout : '<label><input type="checkbox"> <span>{name}</span></label>',
+                widgetOptions: {
+                    columnSelector_layout: '<label><input type="checkbox"> <span>{name}</span></label>',
                     filter_cssFilter: 'form-control',
-                    filter_saveFilters : true,
-                    filter_serversideFiltering : true,
-                    filter_selectSource : {
-                        '.filter-select' : function() { return null; }
+                    filter_saveFilters: true,
+                    filter_serversideFiltering: true,
+                    filter_selectSource: {
+                        '.filter-select': function () {
+                            return null;
+                        }
                     },
 
                     // apply disabled classname to the pager arrows when the rows at either extreme is visible
@@ -143,8 +145,8 @@
 
                     // target the pager markup - see the HTML block below
                     pager_css: {
-                        errorRow    : 'uf-table-error-row', // error information row
-                        disabled    : 'disabled' // Note there is no period "." in front of this class name
+                        errorRow: 'uf-table-error-row', // error information row
+                        disabled: 'disabled' // Note there is no period "." in front of this class name
                     },
 
                     // Must be initialized with a 'data' key
@@ -154,23 +156,23 @@
                     },
 
                     // hash prefix
-                    sort2Hash_hash              : '#',
+                    sort2Hash_hash: '#',
                     // don't '#' or '=' here
-                    sort2Hash_separator         : '|',
+                    sort2Hash_separator: '|',
                     // this option > table ID > table index on page
-                    sort2Hash_tableId           : null,
+                    sort2Hash_tableId: null,
                     // if true, show header cell text instead of a zero-based column index
-                    sort2Hash_headerTextAttr    : 'data-column-name',
+                    sort2Hash_headerTextAttr: 'data-column-name',
                     // direction text shown in the URL e.g. [ 'asc', 'desc' ]
-                    sort2Hash_directionText     : [ 'asc', 'desc' ], // default values
+                    sort2Hash_directionText: ['asc', 'desc'], // default values
                     // if true, override saveSort widget sort, if used & stored sort is available
-                    sort2Hash_overrideSaveSort  : true, // default = false
+                    sort2Hash_overrideSaveSort: true, // default = false
                 }
             }
         };
 
     // Constructor
-    function Plugin (element, options) {
+    function Plugin(element, options) {
         this.element = element[0];
         this.$element = $(this.element);
 
@@ -189,19 +191,19 @@
             tableElement: this.$element.find('.tablesorter'),
             tablesorter: {
                 widgetOptions: {
-                    columnSelector_container : this.$element.find('.js-uf-table-cs-options'),
-                    filter_external          : this.$element.find('.js-uf-table-search input'),
+                    columnSelector_container: this.$element.find('.js-uf-table-cs-options'),
+                    filter_external: this.$element.find('.js-uf-table-search input'),
 
                     // Pager selectors
                     pager_selectors: {
-                        container   : this.$element.find('.js-uf-table-pager'),
-                        first       : '.first',       // go to first page arrow
-                        prev        : '.prev',        // previous page arrow
-                        next        : '.next',        // next page arrow
-                        last        : '.last',        // go to last page arrow
-                        gotoPage    : '.gotoPage',    // go to page selector - select dropdown that sets the current page
-                        pageDisplay : '.pagedisplay', // location of where the "output" is displayed
-                        pageSize    : '.pagesize'     // page size selector - select dropdown that sets the "size" option
+                        container: this.$element.find('.js-uf-table-pager'),
+                        first: '.first',       // go to first page arrow
+                        prev: '.prev',        // previous page arrow
+                        next: '.next',        // next page arrow
+                        last: '.last',        // go to last page arrow
+                        gotoPage: '.gotoPage',    // go to page selector - select dropdown that sets the current page
+                        pageDisplay: '.pagedisplay', // location of where the "output" is displayed
+                        pageSize: '.pagesize'     // page size selector - select dropdown that sets the "size" option
                     },
                     // We need to use $.proxy to properly bind the context for callbacks that will be called by Tablesorter
 
@@ -233,16 +235,16 @@
         var dataAttributeDefaults = {
             info: {
                 messageEmptyRows: infoContainer.data('message-empty-rows') ?
-                                  infoContainer.data('message-empty-rows') :
-                                  "Sorry, we've got nothing here."
+                    infoContainer.data('message-empty-rows') :
+                    "Sorry, we've got nothing here."
             },
             tablesorter: {
                 widgetOptions: {
                     // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
                     // also {page:input} & {startRow:input} will add a modifiable input in place of the value
                     pager_output: pagerContainer.data('output-template') ?
-                                  pagerContainer.data('output-template') :
-                                  '{startRow} to {endRow} of {filteredRows} ({totalRows})' // default if not set on data-* attribute
+                        pagerContainer.data('output-template') :
+                        '{startRow} to {endRow} of {filteredRows} ({totalRows})' // default if not set on data-* attribute
                 }
             }
         };
@@ -264,9 +266,9 @@
         // Set up 'loading' overlays
         if (this.settings.useLoadingTransition) {
             var overlay = this.settings.overlay.container;
-            tableElement.bind('sortStart filterStart pageMoved', function() {
+            tableElement.bind('sortStart filterStart pageMoved', function () {
                 overlay.removeClass('hidden');
-            }).bind('pagerComplete updateComplete', function() {
+            }).bind('pagerComplete updateComplete', function () {
                 overlay.addClass('hidden');
             });
         }
@@ -320,7 +322,7 @@
         this.settings.download.button.on('click', this.settings.download.callback);
 
         // Allow clicking on the labels in the table menu without closing the menu
-        $(this.settings.tablesorter.widgetOptions.columnSelector_container).find('label').on('click', function(e) {
+        $(this.settings.tablesorter.widgetOptions.columnSelector_container).find('label').on('click', function (e) {
             e.stopPropagation();
         });
 
@@ -345,7 +347,7 @@
     /**
      * Get state variables for this table, as required by the AJAX data source: sorts, filters, size, page
      */
-    Plugin.prototype.getTableStateVars = function(table) {
+    Plugin.prototype.getTableStateVars = function (table) {
         var base = this;
 
         // Get sort column and order
@@ -394,7 +396,7 @@
     /**
      * Get saved filters from the browser local storage. Those should always be up to date
      */
-    Plugin.prototype.getSavedFilters = function(table) {
+    Plugin.prototype.getSavedFilters = function (table) {
 
         // Fallback to `getFilters` or empty in case of failure
         var filterList = $.tablesorter.getFilters(table) || [];
@@ -402,12 +404,12 @@
         // Overwrite list with saved filter for filter-select not setup by ts
         var isArray, saved,
             wo = table.config.widgetOptions;
-        if ( wo.filter_saveFilters && $.tablesorter.storage ) {
-            saved = $.tablesorter.storage( table, 'tablesorter-filters' ) || [];
-            isArray = $.isArray( saved );
+        if (wo.filter_saveFilters && $.tablesorter.storage) {
+            saved = $.tablesorter.storage(table, 'tablesorter-filters') || [];
+            isArray = $.isArray(saved);
             // make sure we're not just getting an empty array
-            if ( !( isArray && saved.join( '' ) === '' || !isArray ) ) {
-                filterList = $.tablesorter.filter.processFilters( saved );
+            if (!(isArray && saved.join('') === '' || !isArray)) {
+                filterList = $.tablesorter.filter.processFilters(saved);
             }
         }
 
@@ -419,7 +421,7 @@
      * Used as the default callback for pager_customAjaxUrl
      * @private
      */
-    Plugin.prototype._generateUrl = function(table, url) {
+    Plugin.prototype._generateUrl = function (table, url) {
         var tableState = this.getTableStateVars(table);
 
         if (this.settings.DEBUG) {
@@ -438,7 +440,7 @@
      * Used as the default callback for pager_ajaxProcessing
      * @private
      */
-    Plugin.prototype._processAjax = function(data) {
+    Plugin.prototype._processAjax = function (data) {
         var ts = this.ts[0];
         var json = {},
             rows = '';
@@ -450,8 +452,8 @@
             for (var row = 0; row < size; row++) {
                 var cellData = {
                     rownum: row,
-                    row   : data.rows[row],       // It is safe to use the data from the API because Handlebars escapes HTML
-                    site  : this.settings.site
+                    row: data.rows[row],       // It is safe to use the data from the API because Handlebars escapes HTML
+                    site: this.settings.site
                 };
 
                 rows += this.rowTemplate(cellData);
@@ -484,7 +486,7 @@
      * Initialize filter select menus using the ajax `listable` values
      * @private
      */
-    Plugin.prototype._ajaxInitFilterSelects = function(columns, listable) {
+    Plugin.prototype._ajaxInitFilterSelects = function (columns, listable) {
         var ts = this.ts[0];
         var filters = this.getSavedFilters(ts);
         // Find columns with `.filter-select` and match them to column numbers based on their data-column-name
@@ -527,7 +529,7 @@
      * Handle pager ajax errors.
      * @private
      */
-    Plugin.prototype._pagerAjaxError = function(c, jqXHR, settings, exception) {
+    Plugin.prototype._pagerAjaxError = function (c, jqXHR, settings, exception) {
         this._ajaxError(jqXHR);
 
         // Let TS handle the in-table error message
@@ -538,7 +540,7 @@
      * Handle ajax error
      * @private
      */
-    Plugin.prototype._ajaxError = function(jqXHR) {
+    Plugin.prototype._ajaxError = function (jqXHR) {
         if (typeof jqXHR === 'object') {
             // Error messages
             if (this._debugAjax && jqXHR.responseText) {
@@ -546,7 +548,7 @@
                 document.close();
             } else {
                 if (this.settings.DEBUG) {
-                    console.log('Error (' + jqXHR.status + '): ' + jqXHR.responseText );
+                    console.log('Error (' + jqXHR.status + '): ' + jqXHR.responseText);
                 }
                 // Display errors on failure
                 // TODO: ufAlerts widget should have a 'destroy' method
@@ -583,9 +585,9 @@
      * Default callback for sort2Hash_encodeHash
      * @private
      */
-    Plugin.prototype._encodeHash = function(config, tableId, component, value, rawValue) {
+    Plugin.prototype._encodeHash = function (config, tableId, component, value, rawValue) {
         var wo = config.widgetOptions;
-        if ( component === 'filter' ) {
+        if (component === 'filter') {
             // rawValue is an array of filter values, numerically indexed
             var encodedFilters = '';
             var len = rawValue.length;
@@ -599,7 +601,7 @@
                 }
             }
             return encodedFilters;
-        } else if ( component === 'sort' ) {
+        } else if (component === 'sort') {
             // rawValue is an array of sort pairs [columnNum, sortDirection]
             var encodedFilters = '';
             var len = rawValue.length;
@@ -619,7 +621,7 @@
      * Default callback for sort2Hash_decodeHash
      * @private
      */
-    Plugin.prototype._decodeHash = function(config, tableId, component) {
+    Plugin.prototype._decodeHash = function (config, tableId, component) {
         var wo = config.widgetOptions;
         var result;
         // Convert hash into JSON object
@@ -657,7 +659,7 @@
      * Default callback for sort2Hash_cleanHash
      * @private
      */
-    Plugin.prototype._cleanHash = function(config, tableId, component, hash) {
+    Plugin.prototype._cleanHash = function (config, tableId, component, hash) {
         var wo = config.widgetOptions;
         // Convert hash to JSON object
         var urlObject = $.String.deparam(hash);
@@ -678,7 +680,7 @@
     };
 
     // Handles instantiation and access to non-private methods.
-    $.fn[pluginName] = function(methodOrOptions) {
+    $.fn[pluginName] = function (methodOrOptions) {
         // Grab plugin instance
         var instance = $(this).data(pluginName);
         // If undefined or object, initalise plugin.
@@ -688,17 +690,17 @@
                 $(this).data(pluginName, new Plugin(this, methodOrOptions));
             }
             return this;
-        // Otherwise ensure first parameter is a valid string, and is the name of an actual function.
+            // Otherwise ensure first parameter is a valid string, and is the name of an actual function.
         } else if (typeof methodOrOptions === 'string' && typeof instance[methodOrOptions] === 'function') {
             // Ensure not a private function
             if (methodOrOptions.indexOf('_') !== 0) {
-                return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
+                return instance[methodOrOptions](Array.prototype.slice.call(arguments, 1));
             }
             else {
-                console.warn( 'Method ' +  methodOrOptions + ' is private!' );
+                console.warn('Method ' + methodOrOptions + ' is private!');
             }
         } else {
-            console.warn( 'Method ' +  methodOrOptions + ' does not exist.' );
+            console.warn('Method ' + methodOrOptions + ' does not exist.');
         }
     };
 })(jQuery, window, document);

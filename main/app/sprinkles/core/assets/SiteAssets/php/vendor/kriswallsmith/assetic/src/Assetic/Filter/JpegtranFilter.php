@@ -38,37 +38,30 @@ class JpegtranFilter extends BaseProcessFilter
      *
      * @param string $jpegtranBin Path to the jpegtran binary
      */
-    public function __construct($jpegtranBin = '/usr/bin/jpegtran')
-    {
+    public function __construct($jpegtranBin = '/usr/bin/jpegtran') {
         $this->jpegtranBin = $jpegtranBin;
     }
 
-    public function setOptimize($optimize)
-    {
+    public function setOptimize($optimize) {
         $this->optimize = $optimize;
     }
 
-    public function setCopy($copy)
-    {
+    public function setCopy($copy) {
         $this->copy = $copy;
     }
 
-    public function setProgressive($progressive)
-    {
+    public function setProgressive($progressive) {
         $this->progressive = $progressive;
     }
 
-    public function setRestart($restart)
-    {
+    public function setRestart($restart) {
         $this->restart = $restart;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $pb = $this->createProcessBuilder(array($this->jpegtranBin));
 
         if ($this->optimize) {
@@ -83,7 +76,7 @@ class JpegtranFilter extends BaseProcessFilter
             $pb->add('-progressive');
         }
 
-        if (null !== $this->restart) {
+        if (NULL !== $this->restart) {
             $pb->add('-restart')->add($this->restart);
         }
 

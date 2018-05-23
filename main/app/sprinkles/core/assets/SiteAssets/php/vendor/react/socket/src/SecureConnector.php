@@ -14,20 +14,18 @@ final class SecureConnector implements ConnectorInterface
     private $streamEncryption;
     private $context;
 
-    public function __construct(ConnectorInterface $connector, LoopInterface $loop, array $context = array())
-    {
+    public function __construct(ConnectorInterface $connector, LoopInterface $loop, array $context = array()) {
         $this->connector = $connector;
-        $this->streamEncryption = new StreamEncryption($loop, false);
+        $this->streamEncryption = new StreamEncryption($loop, FALSE);
         $this->context = $context;
     }
 
-    public function connect($uri)
-    {
+    public function connect($uri) {
         if (!function_exists('stream_socket_enable_crypto')) {
             return Promise\reject(new BadMethodCallException('Encryption not supported on your platform (HHVM < 3.8?)')); // @codeCoverageIgnore
         }
 
-        if (strpos($uri, '://') === false) {
+        if (strpos($uri, '://') === FALSE) {
             $uri = 'tls://' . $uri;
         }
 
@@ -54,7 +52,7 @@ final class SecureConnector implements ConnectorInterface
             }
 
             // try to enable encryption
-            return $encryption->enable($connection)->then(null, function ($error) use ($connection) {
+            return $encryption->enable($connection)->then(NULL, function ($error) use ($connection) {
                 // establishing encryption failed => close invalid connection and return error
                 $connection->close();
                 throw $error;

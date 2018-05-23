@@ -1,6 +1,8 @@
 <?php
 require "vendor/autoload.php";
+
 use MatthiasMullie\Minify;
+
 $minifier = new Minify\JS('assets/js/jquery.js');
 $minifier->add('assets/js/fontawesome.js');
 $minifier->add('assets/js/modernizr.js');

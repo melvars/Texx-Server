@@ -11,11 +11,10 @@ use React\Dns\Model\Record;
 class ResolveAliasesTest extends TestCase
 {
     /**
-     * @covers React\Dns\Resolver\Resolver::resolveAliases
+     * @covers       React\Dns\Resolver\Resolver::resolveAliases
      * @dataProvider provideAliasedAnswers
      */
-    public function testResolveAliases(array $expectedAnswers, array $answers, $name)
-    {
+    public function testResolveAliases(array $expectedAnswers, array $answers, $name) {
         $executor = $this->createExecutorMock();
         $resolver = new Resolver('8.8.8.8:53', $executor);
 
@@ -24,8 +23,7 @@ class ResolveAliasesTest extends TestCase
         $this->assertEquals($expectedAnswers, $answers);
     }
 
-    public function provideAliasedAnswers()
-    {
+    public function provideAliasedAnswers() {
         return array(
             array(
                 array('178.79.169.131'),
@@ -93,8 +91,7 @@ class ResolveAliasesTest extends TestCase
         );
     }
 
-    private function createExecutorMock()
-    {
+    private function createExecutorMock() {
         return $this->getMockBuilder('React\Dns\Query\ExecutorInterface')->getMock();
     }
 }

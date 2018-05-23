@@ -112,7 +112,7 @@ Accept-Language: en-US,en;q=0.8';
 
     public function testBadSubprotocolResponse() {
         $negotiator = new ServerNegotiator(new RequestVerifier());
-        $negotiator->setStrictSubProtocolCheck(true);
+        $negotiator->setStrictSubProtocolCheck(TRUE);
         $negotiator->setSupportedSubProtocols([]);
 
         $requestText = 'GET / HTTP/1.1
@@ -144,7 +144,7 @@ Accept-Language: en-US,en;q=0.8';
 
     public function testNonStrictSubprotocolDoesNotIncludeHeaderWhenNoneAgreedOn() {
         $negotiator = new ServerNegotiator(new RequestVerifier());
-        $negotiator->setStrictSubProtocolCheck(false);
+        $negotiator->setStrictSubProtocolCheck(FALSE);
         $negotiator->setSupportedSubProtocols(['someproto']);
 
         $requestText = 'GET / HTTP/1.1

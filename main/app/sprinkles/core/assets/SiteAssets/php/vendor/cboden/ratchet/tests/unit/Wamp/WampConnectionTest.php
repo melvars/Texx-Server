@@ -1,10 +1,12 @@
 <?php
+
 namespace Ratchet\Wamp;
 
 /**
  * @covers Ratchet\Wamp\WampConnection
  */
-class WampConnectionTest extends \PHPUnit_Framework_TestCase {
+class WampConnectionTest extends \PHPUnit_Framework_TestCase
+{
     protected $conn;
     protected $mock;
 
@@ -15,7 +17,7 @@ class WampConnectionTest extends \PHPUnit_Framework_TestCase {
 
     public function testCallResult() {
         $callId = uniqid();
-        $data   = array('hello' => 'world', 'herp' => 'derp');
+        $data = array('hello' => 'world', 'herp' => 'derp');
 
         $this->mock->expects($this->once())->method('send')->with(json_encode(array(3, $callId, $data)));
 
@@ -24,7 +26,7 @@ class WampConnectionTest extends \PHPUnit_Framework_TestCase {
 
     public function testCallError() {
         $callId = uniqid();
-        $uri    = 'http://example.com/end/point';
+        $uri = 'http://example.com/end/point';
 
         $this->mock->expects($this->once())->method('send')->with(json_encode(array(4, $callId, $uri, '')));
 
@@ -33,7 +35,7 @@ class WampConnectionTest extends \PHPUnit_Framework_TestCase {
 
     public function testCallErrorWithTopic() {
         $callId = uniqid();
-        $uri    = 'http://example.com/end/point';
+        $uri = 'http://example.com/end/point';
 
         $this->mock->expects($this->once())->method('send')->with(json_encode(array(4, $callId, $uri, '')));
 
@@ -42,8 +44,8 @@ class WampConnectionTest extends \PHPUnit_Framework_TestCase {
 
     public function testDetailedCallError() {
         $callId = uniqid();
-        $uri    = 'http://example.com/end/point';
-        $desc   = 'beep boop beep';
+        $uri = 'http://example.com/end/point';
+        $desc = 'beep boop beep';
         $detail = 'Error: Too much awesome';
 
         $this->mock->expects($this->once())->method('send')->with(json_encode(array(4, $callId, $uri, $desc, $detail)));
@@ -53,7 +55,7 @@ class WampConnectionTest extends \PHPUnit_Framework_TestCase {
 
     public function testPrefix() {
         $shortOut = 'outgoing';
-        $longOut  = 'http://example.com/outgoing';
+        $longOut = 'http://example.com/outgoing';
 
         $this->mock->expects($this->once())->method('send')->with(json_encode(array(1, $shortOut, $longOut)));
 
@@ -61,7 +63,7 @@ class WampConnectionTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetUriWhenNoCurieGiven() {
-        $uri  = 'http://example.com/noshort';
+        $uri = 'http://example.com/noshort';
 
         $this->assertEquals($uri, $this->conn->getUri($uri));
     }

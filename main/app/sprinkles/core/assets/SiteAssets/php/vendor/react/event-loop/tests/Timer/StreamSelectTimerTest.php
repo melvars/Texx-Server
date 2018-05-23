@@ -6,8 +6,7 @@ use React\EventLoop\StreamSelectLoop;
 
 class StreamSelectTimerTest extends AbstractTimerTest
 {
-    public function createLoop()
-    {
+    public function createLoop() {
         return new StreamSelectLoop();
     }
 }

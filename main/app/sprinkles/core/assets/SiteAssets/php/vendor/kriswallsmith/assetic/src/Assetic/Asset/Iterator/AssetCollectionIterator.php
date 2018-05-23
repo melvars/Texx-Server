@@ -29,18 +29,17 @@ class AssetCollectionIterator implements \RecursiveIterator
     private $output;
     private $clones;
 
-    public function __construct(AssetCollectionInterface $coll, \SplObjectStorage $clones)
-    {
-        $this->assets  = $coll->all();
+    public function __construct(AssetCollectionInterface $coll, \SplObjectStorage $clones) {
+        $this->assets = $coll->all();
         $this->filters = $coll->getFilters();
-        $this->vars    = $coll->getVars();
-        $this->output  = $coll->getTargetPath();
-        $this->clones  = $clones;
+        $this->vars = $coll->getVars();
+        $this->output = $coll->getTargetPath();
+        $this->clones = $clones;
 
-        if (false === $pos = strrpos($this->output, '.')) {
+        if (FALSE === $pos = strrpos($this->output, '.')) {
             $this->output .= '_*';
         } else {
-            $this->output = substr($this->output, 0, $pos).'_*'.substr($this->output, $pos);
+            $this->output = substr($this->output, 0, $pos) . '_*' . substr($this->output, $pos);
         }
     }
 
@@ -51,8 +50,7 @@ class AssetCollectionIterator implements \RecursiveIterator
      *
      * @return \Assetic\Asset\AssetInterface
      */
-    public function current($raw = false)
-    {
+    public function current($raw = FALSE) {
         $asset = current($this->assets);
 
         if ($raw) {
@@ -81,44 +79,37 @@ class AssetCollectionIterator implements \RecursiveIterator
         return $clone;
     }
 
-    public function key()
-    {
+    public function key() {
         return key($this->assets);
     }
 
-    public function next()
-    {
+    public function next() {
         return next($this->assets);
     }
 
-    public function rewind()
-    {
+    public function rewind() {
         return reset($this->assets);
     }
 
-    public function valid()
-    {
-        return false !== current($this->assets);
+    public function valid() {
+        return FALSE !== current($this->assets);
     }
 
-    public function hasChildren()
-    {
+    public function hasChildren() {
         return current($this->assets) instanceof AssetCollectionInterface;
     }
 
     /**
      * @uses current()
      */
-    public function getChildren()
-    {
+    public function getChildren() {
         return new self($this->current(), $this->clones);
     }
 
-    private function removeDuplicateVar($name)
-    {
+    private function removeDuplicateVar($name) {
         foreach ($this->vars as $var) {
-            $var = '{'.$var.'}';
-            if (false !== strpos($name, $var) && false !== strpos($this->output, $var)) {
+            $var = '{' . $var . '}';
+            if (FALSE !== strpos($name, $var) && FALSE !== strpos($this->output, $var)) {
                 $name = str_replace($var, '', $name);
             }
         }

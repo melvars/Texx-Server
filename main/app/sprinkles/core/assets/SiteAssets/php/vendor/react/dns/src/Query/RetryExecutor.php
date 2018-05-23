@@ -9,19 +9,16 @@ class RetryExecutor implements ExecutorInterface
     private $executor;
     private $retries;
 
-    public function __construct(ExecutorInterface $executor, $retries = 2)
-    {
+    public function __construct(ExecutorInterface $executor, $retries = 2) {
         $this->executor = $executor;
         $this->retries = $retries;
     }
 
-    public function query($nameserver, Query $query)
-    {
+    public function query($nameserver, Query $query) {
         return $this->tryQuery($nameserver, $query, $this->retries);
     }
 
-    public function tryQuery($nameserver, Query $query, $retries)
-    {
+    public function tryQuery($nameserver, Query $query, $retries) {
         $that = $this;
         $errorback = function ($error) use ($nameserver, $query, $retries, $that) {
             if (!$error instanceof TimeoutException) {
@@ -34,11 +31,11 @@ class RetryExecutor implements ExecutorInterface
                     $error
                 );
             }
-            return $that->tryQuery($nameserver, $query, $retries-1);
+            return $that->tryQuery($nameserver, $query, $retries - 1);
         };
 
         return $this->executor
             ->query($nameserver, $query)
-            ->then(null, $errorback);
+            ->then(NULL, $errorback);
     }
 }

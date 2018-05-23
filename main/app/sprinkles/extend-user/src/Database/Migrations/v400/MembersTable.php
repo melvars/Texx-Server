@@ -1,4 +1,5 @@
 <?php
+
 namespace UserFrosting\Sprinkle\ExtendUser\Database\Migrations\v400;
 
 use UserFrosting\System\Bakery\Migration;
@@ -11,8 +12,7 @@ class MembersTable extends Migration
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\UsersTable'
     ];
 
-    public function up()
-    {
+    public function up() {
         if (!$this->schema->hasTable('members')) {
             $this->schema->create('members', function (Blueprint $table) {
                 $table->increments('id');
@@ -27,8 +27,7 @@ class MembersTable extends Migration
         }
     }
 
-    public function down()
-    {
+    public function down() {
         $this->schema->drop('members');
     }
 }

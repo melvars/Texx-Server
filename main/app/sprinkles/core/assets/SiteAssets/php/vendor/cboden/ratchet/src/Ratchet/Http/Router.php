@@ -1,5 +1,7 @@
 <?php
+
 namespace Ratchet\Http;
+
 use Ratchet\ConnectionInterface;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
@@ -7,7 +9,8 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use GuzzleHttp\Psr7 as gPsr;
 
-class Router implements HttpServerInterface {
+class Router implements HttpServerInterface
+{
     use CloseResponseTrait;
 
     /**
@@ -26,8 +29,8 @@ class Router implements HttpServerInterface {
      * {@inheritdoc}
      * @throws \UnexpectedValueException If a controller is not \Ratchet\Http\HttpServerInterface
      */
-    public function onOpen(ConnectionInterface $conn, RequestInterface $request = null) {
-        if (null === $request) {
+    public function onOpen(ConnectionInterface $conn, RequestInterface $request = NULL) {
+        if (NULL === $request) {
             throw new \UnexpectedValueException('$request can not be null');
         }
 
@@ -56,7 +59,7 @@ class Router implements HttpServerInterface {
         }
 
         $parameters = [];
-        foreach($route as $key => $value) {
+        foreach ($route as $key => $value) {
             if ((is_string($key)) && ('_' !== substr($key, 0, 1))) {
                 $parameters[$key] = $value;
             }

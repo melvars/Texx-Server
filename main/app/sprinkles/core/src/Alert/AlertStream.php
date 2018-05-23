@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Alert;
 
 use UserFrosting\Fortress\ServerSideValidator;
@@ -28,13 +29,12 @@ abstract class AlertStream
     /**
      * @var UserFrosting\I18n\MessageTranslator|null
      */
-    protected $messageTranslator = null;
+    protected $messageTranslator = NULL;
 
     /**
      * Create a new message stream.
      */
-    public function __construct($messagesKey, $translator = null)
-    {
+    public function __construct($messagesKey, $translator = NULL) {
         $this->messagesKey = $messagesKey;
 
         $this->setTranslator($translator);
@@ -45,8 +45,7 @@ abstract class AlertStream
      *
      * @param UserFrosting\I18n\MessageTranslator $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
      */
-    public function setTranslator($translator)
-    {
+    public function setTranslator($translator) {
         $this->messageTranslator = $translator;
         return $this;
     }
@@ -58,8 +57,7 @@ abstract class AlertStream
      * @param string $message The message to be added to the message stream.
      * @return MessageStream this MessageStream object.
      */
-    public function addMessage($type, $message)
-    {
+    public function addMessage($type, $message) {
         $messages = $this->messages();
         $messages[] = array(
             "type" => $type,
@@ -77,9 +75,8 @@ abstract class AlertStream
      * @param array[string] $placeholders An optional hash of placeholder names => placeholder values to substitute into the translated message.
      * @return MessageStream this MessageStream object.
      */
-    public function addMessageTranslated($type, $messageId, $placeholders = array())
-    {
-        if (!$this->messageTranslator){
+    public function addMessageTranslated($type, $messageId, $placeholders = array()) {
+        if (!$this->messageTranslator) {
             throw new \RuntimeException("No translator has been set!  Please call MessageStream::setTranslator first.");
         }
 
@@ -94,8 +91,7 @@ abstract class AlertStream
      *
      * @return array An array of messages, each of which is itself an array containing "type" and "message" fields.
      */
-    public function getAndClearMessages()
-    {
+    public function getAndClearMessages() {
         $messages = $this->messages();
         $this->resetMessageStream();
         return $messages;
@@ -106,10 +102,9 @@ abstract class AlertStream
      *
      * @param ServerSideValidator $validator
      */
-    public function addValidationErrors(ServerSideValidator $validator)
-    {
+    public function addValidationErrors(ServerSideValidator $validator) {
         foreach ($validator->errors() as $idx => $field) {
-            foreach($field as $eidx => $error) {
+            foreach ($field as $eidx => $error) {
                 $this->addMessage("danger", $error);
             }
         }
@@ -120,8 +115,7 @@ abstract class AlertStream
      *
      * @return MessageTranslator The translator for this message stream.
      */
-    public function translator()
-    {
+    public function translator() {
         return $this->messageTranslator;
     }
 

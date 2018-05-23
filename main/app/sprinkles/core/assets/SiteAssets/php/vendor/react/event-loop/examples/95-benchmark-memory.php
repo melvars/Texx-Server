@@ -14,7 +14,7 @@ use React\EventLoop\TimerInterface;
 require __DIR__ . '/../vendor/autoload.php';
 
 $args = getopt('t:l:r:');
-$t  = isset($args['t']) ? (int)$args['t'] : 0;
+$t = isset($args['t']) ? (int)$args['t'] : 0;
 $loop = isset($args['l']) && class_exists('React\EventLoop\\' . $args['l'] . 'Loop') ? 'React\EventLoop\\' . $args['l'] . 'Loop' : Factory::create();
 
 if (!($loop instanceof LoopInterface)) {
@@ -42,7 +42,7 @@ $loop->addPeriodicTimer(0.001, function () use (&$runs, $loop) {
 
 $loop->addPeriodicTimer($r, function () use (&$runs) {
     $kmem = round(memory_get_usage() / 1024);
-    $kmemReal = round(memory_get_usage(true) / 1024);
+    $kmemReal = round(memory_get_usage(TRUE) / 1024);
     echo "Runs:\t\t\t$runs\n";
     echo "Memory (internal):\t$kmem KiB\n";
     echo "Memory (real):\t\t$kmemReal KiB\n";

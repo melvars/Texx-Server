@@ -24,42 +24,35 @@ class CssMinFilter implements FilterInterface
     private $filters;
     private $plugins;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->filters = array();
         $this->plugins = array();
     }
 
-    public function setFilters(array $filters)
-    {
+    public function setFilters(array $filters) {
         $this->filters = $filters;
     }
 
-    public function setFilter($name, $value)
-    {
+    public function setFilter($name, $value) {
         $this->filters[$name] = $value;
     }
 
-    public function setPlugins(array $plugins)
-    {
+    public function setPlugins(array $plugins) {
         $this->plugins = $plugins;
     }
 
-    public function setPlugin($name, $value)
-    {
+    public function setPlugin($name, $value) {
         $this->plugins[$name] = $value;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $filters = $this->filters;
         $plugins = $this->plugins;
 
-        if (isset($filters['ImportImports']) && true === $filters['ImportImports']) {
+        if (isset($filters['ImportImports']) && TRUE === $filters['ImportImports']) {
             if ($dir = $asset->getSourceDirectory()) {
                 $filters['ImportImports'] = array('BasePath' => $dir);
             } else {

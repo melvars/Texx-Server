@@ -9,8 +9,7 @@ final class SignalsHandler
 {
     private $signals = array();
 
-    public function add($signal, $listener)
-    {
+    public function add($signal, $listener) {
         if (!isset($this->signals[$signal])) {
             $this->signals[$signal] = array();
         }
@@ -22,13 +21,12 @@ final class SignalsHandler
         $this->signals[$signal][] = $listener;
     }
 
-    public function remove($signal, $listener)
-    {
+    public function remove($signal, $listener) {
         if (!isset($this->signals[$signal])) {
             return;
         }
 
-        $index = \array_search($listener, $this->signals[$signal], true);
+        $index = \array_search($listener, $this->signals[$signal], TRUE);
         unset($this->signals[$signal][$index]);
 
         if (isset($this->signals[$signal]) && \count($this->signals[$signal]) === 0) {
@@ -36,8 +34,7 @@ final class SignalsHandler
         }
     }
 
-    public function call($signal)
-    {
+    public function call($signal) {
         if (!isset($this->signals[$signal])) {
             return;
         }
@@ -47,8 +44,7 @@ final class SignalsHandler
         }
     }
 
-    public function count($signal)
-    {
+    public function count($signal) {
         if (!isset($this->signals[$signal])) {
             return 0;
         }
@@ -56,8 +52,7 @@ final class SignalsHandler
         return \count($this->signals[$signal]);
     }
 
-    public function isEmpty()
-    {
+    public function isEmpty() {
         return !$this->signals;
     }
 }

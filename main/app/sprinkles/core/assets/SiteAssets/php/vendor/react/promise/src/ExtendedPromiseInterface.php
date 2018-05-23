@@ -7,7 +7,7 @@ interface ExtendedPromiseInterface extends PromiseInterface
     /**
      * @return void
      */
-    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null);
+    public function done(callable $onFulfilled = NULL, callable $onRejected = NULL, callable $onProgress = NULL);
 
     /**
      * @return ExtendedPromiseInterface

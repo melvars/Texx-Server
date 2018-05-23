@@ -1,7 +1,9 @@
 <?php
+
 namespace Ratchet\RFC6455\Messaging;
 
-interface DataInterface {
+interface DataInterface
+{
     /**
      * Determine if the message is complete or still fragmented
      * @return bool

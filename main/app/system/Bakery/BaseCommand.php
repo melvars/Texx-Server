@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery;
 
 use Symfony\Component\Console\Command\Command;
@@ -42,8 +43,7 @@ abstract class BaseCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function initialize(InputInterface $input, OutputInterface $output)
-    {
+    protected function initialize(InputInterface $input, OutputInterface $output) {
         $this->io = new SymfonyStyle($input, $output);
         $this->projectRoot = \UserFrosting\ROOT_DIR;
     }
@@ -51,8 +51,7 @@ abstract class BaseCommand extends Command
     /**
      * Setup the global container object
      */
-    public function setContainer(ContainerInterface $ci)
-    {
+    public function setContainer(ContainerInterface $ci) {
         $this->ci = $ci;
     }
 }

@@ -7,7 +7,7 @@
  * Target page: /activities
  */
 
-$(document).ready(function() {
+$(document).ready(function () {
     // Set up table of activities
     $("#widget-activities").ufTable({
         dataUrl: site.uri.public + "/api/activities",

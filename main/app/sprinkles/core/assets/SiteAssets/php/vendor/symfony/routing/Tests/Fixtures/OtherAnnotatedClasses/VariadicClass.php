@@ -13,7 +13,6 @@ namespace Symfony\Component\Routing\Tests\Fixtures\OtherAnnotatedClasses;
 
 class VariadicClass
 {
-    public function routeAction(...$params)
-    {
+    public function routeAction(...$params) {
     }
 }

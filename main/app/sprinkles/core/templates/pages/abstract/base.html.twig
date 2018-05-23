@@ -10,7 +10,8 @@
             <meta charset="utf-8">
             <meta name="generator" content="UserFrosting" />
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-            <meta name="description" content="{% block page_description %}This page has not yet been configured.{% endblock %}">
+            <meta name="description"
+                  content="{% block page_description %}This page has not yet been configured.{% endblock %}">
             <meta name="author" content="{% block page_author %}{{ site.author }}{% endblock %}">
 
             <title>{{ site.title }} | {% block page_title %}New Page{% endblock %}</title>
@@ -48,7 +49,7 @@
 
             {# Canonical page link #}
             {% if block('page_canonical') %}
-                <link href="{{site.uri.base.scheme}}://{% block page_canonical %}{% endblock %}" rel="canonical" />
+                <link href="{{ site.uri.base.scheme }}://{% block page_canonical %}{% endblock %}" rel="canonical" />
             {% endif %}
 
             <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

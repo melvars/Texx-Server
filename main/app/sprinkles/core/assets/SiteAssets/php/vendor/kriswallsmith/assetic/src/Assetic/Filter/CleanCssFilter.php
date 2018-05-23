@@ -29,7 +29,7 @@ class CleanCssFilter extends BaseNodeFilter
     private $compatibility;
     private $debug;
     private $rootPath;
-    private $skipImport = true;
+    private $skipImport = TRUE;
     private $timeout;
     private $semanticMerging;
     private $roundingPrecision;
@@ -47,11 +47,10 @@ class CleanCssFilter extends BaseNodeFilter
 
 
     /**
-     * @param string $cleanCssBin  Absolute path to the cleancss executable
-     * @param string $nodeBin      Absolute path to the folder containg node.js executable
+     * @param string $cleanCssBin Absolute path to the cleancss executable
+     * @param string $nodeBin Absolute path to the folder containg node.js executable
      */
-    public function __construct($cleanCssBin = '/usr/bin/cleancss', $nodeBin = null)
-    {
+    public function __construct($cleanCssBin = '/usr/bin/cleancss', $nodeBin = NULL) {
         $this->cleanCssBin = $cleanCssBin;
         $this->nodeBin = $nodeBin;
     }
@@ -60,8 +59,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Keep line breaks
      * @param bool $keepLineBreaks True to enable
      */
-    public function setKeepLineBreaks($keepLineBreaks)
-    {
+    public function setKeepLineBreaks($keepLineBreaks) {
         $this->keepLineBreaks = $keepLineBreaks;
     }
 
@@ -69,8 +67,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Remove all special comments
      * @param bool $removeSpecialComments True to enable
      */ // i.e.  /*! comment */
-    public function setRemoveSpecialComments($removeSpecialComments)
-    {
+    public function setRemoveSpecialComments($removeSpecialComments) {
         $this->removeSpecialComments = $removeSpecialComments;
     }
 
@@ -78,16 +75,15 @@ class CleanCssFilter extends BaseNodeFilter
      * Remove all special comments except the first one
      * @param bool $onlyKeepFirstSpecialComment True to enable
      */
-    public function setOnlyKeepFirstSpecialComment($onlyKeepFirstSpecialComment)
-    {
+    public function setOnlyKeepFirstSpecialComment($onlyKeepFirstSpecialComment) {
         $this->onlyKeepFirstSpecialComment = $onlyKeepFirstSpecialComment;
     }
+
     /**
      * Enables unsafe mode by assuming BEM-like semantic stylesheets (warning, this may break your styling!)
      * @param bool $semanticMerging True to enable
      */
-    public function setSemanticMerging($semanticMerging)
-    {
+    public function setSemanticMerging($semanticMerging) {
         $this->semanticMerging = $semanticMerging;
     }
 
@@ -95,8 +91,7 @@ class CleanCssFilter extends BaseNodeFilter
      * A root path to which resolve absolute @import rules
      * @param string $rootPath
      */
-    public function setRootPath($rootPath)
-    {
+    public function setRootPath($rootPath) {
         $this->rootPath = $rootPath;
     }
 
@@ -104,16 +99,15 @@ class CleanCssFilter extends BaseNodeFilter
      * Disable @import processing
      * @param bool $skipImport True to enable
      */
-    public function setSkipImport($skipImport)
-    {
+    public function setSkipImport($skipImport) {
         $this->skipImport = $skipImport;
     }
+
     /**
      * Per connection timeout when fetching remote @imports; defaults to 5 seconds
      * @param int $timeout
      */
-    public function setTimeout($timeout)
-    {
+    public function setTimeout($timeout) {
         $this->timeout = $timeout;
     }
 
@@ -121,8 +115,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Disable URLs rebasing
      * @param bool $skipRebase True to enable
      */
-    public function setSkipRebase($skipRebase)
-    {
+    public function setSkipRebase($skipRebase) {
         $this->skipRebase = $skipRebase;
     }
 
@@ -130,8 +123,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Disable restructuring optimizations
      * @param bool $skipRestructuring True to enable
      */
-    public function setSkipRestructuring($skipRestructuring)
-    {
+    public function setSkipRestructuring($skipRestructuring) {
         $this->skipRestructuring = $skipRestructuring;
     }
 
@@ -139,8 +131,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Disable shorthand compacting
      * @param bool $skipShorthandCompacting True to enable
      */
-    public function setSkipShorthandCompacting($skipShorthandCompacting)
-    {
+    public function setSkipShorthandCompacting($skipShorthandCompacting) {
         $this->skipShorthandCompacting = $skipShorthandCompacting;
     }
 
@@ -148,8 +139,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Enables building input's source map
      * @param bool $sourceMap True to enable
      */
-    public function setSourceMap($sourceMap)
-    {
+    public function setSourceMap($sourceMap) {
         $this->sourceMap = $sourceMap;
     }
 
@@ -157,8 +147,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Enables inlining sources inside source maps
      * @param bool $sourceMapInlineSources True to enable
      */
-    public function setSourceMapInlineSources($sourceMapInlineSources)
-    {
+    public function setSourceMapInlineSources($sourceMapInlineSources) {
         $this->sourceMapInlineSources = $sourceMapInlineSources;
     }
 
@@ -166,8 +155,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Disable advanced optimizations - selector & property merging, reduction, etc.
      * @param bool $skipAdvanced True to enable
      */
-    public function setSkipAdvanced($skipAdvanced)
-    {
+    public function setSkipAdvanced($skipAdvanced) {
         $this->skipAdvanced = $skipAdvanced;
     }
 
@@ -175,8 +163,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Disable properties merging based on their order
      * @param bool $skipAggresiveMerging True to enable
      */
-    public function setSkipAggresiveMerging($skipAggresiveMerging)
-    {
+    public function setSkipAggresiveMerging($skipAggresiveMerging) {
         $this->skipAggresiveMerging = $skipAggresiveMerging;
     }
 
@@ -184,8 +171,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Disable @import processing for specified rules
      * @param string $skipImportFrom
      */
-    public function setSkipImportFrom($skipImportFrom)
-    {
+    public function setSkipImportFrom($skipImportFrom) {
         $this->skipImportFrom = $skipImportFrom;
     }
 
@@ -193,8 +179,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Disable @media merging
      * @param bool $mediaMerging True to enable
      */
-    public function setMediaMerging($mediaMerging)
-    {
+    public function setMediaMerging($mediaMerging) {
         $this->mediaMerging = $mediaMerging;
     }
 
@@ -202,8 +187,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Rounds to `N` decimal places. Defaults to 2. -1 disables rounding.
      * @param int $roundingPrecision
      */
-    public function setRoundingPrecision($roundingPrecision)
-    {
+    public function setRoundingPrecision($roundingPrecision) {
         $this->roundingPrecision = $roundingPrecision;
     }
 
@@ -211,8 +195,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Force compatibility mode (see https://github.com/jakubpawlowicz/clean-css/blob/master/README.md#how-to-set-compatibility-mode for advanced examples)
      * @param string $compatibility
      */
-    public function setCompatibility($compatibility)
-    {
+    public function setCompatibility($compatibility) {
         $this->compatibility = $compatibility;
     }
 
@@ -220,8 +203,7 @@ class CleanCssFilter extends BaseNodeFilter
      * Shows debug information (minification time & compression efficiency)
      * @param bool $debug True to enable
      */
-    public function setDebug($debug)
-    {
+    public function setDebug($debug) {
         $this->debug = $debug;
     }
 
@@ -229,8 +211,7 @@ class CleanCssFilter extends BaseNodeFilter
     /**
      * @see Assetic\Filter\FilterInterface::filterLoad()
      */
-    public function filterLoad(AssetInterface $asset)
-    {
+    public function filterLoad(AssetInterface $asset) {
     }
 
 
@@ -239,8 +220,7 @@ class CleanCssFilter extends BaseNodeFilter
      *
      * @see Assetic\Filter\FilterInterface::filterDump()
      */
-    public function filterDump(AssetInterface $asset)
-    {
+    public function filterDump(AssetInterface $asset) {
         $pb = $this->createProcessBuilder($this->nodeBin
             ? array($this->nodeBin, $this->cleanCssBin)
             : array($this->cleanCssBin));
@@ -250,7 +230,7 @@ class CleanCssFilter extends BaseNodeFilter
         }
 
         if ($this->compatibility) {
-            $pb->add('--compatibility ' .$this->compatibility);
+            $pb->add('--compatibility ' . $this->compatibility);
         }
 
         if ($this->debug) {
@@ -258,7 +238,7 @@ class CleanCssFilter extends BaseNodeFilter
         }
 
         if ($this->rootPath) {
-            $pb->add('--root ' .$this->rootPath);
+            $pb->add('--root ' . $this->rootPath);
         }
 
         if ($this->skipImport) {
@@ -266,11 +246,11 @@ class CleanCssFilter extends BaseNodeFilter
         }
 
         if ($this->timeout) {
-            $pb->add('--timeout ' .$this->timeout);
+            $pb->add('--timeout ' . $this->timeout);
         }
 
         if ($this->roundingPrecision) {
-            $pb->add('--rounding-precision ' .$this->roundingPrecision);
+            $pb->add('--rounding-precision ' . $this->roundingPrecision);
         }
 
         if ($this->removeSpecialComments) {
@@ -294,7 +274,7 @@ class CleanCssFilter extends BaseNodeFilter
         }
 
         if ($this->skipImportFrom) {
-            $pb->add('--skip-import-from ' .$this->skipImportFrom);
+            $pb->add('--skip-import-from ' . $this->skipImportFrom);
         }
 
         if ($this->mediaMerging) {

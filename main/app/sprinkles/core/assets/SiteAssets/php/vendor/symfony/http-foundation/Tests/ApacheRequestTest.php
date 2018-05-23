@@ -19,8 +19,7 @@ class ApacheRequestTest extends TestCase
     /**
      * @dataProvider provideServerVars
      */
-    public function testUriMethods($server, $expectedRequestUri, $expectedBaseUrl, $expectedPathInfo)
-    {
+    public function testUriMethods($server, $expectedRequestUri, $expectedBaseUrl, $expectedPathInfo) {
         $request = new ApacheRequest();
         $request->server->replace($server);
 
@@ -29,8 +28,7 @@ class ApacheRequestTest extends TestCase
         $this->assertEquals($expectedPathInfo, $request->getPathInfo(), '->getPathInfo() is correct');
     }
 
-    public function provideServerVars()
-    {
+    public function provideServerVars() {
         return array(
             array(
                 array(

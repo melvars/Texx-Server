@@ -21,8 +21,7 @@ class PhpExecutableFinder
 {
     private $executableFinder;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->executableFinder = new ExecutableFinder();
     }
 
@@ -33,24 +32,23 @@ class PhpExecutableFinder
      *
      * @return string|false The PHP executable path or false if it cannot be found
      */
-    public function find($includeArgs = true)
-    {
+    public function find($includeArgs = TRUE) {
         $args = $this->findArguments();
-        $args = $includeArgs && $args ? ' '.implode(' ', $args) : '';
+        $args = $includeArgs && $args ? ' ' . implode(' ', $args) : '';
 
         // HHVM support
         if (defined('HHVM_VERSION')) {
-            return (getenv('PHP_BINARY') ?: PHP_BINARY).$args;
+            return (getenv('PHP_BINARY') ?: PHP_BINARY) . $args;
         }
 
         // PHP_BINARY return the current sapi executable
-        if (PHP_BINARY && \in_array(PHP_SAPI, array('cli', 'cli-server', 'phpdbg'), true)) {
-            return PHP_BINARY.$args;
+        if (PHP_BINARY && \in_array(PHP_SAPI, array('cli', 'cli-server', 'phpdbg'), TRUE)) {
+            return PHP_BINARY . $args;
         }
 
         if ($php = getenv('PHP_PATH')) {
             if (!is_executable($php)) {
-                return false;
+                return FALSE;
             }
 
             return $php;
@@ -62,7 +60,7 @@ class PhpExecutableFinder
             }
         }
 
-        if (is_executable($php = PHP_BINDIR.('\\' === DIRECTORY_SEPARATOR ? '\\php.exe' : '/php'))) {
+        if (is_executable($php = PHP_BINDIR . ('\\' === DIRECTORY_SEPARATOR ? '\\php.exe' : '/php'))) {
             return $php;
         }
 
@@ -71,7 +69,7 @@ class PhpExecutableFinder
             $dirs[] = 'C:\xampp\php\\';
         }
 
-        return $this->executableFinder->find('php', false, $dirs);
+        return $this->executableFinder->find('php', FALSE, $dirs);
     }
 
     /**
@@ -79,13 +77,12 @@ class PhpExecutableFinder
      *
      * @return array The PHP executable arguments
      */
-    public function findArguments()
-    {
+    public function findArguments() {
         $arguments = array();
 
         if (defined('HHVM_VERSION')) {
             $arguments[] = '--php';
-        } elseif ('phpdbg' === PHP_SAPI) {
+        } else if ('phpdbg' === PHP_SAPI) {
             $arguments[] = '-qrr';
         }
 

@@ -49,15 +49,14 @@ class RequestMatcher implements RequestMatcherInterface
     private $schemes = array();
 
     /**
-     * @param string|null          $path
-     * @param string|null          $host
+     * @param string|null $path
+     * @param string|null $host
      * @param string|string[]|null $methods
      * @param string|string[]|null $ips
-     * @param array                $attributes
+     * @param array $attributes
      * @param string|string[]|null $schemes
      */
-    public function __construct($path = null, $host = null, $methods = null, $ips = null, array $attributes = array(), $schemes = null)
-    {
+    public function __construct($path = NULL, $host = NULL, $methods = NULL, $ips = NULL, array $attributes = array(), $schemes = NULL) {
         $this->matchPath($path);
         $this->matchHost($host);
         $this->matchMethod($methods);
@@ -74,9 +73,8 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|string[]|null $scheme An HTTP scheme or an array of HTTP schemes
      */
-    public function matchScheme($scheme)
-    {
-        $this->schemes = null !== $scheme ? array_map('strtolower', (array) $scheme) : array();
+    public function matchScheme($scheme) {
+        $this->schemes = NULL !== $scheme ? array_map('strtolower', (array)$scheme) : array();
     }
 
     /**
@@ -84,8 +82,7 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|null $regexp A Regexp
      */
-    public function matchHost($regexp)
-    {
+    public function matchHost($regexp) {
         $this->host = $regexp;
     }
 
@@ -94,8 +91,7 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|null $regexp A Regexp
      */
-    public function matchPath($regexp)
-    {
+    public function matchPath($regexp) {
         $this->path = $regexp;
     }
 
@@ -104,8 +100,7 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string $ip A specific IP address or a range specified using IP/netmask like 192.168.1.0/24
      */
-    public function matchIp($ip)
-    {
+    public function matchIp($ip) {
         $this->matchIps($ip);
     }
 
@@ -114,9 +109,8 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|string[]|null $ips A specific IP address or a range specified using IP/netmask like 192.168.1.0/24
      */
-    public function matchIps($ips)
-    {
-        $this->ips = null !== $ips ? (array) $ips : array();
+    public function matchIps($ips) {
+        $this->ips = NULL !== $ips ? (array)$ips : array();
     }
 
     /**
@@ -124,51 +118,48 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|string[]|null $method An HTTP method or an array of HTTP methods
      */
-    public function matchMethod($method)
-    {
-        $this->methods = null !== $method ? array_map('strtoupper', (array) $method) : array();
+    public function matchMethod($method) {
+        $this->methods = NULL !== $method ? array_map('strtoupper', (array)$method) : array();
     }
 
     /**
      * Adds a check for request attribute.
      *
-     * @param string $key    The request attribute name
+     * @param string $key The request attribute name
      * @param string $regexp A Regexp
      */
-    public function matchAttribute($key, $regexp)
-    {
+    public function matchAttribute($key, $regexp) {
         $this->attributes[$key] = $regexp;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function matches(Request $request)
-    {
-        if ($this->schemes && !in_array($request->getScheme(), $this->schemes, true)) {
-            return false;
+    public function matches(Request $request) {
+        if ($this->schemes && !in_array($request->getScheme(), $this->schemes, TRUE)) {
+            return FALSE;
         }
 
-        if ($this->methods && !in_array($request->getMethod(), $this->methods, true)) {
-            return false;
+        if ($this->methods && !in_array($request->getMethod(), $this->methods, TRUE)) {
+            return FALSE;
         }
 
         foreach ($this->attributes as $key => $pattern) {
-            if (!preg_match('{'.$pattern.'}', $request->attributes->get($key))) {
-                return false;
+            if (!preg_match('{' . $pattern . '}', $request->attributes->get($key))) {
+                return FALSE;
             }
         }
 
-        if (null !== $this->path && !preg_match('{'.$this->path.'}', rawurldecode($request->getPathInfo()))) {
-            return false;
+        if (NULL !== $this->path && !preg_match('{' . $this->path . '}', rawurldecode($request->getPathInfo()))) {
+            return FALSE;
         }
 
-        if (null !== $this->host && !preg_match('{'.$this->host.'}i', $request->getHost())) {
-            return false;
+        if (NULL !== $this->host && !preg_match('{' . $this->host . '}i', $request->getHost())) {
+            return FALSE;
         }
 
         if (IpUtils::checkIp($request->getClientIp(), $this->ips)) {
-            return true;
+            return TRUE;
         }
 
         // Note to future implementors: add additional checks above the

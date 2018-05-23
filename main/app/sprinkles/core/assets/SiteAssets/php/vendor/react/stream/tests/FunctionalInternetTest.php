@@ -12,8 +12,7 @@ use React\Stream\WritableResourceStream;
  */
 class FunctionalInternetTest extends TestCase
 {
-    public function testUploadKilobytePlain()
-    {
+    public function testUploadKilobytePlain() {
         $size = 1000;
         $stream = stream_socket_client('tcp://httpbin.org:80');
 
@@ -34,8 +33,7 @@ class FunctionalInternetTest extends TestCase
         $this->assertNotEquals('', $buffer);
     }
 
-    public function testUploadBiggerBlockPlain()
-    {
+    public function testUploadBiggerBlockPlain() {
         $size = 50 * 1000;
         $stream = stream_socket_client('tcp://httpbin.org:80');
 
@@ -56,8 +54,7 @@ class FunctionalInternetTest extends TestCase
         $this->assertNotEquals('', $buffer);
     }
 
-    public function testUploadKilobyteSecure()
-    {
+    public function testUploadKilobyteSecure() {
         $size = 1000;
         $stream = stream_socket_client('tls://httpbin.org:443');
 
@@ -78,8 +75,7 @@ class FunctionalInternetTest extends TestCase
         $this->assertNotEquals('', $buffer);
     }
 
-    public function testUploadBiggerBlockSecureRequiresSmallerChunkSize()
-    {
+    public function testUploadBiggerBlockSecureRequiresSmallerChunkSize() {
         $size = 50 * 1000;
         $stream = stream_socket_client('tls://httpbin.org:443');
 
@@ -87,8 +83,8 @@ class FunctionalInternetTest extends TestCase
         $stream = new DuplexResourceStream(
             $stream,
             $loop,
-            null,
-            new WritableResourceStream($stream, $loop, null, 8192)
+            NULL,
+            new WritableResourceStream($stream, $loop, NULL, 8192)
         );
 
         $buffer = '';
@@ -105,8 +101,7 @@ class FunctionalInternetTest extends TestCase
         $this->assertNotEquals('', $buffer);
     }
 
-    private function awaitStreamClose(DuplexResourceStream $stream, LoopInterface $loop, $timeout = 10.0)
-    {
+    private function awaitStreamClose(DuplexResourceStream $stream, LoopInterface $loop, $timeout = 10.0) {
         $stream->on('close', function () use ($loop) {
             $loop->stop();
         });

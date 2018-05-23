@@ -28,11 +28,10 @@ class AssetCollectionFilterIterator extends \RecursiveFilterIterator
      * Constructor.
      *
      * @param AssetCollectionIterator $iterator The inner iterator
-     * @param array                   $visited  An array of visited asset objects
-     * @param array                   $sources  An array of visited source strings
+     * @param array $visited An array of visited asset objects
+     * @param array $sources An array of visited source strings
      */
-    public function __construct(AssetCollectionIterator $iterator, array $visited = array(), array $sources = array())
-    {
+    public function __construct(AssetCollectionIterator $iterator, array $visited = array(), array $sources = array()) {
         parent::__construct($iterator);
 
         $this->visited = $visited;
@@ -47,14 +46,13 @@ class AssetCollectionFilterIterator extends \RecursiveFilterIterator
      *
      * @return Boolean Returns true if we have not seen this asset yet
      */
-    public function accept()
-    {
-        $asset = $this->getInnerIterator()->current(true);
-        $duplicate = false;
+    public function accept() {
+        $asset = $this->getInnerIterator()->current(TRUE);
+        $duplicate = FALSE;
 
         // check strict equality
-        if (in_array($asset, $this->visited, true)) {
-            $duplicate = true;
+        if (in_array($asset, $this->visited, TRUE)) {
+            $duplicate = TRUE;
         } else {
             $this->visited[] = $asset;
         }
@@ -63,9 +61,9 @@ class AssetCollectionFilterIterator extends \RecursiveFilterIterator
         $sourceRoot = $asset->getSourceRoot();
         $sourcePath = $asset->getSourcePath();
         if ($sourceRoot && $sourcePath) {
-            $source = $sourceRoot.'/'.$sourcePath;
+            $source = $sourceRoot . '/' . $sourcePath;
             if (in_array($source, $this->sources)) {
-                $duplicate = true;
+                $duplicate = TRUE;
             } else {
                 $this->sources[] = $source;
             }
@@ -77,8 +75,7 @@ class AssetCollectionFilterIterator extends \RecursiveFilterIterator
     /**
      * Passes visited objects and source URLs to the child iterator.
      */
-    public function getChildren()
-    {
+    public function getChildren() {
         return new self($this->getInnerIterator()->getChildren(), $this->visited, $this->sources);
     }
 }

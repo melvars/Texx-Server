@@ -1,9 +1,12 @@
 <?php
+
 namespace Ratchet\Server;
+
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-class IpBlackList implements MessageComponentInterface {
+class IpBlackList implements MessageComponentInterface
+{
     /**
      * @var array
      */
@@ -27,7 +30,7 @@ class IpBlackList implements MessageComponentInterface {
      * @return IpBlackList
      */
     public function blockAddress($ip) {
-        $this->_blacklist[$ip] = true;
+        $this->_blacklist[$ip] = TRUE;
 
         return $this;
     }

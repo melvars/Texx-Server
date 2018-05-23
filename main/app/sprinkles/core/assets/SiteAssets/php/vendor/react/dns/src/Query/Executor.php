@@ -29,16 +29,14 @@ class Executor implements ExecutorInterface
      * @param BinaryDumper $dumper
      * @param null|float $timeout DEPRECATED: timeout for DNS query or NULL=no timeout
      */
-    public function __construct(LoopInterface $loop, Parser $parser, BinaryDumper $dumper, $timeout = 5)
-    {
+    public function __construct(LoopInterface $loop, Parser $parser, BinaryDumper $dumper, $timeout = 5) {
         $this->loop = $loop;
         $this->parser = $parser;
         $this->dumper = $dumper;
         $this->timeout = $timeout;
     }
 
-    public function query($nameserver, Query $query)
-    {
+    public function query($nameserver, Query $query) {
         $request = Message::createRequestForQuery($query);
 
         $queryData = $this->dumper->toBinary($request);
@@ -50,13 +48,11 @@ class Executor implements ExecutorInterface
     /**
      * @deprecated unused, exists for BC only
      */
-    public function prepareRequest(Query $query)
-    {
+    public function prepareRequest(Query $query) {
         return Message::createRequestForQuery($query);
     }
 
-    public function doQuery($nameserver, $transport, $queryData, $name)
-    {
+    public function doQuery($nameserver, $transport, $queryData, $name) {
         // we only support UDP right now
         if ($transport !== 'udp') {
             return Promise\reject(new \RuntimeException(
@@ -78,14 +74,14 @@ class Executor implements ExecutorInterface
         $deferred = new Deferred(function ($resolve, $reject) use (&$timer, $loop, &$conn, $name) {
             $reject(new CancellationException(sprintf('DNS query for %s has been cancelled', $name)));
 
-            if ($timer !== null) {
+            if ($timer !== NULL) {
                 $loop->cancelTimer($timer);
             }
             $conn->close();
         });
 
-        $timer = null;
-        if ($this->timeout !== null) {
+        $timer = NULL;
+        if ($this->timeout !== NULL) {
             $timer = $this->loop->addTimer($this->timeout, function () use (&$conn, $name, $deferred) {
                 $conn->close();
                 $deferred->reject(new TimeoutException(sprintf("DNS query for %s timed out", $name)));
@@ -94,7 +90,7 @@ class Executor implements ExecutorInterface
 
         $conn->on('data', function ($data) use ($conn, $parser, $deferred, $timer, $loop, $name) {
             $conn->end();
-            if ($timer !== null) {
+            if ($timer !== NULL) {
                 $loop->cancelTimer($timer);
             }
 
@@ -120,8 +116,7 @@ class Executor implements ExecutorInterface
     /**
      * @deprecated unused, exists for BC only
      */
-    protected function generateId()
-    {
+    protected function generateId() {
         return mt_rand(0, 0xffff);
     }
 
@@ -130,10 +125,9 @@ class Executor implements ExecutorInterface
      * @param string $transport
      * @return \React\Stream\DuplexStreamInterface
      */
-    protected function createConnection($nameserver, $transport)
-    {
+    protected function createConnection($nameserver, $transport) {
         $fd = @stream_socket_client("$transport://$nameserver", $errno, $errstr, 0, STREAM_CLIENT_CONNECT | STREAM_CLIENT_ASYNC_CONNECT);
-        if ($fd === false) {
+        if ($fd === FALSE) {
             throw new \RuntimeException('Unable to connect to DNS server: ' . $errstr, $errno);
         }
 
@@ -147,7 +141,7 @@ class Executor implements ExecutorInterface
         } else {
             // use legacy Stream class for react/stream < v0.7.0
             $conn = new Stream($fd, $this->loop);
-            $conn->bufferSize = null;
+            $conn->bufferSize = NULL;
         }
         // @coverageIgnoreEnd
 

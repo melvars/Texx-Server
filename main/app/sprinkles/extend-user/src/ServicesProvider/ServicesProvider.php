@@ -11,8 +11,7 @@ class ServicesProvider
      *
      * @param Container $container A DI container implementing ArrayAccess and container-interop.
      */
-    public function register($container)
-    {
+    public function register($container) {
         /**
          * Extend the 'classMapper' service to register model classes.
          *

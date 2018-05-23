@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Tests\Unit;
 
 use UserFrosting\Tests\TestCase;
@@ -20,8 +21,7 @@ class FactoriesTest extends TestCase
 {
     use DatabaseTransactions;
 
-    function testUserFactory()
-    {
+    function testUserFactory() {
         $fm = $this->ci->factory;
 
         $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 /**
@@ -32,8 +33,7 @@ class StaticMailMessage extends MailMessage
      * @param string $subject
      * @param string $body
      */
-    public function __construct($subject = "", $body = "")
-    {
+    public function __construct($subject = "", $body = "") {
         $this->subject = $subject;
         $this->body = $body;
     }
@@ -41,16 +41,14 @@ class StaticMailMessage extends MailMessage
     /**
      * {@inheritDoc}
      */
-    public function renderBody($params = [])
-    {
+    public function renderBody($params = []) {
         return $this->body;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function renderSubject($params = [])
-    {
+    public function renderSubject($params = []) {
         return $this->subject;
     }
 
@@ -59,8 +57,7 @@ class StaticMailMessage extends MailMessage
      *
      * @param string $subject
      */
-    public function setSubject($subject)
-    {
+    public function setSubject($subject) {
         $this->subject = $subject;
         return $this;
     }
@@ -70,8 +67,7 @@ class StaticMailMessage extends MailMessage
      *
      * @param string $body
      */
-    public function setBody($body)
-    {
+    public function setBody($body) {
         $this->body = $body;
         return $this;
     }
