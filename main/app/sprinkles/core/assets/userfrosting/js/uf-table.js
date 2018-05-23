@@ -551,7 +551,7 @@
                     console.log('Error (' + jqXHR.status + '): ' + jqXHR.responseText);
                 }
                 // Display errors on failure
-                // TODO: ufAlerts widget should have a 'destroy' method
+                // ufAlerts widget should have a 'destroy' method
                 if (!this.settings.msgTarget.data('ufAlerts')) {
                     this.settings.msgTarget.ufAlerts();
                 } else {

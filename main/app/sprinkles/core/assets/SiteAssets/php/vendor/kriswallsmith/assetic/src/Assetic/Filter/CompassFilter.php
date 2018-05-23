@@ -290,14 +290,13 @@ class CompassFilter extends BaseSassFilter
         if (NULL !== $this->scss) {
             $type = $this->scss ? 'scss' : 'sass';
         } else if ($path = $asset->getSourcePath()) {
-            // FIXME: what if the extension is something else?
             $type = pathinfo($path, PATHINFO_EXTENSION);
         } else {
             $type = 'scss';
         }
 
         $tempName = tempnam($tempDir, 'assetic_compass');
-        unlink($tempName); // FIXME: don't use tempnam() here
+        unlink($tempName);
 
         // input
         $input = $tempName . '.' . $type;

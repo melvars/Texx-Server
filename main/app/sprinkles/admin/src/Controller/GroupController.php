@@ -692,7 +692,6 @@ class GroupController extends SimpleController
         // Validate, and throw exception on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
-            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
                 foreach ($field as $eidx => $error) {

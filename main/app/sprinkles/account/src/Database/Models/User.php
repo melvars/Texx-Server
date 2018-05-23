@@ -178,8 +178,6 @@ class User extends Model
             $classMapper->staticMethod('password_reset', 'where', 'user_id', $this->id)->delete();
             $classMapper->staticMethod('verification', 'where', 'user_id', $this->id)->delete();
 
-            // TODO: remove any persistences
-
             // Delete the user
             $result = parent::forceDelete();
         } else {
@@ -332,7 +330,7 @@ class User extends Model
      *
      * By default, adds a new sign-in activity and updates any legacy hash.
      * @param mixed[] $params Optional array of parameters used for this event handler.
-     * @todo Transition to Laravel Event dispatcher to handle this
+     * @odo Transition to Laravel Event dispatcher to handle this
      */
     public function onLogin($params = []) {
         // Add a sign in activity (time is automatically set by database)
@@ -369,7 +367,7 @@ class User extends Model
      *
      * By default, adds a new sign-out activity.
      * @param mixed[] $params Optional array of parameters used for this event handler.
-     * @todo Transition to Laravel Event dispatcher to handle this
+     * @do Transition to Laravel Event dispatcher to handle this
      */
     public function onLogout($params = []) {
         static::$ci->userActivityLogger->info("User {$this->user_name} signed out.", [

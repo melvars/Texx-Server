@@ -8,7 +8,6 @@
  */
 $(document).ready(function () {
 
-    // TODO: Process form
     $("#request-password-reset").ufForm({
         validators: page.validators.forgot_password,
         msgTarget: $("#alerts-page")

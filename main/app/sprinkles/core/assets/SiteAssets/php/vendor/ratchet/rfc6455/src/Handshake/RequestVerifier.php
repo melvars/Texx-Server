@@ -7,7 +7,7 @@ use Psr\Http\Message\RequestInterface;
 /**
  * These are checks to ensure the client requested handshake are valid
  * Verification rules come from section 4.2.1 of the RFC6455 document
- * @todo Currently just returning invalid - should consider returning appropriate HTTP status code error #s
+ *  Currently just returning invalid - should consider returning appropriate HTTP status code error #s
  */
 class RequestVerifier
 {
@@ -74,7 +74,7 @@ class RequestVerifier
     /**
      * @param array $hostHeader
      * @return bool
-     * @todo Once I fix HTTP::getHeaders just verify this isn't NULL or empty...or maybe need to verify it's a valid domain??? Or should it equal $_SERVER['HOST'] ?
+     *  Once I fix HTTP::getHeaders just verify this isn't NULL or empty...or maybe need to verify it's a valid domain??? Or should it equal $_SERVER['HOST'] ?
      */
     public function verifyHost(array $hostHeader) {
         return (1 === count($hostHeader));
@@ -113,8 +113,8 @@ class RequestVerifier
      * This function verifies the nonce is valid (64 big encoded, 16 bytes random string)
      * @param array $keyHeader
      * @return bool
-     * @todo The spec says we don't need to base64_decode - can I just check if the length is 24 and not decode?
-     * @todo Check the spec to see what the encoding of the key could be
+     *  The spec says we don't need to base64_decode - can I just check if the length is 24 and not decode?
+     *  Check the spec to see what the encoding of the key could be
      */
     public function verifyKey(array $keyHeader) {
         return (1 === count($keyHeader) && 16 === strlen(base64_decode($keyHeader[0])));
@@ -130,13 +130,13 @@ class RequestVerifier
     }
 
     /**
-     * @todo Write logic for this method.  See section 4.2.1.8
+     *  Write logic for this method.  See section 4.2.1.8
      */
     public function verifyProtocol($val) {
     }
 
     /**
-     * @todo Write logic for this method.  See section 4.2.1.9
+     *  Write logic for this method.  See section 4.2.1.9
      */
     public function verifyExtensions($val) {
     }

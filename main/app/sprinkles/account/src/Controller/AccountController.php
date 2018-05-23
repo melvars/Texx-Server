@@ -65,7 +65,7 @@ class AccountController extends SimpleController
         // Validate, and halt on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
-            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
+            // O: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException('Missing or malformed request data!');
             foreach ($validator->errors() as $idx => $field) {
                 foreach ($field as $eidx => $error) {
@@ -163,8 +163,8 @@ class AccountController extends SimpleController
      * This is because we need to allow users to re-request a reset, even if they lose the first reset email.
      * This route is "public access".
      * Request type: POST
-     * @todo require additional user information
-     * @todo prevent password reset requests for root account?
+     * @odo require additional user information
+     * @odo prevent password reset requests for root account?
      *
      * @param  Request $request
      * @param  Response $response
@@ -243,8 +243,6 @@ class AccountController extends SimpleController
                 $this->ci->mailer->send($message);
             }
         });
-
-        // TODO: create delay to prevent timing-based attacks
 
         $ms->addMessageTranslated('success', 'PASSWORD.FORGET.REQUEST_SENT', ['email' => $data['email']]);
         return $response->withStatus(200);
@@ -1191,7 +1189,7 @@ class AccountController extends SimpleController
      *
      * This route is "public access".
      * Request type: GET
-     * @todo Can this route be abused for account enumeration?  If so we should throttle it as well.
+     * @odo Can this route be abused for account enumeration?  If so we should throttle it as well.
      *
      * @param  Request $request
      * @param  Response $response

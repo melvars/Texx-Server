@@ -19,7 +19,7 @@ use Assetic\Filter\FilterInterface;
  * Applies a filter to an asset based on a source and/or target path match.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
- * @todo A better asset-matcher mechanism
+ *  A better asset-matcher mechanism
  */
 class EnsureFilterWorker implements WorkerInterface
 {

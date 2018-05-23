@@ -7,7 +7,7 @@ use GuzzleHttp\Psr7\Response;
 
 /**
  * The latest version of the WebSocket protocol
- * @todo Unicode: return mb_convert_encoding(pack("N",$u), mb_internal_encoding(), 'UCS-4BE');
+ *  Unicode: return mb_convert_encoding(pack("N",$u), mb_internal_encoding(), 'UCS-4BE');
  */
 class ServerNegotiator implements NegotiatorInterface
 {
@@ -129,7 +129,7 @@ class ServerNegotiator implements NegotiatorInterface
      * If enabled and support for a subprotocol has been added handshake
      *  will not upgrade if a match between request and supported subprotocols
      * @param boolean $enable
-     * @todo Consider extending this interface and moving this there.
+     *  Consider extending this interface and moving this there.
      *       The spec does says the server can fail for this reason, but
      * it is not a requirement. This is an implementation detail.
      */

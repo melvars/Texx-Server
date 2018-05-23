@@ -72,7 +72,7 @@ class StreamEncryption
         // pause actual stream instance to continue operation on raw stream socket
         $stream->pause();
 
-        // TODO: add write() event to make sure we're not sending any excessive data
+        // add write() event to make sure we're not sending any excessive data
 
         $deferred = new Deferred(function ($_, $reject) use ($toggle) {
             // cancelling this leaves this stream in an inconsistent state…

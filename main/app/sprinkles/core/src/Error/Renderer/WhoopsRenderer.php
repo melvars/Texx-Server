@@ -165,7 +165,7 @@ class WhoopsRenderer extends ErrorRenderer
     public function render() {
         if (!$this->handleUnconditionally()) {
             // Check conditions for outputting HTML:
-            // @todo: Make this more robust
+            // : Make this more robust
             if (php_sapi_name() === 'cli') {
                 // Help users who have been relying on an internal test value
                 // fix their code to the proper method
@@ -221,7 +221,7 @@ class WhoopsRenderer extends ErrorRenderer
         $vars = [
             "page_title" => $this->getPageTitle(),
 
-            // @todo: Asset compiler
+            // : Asset compiler
             "stylesheet" => file_get_contents($cssFile),
             "zepto" => file_get_contents($zeptoFile),
             "clipboard" => file_get_contents($clipboard),
@@ -269,7 +269,7 @@ class WhoopsRenderer extends ErrorRenderer
         }
 
         // Add extra entries list of data tables:
-        // @todo: Consolidate addDataTable and addDataTableCallback
+        // : Consolidate addDataTable and addDataTableCallback
         $extraTables = array_map(function ($table) use ($inspector) {
             return $table instanceof \Closure ? $table($inspector) : $table;
         }, $this->getDataTables());

@@ -250,11 +250,13 @@ function InitializeChatServer() {
         ChatTextInput.keyup(function (e) {
             if (ChatSocket.readyState === 1) {
                 if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
+                    const ChatTextInputText = ChatTextInput.val();
+                    ChatTextInput.val("");
                     var LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
                     if (!LastMessage.hasClass("MessageSent")) { // CHECK IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
-                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + ChatTextInput.val() + "</div></div>");
+                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + ChatTextInputText + "</div></div>");
                     } else if (LastMessage.hasClass("MessageSent")) { // IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
-                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent BottomMessage animated fadeInRight'>" + ChatTextInput.val() + "</div></div>");
+                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent BottomMessage animated fadeInRight'>" + ChatTextInputText + "</div></div>");
                         if (LastMessage.hasClass("AloneMessage")) {
                             LastMessage.removeClass("AloneMessage");
                             LastMessage.addClass("TopMessage");
@@ -271,7 +273,7 @@ function InitializeChatServer() {
 
                     // ENCRYPT AND SEND MESSAGE WITH OWN PUBLIC KEY
                     options = {
-                        data: ChatTextInput.val(),
+                        data: ChatTextInputText,
                         publicKeys: openpgp.key.readArmored(PublicKey[current_username]).keys,
                         privateKeys: [privKeyObj] // FOR SIGNING
                     };
@@ -284,13 +286,11 @@ function InitializeChatServer() {
                             EncryptedWithKeyOfUsername: current_username,
                             Message: EncryptedMessage
                         }));
-                        ChatTextInput.val("");
-                        ChatTextInput.val("");
                     });
 
                     // ENCRYPT AND SEND MESSAGE WITH RECEIVERS PUBLIC KEY
                     options = {
-                        data: ChatTextInput.val(),
+                        data: ChatTextInputText,
                         publicKeys: openpgp.key.readArmored(PublicKey[ReceiversUsername]).keys,
                         privateKeys: [privKeyObj] // FOR SIGNING
                     };
@@ -303,8 +303,6 @@ function InitializeChatServer() {
                             EncryptedWithKeyOfUsername: ReceiversUsername,
                             Message: EncryptedMessage
                         }));
-                        ChatTextInput.val("");
-                        ChatTextInput.val("");
                     });
                 }
             } else {

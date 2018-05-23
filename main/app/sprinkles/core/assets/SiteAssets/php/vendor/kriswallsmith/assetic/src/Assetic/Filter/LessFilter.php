@@ -153,8 +153,8 @@ EOF;
     }
 
     /**
-     * @todo support for import-once
-     * @todo support for import (less) "lib.css"
+     *  support for import-once
+     *  support for import (less) "lib.css"
      */
     public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
         $loadPaths = $this->loadPaths;
@@ -170,7 +170,7 @@ EOF;
         foreach (LessUtils::extractImports($content) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
-                // todo: skip imports with media queries
+                // skip imports with media queries
                 continue;
             }
 

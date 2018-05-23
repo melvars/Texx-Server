@@ -29,7 +29,7 @@
  * UserFrosting https://www.userfrosting.com
  * @author Alexander Weissman <https://alexanderweissman.com>
  *
- * @todo Implement proper fallback for when `set` function isn't supported by FormData.
+ *  Implement proper fallback for when `set` function isn't supported by FormData.
  */
 ;(function ($, window, document, undefined) {
     'use strict';
@@ -166,7 +166,7 @@
                         console.log('Error (' + jqXHR.status + '): ' + jqXHR.responseText);
                     }
                     // Display errors on failure
-                    // TODO: ufAlerts widget should have a 'destroy' method
+                    // ufAlerts widget should have a 'destroy' method
                     if (!this.settings.msgTarget.data('ufAlerts')) {
                         this.settings.msgTarget.ufAlerts();
                     } else {

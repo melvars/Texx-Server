@@ -74,7 +74,7 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
-        // todo
+        
         return array();
     }
 }

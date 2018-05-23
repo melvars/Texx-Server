@@ -43,7 +43,7 @@ class TwigMailMessage extends MailMessage
 
         $twig = $this->view->getEnvironment();
         // Must manually merge in global variables for block rendering
-        // TODO: should we keep this separate from the local parameters?
+        // should we keep this separate from the local parameters?
         $this->params = $twig->getGlobals();
 
         if ($filename !== NULL) {

@@ -36,7 +36,6 @@ class WampServerTest extends AbstractMessageComponentTestCase
     }
 
     public function testGetSubProtocols() {
-        // todo: could expand on this
         $this->assertInternalType('array', $this->_serv->getSubProtocols());
     }
 

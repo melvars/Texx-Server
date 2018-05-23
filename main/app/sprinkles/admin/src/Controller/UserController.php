@@ -46,6 +46,9 @@ class UserController extends SimpleController
      * This route requires authentication.
      * Request type: POST
      * @see getModalCreate
+     * @throws ForbiddenException
+     * @throws BadRequestException
+     * @throws ForbiddenException
      */
     public function create($request, $response, $args) {
         // Get POST parameters: user_name, first_name, last_name, email, locale, (group)
@@ -176,6 +179,9 @@ class UserController extends SimpleController
      * 4. The submitted data is valid.
      * This route requires authentication.
      * Request type: POST
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function createPasswordReset($request, $response, $args) {
         // Get the username from the URL
@@ -235,6 +241,9 @@ class UserController extends SimpleController
     /**
      * Sets the users public key
      * Request type: POST
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function setPublicKey($request, $response, $args) {
         $requestedUser = $this->getUserFromParams($args);
@@ -270,6 +279,10 @@ class UserController extends SimpleController
      * 2. You have permission to delete the target user's account.
      * This route requires authentication (and should generally be limited to admins or the root user).
      * Request type: DELETE
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function delete($request, $response, $args) {
         $user = $this->getUserFromParams($args);
@@ -332,6 +345,9 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function getActivities($request, $response, $args) {
         $user = $this->getUserFromParams($args);
@@ -377,6 +393,9 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function getInfo($request, $response, $args) {
         $user = $this->getUserFromParams($args);
@@ -423,6 +442,7 @@ class UserController extends SimpleController
      * Generates a list of users, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
+     * @throws ForbiddenException
      */
     public function getList($request, $response, $args) {
         // GET parameters
@@ -455,6 +475,10 @@ class UserController extends SimpleController
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function getModalConfirmDelete($request, $response, $args) {
         // GET parameters
@@ -507,6 +531,7 @@ class UserController extends SimpleController
      * Otherwise, the user will be added to the default group and receive the default roles automatically.
      * This page requires authentication.
      * Request type: GET
+     * @throws ForbiddenException
      */
     public function getModalCreate($request, $response, $args) {
         // GET parameters
@@ -533,7 +558,6 @@ class UserController extends SimpleController
         $config = $this->ci->config;
 
         // Determine form fields to hide/disable
-        // TODO: come back to this when we finish implementing theming
         $fields = [
             'hidden' => ['theme'],
             'disabled' => []
@@ -590,6 +614,9 @@ class UserController extends SimpleController
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function getModalEdit($request, $response, $args) {
         // GET parameters
@@ -676,6 +703,9 @@ class UserController extends SimpleController
      * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function getModalEditPassword($request, $response, $args) {
         // GET parameters
@@ -720,6 +750,9 @@ class UserController extends SimpleController
      * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function getModalEditRoles($request, $response, $args) {
         // GET parameters
@@ -757,6 +790,9 @@ class UserController extends SimpleController
      * Generates a list of permissions, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function getPermissions($request, $response, $args) {
         $user = $this->getUserFromParams($args);
@@ -801,6 +837,9 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function getRoles($request, $response, $args) {
         $user = $this->getUserFromParams($args);
@@ -848,6 +887,8 @@ class UserController extends SimpleController
      * This will also try to show buttons for activating, disabling/enabling, deleting, and editing the user.
      * This page requires authentication.
      * Request type: GET
+     * @throws ForbiddenException
+     * @throws BadRequestException
      */
     public function pageInfo($request, $response, $args) {
         $user = $this->getUserFromParams($args);
@@ -977,6 +1018,7 @@ class UserController extends SimpleController
      * Actions typically include: edit user details, activate user, enable/disable user, delete user.
      * This page requires authentication.
      * Request type: GET
+     * @throws ForbiddenException
      */
     public function pageList($request, $response, $args) {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -996,6 +1038,8 @@ class UserController extends SimpleController
     /**
      * Gets the users public key
      * Request type: GET
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function getPublicKey($request, $response, $args) {
         $requestedUser = $this->getUserFromParams($args);
@@ -1026,13 +1070,16 @@ class UserController extends SimpleController
             }
             return $response->withStatus(200);
         } else {
-            throw new NotFoundException();
+            throw new NotFoundException($request, $response);
         }
     }
 
     /**
      * Gets the users which are following the requested user
      * Request type: GET
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function getFollowers($request, $response, $args) {
         $user = $this->getUserFromParams($args);
@@ -1069,6 +1116,9 @@ class UserController extends SimpleController
     /**
      * Get users which the user follows
      * Request type: GET
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function getFollows($request, $response, $args) {
         $user = $this->getUserFromParams($args);
@@ -1085,9 +1135,9 @@ class UserController extends SimpleController
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_user', [
-            'user' => $user
-        ])) {
+        if (($user->id == $currentUser->id) || (!$authorizer->checkAccess($currentUser, 'uri_user', [
+                'user' => $user
+            ]))) {
             throw new ForbiddenException();
         }
 
@@ -1105,6 +1155,9 @@ class UserController extends SimpleController
     /**
      * Get users which the user follows and which are following the user
      * Request type: GET
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws BadRequestException
      */
     public function getFriends($request, $response, $args) {
         $user = $this->getUserFromParams($args);
@@ -1133,7 +1186,7 @@ class UserController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         foreach ($UsersFriends as $Key => $UsersFriendId) { // NOT THAT EFFICIENT...
-            $UsersFriendInformation = $classMapper->createInstance('user')// select doesnt work with instance
+            $UsersFriendInformation = $classMapper->createInstance('user')// raw select doesnt work with instance
             ->where('id', $UsersFriendId->id)
                 ->get();
 
@@ -1145,7 +1198,11 @@ class UserController extends SimpleController
 
         $result = $UsersFriends;
 
-        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+        if (sizeof($result) > 0) { // USER HAS FRIENDS
+            return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+        } else {
+            throw new NotFoundException($request, $response);
+        }
     }
 
 
@@ -1158,6 +1215,10 @@ class UserController extends SimpleController
      * 3. The submitted data is valid.
      * This route requires authentication.
      * Request type: PUT
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws BadRequestException
+     * @throws BadRequestException
      */
     public function updateInfo($request, $response, $args) {
         // Get the username from the URL
@@ -1277,6 +1338,14 @@ class UserController extends SimpleController
      * 3. The submitted data is valid.
      * This route requires authentication.
      * Request type: PUT
+     * @throws ForbiddenException
+     * @throws BadRequestException
+     * @throws BadRequestException
+     * @throws BadRequestException
+     * @throws BadRequestException
+     * @throws BadRequestException
+     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function updateField($request, $response, $args) {
         // Get the username from the URL
@@ -1336,7 +1405,7 @@ class UserController extends SimpleController
         // Validate, and throw exception on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
-            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
+            // encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
                 foreach ($field as $eidx => $error) {
@@ -1426,7 +1495,6 @@ class UserController extends SimpleController
         // Validate, and throw exception on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
-            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
                 foreach ($field as $eidx => $error) {

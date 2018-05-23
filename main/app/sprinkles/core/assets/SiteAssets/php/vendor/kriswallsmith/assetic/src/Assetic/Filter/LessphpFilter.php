@@ -130,7 +130,7 @@ class LessphpFilter implements DependencyExtractorInterface
         foreach (LessUtils::extractImports($content) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
-                // todo: skip imports with media queries
+                // skip imports with media queries
                 continue;
             }
 

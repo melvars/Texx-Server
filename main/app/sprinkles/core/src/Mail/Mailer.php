@@ -64,7 +64,7 @@ class Mailer
             }
 
             // Set any additional message-specific options
-            // TODO: enforce which options can be set through this subarray
+            // enforce which options can be set through this subarray
             if (isset($config['message_options'])) {
                 $this->setOptions($config['message_options']);
             }

@@ -114,7 +114,7 @@ EOF;
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
-        // todo
+        
         return array();
     }
 }

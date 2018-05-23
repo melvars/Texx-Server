@@ -429,7 +429,7 @@ class PdoSessionHandler extends AbstractSessionHandler
      *
      * @return string
      *
-     * @todo implement missing support for oci DSN (which look totally different from other PDO ones)
+     *  implement missing support for oci DSN (which look totally different from other PDO ones)
      */
     private function buildDsnFromUrl($dsnOrUrl) {
         // (pdo_)?sqlite3?:///... => (pdo_)?sqlite3?://localhost/... or else the URL will be invalid
@@ -652,7 +652,7 @@ class PdoSessionHandler extends AbstractSessionHandler
      *
      * @throws \DomainException When an unsupported PDO driver is used
      *
-     * @todo implement missing advisory locks
+     *  implement missing advisory locks
      *       - for oci using DBMS_LOCK.REQUEST
      *       - for sqlsrv using sp_getapplock with LockOwner = Session
      */

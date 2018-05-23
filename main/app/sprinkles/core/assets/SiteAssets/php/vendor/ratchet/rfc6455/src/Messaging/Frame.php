@@ -313,7 +313,7 @@ class Frame implements FrameInterface
 
         return $payload ^ str_pad('', $len, $maskingKey, STR_PAD_RIGHT);
 
-        // TODO: Remove this before publish - keeping methods here to compare performance (above is faster but need control against v0.3.3)
+        // Remove this before publish - keeping methods here to compare performance (above is faster but need control against v0.3.3)
 
         $applied = '';
         for ($i = 0, $len = strlen($payload); $i < $len; $i++) {
@@ -424,7 +424,7 @@ class Frame implements FrameInterface
 
     /**
      * {@inheritdoc}
-     * @todo Consider not checking mask, always returning the payload, masked or not
+     *  Consider not checking mask, always returning the payload, masked or not
      */
     public function getPayload() {
         if (!$this->isCoalesced()) {
@@ -436,7 +436,7 @@ class Frame implements FrameInterface
 
     /**
      * Get the raw contents of the frame
-     * @todo This is untested, make sure the substr is right - trying to return the frame w/o the overflow
+     *  This is untested, make sure the substr is right - trying to return the frame w/o the overflow
      */
     public function getContents() {
         return substr($this->data, 0, $this->getPayloadStartingByte() + $this->getPayloadLength());

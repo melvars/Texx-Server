@@ -6,8 +6,8 @@ use Ratchet\RFC6455\Messaging\Frame;
 
 /**
  * @covers Ratchet\RFC6455\Messaging\Frame
- * @todo getMaskingKey, getPayloadStartingByte don't have tests yet
- * @todo Could use some clean up in general, I had to rush to fix a bug for a deadline, sorry.
+ *  getMaskingKey, getPayloadStartingByte don't have tests yet
+ *  Could use some clean up in general, I had to rush to fix a bug for a deadline, sorry.
  */
 class FrameTest extends \PHPUnit_Framework_TestCase
 {
@@ -260,7 +260,7 @@ class FrameTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider UnframeMessageProvider
      * covers Ratchet\RFC6455\Messaging\Frame::getPayloadLength
-     * @todo Not yet testing when second additional payload length descriptor
+     *  Not yet testing when second additional payload length descriptor
      */
     public function testGetPayloadLengthFromFullMessage($msg, $encoded) {
         $this->_frame->addBuffer(base64_decode($encoded));
@@ -279,7 +279,7 @@ class FrameTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider maskingKeyProvider
      * covers Ratchet\RFC6455\Messaging\Frame::getMaskingKey
-     * @todo I I wrote the dataProvider incorrectly, skipping for now
+     *  I I wrote the dataProvider incorrectly, skipping for now
      */
     public function testGetMaskingKey($mask) {
         $this->_frame->addBuffer(static::encode($this->_firstByteFinText));
@@ -299,7 +299,7 @@ class FrameTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider UnframeMessageProvider
      * covers Ratchet\RFC6455\Messaging\Frame::getPayload
-     * @todo Move this test to bottom as it requires all methods of the class
+     *  Move this test to bottom as it requires all methods of the class
      */
     public function testUnframeFullMessage($unframed, $base_framed) {
         $this->_frame->addBuffer(base64_decode($base_framed));

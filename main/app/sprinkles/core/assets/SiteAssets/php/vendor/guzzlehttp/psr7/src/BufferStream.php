@@ -104,7 +104,7 @@ class BufferStream implements StreamInterface
     public function write($string) {
         $this->buffer .= $string;
 
-        // TODO: What should happen here?
+        // What should happen here?
         if (strlen($this->buffer) >= $this->hwm) {
             return FALSE;
         }

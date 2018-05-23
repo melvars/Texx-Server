@@ -13,7 +13,6 @@ $(document).ready(function () {
         msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function () {
         // Forward to home page on success
-        // TODO: forward to landing/last page
         window.location.replace(site.uri.public + "/account/sign-in");
     });
 });

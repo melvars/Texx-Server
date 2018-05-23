@@ -29,10 +29,6 @@ class CoreController extends SimpleController
      */
 
     public function pageIndex($request, $response, $args) {
-        $FeedImages = DB::table('image_posts')
-            ->orderBy('Created')
-            ->get();
-
         // AUTHORIZATION - ONLY FOR ADMINS RIGHT KNOW (BUILD PROCESS)
         $authorizer = $this->ci->authorizer;
         $currentUser = $this->ci->currentUser;
@@ -40,9 +36,7 @@ class CoreController extends SimpleController
             //throw new ForbiddenException();
         }
 
-        return $this->ci->view->render($response, 'pages/index.html.twig', [
-            'FeedImages' => $FeedImages
-        ]);
+        return $this->ci->view->render($response, 'pages/index.html.twig');
     }
 
 

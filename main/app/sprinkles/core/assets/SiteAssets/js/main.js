@@ -38,62 +38,6 @@ function triggerErrorPopup(ErrorCode) {
 }
 
 /**
- * ENCRYPTION
- */
-/*var openpgp = window.openpgp;
-var options, EncryptedText, DecryptedText, PrivateKey, PassPhrase, PrivateKeyObj;
-var PublicKey = [];
-openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
-
-$.ajax({
-    type: 'GET',
-    url: site.uri.public + '/api/users/u/' + current_username + '/publickey',
-    dataType : "json",
-    success: function (response) {
-        if (response.user_id === current_user_id) {
-            PublicKey[current_username] = response.PublicKey;
-            PrivateKey = localStorage.getItem("PrivateKey");
-            PassPhrase = localStorage.getItem("🔒")
-        }
-    }
-});
-
-function EncryptMessage(Message, Username) {
-    if (!Username in PublicKey) {
-        $.ajax({
-            type: 'GET',
-            url: site.uri.public + '/api/users/u/' + Username + '/publickey',
-            dataType : "json",
-            success: function (response) {
-                if (response.user_id === current_user_id) {
-                    PublicKey[Username] = response.PublicKey;
-                }
-            }
-        });
-    }
-    options = {
-        data: Message,
-        publicKeys: openpgp.key.readArmored(PublicKey[Username]).keys
-    };
-    openpgp.encrypt(options).then(function (EncryptedText) {
-        EncryptedText = EncryptedText.data;
-    });
-}
-
-function DecryptMessage(EncryptedText) {
-    PrivateKeyObj = openpgp.key.readArmored(PrivateKey).keys[0];
-    PrivateKeyObj.decrypt(PassPhrase);
-    options = {
-        message: openpgp.message.readArmored(EncryptedText),
-        privateKeys: [PrivateKeyObj]
-    };
-
-    openpgp.decrypt(options).then(function (DecryptedText) {
-        DecryptedText = DecryptedText.data;
-    });
-}*/
-
-/**
  * OLD BROWSER
  * @type {boolean}
  */
@@ -150,10 +94,6 @@ MainTabWindows.on('beforeChange', function (event, slick, currentSlide, nextSlid
 
     currentSlide.children().attr("src", (currentSlide.children().attr("src").split('.svg')[0].replace('Activated', '') + ".svg"));
     nextSlide.children().attr("src", nextSlide.children().attr("src").split('.svg')[0] + "Activated.svg");
-    //currentSlide.children().attr("data-src", (currentSlide.children().attr("data-src").split('.svg')[0].replace('Activated', '') + ".svg"));
-    //nextSlide.children().attr("data-caching-key", nextSlide.children().attr("data-src").split('.svg')[0].split('/').pop() + "Activated_nav_cached");
-    //nextSlide.children().attr("data-src", nextSlide.children().attr("data-src").split('.svg')[0] + "Activated.svg");
-    //cachedNavbarIcons.refresh();
     $el = nextSlide;
     $el.addClass("ActiveTab");
     leftPos = $el.position().left;
@@ -179,10 +119,7 @@ UserSearchBar.keyup(function () {
                 //var RandomGifUrl = GifUrls[RandomGif];
                 //console.image(RandomGifUrl, 0.5);
 
-                alerts.ufAlerts().ufAlerts('fetch');
-
                 SearchResults.append("<img class='Avatar' src='" + answer.avatar + "'/><div class='UsersFullName'>" + answer.full_name + "</div>");
-                //$(".SearchResults .Avatar").imageCaching(); // refresh
             },
             error: function () {
                 console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was not found!", "color: red");
@@ -206,7 +143,7 @@ $(document).ready(function () {
             })
         },
         error: function () {
-            console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was not found!", "color: red");
+            console.log("%c[FRIENDLY LOGGER] No friends were found! :(", "color: red");
 
             alerts.ufAlerts().ufAlerts('fetch');
         }

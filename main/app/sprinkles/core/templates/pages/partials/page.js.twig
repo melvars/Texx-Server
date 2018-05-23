@@ -1,4 +1,4 @@
 {# Page variables needed by client-side code (Javascript). #}
 {% autoescape 'js' %}
-{{ page | json_encode(constant('JSON_PRETTY_PRINT')) | raw }}
-{%    au t esca e%}
+    var page = {{ page | json_encode(constant('JSON_PRETTY_PRINT')) | raw }}
+{% endautoescape %}

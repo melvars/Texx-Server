@@ -74,7 +74,7 @@ trait Unique
     /**
      * Set the "offset" value of the query.
      *
-     * @todo Implement for 'unionOffset' as well?  (By checking the value of $this->query->getQuery()->unions)
+     *  Implement for 'unionOffset' as well?  (By checking the value of $this->query->getQuery()->unions)
      * @see \Illuminate\Database\Query\Builder
      * @param  int $value
      * @return $this
@@ -98,7 +98,7 @@ trait Unique
     /**
      * Set the "limit" value of the query.
      *
-     * @todo Implement for 'unionLimit' as well?  (By checking the value of $this->query->getQuery()->unions)
+     *  Implement for 'unionLimit' as well?  (By checking the value of $this->query->getQuery()->unions)
      * @see \Illuminate\Database\Query\Builder
      * @param  int $value
      * @return $this

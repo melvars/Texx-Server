@@ -1625,7 +1625,7 @@
         return new Promise(function (resolve, reject) {
             // functions to handle all resolving/rejecting/settling
             var succeedWith = function succeedWith(value) {
-                constructor.closePopup(innerParams.onClose, innerParams.onAfterClose); // TODO: make closePopup an *instance* method
+                constructor.closePopup(innerParams.onClose, innerParams.onAfterClose); // O: make closePopup an *instance* method
                 if (innerParams.useRejections) {
                     resolve(value);
                 } else {
@@ -1682,7 +1682,7 @@
 
             var confirm = function confirm(value) {
                 if (innerParams.showLoaderOnConfirm) {
-                    constructor.showLoading(); // TODO: make showLoading an *instance* method
+                    constructor.showLoading(); // make showLoading an *instance* method
                 }
 
                 if (innerParams.preConfirm) {

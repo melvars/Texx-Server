@@ -139,7 +139,7 @@ abstract class Sprunje
         $v->rule('integer', 'page');
         $v->rule('regex', 'format', '/json|csv/i');
 
-        // TODO: translated rules
+        // translated rules
         if (!$v->validate()) {
             $e = new BadRequestException();
             foreach ($v->errors() as $idx => $field) {

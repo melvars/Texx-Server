@@ -124,7 +124,7 @@ class ServicesProvider
                 // Load Sprinkle assets
                 $sprinkles = $c->sprinkleManager->getSprinkleNames();
 
-                // TODO: move this out into PathBuilder and Loader classes in userfrosting/assets
+                // move this out into PathBuilder and Loader classes in userfrosting/assets
                 // This would also allow us to define and load bundles in themes
                 $bundleSchemas = array_reverse($locator->findResources('sprinkles://' . $config['assets.raw.schema'], TRUE, TRUE));
 
@@ -176,7 +176,7 @@ class ServicesProvider
         /**
          * Middleware to check environment.
          *
-         * @todo We should cache the results of this, the first time that it succeeds.
+         *  We should cache the results of this, the first time that it succeeds.
          */
         $container['checkEnvironment'] = function ($c) {
             $checkEnvironment = new CheckEnvironment($c->view, $c->locator, $c->cache);
@@ -279,7 +279,7 @@ class ServicesProvider
         /**
          * Initialize Eloquent Capsule, which provides the database layer for UF.
          *
-         * @todo construct the individual objects rather than using the facade
+         *  construct the individual objects rather than using the facade
          */
         $container['db'] = function ($c) {
             $config = $c->config;

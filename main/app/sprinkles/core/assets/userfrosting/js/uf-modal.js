@@ -82,7 +82,7 @@
                             console.log("Error (" + data.status + "): " + data.responseText);
                         }
                         // Display errors on failure
-                        // TODO: ufAlerts widget should have a 'destroy' method
+                        // ufAlerts widget should have a 'destroy' method
                         if (!base.options.msgTarget.data('ufAlerts')) {
                             base.options.msgTarget.ufAlerts();
                         } else {

@@ -29,6 +29,48 @@ use Illuminate\Database\Capsule\Manager as DB;
 class PostController extends SimpleController
 {
 
+    /**
+     * Gets the feed of the requested user (for non-administrators only own feed allowed)
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @throws BadRequestException
+     * @throws NotFoundException
+     */
+    public function getFeed(Request $request, Response $response, $args) {
+        $user = $this->getUserFromParams($args);
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
+
+        // Get friends first
+        $UsersFriends = DB::select("SELECT id FROM (SELECT user_id AS id FROM user_follow WHERE followed_by_id = $user->id UNION ALL SELECT followed_by_id FROM user_follow WHERE user_id = $user->id) t GROUP BY id HAVING COUNT(id) > 1");
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+        foreach ($UsersFriends as $Key => $UsersFriendId) { // NOT THAT EFFICIENT...
+            $UsersFriendInformation = $classMapper->createInstance('user')// raw select doesnt work with instance
+            ->where('id', $UsersFriendId->id)
+                ->get();
+
+            $ImagesFromFriends[] = DB::table('image_posts')
+                ->where('UserID', '=', $UsersFriendInformation[0]->id)
+                ->value('File');
+        }
+    }
+
+    /**
+     * Shows the requested image
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @return Response
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     */
     public function showImage(Request $request, Response $response, $args) {
         // check if user is authorized
         $authorizer = $this->ci->authorizer;
@@ -36,7 +78,7 @@ class PostController extends SimpleController
         if (!$authorizer->checkAccess($currentUser, 'view_image')) {
             throw new ForbiddenException();
         }
-        $postID = $args['PostID'];
+        $postID = $args['post_id'];
 
         // get filename from database
         $FileRequestedImage = DB::table('image_posts')
@@ -54,6 +96,14 @@ class PostController extends SimpleController
         }
     }
 
+    /**
+     * posts a image
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws ForbiddenException
+     */
     public function postImage(Request $request, Response $response) {
         // check if user is authorized
         $authorizer = $this->ci->authorizer;
@@ -82,10 +132,15 @@ class PostController extends SimpleController
             DB::table('image_posts')
                 ->insert(['UserID' => $currentUser->id, 'File' => $filename]);
 
-            $response->write('Uploaded successfully! <br/>');
+            return $response->write('Uploaded successfully! <br/>');
         }
     }
 
+    /**
+     * @param $params
+     * @return mixed
+     * @throws BadRequestException
+     */
     protected function getUserFromParams($params) {
         // Load the request schema
         $schema = new RequestSchema('schema://requests/user/get-by-username.yaml');
@@ -97,7 +152,6 @@ class PostController extends SimpleController
         // Validate, and throw exception on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
-            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
                 foreach ($field as $eidx => $error) {

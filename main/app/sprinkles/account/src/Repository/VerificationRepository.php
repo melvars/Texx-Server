@@ -26,7 +26,6 @@ class VerificationRepository extends TokenRepository
      */
     protected function updateUser($user, $args) {
         $user->flag_verified = 1;
-        // TODO: generate user activity? or do this in controller?
         $user->save();
     }
 }

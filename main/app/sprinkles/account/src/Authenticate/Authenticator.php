@@ -181,7 +181,7 @@ class Authenticator
      * This method logs in the specified user, allowing the client to assume the user's identity for the duration of the session.
      * @param User $user The user to log in.
      * @param bool $rememberMe Set to true to make this a "persistent session", i.e. one that will re-login even after the session expires.
-     * @todo Figure out a way to update the currentUser service to reflect the logged-in user *immediately* in the service provider.
+     * @odo Figure out a way to update the currentUser service to reflect the logged-in user *immediately* in the service provider.
      * As it stands, the currentUser service will still reflect a "guest user" for the remainder of the request.
      */
     public function login($user, $rememberMe = FALSE) {

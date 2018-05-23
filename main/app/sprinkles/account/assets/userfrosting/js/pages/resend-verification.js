@@ -8,7 +8,6 @@
  */
 $(document).ready(function () {
 
-    // TODO: Process form
     $("#request-verification-email").ufForm({
         validators: page.validators.resend_verification,
         msgTarget: $("#alerts-page")

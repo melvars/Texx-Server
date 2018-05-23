@@ -119,7 +119,7 @@ class FunctionResolveTest extends TestCase
     public function shouldSupportVeryDeepNestedPromises() {
         $deferreds = [];
 
-        // @TODO Increase count once global-queue is merged
+        //  Increase count once global-queue is merged
         for ($i = 0; $i < 10; $i++) {
             $deferreds[] = $d = new Deferred();
             $p = $d->promise();

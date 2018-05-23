@@ -28,7 +28,7 @@ class PasswordResetRepository extends TokenRepository
      */
     protected function updateUser($user, $args) {
         $user->password = Password::hash($args['password']);
-        // TODO: generate user activity? or do this in controller?
+        // DO: generate user activity? or do this in controller?
         $user->save();
     }
 }

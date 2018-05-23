@@ -346,7 +346,7 @@ class ServicesProvider
             /**
              * This method is invoked when a user attempts to perform certain public actions when they are already logged in.
              *
-             * @todo Forward to user's landing page or last visited page
+             *  Forward to user's landing page or last visited page
              * @param \Psr\Http\Message\ServerRequestInterface $request
              * @param \Psr\Http\Message\ResponseInterface $response
              * @param array $args

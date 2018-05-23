@@ -107,7 +107,7 @@ function updateUser(userName, fieldName, fieldValue) {
             console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText);
 
             // Display errors on failure
-            // TODO: ufAlerts widget should have a 'destroy' method
+            // ufAlerts widget should have a 'destroy' method
             if (!$("#alerts-page").data('ufAlerts')) {
                 $("#alerts-page").ufAlerts();
             } else {

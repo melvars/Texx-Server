@@ -126,7 +126,7 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = NULL) {
-        // todo
+        
         return array();
     }
 }
