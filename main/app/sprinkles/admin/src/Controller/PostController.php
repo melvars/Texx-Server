@@ -43,22 +43,34 @@ class PostController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         // Get friends first
         $UsersFriends = DB::select("SELECT id FROM (SELECT user_id AS id FROM user_follow WHERE followed_by_id = $user->id UNION ALL SELECT followed_by_id FROM user_follow WHERE user_id = $user->id) t GROUP BY id HAVING COUNT(id) > 1");
+
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
-        foreach ($UsersFriends as $Key => $UsersFriendId) { // NOT THAT EFFICIENT...
+        $ImagesFromFriends = "";
+        $config = $this->ci->config;
+        foreach ($UsersFriends as $Key => $UsersFriendId) { // NOT THAT EFFICIENT... (get images from all friends in an array)
             $UsersFriendInformation = $classMapper->createInstance('user')// raw select doesnt work with instance
-            ->where('id', $UsersFriendId->id)
+                ->where('id', $UsersFriendId->id)
                 ->get();
 
-            $ImagesFromFriends[] = DB::table('image_posts')
+            $ImagesFromFriends = DB::table('image_posts')
                 ->where('UserID', '=', $UsersFriendInformation[0]->id)
-                ->value('File');
+                ->select('PostID as image_id')
+                ->get();
+
+            foreach ($ImagesFromFriends as $ImageFromFriend) {
+                $ImageFromFriend->image_url = $config["site.uri.public"] . "/image/" . $ImageFromFriend->image_id;
+                $ImageFromFriend->username =  $UsersFriendInformation[0]->user_name; // ADD USERNAME TO IMAGE ID
+                $ImageFromFriend->avatar =  $UsersFriendInformation[0]->avatar;
+            }
         }
+
+        return $response->withJson($ImagesFromFriends, 200, JSON_PRETTY_PRINT);
     }
 
     /**

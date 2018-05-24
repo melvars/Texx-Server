@@ -51,7 +51,7 @@ return [
             'enable_email' => TRUE
         ],
         'registration' => [
-            'enabled' => TRUE,
+            'enabled' => FALSE, // TODO: Datenschutzerklärung before enabling registration
             'captcha' => TRUE,
             'require_email_verification' => TRUE,
             'user_defaults' => [
