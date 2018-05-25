@@ -1,30 +1,30 @@
 /**
- * ENCRYPTION
- */
-var ReceiversUsername, ReceiversId;
-var openpgp = window.openpgp;
-var options, EncryptedMessage, DecryptedMessage;
-var PublicKey = [];
-openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
-var privKeyObj = openpgp.key.readArmored(localStorage.getItem("PrivateKey").replace(/\r/, "")).keys[0];
-privKeyObj.decrypt(localStorage.getItem("🔒"));
-
-/**
  * GLOBAL DECLARATIONS
  */
-var LastMessage, Username;
+let LastMessage, Username, ReceiversUsername, ReceiversId, options, EncryptedMessage, DecryptedMessage;
+
+/**
+ * INITIAL ENCRYPTION CONFIGURATION
+ */
+const openpgp = window.openpgp;
+const PublicKey = [];
+openpgp.initWorker({path: '/assets-raw/core/assets/SiteAssets/js/openpgp.worker.js'});
+const privKeyObj = openpgp.key.readArmored(localStorage.getItem("PrivateKey").replace(/\r/, "")).keys[0];
+privKeyObj.decrypt(localStorage.getItem("🔒"));
 
 
 /**
  * GENERAL CHAT
  */
 function InitializeChatServer() {
-    var ChatTextInput = $("#ChatTextInput");
-    var SubscribeTextInput = $("#SubscribeTextInput");
-    var ChatMessages = $("#ChatMessages");
-    var TypingIndicatorAnimationElement = "<div class='spinner'><div class='bounce1'></div><div class='bounce2'></div><div class='bounce3'></div></div>";
+    const ChatTextInput = $("#ChatTextInput");
+    const SubscribeTextInput = $("#SubscribeTextInput");
+    const ChatMessages = $("#ChatMessages:visible");
+    const SelectReceiver = $(".SelectReceiver");
+    const SelectedReceiver = $(".SelectedReceiver");
+    const TypingIndicatorAnimationElement = "<div class='spinner'><div class='bounce1'></div><div class='bounce2'></div><div class='bounce3'></div></div>";
 
-    var WebSocketConnectTimerStart = performance.now(); // START CONNECTION EXECUTION TIMER
+    const WebSocketConnectTimerStart = performance.now(); // START CONNECTION EXECUTION TIMER
     const ChatSocket = new WebSocket('wss://marvinborner.ddnss.de:1337');
     ChatSocket.onerror = function () {
         setTimeout(function () {
@@ -34,7 +34,7 @@ function InitializeChatServer() {
     };
     ChatSocket.onopen = function () {
         // CONNECTION SUCCESSFUL!
-        var WebSocketConnectTimerEnd = performance.now(); // END CONNECTION EXECUTION TIMER
+        const WebSocketConnectTimerEnd = performance.now(); // END CONNECTION EXECUTION TIMER
         console.log("%c[CHATSOCKET LOGGER] Chat connection established! (Took " + +(WebSocketConnectTimerEnd - WebSocketConnectTimerStart) + " milliseconds)", "color: darkorange");
         // START VERIFICATION
         ChatSocket.send(JSON.stringify({
@@ -46,18 +46,20 @@ function InitializeChatServer() {
         // GOT MESSAGE
         ChatSocket.onmessage = function (e) {
             // DECLARATIONS
-            var TypingIndicatorMessage = $(".TypingIndicatorMessage").parent();
-            var MessageObject = JSON.parse(e.data);
-            var Message = MessageObject.Message; // ENCRYPTED MESSAGE (NOT ENCRYPTED ON SERVER MESSAGES)
-            var Fullname = MessageObject.Fullname;
-            var Avatar = MessageObject.Avatar;
-            var GroupName = MessageObject.GroupName;
-            var State = MessageObject.State;
-            var ServerMessage = MessageObject.ServerMessage;
-            var WasHimself = MessageObject.WasHimself;
-            var ServerMessageType = MessageObject.ServerMessageType;
-            var Granted = MessageObject.Granted;
-            var Success = MessageObject.Success;
+            const TypingIndicatorMessage = $(".TypingIndicatorMessage").parent();
+            const CurrentChatMessagesWindow = $(".SelectedReceiver #ChatMessages[data-username=" + ReceiversUsername + "]");
+            const MessageObject = JSON.parse(e.data);
+            const Message = MessageObject.Message; // ENCRYPTED MESSAGE (NOT ENCRYPTED ON SERVER MESSAGES)
+            const MessageId = MessageObject.MessageId;
+            const Fullname = MessageObject.Fullname;
+            const Avatar = MessageObject.Avatar;
+            const GroupName = MessageObject.GroupName;
+            const ServerMessageType = MessageObject.ServerMessageType;
+            let State = MessageObject.State;
+            let ServerMessage = MessageObject.ServerMessage;
+            let WasHimself = MessageObject.WasHimself;
+            let Granted = MessageObject.Granted;
+            let Success = MessageObject.Success;
 
             // GLOBAL OVERWRITES
             LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
@@ -114,9 +116,9 @@ function InitializeChatServer() {
                             }
                         });
                         if (!LastMessage.hasClass("MessageReceived")) { // CHECK IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
-                            ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageReceived AloneMessage animated fadeInLeft'>" + DecryptedMessage + "</div></div>");
+                            CurrentChatMessagesWindow.append("<div class='MessageWrapper Normal'><div id='" + MessageId + "' class='ChatMessage MessageReceived AloneMessage animated fadeInLeft'>" + DecryptedMessage + "</div></div>");
                         } else if (LastMessage.hasClass("MessageReceived")) { // IF PREVIOUS MESSAGE WAS FROM OTHER USER TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
-                            ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageReceived BottomMessage animated fadeInLeft'>" + DecryptedMessage + "</div></div>");
+                            CurrentChatMessagesWindow.append("<div class='MessageWrapper Normal'><div id='" + MessageId + "' class='ChatMessage MessageReceived BottomMessage animated fadeInLeft'>" + DecryptedMessage + "</div></div>");
                             if (LastMessage.hasClass("AloneMessage")) {
                                 LastMessage.removeClass("AloneMessage");
                                 LastMessage.addClass("TopMessage");
@@ -132,20 +134,20 @@ function InitializeChatServer() {
                 $('.ChatMessage').linkify({
                     target: "_blank"
                 });
-            } else if (ServerMessage) { // SERVER MESSAGE
+            } else { // SERVER MESSAGE
                 if (ServerMessageType === "GroupJoin") { // TYPE: USER JOINED A GROUP
                     if (WasHimself) { // HIMSELF JOINED A GROUP -> NOTIFY
-                        ChatMessages.empty(); // -> EMPTY MESSAGES ON NEW GROUP JOIN
-                        ChatMessages.append("<br><div class='MessageWrapper'><div class='ServerChatMessage'>" + GroupName + "</span></div></div><br>");
+                        CurrentChatMessagesWindow.empty(); // -> EMPTY MESSAGES ON NEW GROUP JOIN
+                        CurrentChatMessagesWindow.append("<br><div class='MessageWrapper'><div class='ServerChatMessage'>" + GroupName + "</span></div></div><br>");
                         ReplaceServerMessage("YouGroupJoin"); // FOR TRANSLATION
                         console.log("%c[CHATSOCKET LOGGER] You joined the group " + GroupName + "!", "color: darkorange");
                     } else if (!WasHimself) { // OTHER USER JOINED A GROUP -> NOTIFY
-                        ChatMessages.append("<br><div class='MessageWrapper'><div class='ServerChatMessage'>" + Username + "</span></div></div><br>");
+                        CurrentChatMessagesWindow.append("<br><div class='MessageWrapper'><div class='ServerChatMessage'>" + Username + "</span></div></div><br>");
                         ReplaceServerMessage("UserGroupJoin"); // FOR TRANSLATION
                         console.log("%c[CHATSOCKET LOGGER] " + Username + " joined the group!", "color: darkorange");
                     }
                 } else if (ServerMessageType === "UserDisconnect") { // TYPE: USER DISCONNECTED -> NOTIFY
-                    ChatMessages.append("<br><div class='MessageWrapper'><div class='ServerChatMessage'>" + Username + "</span></div></div><br>");
+                    CurrentChatMessagesWindow.append("<br><div class='MessageWrapper'><div class='ServerChatMessage'>" + Username + "</span></div></div><br>");
                     ReplaceServerMessage("UserDisconnect"); // FOR TRANSLATION
                     console.log("%c[CHATSOCKET LOGGER] " + Username + " disconnected from server!", "color: darkorange");
                 } else if (ServerMessageType === "TypingState") { // TYPE: SOMEBODY'S TYPING STATE CHANGED!
@@ -153,7 +155,7 @@ function InitializeChatServer() {
                         if (WasHimself) { // IDENTIFY 'SOMEBODY' -> WAS HIMSELF -> NOT THAT IMPORTANT (USER KNOWS WHEN HE STARTS TYPING?)
                             console.log("%c[CHAT TYPING LOGGER] You started typing!", "color: gray");
                         } else if (!WasHimself) { // IDENTIFY 'SOMEBODY' -> WAS OTHER USER -> SHOW TYPING ANIMATION ON RECEIVER'S SIDE
-                            ChatMessages.append("<div class='MessageWrapper'><div class='ChatMessage TypingIndicatorMessage AloneMessage'>" + TypingIndicatorAnimationElement + "</div></div>");
+                            CurrentChatMessagesWindow.append("<div class='MessageWrapper'><div class='ChatMessage TypingIndicatorMessage AloneMessage'>" + TypingIndicatorAnimationElement + "</div></div>");
                             console.log("%c[CHAT TYPING LOGGER] " + Username + " started typing!", "color: gray");
                         }
                     } else if (!State) { // IF 'SOMEBODY' STOPPED TYPING
@@ -175,25 +177,28 @@ function InitializeChatServer() {
                 } else if (ServerMessageType === "SetReceiver") { // TYPE: SERVER CHECKED ACCESS -- MOSTLY HANDLED IN BACKEND
                     if (Success) {
                         console.log("%c[CHATSOCKET LOGGER] Setting receiver succeeded!", "color: green");
-                        $(".SelectReceiver").hide();
+                        SelectReceiver.hide();
+                        ChatMessages.hide();
                         $(".SelectedReceiver > *").addClass("animated slideInRight");
                         $(".ChatTab .headerWrap .header .HeaderCaption").text(ReceiversUsername);
-                        $(".SelectedReceiver").show();
+                        SelectedReceiver.prepend("<div id='ChatMessages' class='ChatMessages' data-username='" + ReceiversUsername + "'></div>");
+                        SelectedReceiver.show();
+                        $(".SelectedReceiver #ChatMessages[data-username=" + ReceiversUsername + "]").show();
                     } else if (!Success) {
                         console.log("%c[CHATSOCKET LOGGER] Setting receiver failed!", "color: red");
                     }
                 }
             }
             // SCROLL TO BOTTOM ON NEW MESSAGE OF ANY KIND
-            if ((ChatMessages.scrollTop() + ChatMessages.innerHeight() < ChatMessages[0].scrollHeight)) {
-                ChatMessages.animate({scrollTop: document.querySelector("#ChatMessages").scrollHeight});
+            if ((CurrentChatMessagesWindow.scrollTop() + CurrentChatMessagesWindow.innerHeight() < CurrentChatMessagesWindow[0].scrollHeight)) {
+                CurrentChatMessagesWindow.animate({scrollTop: document.querySelector("#ChatMessages").scrollHeight});
             }
         };
 
 
         // TYPING RECOGNITION
-        var typingTimer;
-        var isTyping = false;
+        let typingTimer;
+        let isTyping = false;
 
         ChatTextInput.keydown(function () {
             sendStartTyping();
@@ -252,7 +257,7 @@ function InitializeChatServer() {
                 if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
                     const ChatTextInputText = ChatTextInput.val();
                     ChatTextInput.val("");
-                    var LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
+                    const LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
                     if (!LastMessage.hasClass("MessageSent")) { // CHECK IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
                         ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + ChatTextInputText + "</div></div>");
                     } else if (LastMessage.hasClass("MessageSent")) { // IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN

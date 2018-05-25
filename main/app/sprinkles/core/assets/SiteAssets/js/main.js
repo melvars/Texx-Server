@@ -1,13 +1,14 @@
-var MainTabWindows = $(".MainTabWindows");
-var NavbarIconWrap = $(".NavbarIconWrap");
-var Navbar = $(".Navbar");
-var NavbarLine = $(".NavbarLine");
-var UserSearchBar = $("#UserSearchBar");
-var SearchResults = $(".SearchResults");
-var SelectReceiver = $(".SelectReceiver");
-var FriendList = $(".FriendList");
-var alerts = $("#alerts-page");
-var ExploreData = $("#ExploreData");
+const MainTabWindows = $(".MainTabWindows");
+const FeedTabWindow = $(".FeedTabWindow");
+const NavbarIconWrap = $(".NavbarIconWrap");
+const Navbar = $(".Navbar");
+const NavbarLine = $(".NavbarLine");
+const UserSearchBar = $("#UserSearchBar");
+const SearchResults = $(".SearchResults");
+const SelectReceiver = $(".SelectReceiver");
+const FriendList = $(".FriendList");
+const alerts = $("#alerts-page");
+const ExploreData = $("#ExploreData");
 
 
 /**
@@ -21,7 +22,7 @@ var ExploreData = $("#ExploreData");
  * POPUPS
  */
 function triggerErrorPopup(ErrorCode) {
-    var ErrorMessage = "Unknown Error occurred!", ErrorInformationSite = "", AlsoLogInConsole = true; // WILL BE REWRITTEN (EXCEPT SOMETHING CRAZY HAPPENS)
+    let ErrorMessage = "Unknown Error occurred!", ErrorInformationSite = "", AlsoLogInConsole = true; // WILL BE REWRITTEN (EXCEPT SOMETHING CRAZY HAPPENS)
     switch (ErrorCode) {
         case "ChatNotAllowed":
             AlsoLogInConsole = false;
@@ -41,8 +42,8 @@ function triggerErrorPopup(ErrorCode) {
  * OLD BROWSER
  * @type {boolean}
  */
-var isIE = /*@cc_on!@*/false || !!document.documentMode;
-var isEdge = !isIE && !!window.StyleMedia;
+let isIE = /*@cc_on!@*/false || !!document.documentMode;
+const isEdge = !isIE && !!window.StyleMedia;
 if (isIE || isEdge) {
     alert("Sorry, your browser is currently not supported. " +
         "Please update to a newer browser if you are facing any kind of issues. " +
@@ -52,7 +53,7 @@ if (isIE || isEdge) {
 /**
  * NAVBAR
  */
-var $el, leftPos, newWidth;
+let $el, leftPos, newWidth;
 NavbarLine
     .css("left", $(".ActiveTab").position().left)
     .data("origLeft", NavbarLine.position().left)
@@ -108,7 +109,7 @@ MainTabWindows.on('beforeChange', function (event, slick, currentSlide, nextSlid
  */
 UserSearchBar.keyup(function () {
     SearchResults.empty();
-    var RequestedUser = UserSearchBar.val();
+    const RequestedUser = UserSearchBar.val();
     if (RequestedUser !== " " && RequestedUser !== "")
         $.ajax({
             url: site.uri.public + "/api/users/u/" + RequestedUser,
@@ -144,6 +145,19 @@ $(document).ready(function () {
         },
         error: function () {
             console.log("%c[FRIENDLY LOGGER] No friends were found! :(", "color: red");
+
+            alerts.ufAlerts().ufAlerts('fetch');
+        }
+    });
+    $.ajax({
+        url: site.uri.public + "/api/feed/" + current_username,
+        success: function (images) {
+            images.forEach(function (imageInfo) {
+                FeedTabWindow.append("<img class='FeedImage' src='" + imageInfo.image_url + "'><br>");
+            })
+        },
+        error: function () {
+            console.log("%c[FEED LOGGER] No images in feed!", "color: red");
 
             alerts.ufAlerts().ufAlerts('fetch');
         }

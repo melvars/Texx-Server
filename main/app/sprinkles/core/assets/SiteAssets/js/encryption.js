@@ -4427,7 +4427,7 @@
                             S ? A.emit("unhandledRejection", i, e) : (r = u.onunhandledrejection) ? r({
                                 promise: e,
                                 reason: i
-                            }) : (n = u.console) && n.error && n.error("Unhandled promise rejection", i)
+                            }) : ""//(n = u.console) && n.error && n.error("Unhandled promise rejection", i)
                         }), e._h = S || U(e) ? 2 : 1), e._a = void 0, a && t.e) throw t.v
                     })
                 }, U = function (e) {

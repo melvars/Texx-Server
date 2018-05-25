@@ -122,11 +122,7 @@ class ChatProcessor implements MessageComponentInterface
 
                     if (isset($this->ResourceId[$ReceiversId])) { // USER IS ONLINE
                         $ReceiversResourceId = $this->ResourceId[$ReceiversId];
-                        if ($data->EncryptedWithKeyOfUsername === $this->userInfo[$ReceiversResourceId]->user_name) {
-                            $MessageObject->WasHimself = FALSE;
-                            $MessageJson = json_encode($MessageObject, TRUE);
-                            $this->users[$ReceiversResourceId]->send($MessageJson); // SEND TO RECEIVER
-
+                        if ($data->EncryptedWithKeyOfUsername === $this->userInfo[$ReceiversResourceId]->user_name) { // MESSAGE FOR RECEIVER
                             // SAVE IN DATABASE
                             $url = "https://beam-messenger.de/wormhole/" . file("/AccessToken.txt", FILE_IGNORE_NEW_LINES)["0"] . "/new/message/" . $this->userInfo[$conn->resourceId]->id . "/" . $this->userInfo[$ReceiversResourceId]->id . "/";
                             $data = array('message' => $data->Message);
@@ -140,9 +136,15 @@ class ChatProcessor implements MessageComponentInterface
                             $context = stream_context_create($options);
                             $result = file_get_contents($url, FALSE, $context);
                             if ($result === FALSE) { /* Handle error */
+                            } else {
+                                $MessageObject->MessageId = $result; // MESSAGE ID GETS SEND IN ANSWER
                             }
 
-                        } else if ($data->EncryptedWithKeyOfUsername === $MessageObject->Username) {
+                            $MessageObject->WasHimself = FALSE;
+                            $MessageJson = json_encode($MessageObject, TRUE);
+                            $this->users[$ReceiversResourceId]->send($MessageJson); // SEND TO RECEIVER
+
+                        } else if ($data->EncryptedWithKeyOfUsername === $MessageObject->Username) { // VERIFICATION MESSAGE
                             $MessageObject->WasHimself = TRUE;
                             $MessageJson = json_encode($MessageObject, TRUE);
                             $this->users[$conn->resourceId]->send($MessageJson); // SEND TO SENDER (FOR VERIFICATION)
@@ -161,6 +163,8 @@ class ChatProcessor implements MessageComponentInterface
                         $context = stream_context_create($options);
                         $result = file_get_contents($url, FALSE, $context);
                         if ($result === FALSE) { /* Handle error */
+                        } else {
+                            $MessageObject->MessageId = $result; // MESSAGE ID GETS SEND IN ANSWER
                         }
 
                         // SEND BACK FOR VERIFICATION

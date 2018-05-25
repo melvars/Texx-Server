@@ -30,6 +30,13 @@ use Illuminate\Session\FileSessionHandler;
  */
 class WormholeController extends SimpleController
 {
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @return Response
+     * @throws NotFoundException
+     */
     public function verify(Request $request, Response $response, $args) {
         if ($this->verifyAccessToken($args)) {
             $user_id = $args['user_id'];
@@ -44,14 +51,23 @@ class WormholeController extends SimpleController
         }
     }
 
+    /**
+     * @param $request
+     * @param Response $response
+     * @param $args
+     * @return Response
+     * @throws BadRequestException
+     * @throws NotFoundException
+     */
     public function newMessage($request, Response $response, $args) {
         if ($this->verifyAccessToken($args)) {
             $sender_id = $args['sender_id'];
             $receiver_id = $args['receiver_id'];
             $message = $request->getParsedBody()["message"];
             if (($sender_id != $receiver_id) && $message) {
-                DB::table('chat_messages')
-                    ->insert(['sender_id' => $sender_id, 'receiver_id' => $receiver_id, 'message' => $message]);
+                $MessageId = DB::table('chat_messages')
+                    ->insertGetId(['sender_id' => $sender_id, 'receiver_id' => $receiver_id, 'message' => $message], 'message_id');
+                $response->write($MessageId);
                 return $response->withStatus(200);
             } else {
                 throw new BadRequestException();
@@ -59,6 +75,13 @@ class WormholeController extends SimpleController
         }
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @return Response
+     * @throws NotFoundException
+     */
     public function getInfo(Request $request, Response $response, $args) {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
@@ -104,6 +127,11 @@ class WormholeController extends SimpleController
         }
     }
 
+    /**
+     * @param $args
+     * @return bool
+     * @throws NotFoundException
+     */
     private function verifyAccessToken($args) {
         $currentUser = $this->ci->currentUser; // FOR DATABASE QUERY
         $access_token = $args['access_token'];
@@ -113,7 +141,7 @@ class WormholeController extends SimpleController
             ->exists()) {
             return TRUE;
         } else {
-            throw new NotFoundException();
+            throw new NotFoundException(); // IT'S A FORBIDDEN
         }
     }
 }
