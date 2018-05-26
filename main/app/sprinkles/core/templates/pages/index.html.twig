@@ -14,8 +14,7 @@
             <div class="carousel-cell FeedTab">
                 <div class="headerWrap">
                     <div class="header">
-                        <span class="LeftButtonHeader"><img
-                                    src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                        <span class="LeftButtonHeader"><i class="fas fa-bars"></i></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.FEED") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
@@ -32,8 +31,7 @@
             <div class="carousel-cell ExploreTab">
                 <div class="headerWrap">
                     <div class="header">
-                        <span class="LeftButtonHeader"><img
-                                    src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                        <span class="LeftButtonHeader"><i class="fas fa-bars"></i></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.EXPLORE") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
@@ -56,8 +54,7 @@
             <div class="carousel-cell ChatTab">
                 <div class="headerWrap">
                     <div class="header">
-                        <span class="LeftButtonHeader"><img
-                                    src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                        <span class="LeftButtonHeader"><i class="fas fa-bars"></i></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.CHAT") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
@@ -81,8 +78,7 @@
             <div class="carousel-cell FriendsTab">
                 <div class="headerWrap">
                     <div class="header">
-                        <span class="LeftButtonHeader"><img
-                                    src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                        <span class="LeftButtonHeader"><i class="fas fa-bars"></i></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.FRIENDS") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
@@ -97,8 +93,7 @@
             <div class="carousel-cell PersonalTab">
                 <div class="headerWrap">
                     <div class="header">
-                        <span class="LeftButtonHeader"><img
-                                    src="{{ assets.url('assets://SiteAssets/icons/BurgerMenuShort.svg') }}"></span>
+                        <span class="LeftButtonHeader"><i class="fas fa-bars"></i></span>
                         <span class="HeaderCaption">{{ translate("TAB_CAPTIONS.PERSONAL") }}</span>
                         <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
                     </div>
@@ -125,24 +120,19 @@
 
         <div class="Navbar">
             <span id="0" class="NavbarIconWrap">
-                <img src="{{ assets.url('assets://SiteAssets/icons/FriendFeedOutline.svg') }}"
-                     data-caching-key="FriendFeedOutline_nav_cached">
+                <img src="{{ assets.url('assets://SiteAssets/icons/FriendFeedOutline.svg') }}">
             </span>
             <span id="1" class="NavbarIconWrap">
-                <img src="{{ assets.url('assets://SiteAssets/icons/ExploreGlobeOutline.svg') }}"
-                     data-caching-key="ExploreGlobeOutline_nav_cached">
+                <img src="{{ assets.url('assets://SiteAssets/icons/ExploreGlobeOutline.svg') }}">
             </span>
             <span id="2" class="NavbarIconWrap ActiveTab">
-                <img src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutlineActivated.svg') }}"
-                     data-caching-key="MessageBubbleOutlineActivated_nav_cached">
+                <img src="{{ assets.url('assets://SiteAssets/icons/MessageBubbleOutlineActivated.svg') }}">
             </span>
             <span id="3" class="NavbarIconWrap">
-                <img src="{{ assets.url('assets://SiteAssets/icons/UserGroupOutline.svg') }}"
-                     data-caching-key="UserGroupOutline_nav_cached">
+                <img src="{{ assets.url('assets://SiteAssets/icons/UserGroupOutline.svg') }}">
             </span>
             <span id="4" class="NavbarIconWrap">
-                <img src="{{ assets.url('assets://SiteAssets/icons/UserOutline.svg') }}"
-                     data-caching-key="UserOutline_nav_cached">
+                <img src="{{ assets.url('assets://SiteAssets/icons/UserOutline.svg') }}">
             </span>
         </div>
         <span class='NavbarLine'></span>
@@ -158,18 +148,20 @@
         </div>
     </script>
     <script>
-        var NotifySound = new Audio("{{ assets.url('assets://SiteAssets/notisound.mp3') }}");
+        const NotifySound = new Audio("{{ assets.url('assets://SiteAssets/notisound.mp3') }}");
 
-        function ReplaceServerMessage(Type) { // translation service
-            var LastServerMessage = $(".MessageWrapper:last .ServerChatMessage");
+        // translation service
+        function ReplaceServerMessage(Type) {
+            let Username;
+            const LastServerMessage = $(".MessageWrapper:last .ServerChatMessage");
             if (Type === "YouGroupJoin") {
-                var GroupName = LastServerMessage.text();
+                const GroupName = LastServerMessage.text();
                 LastServerMessage.text("{{ translate("CHAT_MESSAGES.YOU_GROUP_JOIN", {group: "ConvertTranslatedMessageWithGroupName"}) }}".replace("ConvertTranslatedMessageWithGroupName", '"' + GroupName + '"') + ".");
             } else if (Type === "UserGroupJoin") {
-                var Username = LastServerMessage.text();
+                Username = LastServerMessage.text();
                 LastServerMessage.text("{{ translate("CHAT_MESSAGES.USER_GROUP_JOIN", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", Username) + ".");
             } else if (Type === "UserDisconnect") {
-                var Username = LastServerMessage.text();
+                Username = LastServerMessage.text();
                 LastServerMessage.text("{{ translate("CHAT_MESSAGES.USER_DISCONNECT", {user: "ConvertTranslatedMessageWithUsername"}) }}".replace("ConvertTranslatedMessageWithUsername", Username) + ".");
             }
         }
