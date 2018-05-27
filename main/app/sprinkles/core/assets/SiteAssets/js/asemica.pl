@@ -209,7 +209,7 @@ if ($output_file) {
     close('OUTPUT');
 }
 else {
-    print $output_text;
+    #print $output_text;
 }
 
 

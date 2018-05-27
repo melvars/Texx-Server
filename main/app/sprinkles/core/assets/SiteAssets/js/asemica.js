@@ -5,18 +5,36 @@ function asemica(PlainText, CorpusUrl) {
         .then(function (response) {
             response.text().then(function (response) {
                 CorpusString = response;
-                Tokens = tokenize_corpus(CorpusString);
-                Transitions = generate_transitions(Tokens);
+                Tokens = TokenizeCorpus(CorpusString);
+                Transitions = GenerateTransitions(Tokens);
+                if (!VerifyExists(Transitions)) {
+                    throw new Error("Please choose another text.");
+                } else {
+                    Encode("LOL", Transitions, Tokens);
+                }
                 console.log(Transitions);
             });
         });
+
+
+    /*
+    * Encodes an input file using the transition matrix calculated from the corpus
+    */
+    function Encode(Input, Transitions, Tokens) {
+        var Nibbles = [4, 4, 3, 2, 15, 2, 3, 2, 4, 4, 0, 4, 5, 0];
+        var Token = Tokens[Math.round(Math.random() * (Tokens.length - 1) + 1)];
+
+        while (Nibbles.length) {
+
+        }
+    }
 
     /*
     * Breaks the input corpus into a series of processable "tokens"
     *
     * Example output: ['The','Project','Gutenberg', ... ,'about','new','eBooks']
     */
-    function tokenize_corpus(CorpusString) {
+    function TokenizeCorpus(CorpusString) {
         // Clean up things
         const StrippedCorpus = CorpusString
             .replace(/\n/g, " ") // newlines
@@ -52,38 +70,51 @@ function asemica(PlainText, CorpusUrl) {
     * }
     * ...
     */
-    function generate_transitions(Tokens) {
+    function GenerateTransitions(Tokens) {
         Transitions = {};
-        
-        Tokens.forEach(function(Token, Index) {
+
+        Tokens.forEach(function (Token, Index) {
             var ObjectKey = Token.toLowerCase();
-            if (Transitions[ObjectKey] === undefined) { // Will run one time -> initialize
-                Transitions[ObjectKey] = {};
-                Transitions[ObjectKey]["seen"] = 1;
-                Transitions[ObjectKey]["exits"] = {};
-                Transitions[ObjectKey]["door"] = [];
-                if (Tokens[Index + 1] !== undefined) {
-                    Transitions[ObjectKey]["exits"][Tokens[Index + 1]] += 1;
-                }
-                Transitions[ObjectKey]["token"] = ObjectKey;
-            } else { // Will run n times
-                var CurrentSeenValue = Transitions[ObjectKey]["seen"];
-                Transitions[ObjectKey]["seen"] = CurrentSeenValue + 1;
+            if (!(ObjectKey in Transitions)) Transitions[ObjectKey] = {};
+            if (!("exits" in Transitions[ObjectKey])) Transitions[ObjectKey]["exits"] = {};
+
+            Transitions[ObjectKey]["seen"] += 1;
+            Transitions[ObjectKey]["token"] = ObjectKey;
+            if (Tokens[Index + 1] !== undefined) {
+                Transitions[ObjectKey]["exits"][Tokens[Index + 1]]++;
             }
         });
 
-        Transitions.forEach(function(Transition) {
-           var Exits =  Transitions[Transition]["exits"].sort();
-           var Found = {};
+        // Calculate the exits and doors
+        for (var Transition in Transitions) {
+            var Exits = Transitions[Transition]["exits"];
+            var Found = {};
+            Transitions[Transition]["door"] = [];
 
-           Exits.forEach(function(Exit) {
+            for (var Exit in Exits) {
+                if (!(Exit.toLowerCase() in Found)) Transitions[Transition]["door"].push(Exit.toLowerCase());
+                Found[Exit.toLowerCase()] = 1;
+            }
 
-           });
-
-
-        });
+            Transitions[Transition]["doors"] = Transitions[Transition]["door"].length;
+            if (Transitions[Transition]["doors"] > 15) Transitions[Transition]["meaningful"] = 1;
+        }
 
         return Transitions;
+    }
+
+    /*
+    * Returns whether this corpus will work well as an encoding or decoding medium
+    */
+    function VerifyExists(Transitions) {
+        var Count = 0;
+
+        for (var Key in Transitions) {
+            if (Transitions[Key]["doors"] > 15) {
+                Count++;
+            }
+        }
+        return Count >= 7;
     }
 
 }
