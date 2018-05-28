@@ -209,7 +209,7 @@ if ($output_file) {
     close('OUTPUT');
 }
 else {
-    #print $output_text;
+    print $output_text;
 }
 
 
@@ -385,6 +385,9 @@ sub encode {
     while (my $nibble = substr($bits, 0, 4, '')) {
         push @$nibbles, bin2dec($nibble);
     }
+
+    use Data::Dumper;
+    print Dumper($nibbles);
 
     my $token = $tokens->[int(rand(scalar(@$tokens)))];
     my $encoded_text = '';

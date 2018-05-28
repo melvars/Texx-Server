@@ -1,4 +1,4 @@
-function asemica(PlainText, CorpusUrl) {
+function asemica(Text, CorpusUrl, Intent = "enc") {
     let CorpusString, Tokens, Transitions;
 
     fetch(CorpusUrl)
@@ -10,23 +10,41 @@ function asemica(PlainText, CorpusUrl) {
                 if (!VerifyExists(Transitions)) {
                     throw new Error("Please choose another text.");
                 } else {
-                    Encode("LOL", Transitions, Tokens);
+                    console.log(Encode("LOL", Transitions, Tokens));
                 }
-                console.log(Transitions);
             });
         });
 
 
-    /*
-    * Encodes an input file using the transition matrix calculated from the corpus
-    */
+    /**
+     * Encodes an input file using the transition matrix calculated from the corpus
+     *
+     * @return {string}
+     */
     function Encode(Input, Transitions, Tokens) {
-        var Nibbles = [4, 4, 3, 2, 15, 2, 3, 2, 4, 4, 0, 4, 5, 0];
+        var Nibbles = [4, 4, 3, 2, 15, 2, 3, 2, 4, 4, 0, 4, 5, 0]; // TODO: Support other words than "LOL"
         var Token = Tokens[Math.round(Math.random() * (Tokens.length - 1) + 1)];
+        var EncodedText = "";
 
         while (Nibbles.length) {
+            if ("meaningful" in Transitions[Token.toLowerCase()]) { // Token is meaningful
+                EncodedText += Token + " ";
 
+                var Nibble = Nibbles.shift();
+                Token = Transitions[Token.toLowerCase()]["door"][Nibble];
+            } else { // Token is irrelevant -> go through random door
+                EncodedText += Token + " ";
+
+                var RandomDoorNumber = Math.round(Math.random() * (Transitions[Token.toLowerCase()]["doors"] - 1) + 1); // Fix for a annoying bug (count from 1 but array is 0)
+                if (RandomDoorNumber === 1 || RandomDoorNumber === Transitions[Token.toLowerCase()]["doors"]) RandomDoorNumber--;
+                Token = Transitions[Token.toLowerCase()]["door"][RandomDoorNumber];
+            }
+
+            if (Token === undefined) throw new Error("Token is undefined, please report this error to the developer.");
         }
+
+        EncodedText += Token + "";
+        return EncodedText;
     }
 
     /*
@@ -61,7 +79,7 @@ function asemica(PlainText, CorpusUrl) {
     *                         'City' => 1,  // One instance of this
     *                         'and' => 1    // One instance of that
     *                      },               // Exits not guaranteed unique
-    *           'door' => [                 // Doors are guaranteed unique
+    *           'door' => [                 // Doors are guaranteed unique exits
     *                        'City',        // Following door number 1
     *                        'and'          // Following door number 2
     *                     ],
@@ -103,9 +121,11 @@ function asemica(PlainText, CorpusUrl) {
         return Transitions;
     }
 
-    /*
-    * Returns whether this corpus will work well as an encoding or decoding medium
-    */
+    /**
+     * Returns whether this corpus will work well as an encoding or decoding medium
+     *
+     * @return {boolean}
+     */
     function VerifyExists(Transitions) {
         var Count = 0;
 
