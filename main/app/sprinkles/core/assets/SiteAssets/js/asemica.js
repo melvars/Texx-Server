@@ -10,14 +10,20 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
                 if (!VerifyExists(Transitions)) {
                     throw new Error("Please choose another text.");
                 } else {
-                    console.log(Encode("LOL", Transitions, Tokens));
+                    switch (Intent) {
+                        case "enc":
+                            console.log(Encode("LOL", Transitions, Tokens));
+                            break;
+                        case "dec":
+                            console.log(Decode("know their relationship with no surrender of free programs  copyright law.  version ever published by some manner, permitted by software interchange, for them to 60 days after the freedom of free programs   everyone is fundamentally incompatible with two", Transitions, Tokens));
+                    }
                 }
             });
         });
 
 
     /**
-     * Encodes an input file using the transition matrix calculated from the corpus
+     * Encodes an input string using the transition matrix calculated from the corpus
      *
      * @return {string}
      */
@@ -47,14 +53,37 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
         return EncodedText;
     }
 
-    /*
-    * Breaks the input corpus into a series of processable "tokens"
-    *
-    * Example output: ['The','Project','Gutenberg', ... ,'about','new','eBooks']
-    */
-    function TokenizeCorpus(CorpusString) {
-        // Clean up things
-        const StrippedCorpus = CorpusString
+    /**
+     * Pieces an arbitrary binary sequence back together from ASCII input
+     */
+    function Decode(Input, Transitions, Tokens) {
+        Input = CleanInput(Input);
+        var DecodedText = "";
+        var Words = Input.split(/\s+/);
+
+        Words.slice(0, -1).forEach(function (Word, i) {
+            if ("meaningful" in Transitions[Words[i].toLowerCase()]) {
+                var NumDoors = Transitions[Words[i].toLowerCase()]["door"];
+                NumDoors.forEach(function (NumDoor, j) {
+                    var OnDoor = (Transitions[Words[i].toLowerCase()]["door"][j]).toLowerCase();
+                    if (OnDoor === Words[i + 1].toLowerCase()) {
+                        console.log(j);
+                        var Binary = dec2bin(j);
+                        while (Binary.length < 4) {
+                            Binary = "0" + Binary;
+                        }
+                        DecodedText += Binary;
+                    }
+                })
+            }
+        });
+
+        console.log(DecodedText);
+    }
+
+
+    function CleanInput(Input) {
+        Input
             .replace(/\n/g, " ") // newlines
             .replace(/<\/?[^>]+(>|$)/g, "") // html
             .replace(/[^\w']/g, " ") // non-word characters
@@ -62,6 +91,19 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
             .replace(/\s\s+/g, " ") // sequences of spaces
             .replace(/^\s+/, "") // leading whitespace
             .replace(/\s+$/, ""); // trailing whitespace
+
+        return Input;
+    }
+
+
+    /*
+    * Breaks the input corpus into a series of processable "tokens"
+    *
+    * Example output: ['The','Project','Gutenberg', ... ,'about','new','eBooks']
+    */
+    function TokenizeCorpus(CorpusString) {
+        // Clean up things
+        const StrippedCorpus = CleanInput(CorpusString);
 
         Tokens = StrippedCorpus.split(/\s/);
 
@@ -135,6 +177,13 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
             }
         }
         return Count >= 7;
+    }
+
+    /**
+     * Converts a decimal value to binary
+     */
+    function dec2bin(dec) {
+        return (dec >>> 0).toString(2);
     }
 
 }

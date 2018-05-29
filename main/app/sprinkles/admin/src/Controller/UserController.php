@@ -241,9 +241,9 @@ class UserController extends SimpleController
     /**
      * Sets the users public key
      * Request type: POST
-     * @throws ForbiddenException
      * @throws NotFoundException
      * @throws BadRequestException
+     * @throws ForbiddenException
      */
     public function setPublicKey($request, $response, $args) {
         $requestedUser = $this->getUserFromParams($args);

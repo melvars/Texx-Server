@@ -388,6 +388,7 @@ sub encode {
 
     use Data::Dumper;
     print Dumper($nibbles);
+    print $input;
 
     my $token = $tokens->[int(rand(scalar(@$tokens)))];
     my $encoded_text = '';
