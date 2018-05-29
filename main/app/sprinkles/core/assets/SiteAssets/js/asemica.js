@@ -12,10 +12,11 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
                 } else {
                     switch (Intent) {
                         case "enc":
-                            console.log(Encode("LOL", Transitions, Tokens));
+                            console.log(Encode(Text, Transitions, Tokens));
                             break;
                         case "dec":
                             console.log(Decode("know their relationship with no surrender of free programs  copyright law.  version ever published by some manner, permitted by software interchange, for them to 60 days after the freedom of free programs   everyone is fundamentally incompatible with two", Transitions, Tokens));
+                            break;
                     }
                 }
             });
@@ -28,7 +29,7 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
      * @return {string}
      */
     function Encode(Input, Transitions, Tokens) {
-        var Nibbles = [4, 4, 3, 2, 15, 2, 3, 2, 4, 4, 0, 4, 5, 0]; // TODO: Support other words than "LOL"
+        var Nibbles = str2nibble(Input);
         var Token = Tokens[Math.round(Math.random() * (Tokens.length - 1) + 1)];
         var EncodedText = "";
 
@@ -180,10 +181,60 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
     }
 
     /**
+     * Converts a string to several 4bit binary (nibbles) and then to dec
+     */
+    function str2nibble(str) {
+        var DecBytes = [];
+        var BinByte = "";
+        var Nibbles = [];
+
+        for (var i = 0, n = str.length; i < n; i++) {
+            var char = str.charCodeAt(i);
+            DecBytes.push(char & 0xFF);
+        }
+
+        DecBytes.forEach(function (Byte) {
+            Byte = dec2bin(Byte);
+            BinByte += Byte.split("").reverse().join("");
+        });
+
+        console.log(BinByte);
+
+        console.log(BinByte);
+
+        while (BinByte.length > 0) {
+            if (BinByte.slice(4) !== "") {
+                var Nibble = BinByte.slice(0, 4);
+                console.log(Nibble);
+                BinByte = BinByte.slice(4);
+            } else {
+                var Nibble = "0" + BinByte.slice(0, 4);
+                BinByte = BinByte.slice(4);
+            }
+
+            // [4, 4, 3, 2, 15, 2, 3, 2, 4, 4, 0, 4, 5, 0];
+            Nibbles.push(bin2dec(Nibble));
+        }
+
+        console.log(DecBytes);
+        //console.log(UnformattedNibbles);
+        console.log(Nibbles);
+
+        return Nibbles;
+    }
+
+    /**
      * Converts a decimal value to binary
      */
     function dec2bin(dec) {
         return (dec >>> 0).toString(2);
+    }
+
+    /**
+     * Converts a binary value to decimal
+     */
+    function bin2dec(bin) {
+        return parseInt(bin, 2);
     }
 
 }

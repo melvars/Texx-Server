@@ -381,6 +381,8 @@ sub encode {
     my ($input, $transitions, $tokens) = @_;
 
     my $bits = unpack("b*", $input);
+    print $bits;
+
     my $nibbles;
     while (my $nibble = substr($bits, 0, 4, '')) {
         push @$nibbles, bin2dec($nibble);
@@ -388,7 +390,6 @@ sub encode {
 
     use Data::Dumper;
     print Dumper($nibbles);
-    print $input;
 
     my $token = $tokens->[int(rand(scalar(@$tokens)))];
     my $encoded_text = '';
