@@ -12,11 +12,9 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
                 } else {
                     switch (Intent) {
                         case "enc":
-                            console.log(Encode(Text, Transitions, Tokens));
-                            break;
+                            return Encode(Text, Transitions, Tokens);
                         case "dec":
-                            console.log(Decode("know their relationship with no surrender of free programs  copyright law.  version ever published by some manner, permitted by software interchange, for them to 60 days after the freedom of free programs   everyone is fundamentally incompatible with two", Transitions, Tokens));
-                            break;
+                            return Decode(Text, Transitions, Tokens);
                     }
                 }
             });
@@ -185,7 +183,6 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
      */
     function str2nibble(str) {
         var DecBytes = [];
-        var BinByte = "";
         var Nibbles = [];
 
         for (var i = 0, n = str.length; i < n; i++) {
@@ -193,32 +190,15 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
             DecBytes.push(char & 0xFF);
         }
 
-        DecBytes.forEach(function (Byte) {
+        DecBytes.forEach(function (Byte, Index) {
             Byte = dec2bin(Byte);
-            BinByte += Byte.split("").reverse().join("");
+            var FistByteNibble = Byte.slice(-4);
+            var SecondByteNibble = Byte.slice(0, -4).length === 4 ? Byte.slice(0, -4) : 0 + Byte.slice(0, -4);
+            Nibbles.push(bin2dec((FistByteNibble).split("").reverse().join("")));
+            Nibbles.push(bin2dec((SecondByteNibble).split("").reverse().join("")));
         });
 
-        console.log(BinByte);
-
-        console.log(BinByte);
-
-        while (BinByte.length > 0) {
-            if (BinByte.slice(4) !== "") {
-                var Nibble = BinByte.slice(0, 4);
-                console.log(Nibble);
-                BinByte = BinByte.slice(4);
-            } else {
-                var Nibble = "0" + BinByte.slice(0, 4);
-                BinByte = BinByte.slice(4);
-            }
-
-            // [4, 4, 3, 2, 15, 2, 3, 2, 4, 4, 0, 4, 5, 0];
-            Nibbles.push(bin2dec(Nibble));
-        }
-
-        console.log(DecBytes);
-        //console.log(UnformattedNibbles);
-        console.log(Nibbles);
+        Nibbles = Nibbles.concat([0, 4, 5, 0]);
 
         return Nibbles;
     }
