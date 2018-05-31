@@ -12,9 +12,13 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
                 } else {
                     switch (Intent) {
                         case "enc":
-                            return Encode(Text, Transitions, Tokens);
+                            //return Encode(Text, Transitions, Tokens);
+                            console.log(Encode(Text, Transitions, Tokens));
+                            break;
                         case "dec":
-                            return Decode(Text, Transitions, Tokens);
+                            //return Decode(Text, Transitions, Tokens);
+                            console.log(Decode(Text, Transitions, Tokens));
+                            break;
                     }
                 }
             });
@@ -182,25 +186,40 @@ function asemica(Text, CorpusUrl, Intent = "enc") {
      * Converts a string to several 4bit binary (nibbles) and then to dec
      */
     function str2nibble(str) {
+        str = str + " \n";
+
         var DecBytes = [];
         var Nibbles = [];
 
-        for (var i = 0, n = str.length; i < n; i++) {
+        for (var i = 0, n = str.length; i < n; i++) { // str to dec
             var char = str.charCodeAt(i);
             DecBytes.push(char & 0xFF);
         }
 
         DecBytes.forEach(function (Byte, Index) {
-            Byte = dec2bin(Byte);
+            Byte = dec2bin(Byte); // dec to bin
             var FistByteNibble = Byte.slice(-4);
             var SecondByteNibble = Byte.slice(0, -4).length === 4 ? Byte.slice(0, -4) : 0 + Byte.slice(0, -4);
-            Nibbles.push(bin2dec((FistByteNibble).split("").reverse().join("")));
-            Nibbles.push(bin2dec((SecondByteNibble).split("").reverse().join("")));
+            Nibbles.push(bin2dec((FistByteNibble).split("").reverse().join(""))); // formatted bin to dec
+            Nibbles.push(bin2dec((SecondByteNibble).split("").reverse().join(""))); // formatted bin to dec
         });
 
         Nibbles = Nibbles.concat([0, 4, 5, 0]);
 
+        console.log(Nibbles.join(", "));
+
         return Nibbles;
+    }
+
+    /**
+     * Converts several dec converted 4bit binary (nibbles) to a string
+     */
+    function nibble2str(DecNibbles) {
+        var BinNibbles = "";
+
+        DecNibbles.forEach(function(DecNibble) {
+            BinNibbles += dec2bin(DecNibble);
+        })
     }
 
     /**

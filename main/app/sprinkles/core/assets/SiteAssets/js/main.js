@@ -19,8 +19,15 @@ const ExploreData = $("#ExploreData");
 //var cashedAvatarIcons = $("img.Avatar").imageCaching();
 
 /**
- * POPUPS
+ * ERROR/SUCCESS POPUPS
  */
+const toast = swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+});
+
 function triggerErrorPopup(ErrorCode) {
     let ErrorMessage = "Unknown Error occurred!", ErrorInformationSite = "", AlsoLogInConsole = true; // WILL BE REWRITTEN (EXCEPT SOMETHING CRAZY HAPPENS)
     switch (ErrorCode) {
@@ -102,6 +109,33 @@ MainTabWindows.on('beforeChange', function (event, slick, currentSlide, nextSlid
         left: leftPos,
         width: newWidth
     }, 300);
+});
+
+/**
+ * TOP NAVBAR BUTTONS LOGIC
+ */
+$("#ImageUploadButton").on("click", function () {
+    swal({
+        title: 'Choose an image to upload!',
+        html: "<form id='ImageUploadForm'>" +
+            "<input formenctype='multipart/form-data' type='file' name='image' />" +
+            "<input formenctype='multipart/form-data' type='submit' />" +
+            "<input type='hidden' name='" + site.csrf.keys.name + "' value='" + site.csrf.name + "' />" +
+            "<input type='hidden' name='" + site.csrf.keys.value + "' value='" + site.csrf.value + "' />" +
+            "</form>",
+    });
+
+    $("#ImageUploadForm")
+        .submit(function (e) {
+            $.ajax({
+                url: '/api/posts/image',
+                type: 'POST',
+                data: new FormData(this),
+                processData: false,
+                contentType: false
+            });
+            e.preventDefault();
+        });
 });
 
 /**

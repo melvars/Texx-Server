@@ -380,6 +380,9 @@ sub verify_exits {
 sub encode {
     my ($input, $transitions, $tokens) = @_;
 
+    use Data::Dumper;
+    print Dumper($input);
+
     my $bits = unpack("b*", $input);
     print $bits;
 
