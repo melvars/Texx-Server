@@ -215,7 +215,7 @@ class ChatProcessor implements MessageComponentInterface
         }
     }
 
-    public function onClose(ConnectionInterface $conn) {
+    public function onClose(ConnectionInterface $conn) { // TODO: Prevent crashing because window is closed with ALT F4 and TypingState is sent but no data is available
         $this->clients->detach($conn);
         foreach ($this->clients as $client) {
             if (isset($this->channels[$conn->resourceId])) {

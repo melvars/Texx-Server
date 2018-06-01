@@ -59,7 +59,8 @@ class PostController extends SimpleController
                 ->get();
 
             $ImagesFromFriends = DB::table('image_posts')
-                ->where('UserID', '=', $UsersFriendInformation[0]->id)
+                ->where('UserID', '=', $UsersFriendInformation[0]->id) // IMAGES FROM FRIENDS
+                ->orWhere('UserId', '=', $user->id) // IMAGES FROM THE USER HIMSELF
                 ->select('PostID as image_id')
                 ->get();
 

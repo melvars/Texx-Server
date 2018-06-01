@@ -6,6 +6,7 @@ const NavbarLine = $(".NavbarLine");
 const UserSearchBar = $("#UserSearchBar");
 const SearchResults = $(".SearchResults");
 const SelectReceiver = $(".SelectReceiver");
+const SelectedReceiver = $(".SelectedReceiver");
 const FriendList = $(".FriendList");
 const alerts = $("#alerts-page");
 const ExploreData = $("#ExploreData");
@@ -167,13 +168,14 @@ UserSearchBar.keyup(function () {
 /**
  * SEVERAL API REQUESTS/REFRESHES
  */
-// CHAT RECEIVERS -- more in chat.js
 $(document).ready(function () {
-    $.ajax({
+    $.ajax({ // CHAT RECEIVERS -- more in chat.js
         url: site.uri.public + "/api/users/u/" + current_username + "/friends",
         success: function (receivers) {
             receivers.forEach(function (receiversInfo) {
                 SelectReceiver.append("<div class='ReceiverSelector' data-username='" + receiversInfo.username + "' data-id='" + receiversInfo.id + "'><img class='Avatar' src='" + receiversInfo.avatar + "'/><div class='UsersFullName'>" + receiversInfo.full_name + "</div></div>");
+                SelectedReceiver.prepend("<div style='display: none;' id='ChatMessages' class='ChatMessages' data-username='" + receiversInfo.username + "'></div>");
+
                 FriendList.append("<img class='Avatar' src='" + receiversInfo.avatar + "'><a class='FriendName' href='" + site.uri.public + "/users/u/" + receiversInfo.username + "'>" + receiversInfo.full_name + "</a><br>");
             })
         },
@@ -183,7 +185,7 @@ $(document).ready(function () {
             alerts.ufAlerts().ufAlerts('fetch');
         }
     });
-    $.ajax({
+    $.ajax({ // INITIALIZE IMAGE FEED
         url: site.uri.public + "/api/feed/" + current_username,
         success: function (images) {
             images.forEach(function (imageInfo) {

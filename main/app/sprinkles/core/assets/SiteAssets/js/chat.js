@@ -1,7 +1,8 @@
 /**
  * GLOBAL DECLARATIONS
  */
-let LastMessage, Username, ReceiversUsername, ReceiversId, options, EncryptedMessage, DecryptedMessage;
+let LastMessage, Username, ReceiversUsername, CurrentChatMessagesWindow, ReceiversId, options, EncryptedMessage,
+    DecryptedMessage;
 
 /**
  * INITIAL ENCRYPTION CONFIGURATION
@@ -35,7 +36,7 @@ function InitializeChatServer() {
     ChatSocket.onopen = function () {
         // CONNECTION SUCCESSFUL!
         const WebSocketConnectTimerEnd = performance.now(); // END CONNECTION EXECUTION TIMER
-        console.log("%c[CHATSOCKET LOGGER] Chat connection established! (Took " + +(WebSocketConnectTimerEnd - WebSocketConnectTimerStart) + " milliseconds)", "color: darkorange");
+        console.log(`%c[CHATSOCKET LOGGER] Chat connection established! (Took ${+(WebSocketConnectTimerEnd - WebSocketConnectTimerStart)} milliseconds)`, "color: darkorange");
         // START VERIFICATION
         ChatSocket.send(JSON.stringify({
             ClientMessageType: "Verify",
@@ -47,7 +48,6 @@ function InitializeChatServer() {
         ChatSocket.onmessage = function (e) {
             // DECLARATIONS
             const TypingIndicatorMessage = $(".TypingIndicatorMessage").parent();
-            const CurrentChatMessagesWindow = $(".SelectedReceiver #ChatMessages[data-username=" + ReceiversUsername + "]");
             const MessageObject = JSON.parse(e.data);
             const Message = MessageObject.Message; // ENCRYPTED MESSAGE (NOT ENCRYPTED ON SERVER MESSAGES)
             const MessageId = MessageObject.MessageId;
@@ -63,6 +63,7 @@ function InitializeChatServer() {
 
             // GLOBAL OVERWRITES
             LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
+            CurrentChatMessagesWindow = $("#ChatMessages[data-username=" + ReceiversUsername + "]");
             Username = MessageObject.Username;
 
             // GET OWN PUBLIC KEY FIRST
@@ -134,19 +135,20 @@ function InitializeChatServer() {
                 } else if (ServerMessageType === "SetReceiver") { // TYPE: SERVER CHECKED ACCESS -- MOSTLY HANDLED IN BACKEND
                     if (Success) {
                         console.log("%c[CHATSOCKET LOGGER] Setting receiver succeeded!", "color: green");
-                        SelectReceiver.hide();
-                        ChatMessages.hide();
-                        $(".SelectedReceiver > *").addClass("animated slideInRight");
+
+                        // CHANGE HEADER TAB CAPTION
                         $(".ChatTab .headerWrap .header .HeaderCaption.TabCaption").hide();
-                        if ($(".HeaderCaption#" + ReceiversUsername).length) {
-                            $(".HeaderCaption#" + ReceiversUsername).show();
-                        } else {
-                            $(".ChatTab .headerWrap .header > .LeftButtonHeader").after("<span id='" + ReceiversUsername + "' class='HeaderCaption'>" + ReceiversUsername + "</span>");
-                        }
+                        $(".HeaderCaption#" + ReceiversUsername).length
+                            ? $(".HeaderCaption#" + ReceiversUsername).show()
+                            : $(".ChatTab .headerWrap .header > .LeftButtonHeader").after("<span id='" + ReceiversUsername + "' class='HeaderCaption'>" + ReceiversUsername + "</span>");
                         $(".ChatTab .headerWrap .LeftButtonHeader").html("<i id='BackToChatSelectorButton' class='fas fa-caret-left'></i>"); // REPLACE MENU BUTTON WITH BACK BUTTON
-                        SelectedReceiver.prepend("<div id='ChatMessages' class='ChatMessages' data-username='" + ReceiversUsername + "'></div>");
-                        SelectedReceiver.show();
-                        CurrentChatMessagesWindow.show();
+
+                        SelectReceiver.hide();
+                        SelectedReceiver.show(); // SHOW PARENT DIV
+                        $(".SelectedReceiver > #ChatMessages").hide(); // HIDE EVERY CHAT INSTANCE
+                        $(".SelectedReceiver > *").addClass("animated slideInRight");
+                        ChatTextInput.show(); // SHOW CHAT INPUT
+                        CurrentChatMessagesWindow.show(); // ONLY SHOW SELECTED CHAT INSTANCE
                     } else {
                         console.log("%c[CHATSOCKET LOGGER] Setting receiver failed!", "color: red");
                     }
@@ -243,12 +245,12 @@ function InitializeChatServer() {
             if (ChatSocket.readyState === 1) {
                 if (e.keyCode === 13 && ChatTextInput.val().length > 0) {
                     const ChatTextInputText = ChatTextInput.val();
-                    ChatTextInput.val("");
                     const LastMessage = $(".MessageWrapper.Normal:last .ChatMessage");
+                    ChatTextInput.val("");
                     if (!LastMessage.hasClass("MessageSent")) { // CHECK IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> IF NOT, CREATE NEW 'ALONE' MESSAGE
-                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + ChatTextInputText + "</div></div>");
+                        CurrentChatMessagesWindow.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent AloneMessage animated fadeInRight'>" + ChatTextInputText + "</div></div>");
                     } else if (LastMessage.hasClass("MessageSent")) { // IF PREVIOUS MESSAGE WAS FROM HIMSELF TOO -> CREATE WITH CORRESPONDING CLASSES FOR DESIGN
-                        ChatMessages.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent BottomMessage animated fadeInRight'>" + ChatTextInputText + "</div></div>");
+                        CurrentChatMessagesWindow.append("<div class='MessageWrapper Normal'><div class='ChatMessage MessageSent BottomMessage animated fadeInRight'>" + ChatTextInputText + "</div></div>");
                         if (LastMessage.hasClass("AloneMessage")) {
                             LastMessage.removeClass("AloneMessage");
                             LastMessage.addClass("TopMessage");
@@ -313,7 +315,9 @@ function InitializeChatServer() {
             }));
         });
 
-        // SEVERAL THINGS WHICH DON'T MATCH ANY OTHER SECTION
+        /**
+         * SEVERAL THINGS WHICH DON'T MATCH ANY OTHER SECTION
+         */
         function NotConnectedAnymore() {
             console.log("%c[CHATSOCKET LOGGER] Not connected to Websocket anymore! Trying to connect again...", "color: red");
             InitializeChatServer();
