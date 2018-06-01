@@ -137,7 +137,12 @@ function InitializeChatServer() {
                         SelectReceiver.hide();
                         ChatMessages.hide();
                         $(".SelectedReceiver > *").addClass("animated slideInRight");
-                        $(".ChatTab .headerWrap .header .HeaderCaption").text(ReceiversUsername);
+                        $(".ChatTab .headerWrap .header .HeaderCaption.TabCaption").hide();
+                        if ($(".HeaderCaption#" + ReceiversUsername).length) {
+                            $(".HeaderCaption#" + ReceiversUsername).show();
+                        } else {
+                            $(".ChatTab .headerWrap .header > .LeftButtonHeader").after("<span id='" + ReceiversUsername + "' class='HeaderCaption'>" + ReceiversUsername + "</span>");
+                        }
                         $(".ChatTab .headerWrap .LeftButtonHeader").html("<i id='BackToChatSelectorButton' class='fas fa-caret-left'></i>"); // REPLACE MENU BUTTON WITH BACK BUTTON
                         SelectedReceiver.prepend("<div id='ChatMessages' class='ChatMessages' data-username='" + ReceiversUsername + "'></div>");
                         SelectedReceiver.show();
@@ -317,13 +322,22 @@ function InitializeChatServer() {
         // BACK BUTTON
         $(document).on("click", "#BackToChatSelectorButton", function () {
             $(".SelectReceiver > *").addClass("animated slideInLeft");
+            $(".ChatTab .headerWrap .header .HeaderCaption").hide();
+            $(".ChatTab .headerWrap .header .HeaderCaption.TabCaption").show();
             $(".ChatTab .headerWrap .LeftButtonHeader").html("<i class='fas fa-bars'></i>"); // REPLACE BACK BUTTON WITH MENU BUTTON
             SelectedReceiver.hide();
             SelectReceiver.show();
         });
 
+        // USER STOPS TYPING ON PAGE LEAVE
+        window.history.pushState({page: 1}, "", "");
+        window.onpopstate = function (event) {
+            if (event) {
+                sendStopTyping();
+            }
+        };
         $(window).unload(function () {
-            sendStopTyping(); // USER STOPS TYPING ON PAGE UNLOAD
+            sendStopTyping();
         });
     };
 }
