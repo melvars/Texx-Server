@@ -14,6 +14,9 @@ const privKeyObj = openpgp.key.readArmored(localStorage.getItem("PrivateKey").re
 privKeyObj.decrypt(localStorage.getItem("🔒"));
 
 
+// console.log(AES_CBC.encrypt( "LOL", '0123456789' )); // For future me: TODO: Encrypt user data with symmetric encryption (AES_CBC) and like told here: https://stackoverflow.com/a/7529707/9783773
+
+
 /**
  * GENERAL CHAT
  */
@@ -36,7 +39,7 @@ function InitializeChatServer() {
     ChatSocket.onopen = function () {
         // CONNECTION SUCCESSFUL!
         const WebSocketConnectTimerEnd = performance.now(); // END CONNECTION EXECUTION TIMER
-        console.log(`%c[CHATSOCKET LOGGER] Chat connection established! (Took ${+(WebSocketConnectTimerEnd - WebSocketConnectTimerStart)} milliseconds)`, "color: darkorange");
+        console.log("%c[CHATSOCKET LOGGER] Chat connection established! (Took " + (WebSocketConnectTimerEnd - WebSocketConnectTimerStart) + " milliseconds)", "color: darkorange");
         // START VERIFICATION
         ChatSocket.send(JSON.stringify({
             ClientMessageType: "Verify",
