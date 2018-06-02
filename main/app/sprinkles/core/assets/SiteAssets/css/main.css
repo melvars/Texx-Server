@@ -223,6 +223,7 @@ hr.ChatHeaderDivider {
 /* main chat */
 .SelectedReceiver {
     display: none;
+    height: 100%;
 }
 
 .ChatMessages {

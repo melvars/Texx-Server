@@ -110,7 +110,7 @@ class WormholeController extends SimpleController
             $classMapper = $this->ci->classMapper;
             foreach ($UsersFriends as $Key => $UsersFriendId) { // NOT THAT EFFICIENT...
                 $UsersFriendInformation = $classMapper->createInstance('user')// select doesnt work with instance
-                ->where('id', $UsersFriendId->id)
+                    ->where('id', $UsersFriendId->id)
                     ->get();
                 $UsersFriends[$Key]->id = $UsersFriendInformation[0]->id;
                 $UsersFriends[$Key]->username = $UsersFriendInformation[0]->user_name;

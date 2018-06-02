@@ -143,26 +143,31 @@ $("#ImageUploadButton").on("click", function () {
  * SEARCH
  */
 UserSearchBar.keyup(function () {
-    SearchResults.empty();
     const RequestedUser = UserSearchBar.val();
-    if (RequestedUser !== " " && RequestedUser !== "")
+    if (RequestedUser !== " " && RequestedUser !== "") {
         $.ajax({
-            url: site.uri.public + "/api/users/u/" + RequestedUser,
-            success: function (answer) {
-                console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was found!", "color: green");
-                //var GifUrls = ["https://media.giphy.com/media/xUPGcg01dIAot4zyZG/giphy.gif", "https://media.giphy.com/media/IS9LfP9oSLdcY/giphy.gif", "https://media.giphy.com/media/5wWf7H0WTquIU1DFY4g/giphy.gif"];
-                //var RandomGif = Math.floor((Math.random() * GifUrls.length));
-                //var RandomGifUrl = GifUrls[RandomGif];
-                //console.image(RandomGifUrl, 0.5);
-
-                SearchResults.append("<img class='Avatar' src='" + answer.avatar + "'/><div class='UsersFullName'>" + answer.full_name + "</div>");
+            url: site.uri.public + "/api/search/user/" + RequestedUser,
+            success: function (UserArray) {
+                SearchResults.empty();
+                UserArray.forEach(function(User) {
+                    console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was found!", "color: green");
+                    //var GifUrls = ["https://media.giphy.com/media/xUPGcg01dIAot4zyZG/giphy.gif", "https://media.giphy.com/media/IS9LfP9oSLdcY/giphy.gif", "https://media.giphy.com/media/5wWf7H0WTquIU1DFY4g/giphy.gif"];
+                    //var RandomGif = Math.floor((Math.random() * GifUrls.length));
+                    //var RandomGifUrl = GifUrls[RandomGif];
+                    //console.image(RandomGifUrl, 0.5);
+                    SearchResults.append("<img class='Avatar' src='" + User.avatar + "'/><div class='UsersFullName'>" + User.full_name + "</div>");
+                })
             },
             error: function () {
+                SearchResults.empty();
                 console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was not found!", "color: red");
 
                 alerts.ufAlerts().ufAlerts('fetch');
             }
         });
+    } else {
+        SearchResults.empty();
+    }
 });
 
 /**

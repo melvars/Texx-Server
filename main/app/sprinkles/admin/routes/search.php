@@ -3,6 +3,6 @@
 /**
  * Routes for searching any kind of data we have
  */
-$app->group('/search', function () {
-    $this->get('/user/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:pageInfo');
+$app->group('/api/search', function () {
+    $this->get('/user/{search_term}', 'UserFrosting\Sprinkle\Admin\Controller\SearchController:ByUsername');
 })->add('authGuard');
