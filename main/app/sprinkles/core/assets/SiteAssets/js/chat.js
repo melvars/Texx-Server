@@ -322,6 +322,7 @@ function InitializeChatServer() {
          * SEVERAL THINGS WHICH DON'T MATCH ANY OTHER SECTION
          */
         function NotConnectedAnymore() {
+            ChatTextInput.off("keyup");
             console.log("%c[CHATSOCKET LOGGER] Not connected to Websocket anymore! Trying to connect again...", "color: red");
             InitializeChatServer();
         }

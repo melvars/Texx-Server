@@ -142,7 +142,7 @@ $("#ImageUploadButton").on("click", function () {
 /**
  * SEARCH
  */
-UserSearchBar.keyup(function () {
+UserSearchBar.keypress(function () {
     const RequestedUser = UserSearchBar.val();
     if (RequestedUser !== " " && RequestedUser !== "") {
         $.ajax({
