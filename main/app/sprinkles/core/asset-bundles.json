@@ -46,11 +46,11 @@
     },
     "js/main-site": {
       "scripts": [
+        "SiteAssets/js/console.js",
         "SiteAssets/js/fontawesome.js",
         "SiteAssets/js/linkify.js",
         "SiteAssets/js/encryption.js",
         "SiteAssets/js/swiper.js",
-        "SiteAssets/js/console.image.js",
         "SiteAssets/js/popups.js",
         "SiteAssets/js/push.js",
         "SiteAssets/js/chat.js",
