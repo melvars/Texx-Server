@@ -105,6 +105,8 @@ MainTabWindows.on('beforeChange', function (event, slick, currentSlide, nextSlid
     nextSlide.children().attr("src", nextSlide.children().attr("src").split('.svg')[0] + "Activated.svg");
     $el = nextSlide;
     $el.addClass("ActiveTab");
+
+    // NAVBAR LINE
     leftPos = $el.position().left;
     NavbarLine.stop().animate({
         left: leftPos,
@@ -194,7 +196,15 @@ $(document).ready(function () {
         url: site.uri.public + "/api/feed/" + current_username,
         success: function (images) {
             images.forEach(function (imageInfo) {
-                FeedTabWindow.append("<img class='FeedImage' src='" + imageInfo.image_url + "'><br>");
+                FeedTabWindow.append("" +
+                    "<div data-image-id='" + imageInfo.image_id + "' class='FeedImageWrapper'>" +
+                    "<div class='UploaderInfo'>" +
+                    "<img class='UploaderAvatar' src='" + imageInfo.avatar + "'>" +
+                    "<div class='UploaderName'>" + imageInfo.full_name + "</div>" +
+                    "</div>" +
+                    "<img class='FeedImage' src='" + imageInfo.image_url + "'>" +
+                    "</div>" +
+                    "<hr>");
             })
         },
         error: function () {

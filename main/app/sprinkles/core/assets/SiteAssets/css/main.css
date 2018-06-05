@@ -115,13 +115,31 @@ FEED WINDOW
     overflow-x: hidden;
 }
 
+.FeedImageWrapper {
+
+}
+
+.FeedImageWrapper .UploaderInfo {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.FeedImageWrapper .UploaderInfo .UploaderAvatar {
+    height: 50px;
+    width: 50px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+}
+
 .FeedImage {
     display: block;
     margin: 0 auto;
     width: calc(100vw - 30px); /* left + right margin */
     width: -moz-calc(100vw - 30px);
     width: -webkit-calc(100vw - 30px);
-    height: calc(100vw - 30px);
+    height: calc(100vw - 30px); /* TODO: Better feed wrapper height solution with avatar */
     height: -moz-calc(100vw - 30px);
     height: -webkit-calc(100vw - 30px);
     object-fit: cover;

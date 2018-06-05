@@ -46,14 +46,14 @@ class PostController extends SimpleController
             throw new NotFoundException();
         }
 
-        // Get friends first
+        // Get friends first // TODO: Make friend select query more efficient
         $UsersFriends = DB::select("SELECT id FROM (SELECT user_id AS id FROM user_follow WHERE followed_by_id = $user->id UNION ALL SELECT followed_by_id FROM user_follow WHERE user_id = $user->id) t GROUP BY id HAVING COUNT(id) > 1");
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
         $ImagesFromFriends = "";
         $config = $this->ci->config;
-        foreach ($UsersFriends as $Key => $UsersFriendId) { // NOT THAT EFFICIENT... (get images from all friends in an array)
+        foreach ($UsersFriends as $UsersFriendId) { // NOT THAT EFFICIENT... (get images from all friends in an array)
             $UsersFriendInformation = $classMapper->createInstance('user')// raw select doesnt work with instance
                 ->where('id', $UsersFriendId->id)
                 ->get();
@@ -61,13 +61,18 @@ class PostController extends SimpleController
             $ImagesFromFriends = DB::table('image_posts')
                 ->where('UserID', '=', $UsersFriendInformation[0]->id) // IMAGES FROM FRIENDS
                 ->orWhere('UserId', '=', $user->id) // IMAGES FROM THE USER HIMSELF
-                ->select('PostID as image_id')
+                ->select('PostID as image_id', 'UserID as user_id')
                 ->get();
 
             foreach ($ImagesFromFriends as $ImageFromFriend) {
                 $ImageFromFriend->image_url = $config["site.uri.public"] . "/image/" . $ImageFromFriend->image_id;
-                $ImageFromFriend->username =  $UsersFriendInformation[0]->user_name; // ADD USERNAME TO IMAGE ID
-                $ImageFromFriend->avatar =  $UsersFriendInformation[0]->avatar;
+                if ($ImageFromFriend->user_id == $user->id) { // UPLOADED FROM HIMSELF
+                    $ImageFromFriend->full_name = $user->full_name; // ADD USERNAME TO IMAGE ID
+                    $ImageFromFriend->avatar =  $user->avatar;
+                } else { // UPLOADED FROM ANOTHER USER
+                    $ImageFromFriend->full_name = $UsersFriendInformation[0]->full_name; // ADD USERNAME TO IMAGE ID
+                    $ImageFromFriend->avatar =  $UsersFriendInformation[0]->avatar;
+                }
             }
         }
 
