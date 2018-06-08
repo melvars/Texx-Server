@@ -115,14 +115,11 @@ FEED WINDOW
     overflow-x: hidden;
 }
 
-.FeedImageWrapper {
-
-}
-
 .FeedImageWrapper .UploaderInfo {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin-bottom: 5px;
 }
 
 .FeedImageWrapper .UploaderInfo .UploaderAvatar {
