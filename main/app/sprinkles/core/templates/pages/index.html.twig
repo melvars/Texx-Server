@@ -108,12 +108,27 @@
                     </div>
                     <br>
                     <div class="DisplayNames">
-                        <span class="FullName">{{ current_user.first_name }} {{ current_user.last_name }}</span>
+                        <span class="FullName">{{ current_user.full_name }}</span> {# TODO: Onclick edit popup #}
                         <br>
                         <small class="Username">{{ current_user.user_name }}</small>
                     </div>
                     <br>
                     <hr class="ShorterLine" align="center">
+
+                    <br>
+                    <div class="EditProfileForm">
+                        <p class="EditFieldLabel">{{ translate('USERNAME') }}</p>
+                        <p class="EditFieldText">{{ current_user.user_name }}</p><br>
+
+                        <p class="EditFieldLabel">{{ translate('EMAIL') }}</p>
+                        <p class="EditFieldText">{{ current_user.email }}</p><br>
+
+                        <p class="EditFieldLabel">{{ translate('LOCALE') }}</p>
+                        <p class="EditFieldText">{{ site.locales.available[current_user.locale] }}</p><br> {# more in admin/templates/forms/user.html.twig #}
+
+                        <p class="EditFieldLabel">{{ translate('THEME') }}</p>
+                        <p class="EditFieldText">{{ current_user.theme }}</p>
+                    </div>
                 </div>
             </div>
         </div>

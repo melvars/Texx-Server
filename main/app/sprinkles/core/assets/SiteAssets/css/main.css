@@ -427,7 +427,9 @@ PERSONAL TAB
 ***********/
 .PersonalTabWindow {
     position: relative;
-    height: 100%;
+    max-height: calc(100% - 155px); /* navbar + some margin*/
+    max-height: -moz-calc(100% - 155px);
+    max-height: -webkit-calc(100% - 155px);
     margin: 5px;
 }
 
@@ -464,6 +466,11 @@ PERSONAL TAB
 .DisplayNames .FullName {
     font-weight: bold;
     font-size: 20px;
+}
+
+.EditProfileForm {
+    max-height: inherit;
+    overflow: scroll;
 }
 
 /*****

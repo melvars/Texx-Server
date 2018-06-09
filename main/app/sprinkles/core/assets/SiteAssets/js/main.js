@@ -122,11 +122,13 @@ $("#ImageUploadButton").on("click", function () {
         title: 'Choose an image to upload!',
         html: "<form id='ImageUploadForm'>" +
             "<input formenctype='multipart/form-data' type='file' name='image' />" +
-            "<input formenctype='multipart/form-data' type='submit' />" +
+            "<input formenctype='multipart/form-data' type='submit' value='Upload!' />" +
             "<input type='hidden' name='" + site.csrf.keys.name + "' value='" + site.csrf.name + "' />" +
             "<input type='hidden' name='" + site.csrf.keys.value + "' value='" + site.csrf.value + "' />" +
-            "</form>",
+            "</form>"
     });
+
+    $(".swal2-confirm").text("Close");
 
     $("#ImageUploadForm")
         .submit(function (e) {

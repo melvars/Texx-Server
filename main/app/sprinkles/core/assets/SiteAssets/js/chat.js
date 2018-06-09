@@ -327,6 +327,13 @@ function InitializeChatServer() {
             InitializeChatServer();
         }
 
+        // CHECK EVERY 5 SEC IF CLIENT IS STILL CONNECTED
+        setTimeout(function() {
+            if (ChatSocket.readyState !== 1) {
+                NotConnectedAnymore();
+            }
+        }, 5000);
+
         // BACK BUTTON
         $(document).on("click", "#BackToChatSelectorButton", function () {
             $(".SelectReceiver > *").addClass("animated slideInLeft");
