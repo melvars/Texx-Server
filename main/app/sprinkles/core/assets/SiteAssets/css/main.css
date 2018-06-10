@@ -3,6 +3,10 @@ GENERAL
 ******/
 @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic');
 
+:root {
+    --navbar-margin-height: 155px;
+}
+
 * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -19,9 +23,9 @@ GENERAL
 }
 
 ::-webkit-scrollbar {
+    display: none;
     width: 0;
     background: transparent;
-    display: none;
 }
 
 html, body {
@@ -47,13 +51,13 @@ hr {
     padding: 0;
 }
 
-img {
-    pointer-events: none;
-}
-
 hr.ShorterLine {
     margin: 0 auto;
     width: 90%;
+}
+
+img {
+    pointer-events: none;
 }
 
 .main {
@@ -105,14 +109,22 @@ GENERAL TABS
 FEED WINDOW
 **********/
 .FeedTabWindow {
+    display: grid;
+    align-items: center;
+    justify-content: center;
     position: relative;
-    max-height: calc(100% - 155px); /* navbar + some margin*/
-    max-height: -moz-calc(100% - 155px);
-    max-height: -webkit-calc(100% - 155px);
     max-width: 100%;
     margin: 15px;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.FeedImageWrapper {
+    max-width: 500px;
+}
+
+.FeedImageWrapper:last-of-type {
+    margin-bottom: var(--navbar-margin-height); /* For navbar (not a nice solution) */
 }
 
 .FeedImageWrapper .UploaderInfo {
@@ -122,7 +134,7 @@ FEED WINDOW
     margin-bottom: 5px;
 }
 
-.FeedImageWrapper .UploaderInfo .UploaderAvatar {
+.FeedImageWrapper .UploaderInfo .UploaderAvatar { /* TODO: Cut image to square (in PHP) - maybe just leave them in normal size though */
     height: 50px;
     width: 50px;
     -webkit-border-radius: 100px;
@@ -131,14 +143,7 @@ FEED WINDOW
 }
 
 .FeedImage {
-    display: block;
-    margin: 0 auto;
-    width: calc(100vw - 30px); /* left + right margin */
-    width: -moz-calc(100vw - 30px);
-    width: -webkit-calc(100vw - 30px);
-    height: calc(100vw - 30px); /* TODO: Better feed wrapper height solution with avatar */
-    height: -moz-calc(100vw - 30px);
-    height: -webkit-calc(100vw - 30px);
+    width: 100%;
     object-fit: cover;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
@@ -427,9 +432,7 @@ PERSONAL TAB
 ***********/
 .PersonalTabWindow {
     position: relative;
-    max-height: calc(100% - 155px); /* navbar + some margin*/
-    max-height: -moz-calc(100% - 155px);
-    max-height: -webkit-calc(100% - 155px);
+    overflow: auto;
     margin: 5px;
 }
 
@@ -469,8 +472,7 @@ PERSONAL TAB
 }
 
 .EditProfileForm {
-    max-height: inherit;
-    overflow: scroll;
+    margin-bottom: var(--navbar-margin-height);
 }
 
 /*****

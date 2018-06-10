@@ -11,9 +11,9 @@ console.log("%s%c%s%c%s%c%s%c%s%c%s%c",
     "whitespace: pre;",
     "Hello, world! Thanks for checking our code.\nAs this project is completely open source it would be an better option to look here:\n",
     "color: blue;", "https://github.com/marvinborner/BEAM-Messenger\n\n",
-    "", "...or even clone the entire repo with:\n",
+    "", "...or even clone the entire repo with the command:\n",
     "border-radius: 100px; padding: 2px; background-color: black; color: white;", "git clone https://github.com/marvinborner/BEAM-Messenger.git\n",
-    "", "\nWe are also thankful for every contributor we have, so if you have any idea, fix or anything else - feel free to create a pull request.",
+    "", "\nWe are also thankful for every contributor we have, so if you have any idea, fix or anything else - feel free to make a pull request.",
     "font-family: monospace;");
 
 function playGame() {

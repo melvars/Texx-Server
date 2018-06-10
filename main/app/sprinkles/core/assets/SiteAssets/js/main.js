@@ -182,7 +182,7 @@ $(document).ready(function () {
         url: site.uri.public + "/api/users/u/" + current_username + "/friends",
         success: function (receivers) {
             receivers.forEach(function (receiversInfo) {
-                SelectReceiver.append("<div class='ReceiverSelector' data-username='" + receiversInfo.username + "' data-id='" + receiversInfo.id + "'><img class='Avatar' src='" + receiversInfo.avatar + "'/><div class='UsersFullName'>" + receiversInfo.full_name + "</div></div>");
+                SelectReceiver.append("<div class='ReceiverSelector' data-username='" + receiversInfo.username + "' data-id='" + receiversInfo.id + "'><img class='Avatar' src='" + receiversInfo.avatar + "'/><div class='UsersFullName'>" + receiversInfo.full_name + "</div></div><hr class='ShorterLine'>");
                 SelectedReceiver.prepend("<div style='display: none;' id='ChatMessages' class='ChatMessages' data-username='" + receiversInfo.username + "'></div>");
 
                 FriendList.append("<img class='Avatar' src='" + receiversInfo.avatar + "'><a class='FriendName' href='" + site.uri.public + "/users/u/" + receiversInfo.username + "'>" + receiversInfo.full_name + "</a><br>");
