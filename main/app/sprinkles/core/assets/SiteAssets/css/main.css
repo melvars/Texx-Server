@@ -64,6 +64,35 @@ img {
     height: 100%;
 }
 
+/**************
+USER SELECT ROW
+**************/
+.UserSelector {
+    display: grid;
+    grid-template-columns: 10% 20% auto 10%;
+    overflow-y: auto;
+    max-height: 45%;
+    width: 100%;
+    z-index: 9999;
+}
+
+.UserSelector .Avatar {
+    grid-column-start: 2;
+    justify-self: center;
+    align-self: center;
+    height: 50px;
+    width: 50px;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+}
+
+.UserSelector .UsersFullName {
+    grid-column-start: 3;
+    justify-self: center; /* OR start */
+    align-self: center;
+}
+
 /*******
 SWIPEABLE
 *******/
@@ -175,31 +204,6 @@ EXPLORE WINDOW
     border-radius: 25px;
 }
 
-.SearchResults {
-    display: grid;
-    grid-template-columns: 10% 20% auto 10%;
-    overflow-y: auto;
-    max-height: 45%;
-    width: 100%;
-}
-
-.SearchResults .Avatar {
-    grid-column-start: 2;
-    justify-self: center;
-    align-self: center;
-    height: 50px;
-    width: 50px;
-    -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    border-radius: 100%;
-}
-
-.SearchResults .UsersFullName {
-    grid-column-start: 3;
-    justify-self: center; /* OR start */
-    align-self: center;
-}
-
 /**********
 CHAT WINDOW
 **********/
@@ -211,33 +215,6 @@ CHAT WINDOW
 
 hr.ChatHeaderDivider {
     margin-bottom: 0.6em; /* cause of symmetry things */
-}
-
-/* receiver select window */
-.SelectReceiver .ReceiverSelector {
-    display: grid;
-    grid-template-columns: 10% 20% auto 10%;
-    overflow-y: auto;
-    max-height: 45%;
-    width: 100%;
-    z-index: 9999;
-}
-
-.SelectReceiver .ReceiverSelector .Avatar {
-    grid-column-start: 2;
-    justify-self: center;
-    align-self: center;
-    height: 50px;
-    width: 50px;
-    -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    border-radius: 100%;
-}
-
-.SelectReceiver .ReceiverSelector .UsersFullName {
-    grid-column-start: 3;
-    justify-self: center; /* OR start */
-    align-self: center;
 }
 
 /* main chat */
@@ -402,31 +379,6 @@ FRIEND TAB
     margin: 5px;
 }
 
-.FriendList {
-    display: grid;
-    grid-template-columns: 10% 20% auto 10%;
-    overflow-y: auto;
-    max-height: 45%;
-    width: 100%;
-}
-
-.FriendList .Avatar {
-    grid-column-start: 2;
-    justify-self: center;
-    align-self: center;
-    height: 50px;
-    width: 50px;
-    -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    border-radius: 100%;
-}
-
-.FriendList .FriendName {
-    grid-column-start: 3;
-    justify-self: center; /* OR start */
-    align-self: center;
-}
-
 /***********
 PERSONAL TAB
 ***********/
@@ -474,6 +426,16 @@ PERSONAL TAB
 .EditProfileForm {
     margin-bottom: var(--navbar-margin-height);
 }
+
+/****************
+USER PROFILE PAGE
+****************/
+.UserProfilePage {
+    position: relative;
+    overflow: auto;
+    margin: 5px;
+}
+
 
 /*****
 NAVBAR

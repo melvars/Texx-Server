@@ -124,7 +124,8 @@
                         <p class="EditFieldText">{{ current_user.email }}</p><br>
 
                         <p class="EditFieldLabel">{{ translate('LOCALE') }}</p>
-                        <p class="EditFieldText">{{ site.locales.available[current_user.locale] }}</p><br> {# more in admin/templates/forms/user.html.twig #}
+                        <p class="EditFieldText">{{ site.locales.available[current_user.locale] }}</p> {# more in admin/templates/forms/user.html.twig #}
+                        <br>
 
                         <p class="EditFieldLabel">{{ translate('THEME') }}</p>
                         <p class="EditFieldText">{{ current_user.theme }}</p>
@@ -132,6 +133,31 @@
                 </div>
             </div>
         </div>
+
+
+        {# it's here so it's easier to find #}
+        <script>
+            /**
+             * @returns {string}
+             * @constructor
+             */
+            function GetProfilePageHTML(Username) {
+                return `
+                <div class="UserProfilePage">
+                    <div class="headerWrap">
+                        <div class="header">
+                            <span class="LeftButtonHeader"><i class="fas fa-bars"></i></span>
+                            <span class="HeaderCaption TabCaption">${Username}</span>
+                            <span class="RightButtonHeader"><i class="fas fa-bell"></i></span>
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="MainInTab UserProfilePageWindow">
+                    </div>
+                </div>
+                `
+            }
+        </script>
 
         <div class="Navbar">
             <span id="0" class="NavbarIconWrap">

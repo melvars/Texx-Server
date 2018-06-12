@@ -13,6 +13,18 @@ const ExploreData = $("#ExploreData");
 
 
 /**
+ * To get HTML for user selector
+ *
+ * @param User
+ * @returns {string}
+ * @constructor
+ */
+function GetUserSelectorHTML(User) {
+    return "<div class='UserSelector' data-username='" + User.username + "' data-user-id='" + User.id + "'><img class='Avatar' src='" + User.avatar + "'/><div class='UsersFullName'>" + User.full_name + "</div></div><hr class='ShorterLine'>"
+}
+
+
+/**
  * CACHE IMAGES
  * @type {*|jQueryImageCaching|jQuery}
  */
@@ -121,11 +133,11 @@ $("#ImageUploadButton").on("click", function () {
     swal({
         title: 'Choose an image to upload!',
         html: "<form id='ImageUploadForm'>" +
-            "<input formenctype='multipart/form-data' type='file' name='image' />" +
-            "<input formenctype='multipart/form-data' type='submit' value='Upload!' />" +
-            "<input type='hidden' name='" + site.csrf.keys.name + "' value='" + site.csrf.name + "' />" +
-            "<input type='hidden' name='" + site.csrf.keys.value + "' value='" + site.csrf.value + "' />" +
-            "</form>"
+        "<input formenctype='multipart/form-data' type='file' name='image' />" +
+        "<input formenctype='multipart/form-data' type='submit' value='Upload!' />" +
+        "<input type='hidden' name='" + site.csrf.keys.name + "' value='" + site.csrf.name + "' />" +
+        "<input type='hidden' name='" + site.csrf.keys.value + "' value='" + site.csrf.value + "' />" +
+        "</form>"
     });
 
     $(".swal2-confirm").text("Close");
@@ -153,13 +165,13 @@ UserSearchBar.keypress(function () {
             url: site.uri.public + "/api/search/user/" + RequestedUser,
             success: function (UserArray) {
                 SearchResults.empty();
-                UserArray.forEach(function(User) {
+                UserArray.forEach(function (User) {
                     console.log("%c[SEARCH LOGGER] User " + RequestedUser + " was found!", "color: green");
                     //var GifUrls = ["https://media.giphy.com/media/xUPGcg01dIAot4zyZG/giphy.gif", "https://media.giphy.com/media/IS9LfP9oSLdcY/giphy.gif", "https://media.giphy.com/media/5wWf7H0WTquIU1DFY4g/giphy.gif"];
                     //var RandomGif = Math.floor((Math.random() * GifUrls.length));
                     //var RandomGifUrl = GifUrls[RandomGif];
                     //console.image(RandomGifUrl, 0.5);
-                    SearchResults.append("<img class='Avatar' src='" + User.avatar + "'/><div class='UsersFullName'>" + User.full_name + "</div>");
+                    SearchResults.append(GetUserSelectorHTML(User));
                 })
             },
             error: function () {
@@ -181,11 +193,11 @@ $(document).ready(function () {
     $.ajax({ // CHAT RECEIVERS -- more in chat.js
         url: site.uri.public + "/api/users/u/" + current_username + "/friends",
         success: function (receivers) {
-            receivers.forEach(function (receiversInfo) {
-                SelectReceiver.append("<div class='ReceiverSelector' data-username='" + receiversInfo.username + "' data-id='" + receiversInfo.id + "'><img class='Avatar' src='" + receiversInfo.avatar + "'/><div class='UsersFullName'>" + receiversInfo.full_name + "</div></div><hr class='ShorterLine'>");
-                SelectedReceiver.prepend("<div style='display: none;' id='ChatMessages' class='ChatMessages' data-username='" + receiversInfo.username + "'></div>");
+            receivers.forEach(function (User) {
+                SelectReceiver.append(GetUserSelectorHTML(User));
+                SelectedReceiver.prepend("<div style='display: none;' id='ChatMessages' class='ChatMessages' data-username='" + User.username + "'></div>");
 
-                FriendList.append("<img class='Avatar' src='" + receiversInfo.avatar + "'><a class='FriendName' href='" + site.uri.public + "/users/u/" + receiversInfo.username + "'>" + receiversInfo.full_name + "</a><br>");
+                FriendList.append(GetUserSelectorHTML(User));
             })
         },
         error: function () {
@@ -200,14 +212,24 @@ $(document).ready(function () {
             images.forEach(function (imageInfo) {
                 FeedTabWindow.append("" +
                     "<div data-image-id='" + imageInfo.image_id + "' class='FeedImageWrapper'>" +
-                    "<div class='UploaderInfo'>" +
+                    "<div data-username='" + imageInfo.username + "' data-id='" + imageInfo.user_id + "' class='UploaderInfo'>" +
                     "<img class='UploaderAvatar' src='" + imageInfo.avatar + "'>" +
                     "<div class='UploaderName'>" + imageInfo.full_name + "</div>" +
                     "</div>" +
                     "<img class='FeedImage' src='" + imageInfo.image_url + "'>" +
                     "</div>" +
                     "<hr>");
-            })
+            });
+
+            /**
+             * USER PROFILE PAGE SHOW/RENDER -- needs to be initialized after ajax load
+             */
+            $("[data-username]").on("click", function () {
+                console.log(1);
+                $(".main > *").hide(); // TODO: Improve -- maybe move out of success ajax
+                $(".main").prepend(GetProfilePageHTML($(this).attr("data-username")));
+            });
+
         },
         error: function () {
             console.log("%c[FEED LOGGER] No images in feed!", "color: red");

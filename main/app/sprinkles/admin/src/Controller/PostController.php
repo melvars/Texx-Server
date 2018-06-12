@@ -67,9 +67,11 @@ class PostController extends SimpleController
             foreach ($ImagesFromFriends as $ImageFromFriend) {
                 $ImageFromFriend->image_url = $config["site.uri.public"] . "/image/" . $ImageFromFriend->image_id;
                 if ($ImageFromFriend->user_id == $user->id) { // UPLOADED FROM HIMSELF
+                    $ImageFromFriend->username = $user->user_name;
                     $ImageFromFriend->full_name = $user->full_name; // ADD USERNAME TO IMAGE ID
                     $ImageFromFriend->avatar =  $user->avatar;
                 } else { // UPLOADED FROM ANOTHER USER
+                    $ImageFromFriend->username = $UsersFriendInformation[0]->user_name;
                     $ImageFromFriend->full_name = $UsersFriendInformation[0]->full_name; // ADD USERNAME TO IMAGE ID
                     $ImageFromFriend->avatar =  $UsersFriendInformation[0]->avatar;
                 }

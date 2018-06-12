@@ -308,9 +308,9 @@ function InitializeChatServer() {
         });
 
         // SET RECEIVER
-        $(document).on("click", ".ReceiverSelector", function () {
+        $(document).on("click", ".SelectReceiver .UserSelector", function () {
             ReceiversUsername = $(this).attr("data-username");
-            ReceiversId = $(this).attr("data-id");
+            ReceiversId = $(this).attr("data-user-id");
             ChatSocket.send(JSON.stringify({
                 ClientMessageType: "SetReceiver",
                 ReceiversId: ReceiversId,
