@@ -224,7 +224,7 @@ $(document).ready(function () {
             /**
              * USER PROFILE PAGE SHOW/RENDER -- needs to be initialized after ajax load
              */
-            $("[data-username]").on("click", function () {
+            $("div:not(.SelectReceiver) > [data-username]").on("click", function () {
                 console.log(1);
                 $(".main > *").hide(); // TODO: Improve -- maybe move out of success ajax
                 $(".main").prepend(GetProfilePageHTML($(this).attr("data-username")));
