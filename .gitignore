@@ -1,3 +1,4 @@
+.idea
 main/app/sprinkles/core/assets/SiteAssets/php/DataBaseConf.php
 main/app/.env
 main/composer.lock
