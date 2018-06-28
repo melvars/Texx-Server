@@ -1,6 +1,0 @@
----
-user_id:
-  validators:
-    required:
-      label: "&USERID"
-      message: VALIDATE.REQUIRED

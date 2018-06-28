@@ -1,6 +1,0 @@
-PHP Parse error:  syntax error, unexpected 'case' (T_CASE) in /sites/social/main/app/sprinkles/core/assets/SiteAssets/php/Chatserver/src/ChatProcessor.php on line 93
-PHP Notice:  Undefined offset: 130 in /sites/social/main/app/sprinkles/core/assets/SiteAssets/php/Chatserver/src/ChatProcessor.php on line 67
-PHP Notice:  Undefined offset: 130 in /sites/social/main/app/sprinkles/core/assets/SiteAssets/php/Chatserver/src/ChatProcessor.php on line 67
-PHP Notice:  Undefined offset: 130 in /sites/social/main/app/sprinkles/core/assets/SiteAssets/php/Chatserver/src/ChatProcessor.php on line 67
-PHP Notice:  Undefined offset: 130 in /sites/social/main/app/sprinkles/core/assets/SiteAssets/php/Chatserver/src/ChatProcessor.php on line 67
-PHP Notice:  Undefined offset: 133 in /sites/social/main/app/sprinkles/core/assets/SiteAssets/php/Chatserver/src/ChatProcessor.php on line 67
