@@ -20,7 +20,13 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
+        "express": "^4.16.3",
+        "jquery-migrate": "^3.0.1",
         "laravel-echo": "^1.4.0",
-        "pusher-js": "^4.2.2"
+        "redis": "^2.8.0",
+        "socket.io": "^2.1.1",
+        "socket.io-client": "^2.1.1",
+        "sqlite3": "^4.0.1",
+        "ws": "^5.2.1"
     }
 }
