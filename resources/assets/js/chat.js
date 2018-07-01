@@ -13,6 +13,7 @@ $('input.send').click(function (e) {
 
 function sendMessage() {
     var message = $('input.message').val();
+    $('input.message').val("");
     $.ajax({
         type: "POST",
         url: "sendMessage",
