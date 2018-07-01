@@ -28,7 +28,7 @@
 
         <div class="profile-header-container">
             <div class="profile-header-img">
-                <img height="100px" width="100px" class="rounded-circle" src="/avatar/{{ $user->id }}" />
+                <img id="image-preview" height="100px" width="100px" class="rounded-circle" src="/avatar/{{ $user->id }}" />
                 <!-- badge -->
                 <div class="rank-label-container">
                     <span class="label label-default rank-label">{{$user->name}}</span>

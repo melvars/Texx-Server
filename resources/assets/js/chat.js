@@ -1,18 +1,18 @@
-var openpgp = window.openpgp;
+// var openpgp = window.openpgp;
 
-var options = {
-    userIds: [{ name:'Marvin Borner', email:'test@test.de' }], // multiple user IDs
-    numBits: 4096,                                            // RSA key size
-    passphrase: 'cool password of private key'
-};
+// var options = {
+//     userIds: [{ name:'Marvin Borner', email:'test@test.de' }], // multiple user IDs
+//     numBits: 4096,                                            // RSA key size
+//     passphrase: 'cool password of private key'
+// };
 
-openpgp.generateKey(options).then(function(key) {
-    var privateKey = key.privateKeyArmored; // '-----BEGIN PGP PRIVATE KEY BLOCK ... '
-    var publicKey = key.publicKeyArmored;   // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
+// openpgp.generateKey(options).then(function(key) {
+//     var privateKey = key.privateKeyArmored; // '-----BEGIN PGP PRIVATE KEY BLOCK ... '
+//     var publicKey = key.publicKeyArmored;   // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
 
-    console.log(publicKey);
-    console.log(privateKey);
-});
+//     console.log(publicKey);
+//     console.log(privateKey);
+// });
 
 
 
