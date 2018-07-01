@@ -4,8 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+window.openpgp = require('openpgp');
 window.Vue = require('vue');
-// window.jQueryMigrate = require('jquery-migrate');
+require('./bootstrap');
 require('./chat');
-
