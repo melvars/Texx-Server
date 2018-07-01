@@ -16,6 +16,7 @@ Route::get('/', function () {
 Auth::routes();
 Route::group(['middleware' => ['auth']], function () {
     Route::get('profile', 'UserController@Profile');
+    Route::get('avatar/{user_id}', 'ImageController@getAvatar');
     Route::get('/', ['as' => 'writeMessage', 'uses' => 'SocketController@writeMessage']);
 
     Route::post('avatar', 'UserController@updateAvatar');
