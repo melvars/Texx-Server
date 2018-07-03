@@ -7,5 +7,6 @@
 window.openpgp = require('openpgp');
 window.Vue = require('vue');
 require('./bootstrap');
+require('./setup');
 require('./profile');
 require('./chat');

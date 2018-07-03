@@ -82,6 +82,8 @@
             @yield('content')
         </main>
     </div>
+
+    {{ csrf_field() }}
 </body>
 
 </html>

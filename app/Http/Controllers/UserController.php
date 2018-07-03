@@ -27,7 +27,6 @@ class UserController extends Controller
         Storage::put('avatars/' . $avatarName, (string) $fittedAvatar);
         $user->avatar = $avatarName;
         $user->save();
-        return back()
-            ->with('success', 'You have successfully uploaded the avatar.');
+        return response()->json(array('success'=>'You have successfully uploaded the avatar.'));
     }
 }
