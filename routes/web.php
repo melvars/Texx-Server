@@ -14,7 +14,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-Route::group(['middleware' => ['auth']], function () {
+Route::middleware('auth', 'throttle:30,1')->group(function () {
     Route::get('profile', 'UserController@Profile');
     Route::get('avatar/{user_id}', 'ImageController@getAvatar');
     Route::get('/', ['as' => 'writeMessage', 'uses' => 'SocketController@writeMessage']);
