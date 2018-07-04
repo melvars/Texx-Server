@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Foundation\Auth\User;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class UserController extends Controller
@@ -27,6 +27,6 @@ class UserController extends Controller
         Storage::put('avatars/' . $avatarName, (string) $fittedAvatar);
         $user->avatar = $avatarName;
         $user->save();
-        return response()->json(array('success'=>'You have successfully uploaded the avatar.'));
+        return response()->json(array('success' => 'You have successfully uploaded the avatar.'));
     }
 }
