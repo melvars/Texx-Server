@@ -50,8 +50,15 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof HttpException) {
             $statusCode = $exception->getStatusCode();
+            switch ($statusCode) {
+                case '404':
+                    $codeMessage = 'Page could not be found';
+            }
+            $errorMessage = $exception->getMessage() == '' ? ($codeMessage ? $codeMessage : 'An unknown error occurred.') : $exception->getMessage();
+
+
             return response(View::make('errors.http', [
-                'ErrorMessage' => $exception->getMessage() == '' ? 'An unknown error occurred.' : $exception->getMessage(),
+                'ErrorMessage' => $errorMessage,
                 'ErrorCode' => $statusCode
             ]), $statusCode);
         }
