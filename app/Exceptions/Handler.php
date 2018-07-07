@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\View;
+use \Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +48,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof HttpException) {
+            $statusCode = $exception->getStatusCode();
+            return response(View::make('errors.http', [
+                'ErrorMessage' => $exception->getMessage() == '' ? 'An unknown error occurred.' : $exception->getMessage(),
+                'ErrorCode' => $statusCode
+            ]), $statusCode);
+        }
+
         return parent::render($request, $exception);
     }
 }
