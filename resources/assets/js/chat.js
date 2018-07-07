@@ -14,17 +14,29 @@
 //     console.log(privateKey);
 // });
 
+// $.ajax({
+//     type: "POST",
+//     url: "keys/public/1",
+//     data: {
+//         "key": "test_key_2"
+//     },
+//     cache: false,
+//     success: (results) => {
+//         console.log(results);
+//     }
+// });
+
 
 
 var socket = io('http://127.0.0.1:8890', {
     transports: ['websocket']
 });
-socket.on('message', function (data) {
+socket.on('message', (data) => {
     data = JSON.parse(data);
     $("#messages").append("<p>" + data.user + " : " + data.message + "</p>");
 });
 
-$('input.send').click(function (e) {
+$('input.send').click((e) => {
     e.preventDefault();
     sendMessage();
 });
@@ -36,10 +48,8 @@ function sendMessage() {
         type: "POST",
         url: "sendMessage",
         data: {
-            "_token": $('meta[name="csrf-token"]').attr('content'),
             "message": message
         },
-        cache: false,
-        success: function (results) {}
+        cache: false
     });
 }
