@@ -15,9 +15,10 @@ Route::middleware('auth', 'throttle:30') // throttle to 30 per minute
         Route::get('/', ['as' => 'writeMessage', 'uses' => 'SocketController@writeMessage']);
         Route::get('avatar/{user_id}', 'ImageController@getAvatar');
         Route::get('profile', 'UserController@Profile');
+        Route::get('keys/cookie/public/', 'PublicKeyController@setUsersKeyCookie'); // actually it's a post but it has to be get (via cookie) => TODO:
         Route::get('keys/public/{user_id}', 'PublicKeyController@getUsersKey');
 
         Route::post('avatar', 'UserController@updateAvatar');
-        Route::post('keys/public/{user_id}', 'PublicKeyController@setUsersKey');
+        Route::post('keys/public', 'PublicKeyController@setUsersKey');
         Route::post('sendMessage', 'SocketController@sendMessage');
     });
