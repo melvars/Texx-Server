@@ -32,7 +32,7 @@ class PublicKeyController extends Controller
         return response()->json(['message' => 'Successfully inserted public key.']);
     }
 
-    public function setUsersKeyCookie(Request $request)
+    public function setUsersKeyByCookie(Request $request)
     {
         if ($_COOKIE['publickey'] !== null) {
             $user = Auth::user();
