@@ -10,7 +10,7 @@
 |
  */
 Auth::routes();
-Route::middleware('auth', 'throttle:30000') // throttle to 30 per minute
+Route::middleware('auth', 'throttle:30') // throttle to 30 per minute
     ->group(function () {
         Route::get('/', ['as' => 'writeMessage', 'uses' => 'SocketController@writeMessage']);
         Route::get('avatar/{user_id}', 'ImageController@getAvatar');
