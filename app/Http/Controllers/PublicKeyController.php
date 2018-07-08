@@ -8,14 +8,10 @@ use Cookie;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Hash;
-
 class PublicKeyController extends Controller
 {
     public function getUsersKey($user_id)
     {
-        return Hash::check();
-
         $public_key = PublicKeys::select('key')->where('user_id', $user_id)->first();
         // TODO: Friends: do not allow to request every public key
 
