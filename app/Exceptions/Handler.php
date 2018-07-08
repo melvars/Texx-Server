@@ -52,7 +52,7 @@ class Handler extends ExceptionHandler
             $statusCode = $exception->getStatusCode();
             switch ($statusCode) {
                 case '404':
-                    $codeMessage = 'Page could not be found';
+                    $codeMessage = 'Page could not be found.';
             }
             $errorMessage = $exception->getMessage() == '' ? ($codeMessage ? $codeMessage : 'An unknown error occurred.') : $exception->getMessage();
 
