@@ -18,13 +18,15 @@ class DatabaseSeeder extends Seeder
             'name' => 'genesis',
             'email' => ' ',
             'password' => ' ',
-            'hash' => bcrypt('genesis')
+            'prevHash' => '0',
+            'hash' => Hash::make('genesis')
         ]);
 
         DB::table('users')->insert([
             'name' => 'Marvin Borner',
             'email' => 'marvin@borners.de',
             'password' => Hash::make('password'),
+            'prevHash' => Hash::make('genesis'),
             'hash' => Hash::make(Hash::make('genesis') . 'Marvin Borner' . 'marvin@borners.de' . Hash::make('password')) // hashing: prev hash, all fields in current 'block'
         ]);
     }

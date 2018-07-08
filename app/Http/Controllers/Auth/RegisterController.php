@@ -71,6 +71,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $hashedPassword,
+            'prevHash' => $previousHash,
             'hash' => $summedHash
         ]);
     }
