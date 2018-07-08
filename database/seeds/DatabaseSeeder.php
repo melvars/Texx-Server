@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,8 +24,8 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Marvin Borner',
             'email' => 'marvin@borners.de',
-            'password' => bcrypt('password'),
-            'hash' => bcrypt(bcrypt('genesis') . 'Marvin Borner'. 'marvin@borners.de'. 'password') // hashing: prev hash, all fields in current 'block'
+            'password' => Hash::make('password'),
+            'hash' => Hash::make(Hash::make('genesis') . 'Marvin Borner' . 'marvin@borners.de' . Hash::make('password')) // hashing: prev hash, all fields in current 'block'
         ]);
     }
 }

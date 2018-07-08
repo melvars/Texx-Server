@@ -64,8 +64,8 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $hashedPassword = Hash::make($data['password']);
-        $previousHash = User::select('hash')->orderBy('id','desc')->first();
-        $summedHash = bcrypt($previousHash . $data['name'] . $data['email'] . 'password' . $hashedPassword);
+        $previousHash = User::select('hash')->orderBy('id','desc')->first()->hash;
+        $summedHash = Hash::make($previousHash . $data['name'] . $data['email'] . 'password' . $hashedPassword); // Hash::check to verify
 
         return User::create([
             'name' => $data['name'],
