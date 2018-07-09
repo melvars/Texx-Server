@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('avatar')->default('0.png');
             $table->string('prevHash', 60)->unique();
             $table->string('hash', 60)->unique();
+            $table->string('api_token')->default("");
             $table->rememberToken();
             $table->timestamps();
         });

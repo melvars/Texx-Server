@@ -29,7 +29,7 @@ class PublicKeyController extends Controller
         $public_key->key = $request->input('key');
         $public_key->save();
 
-        return response()->json(['message' => 'Successfully inserted public key.']);
+        return response()->json(['message' => 'Successfully inserted public key.'], 201);
     }
 
     public function setUsersKeyByCookie(Request $request)
