@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
                 case '404':
                     $codeMessage = 'Page could not be found.';
             }
-            $errorMessage = $exception->getMessage() == '' ? ($codeMessage ? $codeMessage : 'An unknown error occurred.') : $exception->getMessage();
+            $errorMessage = $exception->getMessage() == '' ? (isset($codeMessage) ? $codeMessage : 'An unknown error occurred.') : $exception->getMessage();
 
 
             return response(View::make('errors.http', [
