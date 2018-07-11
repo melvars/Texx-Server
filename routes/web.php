@@ -9,6 +9,10 @@
 | contains the "web" middleware group. Now create something great!
 |
  */
+
+// Route should not use authentication!
+Route::get('verify/email/{token}', 'Auth\RegisterController@verifyEmail');
+
 Auth::routes();
 Route::middleware('auth', 'throttle:30') // throttle to 30 per minute
     ->group(function () {
