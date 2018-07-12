@@ -15,12 +15,19 @@ mix.js('resources/assets/js/app.js', 'public/js')
     .js('resources/assets/js/initial_key_gen.js', 'public/js')
     .sass('resources/assets/sass/app.scss', 'public/css')
     .sourceMaps()
-    .browserSync('http://127.0.0.1:8000', {
+    .browserSync({
         files: [
             'public/css/*.css',
             'public/js/*.js'
         ],
         injectChanges: true,
-        proxy: false
+        proxy: {
+            target: '127.0.0.1:8000',
+            reqHeaders: function () {
+                return {
+                    host: 'localhost:3000'
+                };
+            }
+        }
     })
     .disableNotifications();
