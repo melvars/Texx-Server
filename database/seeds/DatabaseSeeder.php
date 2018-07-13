@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'prevHash' => Hash::make('genesis'),
             'hash' => Hash::make(Hash::make('genesis') . 'Marvin Borner' . 'marvin@borners.de' . Hash::make('password')), // hashing: prev hash, all fields in current 'block'
-            'api_token' => "password"
+            'api_token' => "password",
+            'admin' => 1
         ]);
     }
 }
