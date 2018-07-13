@@ -18,7 +18,8 @@ mix.js('resources/assets/js/app.js', 'public/js')
     .browserSync({
         files: [
             'public/css/*.css',
-            'public/js/*.js'
+            'public/js/*.js',
+            '**/*.blade.php'
         ],
         injectChanges: true,
         proxy: {
