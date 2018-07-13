@@ -24,5 +24,5 @@
 <p align="center">
     <a target="_blank" href="https://spectrocoin.com/en/integration/buttons/47657-VfniCDsqms.html"><img src="https://img.shields.io/badge/Donate-Bitcoin-yellow.svg?longCache=true&style=for-the-badge" /></a>
     <a target="_blank" href="https://spectrocoin.com/en/integration/buttons/47848-kD0U8S8el6.html"><img src="https://img.shields.io/badge/Donate-DASH-blue.svg?longCache=true&style=for-the-badge" /></a>
-    <a target="_blank" href="https://paypal.me/marvinborner/"><img src="https://img.shields.io/badge/Donate-PayPal-green.svg?longCache=true&style=for-the-badge" /></a>
+    <a target="_blank" href="https://paypal.me/marvinborner/5usd"><img src="https://img.shields.io/badge/Donate-PayPal-green.svg?longCache=true&style=for-the-badge" /></a>
 </p>
