@@ -15,6 +15,7 @@ let SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 mix.js('resources/assets/js/app.js', 'public/js')
     .js('resources/assets/js/admin.js', 'public/js')
     .js('resources/assets/js/initial_key_gen.js', 'public/js')
+    // .ts('resources/assets/js/typescript.ts', 'public/js') => use of typescript!
     .sass('resources/assets/sass/admin.scss', 'public/css')
     .sass('resources/assets/sass/app.scss', 'public/css')
     .sourceMaps()
@@ -35,7 +36,16 @@ mix.js('resources/assets/js/app.js', 'public/js')
             }
         }
     })
-    .disableNotifications().webpackConfig({
+    .disableNotifications()
+    .webpackConfig({
+        module: {
+            rules: [{
+                loader: 'postcss-loader',
+                options: {
+                    plugins: () => [require('autoprefixer')]
+                }
+            }]
+        },
         plugins: [
             new SWPrecacheWebpackPlugin({
                 cacheId: 'BEAM-Messenger',
