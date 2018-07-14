@@ -23,7 +23,6 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
-        "adminlte": "^2.4.1",
         "autoprefixer": "^8.6.5",
         "css-loader": "^1.0.0",
         "express": "^4.16.3",

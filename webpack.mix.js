@@ -13,10 +13,10 @@ let SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
  */
 
 mix.js('resources/assets/js/app.js', 'public/js')
-    // .js('resources/assets/js/admin.js', 'public/js') // TODO: FIX
+    .js('resources/assets/js/admin.js', 'public/js') // TODO: FIX
     .js('resources/assets/js/initial_key_gen.js', 'public/js')
     // .ts('resources/assets/js/typescript.ts', 'public/js') => for use of typescript!
-    // .sass('resources/assets/sass/admin.scss', 'public/css') // TODO: FIX
+    .sass('resources/assets/sass/admin.scss', 'public/css')
     .sass('resources/assets/sass/app.scss', 'public/css')
     .sourceMaps()
     .browserSync({
