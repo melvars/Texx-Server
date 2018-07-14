@@ -7,13 +7,7 @@
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <title>Admin interface of BEAM-Messenger</title>
 
-    <link href="{{ asset("/bower_components/bootstrap/dist/css/bootstrap.min.css ") }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset("/bower_components/font-awesome/css/font-awesome.min.css ") }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset("/bower_components/Ionicons/css/ionicons.min.css ") }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset("/bower_components/admin-lte/dist/css/AdminLTE.min.css ")}}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset("/bower_components/admin-lte/dist/css/skins/skin-blue.min.css ")}}" rel="stylesheet" type="text/css"
-    />
-
+    <link href="{{ asset("css/admin.css") }}" rel="stylesheet" type="text/css" />
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
@@ -118,11 +112,7 @@
 
     </div>
 
-    <script src="{{ asset("/bower_components/jquery/dist/jquery.min.js ") }}"></script>
-    <script src="{{ asset("/bower_components/bootstrap/dist/js/bootstrap.min.js ") }}" type="text/javascript"></script>
-    <script src="{{ asset("/bower_components/admin-lte/dist/js/adminlte.min.js ") }}" type="text/javascript"></script>
-    <script src="{{ asset("/bower_components/jquery-slimscroll/jquery.slimscroll.min.js ") }}" type="text/javascript"></script>
-    <script src="{{ asset("/bower_components/fastclick/lib/fastclick.js ") }}"></script>
+    <script src="{{ asset("js/admin.js") }}"></script>
 </body>
 
 </html>

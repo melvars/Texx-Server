@@ -20,6 +20,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <!-- Manifests -->
+    <link rel="manifest" href="/manifest.json">
 </head>
 
 <body>
@@ -84,6 +87,18 @@
     </div>
 
     {{ csrf_field() }}
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener("load", function(){
+                navigator.serviceWorker.register('service-worker.js').then(function (registration) {
+                    console.log('ServiceWorker registration successful with scope:', registration.scope);
+                }, function (err) {
+                        console.log('ServiceWorker failed:', err);
+                });
+            });
+        }
+    </script>
 </body>
 
 </html>

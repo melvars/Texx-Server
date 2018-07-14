@@ -15,8 +15,8 @@ class SocketController extends Controller
     {
         $messages = Message::leftJoin('users', function ($join) {
             $join->on('messages.user_id', '=', 'users.id');
-        })->select(
-            'users.name', 'messages.message')->orderBy('messages.created_at')
+            })
+            ->select('users.name', 'messages.message')->orderBy('messages.created_at')
             ->get();
 
         return view('writeMessage', compact('messages'));

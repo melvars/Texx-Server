@@ -1,0 +1,1 @@
+console.log("[SERVICE WORKER] Started!");
