@@ -7,10 +7,13 @@ use Illuminate\Foundation\Auth\User;
 
 class AdminController extends Controller
 {
-    public function Overview()
+    public function Dashboard()
     {
         $this->checkAdmin();
-        return view('admin.overview', ['user' => Auth::user()]);
+        return view('admin.dashboard', [
+            'user' => Auth::user(),
+            'cpu_load' => round(sys_getloadavg()[1]/(trim(shell_exec("grep -P '^processor' /proc/cpuinfo|wc -l")) + 1)*100, 0)
+        ]);
     }
 
     private function checkAdmin()
