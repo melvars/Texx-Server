@@ -1,7 +1,7 @@
 <header class="main-header">
 
     <a href="/" class="logo">
-        <span class="logo-mini"><b>BEAM</b></span>
+        <span class="logo-mini"><b>B</b>M</span>
         <span class="logo-lg"><b>BEAM</b>-Messenger</span>
     </a>
 

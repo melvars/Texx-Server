@@ -15,7 +15,7 @@
     <![endif]-->
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini fixed sidebar-collapse">
     <div class="wrapper">
 
         @include('admin.layouts.navbar');
