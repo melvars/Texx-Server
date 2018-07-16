@@ -7,6 +7,7 @@
 window.openpgp = require('openpgp');
 window.Vue = require('vue');
 require('./bootstrap');
+require('@fortawesome/fontawesome-free/js/all');
 require('./setup');
 require('./profile');
 require('./chat');

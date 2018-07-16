@@ -23,6 +23,7 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.1.0",
         "autoprefixer": "^8.6.5",
         "bootstrap3-wysihtml5-npm": "^0.3.3-npm.12",
         "css-loader": "^1.0.0",

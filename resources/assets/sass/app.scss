@@ -1,18 +1,40 @@
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
 // Variables
 @import "variables";
-
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
-
 // Chat
 @import "chat";
 
 .navbar-laravel {
-    background-color: #fff;
+    margin: 0;
+    padding: 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.navbar.fixed-bottom {
+    width: 100%;
+    background-color: #555;
+    overflow: auto;
+}
+
+.navbar.fixed-bottom .navbar-icon {
+    float: left;
+    width: 20%;
+    text-align: center;
+    padding: 12px 0;
+    transition: all 0.3s ease;
+    color: white;
+    font-size: 36px;
+}
+
+.navbar.fixed-bottom a:hover {
+    background-color: #000;
+}
+
+.active {
+    background-color: #4CAF50 !important;
 }
 
 .alert {
