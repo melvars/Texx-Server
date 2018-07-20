@@ -1,7 +1,8 @@
 <?php
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateUsersTable extends Migration
 {
@@ -17,17 +18,11 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('avatar')->default('0.png');
-            $table->string('prevHash', 60)->unique();
-            $table->string('hash', 60)->unique();
-            $table->string('api_token')->default("");
-            $table->tinyInteger('verified')->default(0);
-            $table->tinyInteger('admin')->default(0);
-            $table->string('email_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      *

@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Jobs\SendVerificationEmail;
 use App\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -22,7 +19,7 @@ class RegisterController extends Controller
     | validation and creation. By default this controller uses a trait to
     | provide this functionality without requiring any additional code.
     |
-     */
+    */
 
     use RegistersUsers;
 
@@ -31,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/keys/cookie/public';
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -66,48 +63,10 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $hashedPassword = Hash::make($data['password']);
-        $previousHash = User::select('hash')->orderBy('id', 'desc')->first()->hash;
-        $summedHash = Hash::make($previousHash . $data['name'] . $data['email'] . 'password' . $hashedPassword); // Hash::check to verify
-
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $hashedPassword,
-            'prevHash' => $previousHash,
-            'hash' => $summedHash,
-            'email_token' => base64_encode($data['email']),
+            'password' => Hash::make($data['password']),
         ]);
     }
-
-    /**
-     * Handle a registration request for the application.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-
-    public function register(Request $request)
-    {
-        $this->validator($request->all())->validate();
-        event(new Registered($user = $this->create($request->all())));
-        dispatch(new SendVerificationEmail($user));
-        return view('confirmEmail');
-    }
-
-    /**
-     * Handle a registration request for the application.
-     *
-     * @param $token
-     * @return \Illuminate\Http\Response
-     */
-    public function verifyEmail($token)
-    {
-        $user = User::where('email_token', $token)->first();
-        $user->verified = 1;
-        if ($user->save()) {
-            return view('verificationSuccess', ['user' => $user]);
-        }
-    }
-
 }
