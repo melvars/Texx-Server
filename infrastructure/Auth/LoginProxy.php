@@ -22,7 +22,8 @@ class LoginProxy
 
     private $userRepository;
 
-    public function __construct(Application $app, UserRepository $userRepository) {
+    public function __construct(Application $app, UserRepository $userRepository)
+    {
         $this->userRepository = $userRepository;
 
         $this->apiConsumer = $app->make('apiconsumer');
@@ -43,10 +44,11 @@ class LoginProxy
         $user = $this->userRepository->getWhere('email', $email)->first();
 
         if (!is_null($user)) {
-            return $this->proxy('password', [
+            $TokenObject = $this->proxy('password', [
                 'username' => $email,
                 'password' => $password
             ]);
+            return array_merge($TokenObject, ['user_data' => json_decode(json_encode($user), true)]);
         }
 
         throw new InvalidCredentialsException();
@@ -74,9 +76,9 @@ class LoginProxy
     public function proxy($grantType, array $data = [])
     {
         $data = array_merge($data, [
-            'client_id'     => env('PASSWORD_CLIENT_ID'),
+            'client_id' => env('PASSWORD_CLIENT_ID'),
             'client_secret' => env('PASSWORD_CLIENT_SECRET'),
-            'grant_type'    => $grantType
+            'grant_type' => $grantType
         ]);
 
         $response = $this->apiConsumer->post('/oauth/token', $data);
