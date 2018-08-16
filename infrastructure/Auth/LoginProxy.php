@@ -44,11 +44,10 @@ class LoginProxy
         $user = $this->userRepository->getWhere('email', $email)->first();
 
         if (!is_null($user)) {
-            $TokenObject = $this->proxy('password', [
+            return $this->proxy('password', [
                 'username' => $email,
                 'password' => $password
             ]);
-            return array_merge($TokenObject, ['user_data' => json_decode(json_encode($user), true)]);
         }
 
         throw new InvalidCredentialsException();
