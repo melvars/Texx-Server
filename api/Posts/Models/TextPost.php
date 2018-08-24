@@ -6,9 +6,11 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
-class PostText extends Model
+class TextPost extends Model
 {
     use HasApiTokens, Notifiable;
+
+    protected $table = "text_posts";
     
     /**
      * The attributes that are mass assignable.
@@ -16,6 +18,11 @@ class PostText extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'text'
+        'description', 'text'
     ];
+
+    public function post()
+    {
+        return $this->belongsTo('Api\Posts\Models\Post');
+    }
 }

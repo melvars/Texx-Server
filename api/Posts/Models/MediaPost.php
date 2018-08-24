@@ -6,9 +6,11 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
-class PostImage extends Model
+class MediaPost extends Model
 {
     use HasApiTokens, Notifiable;
+
+    protected $table = "media_posts";
     
     /**
      * The attributes that are mass assignable.
@@ -16,6 +18,11 @@ class PostImage extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'description', 'image_path',
+        'description', 'media_path'
     ];
+
+    public function post()
+    {
+        return $this->belongsTo('Api\Posts\Models\Post');
+    }
 }

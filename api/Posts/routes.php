@@ -1,5 +1,5 @@
 <?php
-
+// type [text, media] as get parameter (/posts?type=media,text) 
 $router->get('/posts', 'PostController@getAll');
 $router->get('/posts/{id}', 'PostController@getById');
 $router->post('/posts', 'PostController@create');
