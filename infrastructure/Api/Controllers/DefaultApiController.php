@@ -10,8 +10,7 @@ class DefaultApiController extends BaseController
     public function index()
     {
         return response()->json([
-            'title'   => 'BEAM-Messenger',
-            'version' => Version::getGitTag()
+            'message'   => 'Welcome to the official BEAM-Messenger API'
         ]);
     }
 }
