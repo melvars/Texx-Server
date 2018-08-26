@@ -1,11 +1,11 @@
-# BEAM-Messenger
+# Texx
 <p align="center">
-    <i>„A high security laravel-based messenger with end-to-end AES256 encryption“</i>
+    <i>„A high security laravel-based social network with end-to-end AES256 encryption“</i>
     <br><br>
-    <a target="_blank" href="https://beam-messenger.de"><img src="https://img.shields.io/website-up-down-green-red/https/beam-messenger.de.svg?label=website&style=for-the-badge" /></a>
+    <a target="_blank" href="https://texx.me"><img src="https://img.shields.io/website-up-down-green-red/https/texx.me.svg?label=website&style=for-the-badge" /></a>
 </p>
 
-## Features of BEAM-Messenger
+## Features of Texx
 - Easy interface
 - Realtime responses (Unlike blockchain-technology)
 - Unhackable (almost - if you're lucky, it'll only take 77,000,000,000,000,000,000,000,000 years to hack)
@@ -19,7 +19,7 @@
 - Friends and followers
 - Groups up to 256 members
 
-## Help me with a small donation :)
+## Help us with a small donation :)
 
 <p align="center">
     <a target="_blank" href="https://spectrocoin.com/en/integration/buttons/47657-VfniCDsqms.html"><img src="https://img.shields.io/badge/Donate-Bitcoin-yellow.svg?longCache=true&style=for-the-badge" /></a>

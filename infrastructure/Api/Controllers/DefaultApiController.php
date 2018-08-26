@@ -10,7 +10,7 @@ class DefaultApiController extends BaseController
     public function index()
     {
         return response()->json([
-            'message'   => 'Welcome to the official BEAM-Messenger API'
+            'message'   => 'Welcome to the official Texx API'
         ]);
     }
 }
