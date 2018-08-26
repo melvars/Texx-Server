@@ -15,8 +15,13 @@ class CreateMediaPostsTable extends Migration
     {
         Schema::create('media_posts', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('post_id')->unsigned()->unique();
             $table->string('description');
             $table->string('media_path');
+
+            $table->foreign('post_id')
+                ->references('id')
+                ->on('posts');
         });
     }
 
