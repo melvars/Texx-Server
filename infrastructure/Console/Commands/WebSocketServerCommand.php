@@ -1,5 +1,4 @@
 <?php
-
 namespace Infrastructure\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -32,7 +31,7 @@ class WebSocketServerCommand extends Command
             ),
             1337
         );
-        $this->line('Started server.');
+        $this->line('Starting websocket...');
         $server->run();
     }
 }

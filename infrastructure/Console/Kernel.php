@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         AddUserCommand::class,
-        Commands\WebSocketServerCommand::class
+        Commands\WebSocketServerCommand::class,
+        Commands\StartServerCommand::class
     ];
 
     /**
