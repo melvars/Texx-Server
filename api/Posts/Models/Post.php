@@ -2,9 +2,9 @@
 
 namespace Api\Posts\Models;
 
-use Laravel\Passport\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 class Post extends Model
 {
@@ -26,7 +26,7 @@ class Post extends Model
 
     public function post_type()
     {
-        return $this->belongsTo('Api\Posts\Models\Post');
+        return $this->hasOne('Api\Posts\Models\PostType');
     }
 
     public function media_post()
