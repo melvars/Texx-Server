@@ -36,7 +36,7 @@ class PostService
 
     public function getAll($options = [])
     {
-        return Post::with('post_type')->with('user')->get();
+        return $this->postRepository->get($options);
     }
 
     public function getById($postId, array $options = [])
