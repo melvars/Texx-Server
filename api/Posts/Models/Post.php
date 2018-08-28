@@ -26,7 +26,7 @@ class Post extends Model
 
     public function post_type()
     {
-        return $this->hasOne('Api\Posts\Models\PostType');
+        return $this->belongsTo('Api\Posts\Models\PostType');
     }
 
     public function media_post()

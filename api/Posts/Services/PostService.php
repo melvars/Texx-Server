@@ -2,15 +2,15 @@
 
 namespace Api\Posts\Services;
 
-use Exception;
-use Illuminate\Auth\AuthManager;
-use Illuminate\Database\DatabaseManager;
-use Illuminate\Events\Dispatcher;
-use Api\Posts\Exceptions\PostNotFoundException;
 use Api\Posts\Events\PostWasCreated;
 use Api\Posts\Events\PostWasDeleted;
 use Api\Posts\Events\PostWasUpdated;
+use Api\Posts\Exceptions\PostNotFoundException;
+use Api\Posts\Models\Post;
 use Api\Posts\Repositories\PostRepository;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Events\Dispatcher;
 
 class PostService
 {
@@ -36,7 +36,7 @@ class PostService
 
     public function getAll($options = [])
     {
-        return $this->postRepository->get($options);
+        return Post::with('post_type')->with('user')->get();
     }
 
     public function getById($postId, array $options = [])
@@ -77,7 +77,7 @@ class PostService
 
     private function getRequestedPost($postId)
     {
-        $post = $this->postRepository->getById($postId);
+        $post = Post::with('post_type')->with('user')->where('id', $postId)->get();
 
         if (is_null($post)) {
             throw new PostNotFoundException();

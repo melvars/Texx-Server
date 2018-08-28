@@ -2,11 +2,11 @@
 
 namespace Api\Posts\Models;
 
-use Laravel\Passport\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
-class TextPost extends Model
+class PostType extends Model
 {
     use HasApiTokens, Notifiable;
 
