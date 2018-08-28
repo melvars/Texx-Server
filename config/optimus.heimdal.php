@@ -1,7 +1,8 @@
 <?php
 
-use Symfony\Component\HttpKernel\Exception as SymfonyException;
+use Infrastructure\Exceptions\Formatters as LocalFormatters;
 use Optimus\Heimdal\Formatters;
+use Symfony\Component\HttpKernel\Exception as SymfonyException;
 
 return [
     'add_cors_headers' => false,
@@ -10,7 +11,7 @@ return [
     'formatters' => [
         SymfonyException\UnprocessableEntityHttpException::class => Formatters\UnprocessableEntityHttpExceptionFormatter::class,
         SymfonyException\HttpException::class => Formatters\HttpExceptionFormatter::class,
-        Exception::class => Formatters\ExceptionFormatter::class,
+        Exception::class => LocalFormatters\ExceptionFormatter::class,
     ],
 
     'response_factory' => \Optimus\Heimdal\ResponseFactory::class,
