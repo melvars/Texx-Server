@@ -16,8 +16,6 @@ class PostRepository extends Repository
     {
         $post = $this->getModel();
 
-        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
-
         $post->fill($data);
         $post->save();
 
