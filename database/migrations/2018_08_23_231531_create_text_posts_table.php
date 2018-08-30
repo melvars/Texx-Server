@@ -16,7 +16,6 @@ class CreateTextPostsTable extends Migration
         Schema::create('text_posts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('post_id')->unsigned()->unique();
-            $table->string('description');
             $table->string('text', 8192);
 
             $table->foreign('post_id')
