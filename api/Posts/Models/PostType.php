@@ -14,6 +14,6 @@ class PostType extends Model
 
     public function posts()
     {
-        return $this->hasMany('Api\Posts\Models\Post');
+        return $this->hasMany('Api\Posts\Models\Post', 'post_types_id', 'id');
     }
 }

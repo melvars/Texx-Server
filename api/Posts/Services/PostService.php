@@ -6,7 +6,6 @@ use Api\Posts\Events\PostWasCreated;
 use Api\Posts\Events\PostWasDeleted;
 use Api\Posts\Events\PostWasUpdated;
 use Api\Posts\Exceptions\PostNotFoundException;
-use Api\Posts\Models\Post;
 use Api\Posts\Repositories\PostRepository;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Database\DatabaseManager;
@@ -36,7 +35,7 @@ class PostService
 
     public function getAll($options = [])
     {
-        return $this->postRepository->get($options);
+        return $this->postRepository->getJoined($options);
     }
 
     public function getById($postId, array $options = [])
@@ -77,7 +76,7 @@ class PostService
 
     private function getRequestedPost($postId)
     {
-        $post = Post::with('post_type')->with('user')->where('id', $postId)->get();
+        $post = $this->postRepository->getJoinedById($postId);
 
         if (is_null($post)) {
             throw new PostNotFoundException();
