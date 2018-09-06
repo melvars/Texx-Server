@@ -14,7 +14,7 @@ class PostRepository extends Repository
 
     public function getJoined($options)
     {
-        $query = Post::query()->with('user')->with('post_type');
+        $query = Post::query()->with('post_type');
         $this->applyResourceOptions($query, $options);
         $posts = $query->get();
         $joinedPosts = [];
@@ -30,7 +30,7 @@ class PostRepository extends Repository
 
     public function getJoinedById($postId)
     {
-        $query = Post::query()->with('user')->with('post_type')->where('id', $postId);
+        $query = Post::query()->with('post_type')->where('id', $postId);
         $post = $query->first();
 
         $postType = 'Api\Posts\Models\\' . $post["post_type"]["type"] . 'Post';
