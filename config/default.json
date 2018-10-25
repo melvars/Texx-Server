@@ -5,5 +5,30 @@
   "paginate": {
     "default": 10,
     "max": 50
+  },
+  "mysql": "mysql://root:root@localhost:3306/texx",
+  "authentication": {
+    "secret": "545c26b716c16d00e792322ea4642185515eeb2ff11f1c497fe22e8bc97362873d60fe47c063deafdf30f9bb40115795a84ecc389647f5e80f4063b1ccf2de09e3c1dcbe32f235075e6356f36e06e115843a3f0713cec71bda8f01632858a33a3e0547a70c4d04c7e88ba123bf38178cfb2b0f5435e50394fa8c836c3e196eb1f03fd109c0a31a3ff146244edbbd90baf752405077b6506cd12951d282020903e06e789292ca833475fde9f28cff27ce122dad5137d6bcdd2129133e87caa4a466060b216be85046a6029b100b5f72f57b82f0a788197e4107cd77f66d4435b9631e3b06ffaa55ded2c92bf19576fb28f1b646a402ce05262f662c21e04d29f0",
+    "strategies": [
+      "jwt",
+      "local"
+    ],
+    "path": "/authentication",
+    "service": "users",
+    "jwt": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "subject": "anonymous",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "entity": "user",
+      "usernameField": "email",
+      "passwordField": "password"
+    }
   }
 }
