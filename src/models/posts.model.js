@@ -6,6 +6,10 @@ const DataTypes = Sequelize.DataTypes;
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
   const posts = sequelizeClient.define('posts', {
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     text: {
       type: DataTypes.STRING,
       allowNull: false
